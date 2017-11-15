@@ -1,0 +1,198 @@
+<template>
+  <view class="page-user">
+    <view class="weui-panel">
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell">
+          <view class="weui-cell__bd userinfo clearfix">
+            <image class="userinfo-avatar" src="{{ user.wechat.avatarUrl }}" background-size="cover"/>
+            <view class="userinfo-info">
+              <view class="userinfo-nickname">{{ user.name }}(微信名称:{{user.wechat.nickname}})</view>
+              <view class="userinfo-status">手机号：{{user.mobile}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells__title">图书借阅</view>
+    <view class="weui-cells weui-cells_after-title">
+      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+        <view class="weui-cell__hd">
+          <image src="{{icon}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+        </view>
+        <view class="weui-cell__bd">我的借阅</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access">3本</view>
+      </navigator>
+
+      <navigator url="" class="weui-cell weui-cell_access disable" hover-class="weui-cell_active">
+        <view class="weui-cell__hd">
+          <image src="{{icon}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+        </view>
+        <view class="weui-cell__bd">我的书评</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access">开发中...</view>
+      </navigator>
+
+
+      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+        <view class="weui-cell__hd">
+          <image src="{{icon}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+        </view>
+        <view class="weui-cell__bd">我的收藏</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access">开发中...</view>
+      </navigator>
+    </view>
+
+    <view class="weui-cells__title">我的图书馆</view>
+    <view class="weui-cells weui-cells_after-title">
+      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+        <view class="weui-cell__hd">
+          <image src="{{icon}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+        </view>
+        <view class="weui-cell__bd">[组织]方舟图书馆</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access">150册</view>
+      </navigator>
+
+      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+        <view class="weui-cell__hd">
+          <image src="{{icon}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+        </view>
+        <view class="weui-cell__bd">[家庭]西西书</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access">3本</view>
+      </navigator>
+    </view>
+
+    <view class="weui-cells__title">我的好友</view>
+    <view class="weui-cells weui-cells_after-title">
+      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+        <view class="weui-cell__hd">
+          <image src="{{icon}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+        </view>
+        <view class="weui-cell__bd">我的馆群</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access">开发中...</view>
+      </navigator>
+
+      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+        <view class="weui-cell__hd">
+          <image src="{{icon}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+        </view>
+        <view class="weui-cell__bd">我的朋友</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access">开发中...</view>
+      </navigator>
+    </view>
+
+    <view class="weui-cells__title"></view>
+    <view class="weui-cells weui-cells_after-title">
+      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+        <view class="weui-cell__hd">
+          <image src="{{icon}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+        </view>
+        <view class="weui-cell__bd">关于我们</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access">开发中...</view>
+      </navigator>
+    </view>
+
+    <view class="weui-cells__title"></view>
+    <view class="page__bd page__bd_spacing" plain="true">
+      <button class="weui-btn" type="primary" g open-type="contact" >建议交流</button>
+    </view>
+    <view class="weui-cells__title"></view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import http from '../mixins/http'
+  import base from '../mixins/base'
+  import user from '../mixins/user'
+  import { service } from '../config.js'
+
+  export default class pageUser extends wepy.page {
+    mixins = [base, http, user]
+    config = {
+      navigationBarTitleText: '我的',
+      enablePullDownRefresh: false
+    }
+    data = {
+      libraries: {},
+      user: {},
+      nickName: '加载中...'
+
+    }
+
+    computed = {
+      nickName() {
+        return (user && user.wechat && user.wechat.nickname) ? user.wechat.nickname : '未授权用户'
+      }
+    }
+
+    onShow() {
+      // 初始化页面数据
+      this.initPageData()
+      // this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      this.$get({url: service.user}, {
+        success: ({code, data}) => {
+          this.user = data.user
+          this.libraries = data.libraries
+        }
+      })
+    }
+
+    methods = {
+    }
+
+    components = {
+    }
+  }
+</script>
+
+<style lang="less">
+@import "../styles/custom/fn.less";
+
+.page-user{
+
+  @userinfoHeight: 100rpx;
+  @userinfoSpace: 8rpx;
+
+  .userinfo{
+    padding: 20rpx 0;
+  }
+
+  .userinfo-avatar {
+    float: left;
+    width: @userinfoHeight;
+    height: @userinfoHeight;
+    border-radius: 50%;
+  }
+
+  // space + space
+  .userinfo-info {
+    float: left;
+    line-height: 1;
+    padding: @userinfoSpace 0;
+    margin-left: 3 * @userinfoSpace;
+  }
+
+  // text + space + text
+  .userinfo-nickname {
+    color: @uiColorGreen;
+    font-size: (@userinfoHeight - 4 * @userinfoSpace) * (16 / 30);
+    margin-bottom: 2 * @userinfoSpace;
+  }
+  .userinfo-status {
+    color: #999;
+    font-size: (@userinfoHeight - 4 * @userinfoSpace) * (14 / 30);
+
+  }
+}
+</style>

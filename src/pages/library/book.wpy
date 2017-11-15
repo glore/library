@@ -1,0 +1,271 @@
+<template>
+  <view class="main-detail">
+    <view class="weui-panel">
+      <block wx:if="{{banners && banners.length}}">
+        <view class="detail-cover">
+        </view>
+      </block>
+      <block wx:else>
+        <image src="{{book.image|| img_banner}}" class="detail-cover" mode="aspectFit"/>
+      </block>
+      <view class="weui-media-box weui-media-box_text weui-cells_in-small-appmsg">
+        <view class="h3 color-333">{{book.name}}</view>
+        <view class="detail-info">
+          <view>作者：{{book.author}}</view>
+          <view>出版社：{{book.pubcompany}}</view>
+          <view>出版时间：{{book.pubtime}}</view>
+        </view>
+        <view class="detail-tags">
+          <text wx:for="{{book.tags}}" wx:key="index" wx:for-item="tag" class="tag">{{tag}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="weui-panel">
+      <view class="weui-media-box weui-media-box_text">
+          <view class="detail-desc-title">简介：</view>
+          <view class="detail-desc">
+            <block wx:for="{{description}}" wx:key="index" wx:for-item="desc">
+              <view class="detail-text" wx:if="{{desc.type === 'text'}}">{{book.desc}}</view>
+              <image wx:elif="{{desc.type === 'image'}}" class="detail-image"
+               src="{{desc.value || img_banner}}" mode="widthFix"/>
+            </block>
+          </view>
+      </view>
+    </view>
+
+    <Screen class="fixed-bottom">
+      <view style="display: flex;">
+        <button @tap="toStar" class="weui-btn btn-block btn-flex-1">
+          <block wx:if="{{isCollect}}">
+            <image class="imgicon" src="{{icon_star_active}}" mode="aspectFit"/>
+            <view class="btn-text-bottom color-999">已收藏</view>
+          </block><block wx:else>
+            <image class="imgicon" src="{{icon_star}}" mode="aspectFit"/>
+            <view class="btn-text-bottom">收藏</view>
+          </block>
+        </button>
+        <button @tap="toBorrow" class="weui-btn btn-block btn-flex-1">
+          <image class="imgicon" src="{{icon_shelf}}" mode="aspectFit"/>
+          <view class="btn-text-bottom">书架</view>
+        </button>
+        <button @tap="toAdd({{book}})" disabled="{{!isEnabled}}" class="weui-btn btn-block btn-flex-full" type="primary">
+          <text wx:if="{{!isEnabled}}">已借完</text>
+          <text wx:elif="{{book.exist}}">已添加，查看书架</text>
+          <text wx:else>借阅</text>
+        </button>
+      </view>
+      <button slot="placeholder" class="weui-btn btn-block" type="primary">借阅</button>
+    </Screen>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { service } from '../../config.js'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import cart from '../../mixins/cart'
+  import user from '../../mixins/user'
+  import Screen from '../../components/screen'
+
+  export default class mainDetail extends wepy.page {
+    mixins = [base, http, cart, user]
+    config = {
+      navigationBarTitleText: '图书详情'
+    }
+    data = {
+      img_banner: '/images/swiper.png',
+      icon_star: '/images/icon/icon-star@2x.png',
+      icon_star_active: '/images/icon/icon-star-active@2x.png',
+      icon_shelf: '/images/tabbars/icon-shelf@2x.png',
+      navigate: false,
+      book: {}
+    }
+
+    computed = {
+      banners () {
+        return this.getArray(this.book && this.book.images)
+      },
+      description() {
+        const desc = this.book && this.book.desc
+        return desc || [{
+          type: 'text',
+          value: '暂无图书简介'
+        }]
+      },
+      isCollect() {
+        return Boolean(this.book && +this.book.collected)
+      },
+      isEnabled() {
+        return Boolean(this.book.book_libraries && +this.book.book_libraries[0].left_num > 0)
+      }
+    }
+
+    onLoad(query) {
+      this.book.id = query && +query.id
+      this.book.title = query && query.title
+    }
+
+    onShow() {
+      // 初始化页面数据
+      this.initPageData()
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      // 请求图书详情
+      this.getDetail()
+    }
+
+    // 获取图书信息
+    getDetail() {
+      // 根据业务接口处理数据
+      this.$get({url: service.books + '/' + this.book.id}, {
+        success: ({code, data}) => {
+          this.book = data
+        }
+      })
+
+      // 获取书架状态，优化本页交互
+      // const ids = this.getCartList().filter(({good}) => good).map(({good}) => this.getString(good.id))
+      // 标识本商品已存在书架中
+      /* if (ids.indexOf(this.getString(this.book.id)) > -1) {
+        this.book.exist = 1
+      } */
+      // 切换展示库存: 0/1
+      // this.book.stock = Math.abs(this.book.stock - 1)
+
+      // ===== 随机示例：借完 -> 已加 -> 可借 -> 借完~ =====
+      // const stock = this.book.stock
+      // const exist = this.book.exist
+      // this.book.stock = exist
+      // this.book.exist = (stock + exist) % 2
+
+      // 停止下拉状态
+      wx.stopPullDownRefresh()
+    }
+
+    methods = {
+      toStar() {
+        // 将要发生的收藏动作
+        const newType = this.isCollect ? 0 : 1
+        const newTypeText = newType ? '添加' : '取消'
+
+        // 根据业务接口处理数据
+        // this.$post({url: service.collect, data: {}}, {
+        //   success: ({code, data}) => {},
+        //   fail: ({code, data}) => {}
+        // })
+
+        // ===== 以下随机示例 =====
+        // 重置本书收藏状态
+        this.book.collected = newType
+        wx.showToast({
+          title: `${newTypeText}收藏！`,
+          icon: 'success',
+          duration: 1000
+        })
+      },
+      toBorrow() {
+        // 查看书架
+        wx.switchTab({url: '/pages/borrow'})
+      },
+      toAdd(book) {
+        var that = this
+        wx.showModal({
+          title: '借阅确认',
+          content: '是否借阅该本书？',
+          showCancel: true,
+          success: function(res) {
+            if (res.confirm) {
+              that.$post({url: service.library + '/books/' + book.id + '/reserve'}, {
+                success: ({code, data}) => {
+                  wx.showModal({
+                    title: '预约借书成功',
+                    content: '请找管理员取书！'
+                  })
+                }
+              })
+            }
+          }
+
+        })
+      }
+    }
+    components = {
+      Screen
+    }
+  }
+</script>
+
+<style lang="less">
+@import "../../styles/custom/fn.less";
+
+.main-detail{
+
+  .detail-cover{
+    display: block;
+    margin: 40rpx auto 0;
+  }
+  .detail-tags{
+    .h4();
+    padding: 0.4em 0;
+  }
+
+  .detail-desc-title{
+    .h4();
+    color: #ccc;
+    // margin-bottom: 0.5em;
+  }
+  .detail-info,
+  .detail-desc{
+    color: #aaa;
+    font-size: 12px;
+    line-height: 1;
+    // line-height: 0;
+    padding: 0.5em 0;
+    overflow: hidden;
+    text-align: center;
+  }
+  .detail-info,
+  .detail-text{
+    text-align: left;
+    line-height: 1.5;
+  }
+  .detail-text{
+    // text-indent: 2em;
+    & + .detail-image{
+      margin-top: 0.5em;
+    }
+  }
+  .detail-image{
+    width:100%;
+    // margin: 0.5em 0;
+    & + .detail-text{
+      margin-top: 0.5em;
+    }
+  }
+
+  .btn-flex-1{
+    padding: 0;
+    width: 3.5em;
+    line-height: 1.6;
+    overflow: hidden;
+  }
+  .btn-flex-full{
+    flex: 1 1 auto;
+  }
+  .btn-text-bottom{
+    .h5();
+    line-height: 1;
+    color: #777;
+  }
+
+}
+</style>

@@ -1,0 +1,226 @@
+<template>
+  <view class="user-library">
+    <view class="library-title">{{mylib.name}}</view>
+    <view class="weui-flex library-wrapper">
+      <block wx:for="{{library}}" wx:key="index">
+          <view @tap="goto({{item.url}})" class="weui-flex__item list-item">
+            <view class="color-666 item-title">{{item.value}}{{item.unit}}</view>
+            <view class="color-bbb h5">{{item.subtitle}}</view>
+          </view>
+      </block>
+    </view>
+
+    <button wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}" @tap="scanReturn"  class="weui-btn mini-btn" type="primary" size="mini">扫码还书</button>
+    <button wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}" @tap="scanBook"  class="weui-btn mini-btn" type="primary" size="mini">扫码录书</button>
+    <button wx:if="{{mylib.member && mylib.member.status=='MEMBER'}}" @tap="scanBorrow"  class="weui-btn mini-btn" type="primary" size="mini">扫码借书</button>
+    <button wx:if="{{!mylib.member}}" @tap="joinLibrary({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">申请加入</button>
+    <button wx:if="{{mylib.member && mylib.member.status=='JOIN'}}" @tap="joinTip"  class="weui-btn mini-btn" type="primary" size="mini">待审核</button>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { service } from '../config.js'
+  import http from '../mixins/http'
+  import base from '../mixins/base'
+  import user from '../mixins/user'
+
+  export default class userSubscribe extends wepy.page {
+    mixins = [base, http, user]
+    config = {
+      navigationBarTitleText: '我的借阅'
+    }
+    data = {
+      // 后置显示按钮
+      loaded: false,
+      // 我的图书馆
+      mylib: {},
+      // 面板数据
+      library: [{
+        unit: '类',
+        value: 0,
+        url: '/pages/library/sorts',
+        subtitle: '馆藏分类'
+      }, {
+        unit: '册',
+        value: 0,
+        url: '/pages/main/list',
+        subtitle: '馆藏册数'
+      }, {
+        unit: '位',
+        value: 0,
+        url: '/pages/library/members',
+        subtitle: '加入会员'
+      }, {
+        unit: '册',
+        value: 0,
+        url: '/pages/library/borrows',
+        subtitle: '已借册数'
+      }]
+    }
+
+    computed = {
+    }
+
+    onShareAppMessage(res) {
+      return {
+        title: '方舟图书馆',
+        path: '/pages/library',
+        success: function(res) {
+          // 转发成功
+          console.log('success')
+          console.log(res.target)
+        },
+        fail: function(res) {
+          // 转发失败
+          console.log('failed')
+          console.log(res.target)
+        }
+      }
+    }
+
+    onShow() {
+      // google tracker
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      // 图书馆详情
+      this.$get({url: service.library}, {
+        success: ({code, data}) => {
+          var library = this.library
+          library[0].value = data.sorts_count
+          // library[1].value = data.library_books_count
+          library[1].value = data.books_num
+          library[2].value = data.members_count
+          library[3].value = data.borrows_count
+          this.library = library
+          this.mylib = data
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loaded = false }
+      })
+    }
+
+    methods = {
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
+      joinTip() {
+        wx.showModal({
+          title: '待审核',
+          content: '请等待管理员审核！'
+        })
+      },
+      joinLibrary() {
+        this.$post({
+          url: service.libraries + '/' + this.mylib.id + '/join'
+        }, {
+          success: ({code, data}) => {
+            wx.reLaunch({url: '/pages/library'})
+          },
+          fail: ({code, data}) => {},
+          complete: () => { this.loaded = false }
+        })
+      },
+      scanBook() {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+
+            if (res.result) {
+              this.$post({
+                url: service.book_store,
+                data: {
+                  'isbn': res.result
+                }
+              }, {
+                success: ({code, data}) => {
+                  wx.reLaunch({url: '/pages/library/book_edit?id=' + data.id})
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loaded = false }
+              })
+            }
+          }
+        })
+      },
+      scanReturn() {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+            wx.navigateTo({url: '/pages/library/borrow?isbn=' + res.result})
+          }
+        })
+      },
+      scanBorrow() {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+
+            if (res.result) {
+              this.$post({
+                url: service.book_store,
+                data: {
+                  'isbn': res.result
+                }
+              }, {
+                success: ({code, data}) => {
+                  wx.navigateTo({url: '/pages/library/book?id=' + data.id})
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loaded = false }
+              })
+            }
+          }
+        })
+      }
+    }
+  }
+
+</script>
+
+<style lang="less">
+@import "../styles/weui/base/fn.wxss";
+@import "../styles/custom/fn.less";
+
+.user-library{
+  text-align: center;
+  background: #fff;
+  .library-title{
+    .h4();
+    text-align: left;
+    color: #666;
+    padding: 20rpx 40rpx 10rpx;
+  }
+  .library-wrapper{
+    padding: 20rpx 0;
+  }
+  .library-item{
+    position: relative;
+    &:before {
+      .setLeftLine(@weuiCellBorderColor);
+    }
+    &:first-child {
+      &:before {
+        display: none;
+      }
+    }
+  }
+  .item-title{
+    .h3();
+    line-height: 1;
+  }
+  .mini-btn{
+    margin: 1em auto;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}
+</style>

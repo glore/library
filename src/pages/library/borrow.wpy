@@ -1,0 +1,251 @@
+<template>
+  <view class="main-detail">
+    <view class="weui-panel">
+      <block wx:if="{{banners && banners.length}}">
+        <view class="detail-cover">
+        </view>
+      </block>
+      <block wx:else>
+        <image src="{{book.image|| img_banner}}" class="detail-cover" mode="aspectFit"/>
+      </block>
+      <view class="weui-media-box weui-media-box_text weui-cells_in-small-appmsg">
+        <view class="h3 color-333">{{book.name}}</view>
+        <view class="detail-info">
+          <view>作者：{{book.author}}</view>
+          <view>出版社：{{book.pubcompany}}</view>
+          <view>出版时间：{{book.pubtime}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="weui-cells__title">选择会员</view>
+    <view class="weui-cells weui-cells_after-title">
+        <radio-group @change="checkUser">
+            <label class="weui-cell weui-check__label" wx:for="{{borrows}}" wx:key="value">
+              <radio class="weui-check" value="{{item.id}}" checked="{{item.checked}}"/>
+
+                <view class="weui-cell__bd" wx:if="{{item.status=='RESERVE'}}">{{item.user.name}}[预借]</view>
+                <view class="weui-cell__bd" wx:if="{{item.status=='BORROW'}}">{{item.user.name}}[借阅中]</view>
+                <view class="weui-cell__bd" wx:if="{{item.status=='RETURN'}}">{{item.user.name}}[已还]</view>
+                <view class="weui-cell__ft weui-cell__ft_in-radio" wx:if="{{borrow_id &&  borrow_id==item.id}}">
+                    <icon class="weui-icon-radio" type="success_no_circle" size="16"></icon>
+                </view>
+            </label>
+        </radio-group>
+    </view>
+    
+
+    <Screen class="fixed-bottom">
+      <view style="display: flex;">
+        <button @tap="borrowReturn()" disabled="{{!isCheck || !isDo}}" class="weui-btn btn-block btn-flex-full" type="primary">
+          <text wx:if="{{!isCheck}}">请先选择会员</text>
+          <text wx:if="{{isCheck && isDo =='return'}}">确认还书</text>
+          <text wx:if="{{isCheck && isDo =='borrow'}}">确认借书</text>
+        </button>
+      </view>
+      <button slot="placeholder" class="weui-btn btn-block" type="primary">借阅</button>
+    </Screen>
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { service } from '../../config.js'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import Screen from '../../components/screen'
+
+  export default class libraryBorrow extends wepy.page {
+    mixins = [base, http, user]
+    config = {
+      navigationBarTitleText: '借阅管理'
+    }
+    data = {
+      img_banner: 'https://images.ufutx.com/201710/26/7cd9f274cd861fbb2ce30a99555f00bb.png',
+      icon_star: '/images/icon/icon-star@2x.png',
+      icon_star_active: '/images/icon/icon-star-active@2x.png',
+      icon_shelf: '/images/tabbars/icon-shelf@2x.png',
+      navigate: false,
+      isbn: false,
+      id: 0,
+      borrow_id: 0,
+      book: {},
+      borrows: []
+    }
+
+    computed = {
+      banners () {
+        return this.getArray(this.book && this.book.images)
+      },
+      description() {
+        const desc = this.book && this.book.desc
+        return desc || [{
+          type: 'text',
+          value: '暂无图书简介'
+        }]
+      },
+      isCheck() {
+        return Boolean(this.borrow_id > 0)
+      },
+      isDo() {
+        return this.borrow_status
+      },
+      isCollect() {
+        return Boolean(this.book && +this.book.collected)
+      },
+      isEnabled() {
+        return Boolean(this.book.book_libraries && +this.book.book_libraries[0].left_num > 0)
+      }
+    }
+
+    onLoad(query) {
+      this.id = query && +query.id
+      this.isbn = query && +query.isbn
+    }
+
+    onShow() {
+      // 初始化页面数据
+      this.initPageData()
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      // 请求图书详情
+      this.getDetail()
+    }
+
+    // 获取图书信息
+    getDetail() {
+      var url = service.library
+      if (this.isbn) {
+        url = url + '/borrow/isbn/' + this.isbn
+      } else {
+        url = url + '/borrows/' + this.id
+      }
+      this.$get({url: url}, {
+        success: ({code, data}) => {
+          if (this.isbn) {
+            this.book = data[0].book
+            this.borrows = data
+          } else {
+            this.book = data.book
+            this.borrows[0] = data
+          }
+        }
+      })
+
+      // 停止下拉状态
+      wx.stopPullDownRefresh()
+    }
+
+    methods = {
+      checkUser(e) {
+        console.log('radio发生change事件，携带value值为：', e.detail.value)
+        this.borrow_id = e.detail.value
+
+        this.borrows.forEach(v => {
+          if (this.getNumber(v.id) === this.getNumber(e.detail.value)) {
+            switch (v.status) {
+              case 'RESERVE': {
+                this.borrow_status = 'borrow'
+                break
+              }
+              case 'BORROW': {
+                this.borrow_status = 'return'
+                break
+              }
+              case 'RETURN':
+              default: {
+                this.borrow_status = ''
+                break
+              }
+            }
+          }
+        })
+      },
+      borrowReturn() {
+        var url = service.library + '/borrows/' + this.borrow_id + '/' + this.borrow_status
+        this.$put({url: url}, {
+          success: ({code, data}) => {
+            wx.reLaunch({url: '/pages/library'})
+          }
+        })
+      }
+    }
+    components = {
+      Screen
+    }
+  }
+</script>
+
+<style lang="less">
+@import "../../styles/custom/fn.less";
+
+.main-detail{
+
+  .detail-cover{
+    display: block;
+    margin: 40rpx auto 0;
+  }
+  .detail-tags{
+    .h4();
+    padding: 0.4em 0;
+  }
+
+  .detail-desc-title{
+    .h4();
+    color: #ccc;
+    // margin-bottom: 0.5em;
+  }
+  .detail-info,
+  .detail-desc{
+    color: #aaa;
+    font-size: 12px;
+    line-height: 1;
+    // line-height: 0;
+    padding: 0.5em 0;
+    overflow: hidden;
+    text-align: center;
+  }
+  .detail-info,
+  .detail-text{
+    text-align: left;
+    line-height: 1.5;
+  }
+  .detail-text{
+    // text-indent: 2em;
+    & + .detail-image{
+      margin-top: 0.5em;
+    }
+  }
+  .detail-image{
+    width:100%;
+    // margin: 0.5em 0;
+    & + .detail-text{
+      margin-top: 0.5em;
+    }
+  }
+
+  .btn-flex-1{
+    padding: 0;
+    width: 3.5em;
+    line-height: 1.6;
+    overflow: hidden;
+  }
+  .btn-flex-full{
+    flex: 1 1 auto;
+  }
+  .btn-text-bottom{
+    .h5();
+    line-height: 1;
+    color: #777;
+  }
+
+}
+</style>

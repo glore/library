@@ -1,0 +1,181 @@
+<template>
+  <view class="main-detail">
+    
+    <view class="weui-cells__title">{{library.name}}会员管理</view>
+    <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell" wx:for="{{members}}">
+            <view class="weui-cell__hd">
+                <image src="{{item.user.wechat.avatar}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+            </view>
+            <view class="weui-cell__bd">{{item.user.name}}</view>
+            <view class="weui-cell__ft member-status member-join" wx:if="{{item.status=='JOIN'}}">待审核</view>
+            <view class="weui-cell__ft member-status" wx:if="{{item.status=='MEMBER'}}">成员</view>
+            <view class="weui-cell__ft member-status" wx:if="{{item.status=='ADMIN'}}">管理员</view>
+            <view class="weui-cell__ft" wx:if="{{item.status=='ADMIN'}}">
+              <button class="weui-btn mini-btn" @tap="memberUpdate({{item.id}}, 'member')" type="primary">降级</button>
+            </view>
+            <view class="weui-cell__ft" wx:if="{{item.status=='JOIN'}}">
+              <button class="weui-btn mini-btn" @tap="memberUpdate({{item.id}}, 'member')" type="primary">通过</button>
+            </view>
+            <view class="weui-cell__ft" wx:if="{{item.status=='JOIN'}}">
+              <button class="weui-btn mini-btn" @tap="memberUpdate({{item.id}}, 'reject')"type="danger">删除</button>
+            </view>
+            <view class="weui-cell__ft" wx:if="{{item.status=='MEMBER'}}">
+              <button class="weui-btn mini-btn" @tap="memberUpdate({{item.id}}, 'admin')"type="primary">升级</button>
+            </view>
+        </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { service } from '../../config.js'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import Screen from '../../components/screen'
+
+  export default class libraryMembers extends wepy.page {
+    mixins = [base, http, user]
+    config = {
+      navigationBarTitleText: '会员管理'
+    }
+    data = {
+      library: {},
+      members: []
+    }
+
+    computed = {
+      isReturn() {
+        return Boolean(this.borrow_id > 0)
+      }
+    }
+
+    onLoad(query) {
+      this.id = query && +query.id
+      this.isbn = query && +query.isbn
+    }
+
+    onShow() {
+      // 初始化页面数据
+      this.initPageData()
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      // 请求图书详情
+      this.getMembers()
+    }
+
+    // 获取图书信息
+    getMembers() {
+      var url = service.library + '/members'
+      this.$get({url: url}, {
+        success: ({code, data}) => {
+          this.members = data.members
+          this.library = data.library
+        },
+        fail: ({code, data}) => {}
+      })
+
+      // 停止下拉状态
+      wx.stopPullDownRefresh()
+    }
+
+    methods = {
+      checkUser(e) {
+        console.log('radio发生change事件，携带value值为：', e.detail.value)
+        this.borrow_id = e.detail.value
+      },
+      memberUpdate(id, ops) {
+        var url = service.library + '/members/' + id + '/' + ops
+        this.$put({url: url}, {
+          success: ({code, data}) => {
+            wx.reLaunch({url: service.library + '/members'})
+          },
+          fail: ({code, data}) => {}
+        })
+      }
+    }
+    components = {
+      Screen
+    }
+  }
+</script>
+
+<style lang="less">
+@import "../../styles/custom/fn.less";
+
+.main-detail{
+
+  .detail-cover{
+    display: block;
+    margin: 40rpx auto 0;
+  }
+  .detail-tags{
+    .h4();
+    padding: 0.4em 0;
+  }
+
+  .detail-desc-title{
+    .h4();
+    color: #ccc;
+    // margin-bottom: 0.5em;
+  }
+  .detail-info,
+  .detail-desc{
+    color: #aaa;
+    font-size: 12px;
+    line-height: 1;
+    // line-height: 0;
+    padding: 0.5em 0;
+    overflow: hidden;
+    text-align: center;
+  }
+  .detail-info,
+  .detail-text{
+    text-align: left;
+    line-height: 1.5;
+  }
+  .detail-text{
+    // text-indent: 2em;
+    & + .detail-image{
+      margin-top: 0.5em;
+    }
+  }
+  .detail-image{
+    width:100%;
+    // margin: 0.5em 0;
+    & + .detail-text{
+      margin-top: 0.5em;
+    }
+  }
+
+  .btn-flex-1{
+    padding: 0;
+    width: 3.5em;
+    line-height: 1.6;
+    overflow: hidden;
+  }
+  .btn-flex-full{
+    flex: 1 1 auto;
+  }
+  .btn-text-bottom{
+    .h5();
+    line-height: 1;
+    color: #777;
+  }
+  .member-status{
+    margin-right: 10px;
+  }
+  .member-join{
+    color: red;
+  }
+
+}
+</style>

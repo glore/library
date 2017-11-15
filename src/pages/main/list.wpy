@@ -1,0 +1,173 @@
+<template>
+  <view class="main-list">
+    <view class="main-list-title clearfix" wx:if="{{keywords && keywords.length}}">
+      <view class="pull-left width-8p">
+        <block wx:for="{{keywords}}" wx:key="index">
+          <text wx:if="{{index > 0}}">，</text>
+          <text>{{item}}</text>
+        </block>
+      </view>
+      <text @tap="clearSearch" class="link link-blue pull-right">清空筛选</text>
+    </view>
+    <BookList :list.sync="list" :loading.sync="loading" :noMore.sync="noMoreList"></BookList>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { service } from '../../config.js'
+  import base from '../../mixins/base'
+  import http from '../../mixins/http'
+  import BookList from '../../components/bookList'
+
+  export default class mainList extends wepy.page {
+    mixins = [base, http]
+    config = {
+      navigationBarTitleText: '查找图书'
+    }
+    data = {
+      params: {},
+
+      noMoreList: false,
+      loading: false,
+      list: [],
+      page: 1
+    }
+
+    onLoad(query) {
+      let params = query && query.params
+      try {
+        params = JSON.parse(params)
+      } catch (e) {
+        params = {}
+      }
+      this.params = params
+    }
+
+    onReady() {
+      this.initPageData(this.page)
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    onReachBottom() {
+      setTimeout(() => {
+        this.updateBookList(this.page)
+        this.$apply()
+      }, 200)
+    }
+
+    methods = {
+      clearSearch() {
+        // 清空参数
+        this.params = {}
+        // 初始化页面
+        this.initPageData()
+      }
+    }
+
+    computed = {
+      keywords() {
+        const title = this.params && this.params.title
+        const words = this.params && this.params.keyword
+        const keywords = this.getString(words || title).split(/\s+/g)
+        return keywords.filter((item) => item) || []
+      }
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      // 初始化参数
+      this.page = 1
+      this.loading = false
+      this.noMoreList = false
+
+      // 请求推荐列表
+      this.updateBookList(this.page)
+    }
+
+    // 更新图书列表
+    updateBookList(page) {
+      if (this.loading || this.noMoreList) return
+      this.loading = true
+      // 推荐列表
+      this.$get({
+        url: service.list,
+        data: Object.assign({}, this.getObject(this.params), {
+          // 默认从1开始为第一页
+          page: page
+        })
+      }, {
+        success: ({code, data}) => {
+          this.size = data.per_page
+          this.noMoreList = false
+          if (data.current_page > data.last_page) {
+            this.noMoreList = true
+            return
+          }
+
+          data = data.data
+          // 请求到空列表后就认为没有更多了
+          if (this.isArray(data) && data.length === 0) {
+            this.noMoreList = true
+            return
+          }
+          if (this.list.length === 0) {
+            this.list = this.getBooks(data)
+          } else {
+            // 添加到列表中
+            this.list = [
+              ...this.list,
+              ...this.getBooks(data)
+            ]
+          }
+          // 成功了就增加一页
+          this.page += 1
+        },
+        fail: ({code, data}) => {
+          console.log('[updateBookList fail]', code, data)
+        },
+        complete: () => {
+          this.loading = false
+        }
+      })
+    }
+
+    // 处理图书列表
+    getBooks(data) {
+      return this.getArray(data).map((book, index) => {
+        // 拼接示例数据
+        return {
+          id: book.book.id,
+          title: book.book.title ? book.book.title : '无标题',
+          content: `简介: ${book.book.summary}.`,
+          image: book.book.image ? book.book.image : 'http://images.ufutx.com/201709/27/97bae3e1de000df7b4b6b28a3195a4de.png',
+          tags: [book.book.author ? book.book.author : '无'],
+          status: 1
+        }
+      })
+    }
+
+    components = {
+      BookList
+    }
+  }
+</script>
+
+<style lang="less">
+@import "../../styles/weui/base/fn.wxss";
+
+.main-list{
+  .width-8p{
+    width: 80% !important;
+  }
+
+  .main-list-title {
+    padding: 1em @weuiCellGapH;
+    color: @weuiTextColorGray;
+    font-size: @weuiCellTipsFontSize;
+  }
+}
+</style>

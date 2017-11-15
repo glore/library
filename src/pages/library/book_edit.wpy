@@ -1,0 +1,325 @@
+
+<template>
+  <view class="borrow-subscribe">
+    <view class="weui-cells weui-cells_after-title borrow-address">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label reset-label-left">
+          <image class="imgicon" style="width:4em; height:4em" src="{{image}}" mode="aspectFit"/>
+          </view>
+        </view>
+        <view class="weui-cell__bd h3  color-red">
+            <input @input="typing('title')" cclass="weui-input" style="margin-top:10px" value="{{title}}" placeholder="图书标题"/>
+            <input @input="typing('origin_title')" class="weui-input" value="{{origin_title}}" style="margin-top:10px" placeholder="译本原标题"/>
+            <input @input="typing('author')" class="weui-input" value="{{author}}" style="margin-top:10px" placeholder="作者"/>
+            <input @input="typing('translator')" class="weui-input" value="{{translator}}" style="margin-top:10px" placeholder="翻译"/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label reset-label-left">分类</view>
+        </view>
+        <view class="weui-cell__bd h3  color-red">
+          <picker @change="sortChange" value="{{sortIndex}}" range="{{sorts}}">
+            <view class="weui-select">{{sorts[sortIndex]}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label reset-label-left">编码</view>
+        </view>
+        <view class="weui-cell__bd h3  color-red">
+            <input @input="typing('isbn')" class="weui-input" value="{{isbn}}" placeholder="ISBN码"/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label reset-label-left">价格</view>
+        </view>
+        <view class="weui-cell__bd h3  color-red">
+            <input @input="typing('price')" class="weui-input" value="{{price}}" placeholder="价格"/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label reset-label-left">页数</view>
+        </view>
+        <view class="weui-cell__bd h3  color-red">
+            <input @input="typing('pages')" class="weui-input" value="{{pages}}" placeholder="图书总页数"/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label reset-label-left">册数</view>
+        </view>
+        <view class="weui-cell__bd h3  color-red">
+            <input @input="typing('num')" class="weui-input" value="{{num}}" placeholder="馆藏册数"/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label reset-label-left">出版社</view>
+        </view>
+        <view class="weui-cell__bd h3  color-red">
+            <input @input="typing('publisher')" class="weui-input" value="{{publisher}}" placeholder="出版社"/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label reset-label-left">出版日期</view>
+        </view>
+        <view class="weui-cell__bd h3  color-red">
+            <input @input="typing('pubdate')" class="weui-input" value="{{pubdate}}" placeholder="出版日期"/>
+        </view>
+      </view>
+	    <view class="weui-cells__title">简介</view>
+        <view class="weui-cells weui-cells_after-title">
+          <view class="weui-cell">
+            <view class="weui-cell__bd h3 color-red">
+              <textarea class="weui-textarea" @input="typing('summary')" value="{{summary}}" auto-height="true" auto-focus="true" class="weui-input" placeholder="图书简介" />
+              <view class="weui-textarea-counter"></view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells__tips">
+        <view class="color-666">说明</view>
+        <view class="color-999">1. 图书馆藏书册数必需填写</view>
+        <view class="color-999">2. 图书标题和作者需要填写</view>
+      </view>
+      <button @tap="save" class="weui-btn btn-primary" type="primary">保存</button>
+      <button @tap="destroy" class="weui-btn btn-danger" type="danger" >删除</button>
+      </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { service } from '../../config.js'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+
+  export default class borrowSubscribe extends wepy.page {
+    mixins = [base, http, user]
+    config = {
+      navigationBarTitleText: '图书编辑',
+      enablePullDownRefresh: false
+    }
+    data = {
+      id: 0,
+      title: '',
+      origin_title: '',
+      class_id: 0,
+      author: '',
+      translator: '',
+      summary: '',
+      publisher: '',
+      price: '',
+      isbn: '',
+      image: '',
+      pubdate: '',
+      pages: '',
+      num: '',
+
+      loading: false,
+      timer: null,
+      time: 0,
+
+      // 图书分类
+      list: [],
+      sorts: [],
+      sortIndex: 0
+    }
+
+    computed = {
+    }
+
+    onLoad(options) {
+      this.id = options.id
+    }
+
+    onShow(options) {
+      // 初始化页面数据
+      this.initPageData()
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      // 拉取图书详情
+      this.$get({url: service.books + '/' + this.id}, {
+        success: ({code, data}) => {
+          this.id = data.id
+          this.title = data.title
+          this.origin_title = data.origin_title
+          this.class_id = data.class_id
+          this.author = data.author
+          this.translator = data.translator
+          this.summary = data.summary
+          this.publisher = data.publisher
+          this.price = data.price
+          this.isbn = data.isbn
+          this.image = data.image
+          this.pubdate = data.pubdate
+          this.pages = data.pages
+          this.num = data.library_book.num
+
+          // 分类列表
+          this.list = data.library_book.sorts
+          for (var i = 0; i < this.list.length; ++i) {
+            this.sorts[i] = this.list[i].name
+            if (this.getString(this.list[i].id) === this.getString(this.class_id)) {
+              this.sortIndex = i
+            }
+          }
+        },
+        fail: ({code, data}) => {}
+      })
+    }
+
+    methods = {
+      sortChange(e) {
+        console.log('radio发生change事件，携带value值为：', e.detail.value)
+        this.sortIndex = e.detail.value
+        this.class_id = this.list[this.sortIndex].id
+      },
+
+      save() {
+        // 防抖
+        if (this.loading) return
+        if (!this.getString(this.title)) {
+          return this.$alert('温馨提示', '请输入图书标题')
+        }
+        if (!this.getString(this.author)) {
+          return this.$alert('温馨提示', '请输入作者')
+        }
+        if (!this.getString(this.num)) {
+          return this.$alert('温馨提示', '请设置馆藏册数')
+        }
+
+        const data = {
+          title: this.getString(this.title),
+          origin_title: this.getString(this.origin_title),
+          class_id: this.getString(this.class_id),
+          author: this.getString(this.author),
+          translator: this.getString(this.translator),
+          summary: this.getString(this.summary),
+          publisher: this.getString(this.publisher),
+          price: this.getString(this.price),
+          isbn: this.getString(this.isbn),
+          image: this.getString(this.image),
+          pubdate: this.getString(this.pubdate),
+          pages: this.getString(this.pages),
+          num: this.getString(this.num)
+        }
+        // 开防抖
+        this.loading = true
+
+        // 保存图书信息
+        this.$put({url: service.books + '/' + this.id, data: data}, {
+          success: ({code, data}) => {
+            wx.showModal({
+              title: '提示',
+              content: '保存成功, 继续录入',
+              success: function(res) {
+                if (res.confirm) {
+                  wx.switchTab({url: '/pages/library'})
+                } else if (res.cancel) {
+                }
+              }
+            })
+          },
+          fail: ({code, data}) => {
+            // 失败了什么也不做
+          },
+          complete: () => {
+            this.loading = false
+          }
+        })
+      },
+      destroy() {
+        var self = this
+        wx.showModal({
+          title: '提示',
+          content: '确认删除该图书信息？',
+          success: function(res) {
+            if (res.confirm) {
+              self.$delete({url: service.books + '/' + self.id}, {
+                success: ({code, data}) => {
+                  // setTimeout(() => {
+                  wx.showToast({
+                    title: '删除成功',
+                    icon: 'success',
+                    duration: 2000
+                  })
+                  // }, 2000)
+                  wx.navigateBack({
+                    delta: 2
+                  })
+                },
+                fail: ({code, data}) => {
+                  // 失败了什么也不做
+                },
+                complete: () => {
+                  self.loading = false
+                }
+              })
+            } else if (res.cancel) {
+            }
+          }
+        })
+      },
+      typing (type, e) {
+        if (this.isDefined(this[type])) {
+          this[type] = e.detail.value
+        }
+      }
+    }
+  }
+</script>
+
+<style lang="less">
+@import "../../styles/custom/fn.less";
+
+.borrow-subscribe{
+  .weui-media-box__title{
+    padding-bottom: 0.5em;
+  }
+  .borrow-address{
+    margin-bottom: 1em;
+  }
+  .reset-cell-block{
+    display:block !important;
+    padding-bottom:0;
+
+    & + .weui-cell{
+      &:before{
+        display: none;
+      }
+    }
+  }
+
+  .reset-label-left{
+    color: #999;
+    margin-right:1em;
+    padding-right: 1em;
+    border-right: 1rpx solid @uiBorderColor;
+  }
+
+  .reset-label-right{
+    color: #666;
+    line-height: 0;
+    margin-left: 1em;
+    padding-left: 1em;
+  }
+
+  .reset-input{
+    padding: 6px 15px;
+  }
+}
+</style>
