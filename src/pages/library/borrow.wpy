@@ -12,8 +12,9 @@
         <view class="h3 color-333">{{book.name}}</view>
         <view class="detail-info">
           <view>作者：{{book.author}}</view>
-          <view>出版社：{{book.pubcompany}}</view>
-          <view>出版时间：{{book.pubtime}}</view>
+          <view>出版社：{{book.publisher}}</view>
+          <view>出版时间：{{book.pubdate}}</view>
+          <view>内部分类：{{book.sort.name}}</view>
         </view>
       </view>
     </view>

@@ -13,7 +13,7 @@ export default class extends wepy.app {
       'pages/main/list',
       'pages/main/detail',
 
-      'pages/library',
+      'pages/library/library',
       'pages/library/borrow',
       'pages/library/members',
       'pages/library/borrows',
@@ -52,7 +52,7 @@ export default class extends wepy.app {
         iconPath: './images/tabbars/icon-mark@2x.png',
         text: '首页'
       }, {
-        pagePath: 'pages/library',
+        pagePath: 'pages/borrow',
         selectedIconPath: './images/tabbars/icon-shelf-active@2x.png',
         iconPath: './images/tabbars/icon-shelf@2x.png',
         text: '借阅'
@@ -88,21 +88,18 @@ export default class extends wepy.app {
   }
 
   onShareAppMessage(title) {
-    /* if (res.from === 'button') {
-      // 来自页面内转发按钮
-      console.log(res.target)
-      } */
+
     return {
       title: title ? title : '友福图书馆',
       // path: '/pages/index',
       // imageUrl: '',
       success: function(res) {
         // 转发成功
-        console.log(res.target)
+        console.log(res.errMsg)
       },
       fail: function(res) {
         // 转发失败
-        console.log(res.target)
+        console.log(res.errMsg)
       }
     }
   }

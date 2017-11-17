@@ -12,8 +12,10 @@
         <view class="h3 color-333">{{book.name}}</view>
         <view class="detail-info">
           <view>作者：{{book.author}}</view>
-          <view>出版社：{{book.pubcompany}}</view>
-          <view>出版时间：{{book.pubtime}}</view>
+          <view>出版社：{{book.publisher}}</view>
+          <view>出版时间：{{book.pubdate}}</view>
+          <view>内部分类：{{book.sort.name}}</view>
+          <view>册数：{{book.library_book.num}}册<span wx:if="book.library_book.lent_num">(已借{{book.library_book.lent_num}}册)</span></view>
         </view>
         <view class="detail-tags">
           <text wx:for="{{book.tags}}" wx:key="index" wx:for-item="tag" class="tag">{{tag}}</text>
@@ -26,7 +28,7 @@
           <view class="detail-desc-title">简介：</view>
           <view class="detail-desc">
             <block wx:for="{{description}}" wx:key="index" wx:for-item="desc">
-              <view class="detail-text" wx:if="{{desc.type === 'text'}}">{{book.desc}}</view>
+              <view class="detail-text" wx:if="{{desc.type === 'text'}}">{{book.summary}}</view>
               <image wx:elif="{{desc.type === 'image'}}" class="detail-image"
                src="{{desc.value || img_banner}}" mode="widthFix"/>
             </block>
@@ -99,7 +101,7 @@
         return Boolean(this.book && +this.book.collected)
       },
       isEnabled() {
-        return Boolean(this.book.book_libraries && +this.book.book_libraries[0].left_num > 0)
+        return Boolean(this.book.book_libraries && + this.book.book_libraries[0].lent_num < this.book.book_libraries[0].num)
       }
     }
 
@@ -107,10 +109,13 @@
       this.book.id = query && +query.id
       this.book.title = query && query.title
     }
-
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
     onShow() {
-      // 初始化页面数据
       this.initPageData()
+      // google analytics
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
 
     onPullDownRefresh() {

@@ -21,15 +21,15 @@
 
 <script>
   import wepy from 'wepy'
-  import { service } from '../config.js'
-  import http from '../mixins/http'
-  import base from '../mixins/base'
-  import user from '../mixins/user'
+  import { service } from '../../config.js'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
 
   export default class userSubscribe extends wepy.page {
     mixins = [base, http, user]
     config = {
-      navigationBarTitleText: '我的借阅'
+      navigationBarTitleText: '友福图书馆'
     }
     data = {
       // 后置显示按钮
@@ -64,23 +64,13 @@
     }
 
     onShareAppMessage(res) {
-      return {
-        title: '方舟图书馆',
-        path: '/pages/library',
-        success: function(res) {
-          // 转发成功
-          console.log('success')
-          console.log(res.target)
-        },
-        fail: function(res) {
-          // 转发失败
-          console.log('failed')
-          console.log(res.target)
-        }
-      }
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
-
+    onLoad(query) {
+      this.mylib.id = query && +query.id
+    }
     onShow() {
+      this.initPageData()
       // google tracker
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
@@ -91,8 +81,9 @@
 
     // 初始化页面数据
     initPageData() {
+      var self = this
       // 图书馆详情
-      this.$get({url: service.library}, {
+      this.$get({url: service.libraries + '/' + this.mylib.id}, {
         success: ({code, data}) => {
           var library = this.library
           library[0].value = data.sorts_count
@@ -102,6 +93,7 @@
           library[3].value = data.borrows_count
           this.library = library
           this.mylib = data
+          self.config.navigationBarTitleText = data.name
         },
         fail: ({code, data}) => {},
         complete: () => { this.loaded = false }
@@ -187,8 +179,8 @@
 </script>
 
 <style lang="less">
-@import "../styles/weui/base/fn.wxss";
-@import "../styles/custom/fn.less";
+@import "../../styles/weui/base/fn.wxss";
+@import "../../styles/custom/fn.less";
 
 .user-library{
   text-align: center;

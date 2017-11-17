@@ -13,6 +13,7 @@
   import { service } from '../config.js'
   import base from '../mixins/base'
   import http from '../mixins/http'
+  import user from '../mixins/user'
   import { funImages } from '../mixins/demo'
 //  import Swiper from '../components/swiper'
   import SearchBar from '../components/searchbar'
@@ -20,25 +21,14 @@
   import BookList from '../components/bookList'
 
   export default class pageIndex extends wepy.page {
-    mixins = [base, http]
+    mixins = [base, http, user]
     config = {
-      navigationBarTitleText: '首页',
+      navigationBarTitleText: '友福图书馆',
       navigationBarTextStyle: 'white',
       navigationBarBackgroundColor: '#049BFF'
     }
     data = {
       searchText: '搜索图书',
-      swipers: [
-        // 占位图，防止请求错误无图显示
-        {image: '/images/swiper.png', url: '/pages/main/search'}
-      ],
-      categorys: [
-        {title: '今', image: funImages[0]},
-        {title: '晚', image: funImages[1]},
-        {title: '吃', image: funImages[2]},
-        {title: '鸡', image: funImages[3]}
-      ],
-
       noMoreList: false,
       loading: false,
       list: [],
@@ -50,29 +40,12 @@
     }
 
     onShareAppMessage(res) {
-      /* if (res.from === 'button') {
-        // 来自页面内转发按钮
-        console.log(res.target)
-        } */
-      return {
-        title: '友福图书馆',
-        path: '/pages/index',
-        success: function(res) {
-          // 转发成功
-          console.log('success')
-          console.log(res.target)
-        },
-        fail: function(res) {
-          // 转发失败
-          console.log('failed')
-          console.log(res.target)
-        }
-      }
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
 
     onShow() {
       // 初始化页面数据
-      this.userInfo = this.$getUser()
+      // this.userInfo = this.$getUser()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
 
@@ -95,18 +68,6 @@
 
       // 请求列表
       this.updateBookList(this.page)
-
-      // 处理轮播图
-      this.swipers.push({image: '/images/swiper.png'})
-      // 处理菜单栏
-      this.categorys.map((cate, index) => {
-        const xnum = Math.min(Math.max(index, 1), 3)
-        cate.url = `/pages/main/search?params=${this.$json({
-          value: [xnum, 4 - xnum].map(item => this.getString(item)),
-          index: index + 1,
-          title: cate.title
-        })}`
-      })
     }
 
     // 更新图书列表
@@ -165,7 +126,7 @@
           content: `简介: ${book.book.summary}.`,
           image: book.book.image ? book.book.image : 'http://images.ufutx.com/201709/27/97bae3e1de000df7b4b6b28a3195a4de.png',
           tags: [book.book.author ? book.book.author : '无'],
-          status: 1
+          status: book.num>book.lent_num
         }
       })
     }

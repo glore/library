@@ -1,110 +1,77 @@
 <template>
-  <view wx:if="{{canBorrow}}" class="page-borrow">
-    <view class="weui-panel borrow-list">
-      <view class="weui-panel__hd">
-        <text>本次最多可借</text>
-        <text class="color-red">{{borrowCount}}本</text>
-        <text>，还可借</text>
-        <text class="color-red">{{borrowTime}}次</text><text>。</text>
-      </view>
-      <view class="weui-panel__bd">
-        <block wx:for="{{borrowList}}" wx:key="index">
-          <view class="weui-media-box weui-media-box_text">
-            <block wx:if="{{item.good}}">
-              <view class="icon-order-circle">{{index+1}}</view>
-              <view class="borrow-name-wrapper">
-                <view class="borrow-book-name">{{item.good.name}}</view>
-              </view>
-              <view @tap="remove({{item.good}})" class="icon-delete reset-pull-right"></view>
-            </block><block wx:else>
-              <view class="icon-order-empty">{{index+1}}</view>
-              <view class="borrow-name-wrapper">
-                <view class="borrow-book-name color-ddd">空</view>
-              </view>
-              <view @tap="goMain" class="link link-blue reset-pull-right">去借书</view>
-            </block>
+  <view class="borrow">
+    <view class="library-title">{{mylib.name}}</view>
+    <view class="weui-flex library-wrapper">
+      <block wx:for="{{library}}" wx:key="index">
+          <view @tap="goto({{item.url}})" class="weui-flex__item list-item">
+            <view class="color-666 item-title">{{item.value}}{{item.unit}}</view>
+            <view class="color-bbb h5">{{item.subtitle}}</view>
           </view>
-        </block>
-      </view>
+      </block>
     </view>
-    <view class="weui-panel">
-      <view class="weui-media-box weui-media-box_text borrow-address">
-        <view class="weui-media-box__title h4 color-666">收货地址</view>
-        <view class="weui-cell__bd h4">
-          <textarea @input="typing('address')" class="weui-textarea" value="{{address}}" placeholder="请填写收货地址" auto-height/>
-        </view>
-        <view @tap="chooseAddress" wx:if="{{showChooseAddress}}" class="link link-red reset-pull-middle">
-          <image src="/images/icon/icon-location@2x.png" class="imgicon icon-location" mode="aspectFit"/>
-        </view>
-      </view>
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label reset-label-left h4">手机号码</view>
-        </view>
-        <view class="weui-cell__bd h4">
-          <input @input="typing('phone')" class="weui-input" value="{{phone}}" placeholder="请填写收货人手机号码"/>
-        </view>
-      </view>
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label reset-label-left h4">收货人</view>
-        </view>
-        <view class="weui-cell__bd h4">
-          <input @input="typing('receiver')" class="weui-input" value="{{receiver}}" placeholder="请填写收货人姓名"/>
-        </view>
-      </view>
-    </view>
-    <button @tap="borrow" class="weui-btn btn-primary" type="primary">确认</button>
-  </view>
-  <view wx:else class="text-center tip-page page-borrow-tip">
-    <block wx:if="{{loaded}}">
-    :q
-      <icon class="tip-icon" type="cancel" size="70" color="#bbb"></icon>
-      <view class="h4">您还没有订阅，快去选择吧~</view>
-      <button @tap="toSubscribe" class="weui-btn mini-btn" type="primary" size="mini">立即订阅</button>
-    </block>
+
+    <button wx:if="{{mylib.member && mylib.member.status!='JOIN'}}" @tap="scanBorrow"  class="weui-btn mini-btn" type="primary" size="mini">扫码借书</button>
+    <button wx:if="{{!mylib.member}}" @tap="joinLibrary({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">申请加入</button>
+    <button wx:if="{{mylib.member && mylib.member.status=='JOIN'}}" @tap="joinTip"  class="weui-btn mini-btn" type="primary" size="mini">待审核</button>
+    <button wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}" @tap="goto('/pages/library/library?id=1')"  class="weui-btn mini-btn" type="primary" size="mini">管理员入口</button>
+
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
-  // import { service } from '../config.js'
+  import { service } from '../config.js'
   import http from '../mixins/http'
   import base from '../mixins/base'
   import user from '../mixins/user'
-  import cart from '../mixins/cart'
 
-  export default class pageBorrow extends wepy.page {
-    mixins = [base, http, user, cart]
+  export default class Borrow extends wepy.page {
+    mixins = [base, http, user]
     config = {
-      navigationBarTitleText: '书架',
-      enablePullDownRefresh: false
+      navigationBarTitleText: '友福图书馆'
     }
     data = {
+      // 后置显示按钮
       loaded: false,
-      loading: false,
-      // 列表/几本/几次
-      borrowList: [],
-      borrowCount: 0,
-      borrowTime: 0,
-      // 收件人信息
-      receiver: '',
-      address: '',
-      phone: ''
+      // 我的图书馆
+      mylib: {},
+      // 面板数据
+      library: [{
+        unit: '类',
+        value: 0,
+        url: '/pages/main/list',
+        subtitle: '馆藏分类'
+      }, {
+        unit: '册',
+        value: 0,
+        url: '/pages/main/list',
+        subtitle: '馆藏册数'
+      }, {
+        unit: '位',
+        value: 0,
+        url: '/pages/library/members',
+        subtitle: '加入会员'
+      }, {
+        unit: '册',
+        value: 0,
+        url: '/pages/library/borrows',
+        subtitle: '已借册数'
+      }]
     }
 
     computed = {
-      showChooseAddress() {
-        return !!wx.chooseAddress
-      },
-      canBorrow() {
-        return +this.borrowCount && +this.borrowTime
-      }
     }
 
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+    onLoad(query) {
+      this.mylib.id = 1 // query && +query.id
+    }
     onShow() {
-      // 初始化页面数据
       this.initPageData()
+      // google tracker
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
 
     onPullDownRefresh() {
@@ -113,255 +80,138 @@
 
     // 初始化页面数据
     initPageData() {
-      // 异步获取数据
-      this.loading = true
-      this.$getUserInfo((data) => {
-        this.loaded = true
-
-        // 初始化收件人信息
-        const { identity, packages, nickName } = data
-        this.phone = this.getString(this.phone || identity.mobile, '手机号码')
-        this.address = this.getString(this.address || identity.address, '地址')
-        this.receiver = this.getString(this.receiver || nickName, '用户')
-        this.borrowTime = this.getNumber(this.borrowTime || packages.times, 1)
-        this.borrowCount = this.getNumber(this.borrowCount || packages.quantity, 5)
-
-        // 更新借阅列表
-        this.updateBorrowList()
-        this.loading = false
+      var self = this
+      // 图书馆详情
+      this.$get({url: service.libraries + '/' + this.mylib.id}, {
+        success: ({code, data}) => {
+          var library = this.library
+          library[0].value = data.sorts_count
+          // library[1].value = data.library_books_count
+          library[1].value = data.books_num
+          library[2].value = data.members_count
+          library[3].value = data.borrows_count
+          this.library = library
+          this.mylib = data
+          self.config.navigationBarTitleText = data.name
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loaded = false }
       })
     }
 
     methods = {
-      borrow() {
-        // 防抖
-        if (this.loading) return
-        if (!this.isPhone(this.phone)) {
-          return this.$alert('温馨提示', '请填写正确的手机号码')
-        }
-        if (this.isUndefined(this.address)) {
-          return this.$alert('温馨提示', '请填写收货地址')
-        }
-        if (this.isUndefined(this.receiver)) {
-          return this.$alert('温馨提示', '请填写收货人')
-        }
-
-        // 根据业务接口处理数据
-        // this.loading = true
-        // this.$post({url: service.borrow, data}, {
-        //   success: ({code, data}) => {},
-        //   fail: ({code, data}) => {},
-        //   complete: () => {this.loading = false}
-        // })
-
-        // ===== 以下随机示例 =====
-        setTimeout(() => {
-          const random = Math.random() * 10
-          const res = {
-            code: random < 3 ? 0 : random,
-            message: '大吉大利 再试一次'
-          }
-
-          // 提示成功/失败
-          wx.navigateTo({
-            // type: 成功 = 0，失败 > 0，
-            url: `/pages/borrow/result?type=${this.getNumber(res.code)}&message=${res.message}`
-          })
-        }, 200)
+      goto(url) {
+        wx.navigateTo({url: url})
       },
-      chooseAddress() {
-        wx.chooseAddress && wx.chooseAddress({
+      joinTip() {
+        wx.showModal({
+          title: '待审核',
+          content: '请等待管理员审核！'
+        })
+      },
+      joinLibrary() {
+        this.$post({
+          url: service.libraries + '/' + this.mylib.id + '/join'
+        }, {
+          success: ({code, data}) => {
+            wx.reLaunch({url: '/pages/library'})
+          },
+          fail: ({code, data}) => {},
+          complete: () => { this.loaded = false }
+        })
+      },
+      scanBook() {
+        wx.scanCode({
           success: (res) => {
-            const {
-              // 收货人姓名
-              userName,
-              // 手机号
-              telNumber,
-              // 国标收货地址第一级地址
-              provinceName,
-              // 国标收货地址第二级地址
-              cityName,
-              // 国标收货地址第三级地址
-              countyName,
-              // 详细收货地址信息
-              detailInfo,
-              // 收货地址国家码
-              // nationalCode,
-              // 邮编
-              postalCode
-            } = res
+            console.log('[dev]', 'scancode', res)
 
-            this.address = [
-              provinceName,
-              cityName,
-              countyName,
-              detailInfo,
-              postalCode
-            ].join(' ')
-            this.receiver = userName || this.receiver
-            this.phone = telNumber || this.phone
-            this.$apply()
+            if (res.result) {
+              this.$post({
+                url: service.book_store,
+                data: {
+                  'isbn': res.result
+                }
+              }, {
+                success: ({code, data}) => {
+                  wx.reLaunch({url: '/pages/library/book_edit?id=' + data.id})
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loaded = false }
+              })
+            }
           }
         })
       },
-      remove(item) {
-        this.removeCart(item, () => {
-          this.updateBorrowList()
+      scanReturn() {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+            wx.navigateTo({url: '/pages/library/borrow?isbn=' + res.result})
+          }
         })
       },
-      toSubscribe() {
-        wx.navigateTo({url: '/pages/borrow/subscribe'})
-      },
-      goMain() {
-        wx.switchTab({url: '/pages/index'})
-      },
-      typing (type, e) {
-        if (this.isDefined(this[type])) {
-          this[type] = e.detail.value
-        }
+      scanBorrow() {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+
+            if (res.result) {
+              this.$post({
+                url: service.book_store,
+                data: {
+                  'isbn': res.result
+                }
+              }, {
+                success: ({code, data}) => {
+                  wx.navigateTo({url: '/pages/library/book?id=' + data.id})
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loaded = false }
+              })
+            }
+          }
+        })
       }
     }
-
-    updateBorrowList() {
-      if (!this.getNumber(this.borrowCount)) return
-
-      // 获取购物车信息
-      this.getCartList((list) => {
-        const realist = this.getArray(list, [])
-        const lenList = []
-        for (var i = 0; i < +this.borrowCount; i++) {
-          lenList.push(realist[i] || {})
-        }
-        this.borrowList = lenList
-      })
-    }
-
-    components = {
-    }
   }
+
 </script>
 
 <style lang="less">
+@import "../styles/weui/base/fn.wxss";
 @import "../styles/custom/fn.less";
 
-@icon-font-size: 34rpx;
-
-.page-borrow{
-  .borrow-list{
-    .weui-media-box_text{
-      .h4();
-      padding-right: 5em;
-      line-height: 1;
-      vertical-align: middle;
+.borrow{
+  text-align: center;
+  background: #fff;
+  .library-title{
+    .h4();
+    text-align: left;
+    color: #666;
+    padding: 20rpx 40rpx 10rpx;
+  }
+  .library-wrapper{
+    padding: 20rpx 0;
+  }
+  .library-item{
+    position: relative;
+    &:before {
+      .setLeftLine(@weuiCellBorderColor);
+    }
+    &:first-child {
+      &:before {
+        display: none;
+      }
     }
   }
-  .borrow-address{
-    .weui-textarea{
-      width: 600rpx;
-    }
-    .weui-media-box{
-      padding-bottom: 1em;
-    }
-    .weui-media-box__title{
-      padding-bottom: 0.5em;
-    }
-    .reset-pull-right{
-      .h4();
-      top: 15px;
-      bottom: auto;
-      margin-top: -0.5em;
-    }
-    .reset-pull-middle{
-      top: 1em;
-    }
-    .icon-location{
-      width: 1.5em;
-      height: 1.5em;
-    }
-  }
-  .borrow-name-wrapper{
-    display: inline-block;
-    position: absolute;
-    top: 0;
-    left: 15px;
-    right: 15px;
-    bottom: 0;
-    height: 1em;
-    padding-left: @icon-font-size + 15rpx;
-    padding-right: 4em;
+  .item-title{
+    .h3();
     line-height: 1;
-    margin: auto;
   }
-  .borrow-book-name{
-    width: 100%;
-    .text-ellipsis();
-  }
-  .reset-pull-right,
-  .reset-pull-middle{
-    position: absolute;
-    right: 15px;
-    top: 0;
-    bottom: 0;
-    height: 2em;
-    line-height: 2;
-    padding: 0 1em;
-    margin: auto -1em auto 0;
-  }
-  .reset-label-left{
-    color: #999;
-    margin-right:1em;
-    padding-right: 1em;
-    border-right: 1rpx solid @uiBorderColor;
-  }
-  .icon-order-circle,
-  .icon-order-empty{
-    display: inline-block;
-    width: @icon-font-size;
-    height: @icon-font-size;
-    font-size: 90%;
-    line-height: @icon-font-size;
-    border: 1rpx solid transparent;
-    border-radius: 50%;
-    text-align: center;
-  }
-  .icon-order-circle{
-    color: #fff;
-    background: @weuiColorPrimary;
-    border-color: @weuiColorPrimary;
-  }
-  .icon-order-empty{
-    color: #ddd;
-    background: transparent;
-    border-color: #ddd;
-  }
-  .icon-delete{
-    display: inline-block;
-    width: @icon-font-size;
-    height: @icon-font-size;
-    &:before,
-    &:after{
-      content: '';
-      display: inline-block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 2rpx;
-      height: 100%;
-      margin: auto;
-      background: #999;
-      transform: rotate(45deg);
-    }
-    &:after{
-      transform: rotate(-45deg);
-    }
-  }
-}
-
-.page-borrow-tip{
-  .tip-icon{
-    margin-top: 20vh;
+  .mini-btn{
+    margin: 1em auto;
+    margin-left: 5px;
+    margin-right: 5px;
   }
 }
 </style>

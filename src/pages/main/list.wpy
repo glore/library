@@ -9,6 +9,7 @@
       </view>
       <text @tap="clearSearch" class="link link-blue pull-right">清空筛选</text>
     </view>
+    <SearchBar :placeholder="searchText"></SearchBar>
     <BookList :list.sync="list" :loading.sync="loading" :noMore.sync="noMoreList"></BookList>
   </view>
 </template>
@@ -18,6 +19,7 @@
   import { service } from '../../config.js'
   import base from '../../mixins/base'
   import http from '../../mixins/http'
+  import SearchBar from '../../components/searchbar'
   import BookList from '../../components/bookList'
 
   export default class mainList extends wepy.page {
@@ -33,7 +35,13 @@
       list: [],
       page: 1
     }
-
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+    onShow() {
+      // google analytics
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
     onLoad(query) {
       let params = query && query.params
       try {
@@ -83,6 +91,7 @@
       this.page = 1
       this.loading = false
       this.noMoreList = false
+      this.list = []
 
       // 请求推荐列表
       this.updateBookList(this.page)
@@ -145,13 +154,14 @@
           content: `简介: ${book.book.summary}.`,
           image: book.book.image ? book.book.image : 'http://images.ufutx.com/201709/27/97bae3e1de000df7b4b6b28a3195a4de.png',
           tags: [book.book.author ? book.book.author : '无'],
-          status: 1
+          status: book.num > book.lent_num
         }
       })
     }
 
     components = {
-      BookList
+      BookList,
+      SearchBar
     }
   }
 </script>
