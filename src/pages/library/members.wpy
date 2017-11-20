@@ -96,7 +96,7 @@
         var url = service.library + '/members/' + id + '/' + ops
         this.$put({url: url}, {
           success: ({code, data}) => {
-            wx.reLaunch({url: service.library + '/members'})
+            wx.redirectTo({url: '/pages/library/members'})
           },
           fail: ({code, data}) => {}
         })

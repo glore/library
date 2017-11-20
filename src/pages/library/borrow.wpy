@@ -174,7 +174,7 @@
         var url = service.library + '/borrows/' + this.borrow_id + '/' + this.borrow_status
         this.$put({url: url}, {
           success: ({code, data}) => {
-            wx.reLaunch({url: '/pages/library'})
+            wx.navigateBack({delta: 1})
           }
         })
       }

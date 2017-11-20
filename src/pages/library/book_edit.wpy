@@ -1,4 +1,3 @@
-
 <template>
   <view class="borrow-subscribe">
     <view class="weui-cells weui-cells_after-title borrow-address">
@@ -228,7 +227,7 @@
               content: '保存成功, 继续录入',
               success: function(res) {
                 if (res.confirm) {
-                  wx.switchTab({url: '/pages/library'})
+                  wx.navigateTo({url: '/pages/library/library?id=' + data.library_book.library_id})
                 } else if (res.cancel) {
                 }
               }
