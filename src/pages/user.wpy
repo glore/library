@@ -4,7 +4,7 @@
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell">
           <view class="weui-cell__bd userinfo clearfix">
-            <image class="userinfo-avatar" src="{{ user.wechat.avatarUrl }}" background-size="cover"/>
+            <image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"/>
             <view class="userinfo-info">
               <view class="userinfo-nickname">{{ user.name }}(微信名称:{{user.wechat.nickname}})</view>
               <view class="userinfo-status">手机号：{{user.mobile}}</view>

@@ -3,7 +3,7 @@
     <SearchBar :placeholder="searchText"></SearchBar>
     <!--Swiper :list.sync="swipers" height="280"></Swiper-->
     <!--Category :list.sync="categorys" col="4"></Category-->
-    <BookList :list.sync="list" title="图书列表"
+    <BookList :list.sync="list" title="图书推荐"
      :loading.sync="loading" :noMore.sync="noMoreList"></BookList>
   </view>
 </template>
@@ -20,7 +20,7 @@
   export default class pageIndex extends wepy.page {
     mixins = [base, http, user]
     config = {
-      navigationBarTitleText: '友福图书馆',
+      navigationBarTitleText: '首页',
       navigationBarTextStyle: 'white',
       navigationBarBackgroundColor: '#049BFF'
     }
@@ -73,7 +73,7 @@
       this.loading = true
       // 请求列表
       this.$get({
-        url: service.list,
+        url: service.recommend + '/books',
         data: {
           // 默认从1开始为第一页
           page: page
@@ -116,14 +116,14 @@
     // 处理图书列表
     getBooks(data) {
       return this.getArray(data).map((book, index) => {
-        // 拼接示例数据
+        // Return book data
         return {
-          id: book.book.id,
-          title: book.book.title ? book.book.title : '无标题',
-          content: `简介: ${book.book.summary}.`,
-          image: book.book.image ? book.book.image : 'http://images.ufutx.com/201709/27/97bae3e1de000df7b4b6b28a3195a4de.png',
-          tags: [book.book.author ? book.book.author : '无'],
-          status: book.num>book.lent_num
+          id: book.id,
+          title: book.title ? book.title : '无标题',
+          content: `简介: ${book.summary}.`,
+          image: book.image ? book.image : 'http://images.ufutx.com/201709/27/97bae3e1de000df7b4b6b28a3195a4de.png',
+          tags: [book.book_libraries[0].library.name],
+          status: book.book_libraries[0].num > book.book_libraries[0].lent_num
         }
       })
     }

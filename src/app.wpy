@@ -87,10 +87,9 @@ export default class extends wepy.app {
   onShow(options) {
   }
 
-  onShareAppMessage(title) {
-
+  onShareAppMessage(title = '友福图书馆') {
     return {
-      title: title ? title : '友福图书馆',
+      title: title,
       // path: '/pages/index',
       // imageUrl: '',
       success: function(res) {
@@ -125,7 +124,7 @@ export default class extends wepy.app {
       .newTracker('UA-109097480-1')
     }
     var t = this.globalData.tracker
-    t.setScreenName(text?text:name)
+    t.setScreenName(text)
     t.send(new HitBuilders.ScreenViewBuilder().build())
   }
   /* ========================= 更新缓存信息 ======================== */
