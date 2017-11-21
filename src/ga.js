@@ -230,11 +230,11 @@ Tracker.prototype._do_send = function () {
 
     var payloadData = payloads.join("\r\n");
 
-    var apiUrl = 'https://www.google-analytics.com/collect';
+    var apiUrl = 'https://ga.ufutx.net/collect';
     if (payloads.length > 1) {
         console.log(["ga.queue.send.batch", payloadData]);
         //使用批量上报接口
-        apiUrl = 'https://www.google-analytics.com/batch';
+        apiUrl = 'https://ga.ufutx.net/batch';
     } else {
         console.log(["ga.queue.send.collect", payloadData]);
     }

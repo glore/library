@@ -14,10 +14,7 @@
   import base from '../mixins/base'
   import http from '../mixins/http'
   import user from '../mixins/user'
-  import { funImages } from '../mixins/demo'
-//  import Swiper from '../components/swiper'
   import SearchBar from '../components/searchbar'
-//  import Category from '../components/category'
   import BookList from '../components/bookList'
 
   export default class pageIndex extends wepy.page {
@@ -136,9 +133,7 @@
 
     components = {
       SearchBar,
-//      Category,
       BookList
-//      Swiper
     }
   }
 </script>
