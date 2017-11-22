@@ -29,6 +29,7 @@ export default class extends wepy.app {
       'pages/user',
       'pages/user/register',
       'pages/user/borrow',
+      'pages/user/borrows',
       'pages/user/return',
       'pages/user/collect',
       'pages/user/subscribe'

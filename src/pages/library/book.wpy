@@ -123,7 +123,7 @@
         return Boolean(this.book && +this.book.collected)
       },
       isEnabled() {
-        return Boolean(this.book.book_libraries && + this.book.book_libraries[0].lent_num < this.book.book_libraries[0].num)
+        return Boolean(this.book.book_libraries && this.book.book_libraries[0].lent_num < this.book.book_libraries[0].num)
       }
     }
 
