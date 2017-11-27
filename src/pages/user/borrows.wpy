@@ -66,7 +66,6 @@
   import { service } from '../../config.js'
   import http from '../../mixins/http'
   import base from '../../mixins/base'
-  import { funImages } from '../../mixins/demo'
 
   export default class userBorrow extends wepy.page {
     mixins = [base, http]
@@ -100,18 +99,18 @@
           this.borrows = data.data
         },
         fail: ({code, data}) => {},
-        complete: () => {this.loading = false}
+        complete: () => { this.loading = false }
       })
     }
 
     methods = {
-      goRenew(library_id, id) {
-        var url = service.libraries + '/' + library_id + '/borrows/' + id + '/renew' 
+      goRenew(libraryId, id) {
+        var url = service.libraries + '/' + libraryId + '/borrows/' + id + '/renew'
         this.$put({url: url}, {
           success: ({code, data}) => {
             wx.reLaunch({url: `/pages/user/borrows`})
           }
-        })        
+        })
       }
     }
   }
