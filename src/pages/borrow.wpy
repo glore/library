@@ -114,7 +114,7 @@
           url: service.libraries + '/' + this.mylib.id + '/join'
         }, {
           success: ({code, data}) => {
-            wx.reLaunch({url: '/pages/library'})
+            wx.reLaunch({url: '/pages/borrow'})
           },
           fail: ({code, data}) => {},
           complete: () => { this.loaded = false }

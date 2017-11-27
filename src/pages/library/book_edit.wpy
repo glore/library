@@ -227,7 +227,10 @@
               content: '保存成功, 继续录入',
               success: function(res) {
                 if (res.confirm) {
-                  wx.navigateTo({url: '/pages/library/library?id=' + data.library_book.library_id})
+                  // wx.navigateTo({url: '/pages/library/library?id=' + data.library_book.library_id})
+                  wx.navigateBack({
+                    delta: 1
+                  })
                 } else if (res.cancel) {
                 }
               }

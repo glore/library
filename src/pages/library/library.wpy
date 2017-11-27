@@ -115,7 +115,7 @@
           url: service.libraries + '/' + this.mylib.id + '/join'
         }, {
           success: ({code, data}) => {
-            wx.reLaunch({url: '/pages/library'})
+            wx.navigateTo({url: '/pages/library'})
           },
           fail: ({code, data}) => {},
           complete: () => { this.loaded = false }
@@ -134,7 +134,7 @@
                 }
               }, {
                 success: ({code, data}) => {
-                  wx.reLaunch({url: '/pages/library/book_edit?id=' + data.id})
+                  wx.navigateTo({url: '/pages/library/book_edit?id=' + data.id})
                 },
                 fail: ({code, data}) => {},
                 complete: () => { this.loaded = false }
