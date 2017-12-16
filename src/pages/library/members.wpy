@@ -12,16 +12,16 @@
             <view class="weui-cell__ft member-status" wx:if="{{item.status=='MEMBER'}}">成员</view>
             <view class="weui-cell__ft member-status" wx:if="{{item.status=='ADMIN'}}">管理员</view>
             <view class="weui-cell__ft" wx:if="{{item.status=='ADMIN'}}">
-              <button class="weui-btn mini-btn" @tap="memberUpdate({{item.id}}, 'member')" type="primary">降级</button>
+              <button class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'member')" type="primary">降级</button>
             </view>
             <view class="weui-cell__ft" wx:if="{{item.status=='JOIN'}}">
-              <button class="weui-btn mini-btn" @tap="memberUpdate({{item.id}}, 'member')" type="primary">通过</button>
+              <button class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'member')" type="primary">通过</button>
             </view>
             <view class="weui-cell__ft" wx:if="{{item.status=='JOIN'}}">
-              <button class="weui-btn mini-btn" @tap="memberUpdate({{item.id}}, 'reject')"type="danger">删除</button>
+              <button class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'reject')"type="danger">删除</button>
             </view>
             <view class="weui-cell__ft" wx:if="{{item.status=='MEMBER'}}">
-              <button class="weui-btn mini-btn" @tap="memberUpdate({{item.id}}, 'admin')"type="primary">升级</button>
+              <button class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'admin')"type="primary">升级</button>
             </view>
         </view>
     </view>
@@ -92,6 +92,7 @@
         console.log('radio发生change事件，携带value值为：', e.detail.value)
         this.borrow_id = e.detail.value
       },
+
       memberUpdate(id, ops) {
         var url = service.library + '/members/' + id + '/' + ops
         this.$put({url: url}, {

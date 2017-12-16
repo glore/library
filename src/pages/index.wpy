@@ -9,6 +9,7 @@
 </template>
 
 <script>
+
   import wepy from 'wepy'
   import { service } from '../config.js'
   import base from '../mixins/base'
