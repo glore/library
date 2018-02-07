@@ -97,13 +97,11 @@
         console.log('radio发生change事件，携带value值为：', e.detail.value)
         this.borrow_id = e.detail.value
       },
-
       makePhoneCall(mobile) {
         wx.makePhoneCall({
           phoneNumber: mobile
         })
       },
-
       memberUpdate(id, ops) {
         var url = service.library + '/members/' + id + '/' + ops
         this.$put({url: url}, {
