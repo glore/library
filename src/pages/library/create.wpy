@@ -1,0 +1,252 @@
+
+<template>
+  <view class="book-sort">
+
+    <view class="weui-cells__title">每个人都有一个属于自己的图书馆</view>
+    <view class="weui-cells weui-cells_after-title book-address">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label reset-label-left">名称</view>
+        </view>
+        <view class="weui-cell__bd h3  color-red">
+            <input @input="typing('name')" value="{{name}}" placeholder="请输入你的图书馆名称" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label reset-label-left">简介</view>
+        </view>
+        <view class="weui-cell__bd h3  color-red">
+            <input @input="typing('intro')" value="{{intro}}" placeholder="图书馆简单说明" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells__title">图书馆类型</view>
+    <view class="weui-cells weui-cells_after-title">
+        <radio-group @change="radioChange">
+            <label class="weui-cell weui-check__label" wx:for="{{radioItems}}" wx:key="value">
+                <radio class="weui-check" value="{{item.value}}" checked="{{item.checked}}"/>
+
+                <view class="weui-cell__bd">{{item.name}}</view>
+                <view class="weui-cell__ft weui-cell__ft_in-radio" wx:if="{{item.checked}}">
+                    <icon class="weui-icon-radio" type="success_no_circle" size="16"></icon>
+                </view>
+            </label>
+        </radio-group>
+    </view>
+    <button @tap="save" class="weui-btn btn-primary" type="primary">创建</button>
+    <button wx:if="{{id}}" @tap="destroy" class="weui-btn btn-danger" type="danger" >删除</button>
+  </view>
+</template>
+
+<script>
+
+  import wepy from 'wepy'
+  import { service } from '../../config.js'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+
+  export default class bookSort extends wepy.page {
+    mixins = [base, http, user]
+    config = {
+      navigationBarTitleText: '创建属于自己的图书馆',
+      enablePullDownRefresh: false
+    }
+    data = {
+      id: 0,
+      name: '',
+      intro: '',
+      type: 'FAMILY',
+      radioItems: [
+        {name: '个人家庭图书馆', value: 'FAMILY', checked: true},
+        {name: '书店图书馆', value: 'ORG', checked: false},
+        {name: '机构图书馆', value: 'STORE', checked: false}
+      ],      
+      loading: false,
+
+      // 图书分类
+      sort: null
+    }
+
+    computed = {
+    }
+
+    onLoad(options) {
+      this.id = options.id
+    }
+
+    onShow(options) {
+      // 初始化页面数据
+      this.initPageData()
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      // 获取分类列表
+      if (this.id) {
+        this.$get({url: service.sorts + '/' + this.id}, {
+          success: ({code, data}) => {
+            this.name = data.name
+            this.intro = data.intro
+          },
+          complete: () => {
+            this.loading = false
+          }
+        })
+      }
+    }
+
+    methods = {
+      radioChange (e) {
+        console.log('radio发生change事件，携带value值为：', e.detail.value);
+        this.radioItems.forEach(v => {
+          v.checked = v.value === e.detail.value;
+          this.type = v.value
+        });
+      },
+      save() {
+        // 防抖
+        if (this.loading) return
+        if (!this.getString(this.name)) {
+          return this.$alert('温馨提示', '请输入图书馆名称')
+        }
+        if (!this.getString(this.intro)) {
+          return this.$alert('温馨提示', '请输入图书馆简介')
+        }
+
+        const data = {
+          name: this.getString(this.name),
+          intro: this.getString(this.intro),
+          type: this.getString(this.type)
+        }
+        // 开防抖
+        this.loading = true
+
+        // 保存图书信息
+        if (this.id) {
+          this.$put({url: service.host + '/libraries/' + this.id, data: data}, {
+            success: ({code, data}) => {
+              wx.showModal({
+                title: '提示',
+                content: '保存成功',
+                success: function(res) {
+                  if (res.confirm) {
+                    wx.navigateTo({url: '/pages/borrow'})
+                  } else if (res.cancel) {
+                  }
+                }
+              })
+            },
+            complete: () => {
+              this.loading = false
+            }
+          })
+        } else {
+          this.$post({url: service.host + '/libraries', data: data}, {
+            success: ({code, data}) => {
+              wx.showModal({
+                title: '提示',
+                content: '创建成功',
+                success: function(res) {
+                  if (res.confirm) {
+                    wx.navigateTo({url: '/pages/library/library?id=' + data.id})
+                  } else if (res.cancel) {
+                  }
+                }
+              })
+            },
+            fail: ({code, data}) => {
+              // 失败了什么也不做
+            },
+            complete: () => {
+              this.loading = false
+            }
+          })
+        }
+      },
+      destroy() {
+        var self = this
+        wx.showModal({
+          title: '提示',
+          content: '确认删除该图书分类？',
+          success: function(res) {
+            if (res.confirm) {
+              self.$delete({url: service.sorts + '/' + self.id}, {
+                success: ({code, data}) => {
+                  // setTimeout(() => {
+                  wx.showToast({
+                    title: '删除成功',
+                    icon: 'success',
+                    duration: 2000
+                  })
+                  // }, 2000)
+                  wx.navigateTo({url: '/pages/library/sorts'})
+                },
+                fail: ({code, data}) => {
+                  // 失败了什么也不做
+                },
+                complete: () => {
+                  self.loading = false
+                }
+              })
+            } else if (res.cancel) {
+            }
+          }
+        })
+      },
+      typing (type, e) {
+        if (this.isDefined(this[type])) {
+          this[type] = e.detail.value
+        }
+      }
+    }
+  }
+</script>
+
+<style lang="less">
+@import "../../styles/custom/fn.less";
+
+.book-sort{
+  .weui-media-box__title{
+    padding-bottom: 0.5em;
+  }
+  .book-address{
+    margin-bottom: 1em;
+  }
+  .reset-cell-block{
+    display:block !important;
+    padding-bottom:0;
+
+    & + .weui-cell{
+      &:before{
+        display: none;
+      }
+    }
+  }
+
+  .reset-label-left{
+    color: #999;
+    margin-right:1em;
+    padding-right: 1em;
+    border-right: 1rpx solid @uiBorderColor;
+  }
+
+  .reset-label-right{
+    color: #666;
+    line-height: 0;
+    margin-left: 1em;
+    padding-left: 1em;
+  }
+
+  .reset-input{
+    padding: 6px 15px;
+  }
+}
+</style>

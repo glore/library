@@ -1,18 +1,31 @@
 <template>
   <view class="main-detail">
-    
-    <view class="weui-cells__title">{{library.name}}借阅管理</view>
-    <view class="weui-cells weui-cells_after-title"  wx:for="{{borrows}}">
-        <navigator url="/pages/library/borrow?id={{item.id}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-            <view class="weui-cell__hd">
-                <image src="{{item.user.wechat.avatar}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
-            </view>
-            <view class="weui-cell__bd">{{item.user.name}}</view>
-            <view class="weui-cell__ft reserve-status" wx:if="{{item.status=='RESERVE'}}">[预订]</view>
-            <view class="weui-cell__ft borrow-status" wx:if="{{item.status=='BORROW'}}">[借阅]</view>
-            <view class="weui-cell__ft return-status" wx:if="{{item.status=='RETURN'}}">[已还]</view>
-            <view class="weui-cell__ft weui-cell__ft_in-access">{{item.book.title}}</view>
-        </navigator>
+    <view class="weui-panel weui-panel_access">
+      <view class="weui-panel__hd">
+        {{library.name}}借阅管理
+      </view>
+      <view class="weui-panel__bd"  wx:key="index">
+        <navigator  wx:for="{{borrows}}" url="/pages/library/borrow?id={{item.id}}" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+          <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+            <image class="weui-media-box__thumb" src="{{item.user.wechat.avatar}}" />
+          </view>
+          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+            <view class="weui-media-box__title">姓名：{{item.user.name}}</view>
+            <view class="weui-media-box__desc">书名：{{item.book.title}}</view>
+            <view class="weui-media-box__desc">借书时间：{{item.created_at}}</view>
+            <view class="weui-media-box__desc"  wx:if="{{item.status=='BORROW'}}" style="color:red">最迟还书时间：{{item.return_time}}</view>
+            <view class="weui-media-box__desc"  style="color:red" wx:if="{{item.status=='RESERVE'}}"><button type="primary" size="mini">借书管理</button></view>
+            <view class="weui-media-box__desc"  style="color:blue" wx:if="{{item.status=='BORROW'}}"><button type="danger" size="mini">还书管理</button></view>
+            <view class="weui-media-box__desc"  style="color:green" wx:if="{{item.status=='RETURN'}}">还书时间：{{item.updated_at}}</view>
+          </view>
+         </navigator>
+      </view>
+      <!--view class="weui-panel__ft">
+         <navigator class="weui-cell weui-cell_access weui-cell_link" url="/pages/book/comments?id={{book.id}}">
+             <view class="weui-cell__bd">查看评论</view>
+             <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+         </navigator>
+      </view-->
     </view>
   </view>
 </template>
@@ -79,14 +92,6 @@
       checkUser(e) {
         console.log('radio发生change事件，携带value值为：', e.detail.value)
         this.borrow_id = e.detail.value
-      },
-      memberUpdate(id, ops) {
-        var url = service.library + '/borrows/' + id + '/' + ops
-        this.$put({url: url}, {
-          success: ({code, data}) => {
-            wx.reLaunch({url: service.library + '/borrows'})
-          }
-        })
       }
     }
     components = {

@@ -135,7 +135,7 @@ export default class httpMixin extends wepy.mixin {
               this.$apply()
             }else{ */
               wx.showModal({
-                title: '操作错误',
+                title: '提示',
                 content: data.message,
                 showCancel: false
               })

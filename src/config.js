@@ -3,8 +3,8 @@
 ======================================================== */
 
 // 域名
-var host = 'https://library.ufutx.com/api';
-// var host = 'http://library.glore/api';
+// var host = 'https://library.ufutx.com/api';
+var host = 'http://library.glore/api';
 
 export const service = {
     // 登录接口

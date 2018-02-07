@@ -1,0 +1,132 @@
+<template>
+  <view class="comment">
+    <view class="weui-panel weui-panel_access">
+      <view class="weui-panel__hd">
+        图书详情
+      </view>
+      <view class="weui-panel__bd">
+         <navigator  url="/pages/library/book?id={{book.id}}&title={{book.title}}" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+             <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+                 <image class="weui-media-box__thumb" src="{{book.image}}" />
+             </view>
+             <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+                 <view class="weui-media-box__title">{{book.author}}</view>
+                 <view class="weui-media-box__desc">{{book.title}}</view>
+             </view>
+         </navigator>
+      </view>
+      <view class="weui-panel__ft">
+         <navigator class="weui-cell weui-cell_access weui-cell_link" url="/pages/book/comments?id={{book.id}}">
+             <view class="weui-cell__bd">查看评论</view>
+             <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+         </navigator>
+      </view>
+    </view>
+    <view class="weui-cells__title">写图书评论</view>
+    <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell">
+            <view class="weui-cell__bd">
+                <textarea class="weui-textarea" placeholder="请发布该书的评论" @input="typing('content')" value="{{content}}" style="height: 10.3em" />
+                <view class="weui-textarea-counter">{{charNumber}}/140</view>
+            </view>
+        </view>
+    </view>
+    <view class="page__bd page__bd_spacing">
+      <button class="weui-btn" type="primary" @tap="store()">提交</button>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { service } from '../../config.js'
+  import base from '../../mixins/base'
+  import http from '../../mixins/http'
+
+  export default class comment extends wepy.page {
+    mixins = [base, http]
+    config = {
+      navigationBarTitleText: '撰写图书评论',
+      navigationBarTextStyle: 'white',
+      navigationBarBackgroundColor: '#049BFF'
+    }
+    data = {
+      book: {},
+      content: '',
+      loading: false
+
+    }
+
+    onLoad(query) {
+      this.book.id = query && +query.id
+      // this.book.title = query && query.title
+    }
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+    onShow() {
+      this.initPageData()
+      // google analytics
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      // 获取图书详情
+      this.$get({url: service.books + '/' + this.book.id}, {
+        success: ({code, data}) => {
+          this.book = data
+        }
+      })
+    }
+
+    computed = {
+      charNumber () {
+        return this.getString(this.content).length
+      }
+    }
+
+    methods = {
+      typing (type, e) {
+        if (this.isDefined(this[type])) {
+          this[type] = e.detail.value
+        }
+      },
+      store () {
+        // 防抖
+        if (this.loading) return
+        const data = {
+          content: this.getString(this.content)
+        }
+        // 开防抖
+        this.loading = true
+
+        // 保存图书信息
+        this.$post({url: service.books + '/' + this.book.id + '/comments', data: data}, {
+          success: ({code, data}) => {
+            wx.navigateTo({url: '/pages/book/comments?id=' + this.book.id})
+          },
+          fail: ({code, data}) => {
+            // 失败了什么也不做
+          },
+          complete: () => {
+            this.loading = false
+          }
+        })
+      }
+    }
+
+    components = {
+    }
+  }
+</script>
+
+<style lang="less">
+.page-index{
+  // some style
+}
+</style>

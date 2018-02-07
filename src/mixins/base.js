@@ -96,6 +96,8 @@ export default class baseMixin extends wepy.mixin {
   isPhone(str) {
     return /^1\d{10}$/.test(str)
   }
+
+  // 警告框
   $alert(item = '标题', item2) {
     const param = this.isObject(item) ? Object.assign({
       // 首参数为obj
@@ -113,5 +115,10 @@ export default class baseMixin extends wepy.mixin {
     wx.showModal(Object.assign({
       showCancel: false
     }, param))
+  }
+
+  //跳转链接
+  $goto(url) {
+    wx.navigateTo({url: url})
   }
 }

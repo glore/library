@@ -8,10 +8,15 @@ var HitBuilders = ga.HitBuilders
 export default class extends wepy.app {
   config = {
     pages: [
+      // 首页
       'pages/index',
       'pages/main/search',
       'pages/main/list',
       'pages/main/detail',
+
+      // 图书
+      'pages/book/comment',
+      'pages/book/comments',
 
       'pages/library/library',
       'pages/library/borrow',
@@ -21,11 +26,12 @@ export default class extends wepy.app {
       'pages/library/book_edit',
       'pages/library/sorts',
       'pages/library/sort',
+      'pages/library/create',
 
       'pages/borrow',
       'pages/borrow/subscribe',
       'pages/borrow/result',
-
+      // 我的
       'pages/user',
       'pages/user/register',
       'pages/user/borrow',

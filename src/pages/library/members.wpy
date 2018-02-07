@@ -1,29 +1,34 @@
 <template>
   <view class="main-detail">
-    
-    <view class="weui-cells__title">{{library.name}}会员管理</view>
-    <view class="weui-cells weui-cells_after-title">
-        <view class="weui-cell" wx:for="{{members}}">
-            <view class="weui-cell__hd">
-                <image src="{{item.user.wechat.avatar}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+    <view class="weui-panel weui-panel_access">
+      <view class="weui-panel__hd">
+        {{library.name}}会员管理
+      </view>
+      <view class="weui-panel__bd">
+        <view  wx:for="{{members}}"class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+          <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+            <image class="weui-media-box__thumb" src="{{item.user.wechat.avatar}}" />
+          </view>
+          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+            <view class="weui-media-box__title"  @tap="makePhoneCall('{{item.user.mobile}}')" >姓名：{{item.user.name}}</view>
+            <view class="weui-media-box__desc"   @tap="makePhoneCall('{{item.user.mobile}}')" >电话: {{item.user.mobile}}</view>
+            <view class="weui-media-box__desc" wx:if="{{item.status=='JOIN'}}" style="color:red">状态：待审核</view>
+            <view class="weui-media-box__desc" wx:if="{{item.status=='MEMBER'}}" style="color:green">状态：会员</view>
+            <view class="weui-media-box__desc" wx:if="{{item.status=='ADMIN'}}"  style="color:blue">状态：管理员</view>
+            <view class="weui-media-box__info">
+              <button class="weui-btn mini-btn" size="mini" style="margin-right: 10px;" wx:if="{{item.status=='ADMIN'}}" @tap = "memberUpdate({{item.id}}, 'member')" type="primary">移除管理权</button>
+              <block  wx:if="{{item.status=='JOIN'}}">
+                <button  class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'member')" size="mini" style="margin-right: 10px;" type="primary">同意加入</button>
+                <button class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'reject')" size="mini" style="margin-right: 10px;" type="danger">移出图书馆</button>
+              </block>
+              <block  wx:if="{{item.status=='MEMBER'}}">
+                <button class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'admin')" size="mini" style="margin-right: 10px;" type="danger">升为管理同工</button>
+                <button class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'reject')" size="mini" style="margin-right: 10px;" type="danger">移出图书馆</button>
+              </block>
             </view>
-            <view class="weui-cell__bd">{{item.user.name}}</view>
-            <view class="weui-cell__ft member-status member-join" wx:if="{{item.status=='JOIN'}}">待审核</view>
-            <view class="weui-cell__ft member-status" wx:if="{{item.status=='MEMBER'}}">成员</view>
-            <view class="weui-cell__ft member-status" wx:if="{{item.status=='ADMIN'}}">管理员</view>
-            <view class="weui-cell__ft" wx:if="{{item.status=='ADMIN'}}">
-              <button class="weui-btn mini-btn" @tap="memberUpdate({{item.id}}, 'member')" type="primary">降级</button>
-            </view>
-            <view class="weui-cell__ft" wx:if="{{item.status=='JOIN'}}">
-              <button class="weui-btn mini-btn" @tap="memberUpdate({{item.id}}, 'member')" type="primary">通过</button>
-            </view>
-            <view class="weui-cell__ft" wx:if="{{item.status=='JOIN'}}">
-              <button class="weui-btn mini-btn" @tap="memberUpdate({{item.id}}, 'reject')"type="danger">删除</button>
-            </view>
-            <view class="weui-cell__ft" wx:if="{{item.status=='MEMBER'}}">
-              <button class="weui-btn mini-btn" @tap="memberUpdate({{item.id}}, 'admin')"type="primary">升级</button>
-            </view>
+          </view>
         </view>
+      </view>
     </view>
   </view>
 </template>
@@ -92,6 +97,13 @@
         console.log('radio发生change事件，携带value值为：', e.detail.value)
         this.borrow_id = e.detail.value
       },
+
+      makePhoneCall(mobile) {
+        wx.makePhoneCall({
+          phoneNumber: mobile
+        })
+      },
+
       memberUpdate(id, ops) {
         var url = service.library + '/members/' + id + '/' + ops
         this.$put({url: url}, {
