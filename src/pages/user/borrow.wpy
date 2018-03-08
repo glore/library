@@ -65,7 +65,6 @@
   import { service } from '../../config.js'
   import http from '../../mixins/http'
   import base from '../../mixins/base'
-  import { funImages } from '../../mixins/demo'
 
   export default class userBorrow extends wepy.page {
     mixins = [base, http]
@@ -140,7 +139,7 @@
         return {
           id: xlen,
           title: book.title,
-          image: funImages[(xlen + 4) % 8]
+          image: ''
         }
       })
     }

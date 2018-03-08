@@ -5,7 +5,7 @@
         {{library.name}}会员管理
       </view>
       <view class="weui-panel__bd">
-        <view  wx:for="{{members}}"class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+        <view  wx:for="{{members}}" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
           <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
             <image class="weui-media-box__thumb" src="{{item.user.wechat.avatar}}" />
           </view>
@@ -18,7 +18,7 @@
             <view class="weui-media-box__info">
               <button class="weui-btn mini-btn" size="mini" style="margin-right: 10px;" wx:if="{{item.status=='ADMIN'}}" @tap = "memberUpdate({{item.id}}, 'member')" type="primary">移除管理权</button>
               <block  wx:if="{{item.status=='JOIN'}}">
-                <button  class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'member')" size="mini" style="margin-right: 10px;" type="primary">同意加入</button>
+                <button  class="weui-btn mini-btn" @tap="memberUpdate({{item.id}}, 'member')" size="mini" style="margin-right: 10px;" type="primary">同意加入</button>
                 <button class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'reject')" size="mini" style="margin-right: 10px;" type="danger">移出图书馆</button>
               </block>
               <block  wx:if="{{item.status=='MEMBER'}}">

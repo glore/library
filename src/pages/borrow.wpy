@@ -56,7 +56,7 @@
         value: 0,
         url: '/pages/library/borrows',
         subtitle: '已借册数'
-      }],
+      }]
     }
 
     computed = {

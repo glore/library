@@ -22,7 +22,7 @@
         图书评论
       </view>
       <view class="weui-panel__bd">
-         <navigator wx:for="{{comments}}" url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+         <navigator wx:for="{{comments}}" wx:key="item.id" url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
              <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
                  <image class="weui-media-box__thumb" src="{{item.user.wechat.avatar}}" />
              </view>
@@ -45,7 +45,7 @@
   export default class comments extends wepy.page {
     mixins = [base, http]
     config = {
-      navigationBarTitleText: '撰写图书评论',
+      navigationBarTitleText: '图书评论',
       navigationBarTextStyle: 'white',
       navigationBarBackgroundColor: '#049BFF'
     }
@@ -101,6 +101,10 @@
         if (this.isDefined(this[type])) {
           this[type] = e.detail.value
         }
+      },
+      goto(url) {
+        // url jump
+        wx.navigateTo({url: url})
       },
       store () {
         // 防抖

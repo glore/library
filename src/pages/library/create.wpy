@@ -64,7 +64,7 @@
         {name: '个人家庭图书馆', value: 'FAMILY', checked: true},
         {name: '书店图书馆', value: 'ORG', checked: false},
         {name: '机构图书馆', value: 'STORE', checked: false}
-      ],      
+      ],
       loading: false,
 
       // 图书分类
@@ -105,11 +105,11 @@
 
     methods = {
       radioChange (e) {
-        console.log('radio发生change事件，携带value值为：', e.detail.value);
+        console.log('radio发生change事件，携带value值为：', e.detail.value)
         this.radioItems.forEach(v => {
-          v.checked = v.value === e.detail.value;
+          v.checked = v.value === e.detail.value
           this.type = v.value
-        });
+        })
       },
       save() {
         // 防抖
