@@ -156,7 +156,7 @@
                 content: '创建成功',
                 success: function(res) {
                   if (res.confirm) {
-                    wx.navigateTo({url: '/pages/library/library?id=' + data.id})
+                    wx.redirectTo({url: '/pages/library/library?id=' + data.id})
                   } else if (res.cancel) {
                   }
                 }

@@ -2,8 +2,8 @@
 <template>
   <view class="book-sorts">
     <view class="weui-cells__title">
-      图书列表
-      <button class="weui-btn mini-btn" @tap="add" type="primary" size="mini" style="float:right">添加分类</button>
+      {{library.name}}分类列表
+      <button class="weui-btn mini-btn" @tap="add({{library.id}})" type="primary" size="mini" style="float:right">添加分类</button>
     </view>
     <view class="weui-cells__title"></view>
     <view class="weui-cells weui-cells_after-title">
@@ -34,18 +34,19 @@
       loading: false,
 
       // 图书分类
-      sorts: []
+      sorts: [],
+      library_id: 0,
+      library: {}
     }
 
     computed = {
     }
 
     onLoad(options) {
+      this.library_id = options && +options.library_id
     }
 
     onShow(options) {
-      // 清空code
-      this.code = ''
       // 初始化页面数据
       this.initPageData()
     }
@@ -57,9 +58,10 @@
     // 初始化页面数据
     initPageData() {
       // 获取分类列表
-      this.$get({url: service.sorts}, {
+      this.$get({url: service.libraries + '/' + this.library_id + '/sorts'}, {
         success: ({code, data}) => {
-          this.sorts = data
+          this.sorts = data.sorts
+          this.library = data.library
         },
         fail: ({code, data}) => {
           // 失败了什么也不做
@@ -71,8 +73,8 @@
     }
 
     methods = {
-      add() {
-        wx.navigateTo({url: '/pages/library/sort'})
+      add(libraryId) {
+        wx.navigateTo({url: '/pages/library/sort?library_id=' + libraryId})
       },
 
       save() {

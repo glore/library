@@ -8,8 +8,13 @@ var HitBuilders = ga.HitBuilders
 export default class extends wepy.app {
   config = {
     pages: [
-      // 首页
+      // tab-bar
+      'pages/borrow',
       'pages/index',
+      'pages/party',
+      'pages/user',
+
+      // 首页
       'pages/main/search',
       'pages/main/list',
       'pages/main/detail',
@@ -28,11 +33,9 @@ export default class extends wepy.app {
       'pages/library/sort',
       'pages/library/create',
 
-      'pages/borrow',
       'pages/borrow/subscribe',
       'pages/borrow/result',
       // 我的
-      'pages/user',
       'pages/user/register',
       'pages/user/borrow',
       'pages/user/borrows',
@@ -63,6 +66,11 @@ export default class extends wepy.app {
         selectedIconPath: './images/tabbars/icon-shelf-active@2x.png',
         iconPath: './images/tabbars/icon-shelf@2x.png',
         text: '借阅'
+      /* }, {
+        pagePath: 'pages/party',
+        selectedIconPath: './images/tabbars/icon-shelf-active@2x.png',
+        iconPath: './images/tabbars/icon-shelf@2x.png',
+        text: '聚会' */
       }, {
         pagePath: 'pages/user',
         selectedIconPath: './images/tabbars/icon-smile-active@2x.png',

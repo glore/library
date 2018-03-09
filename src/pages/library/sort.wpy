@@ -50,7 +50,8 @@
       loading: false,
 
       // 图书分类
-      sort: null
+      sort: null,
+      libraryId: 0
     }
 
     computed = {
@@ -58,6 +59,7 @@
 
     onLoad(options) {
       this.id = options.id
+      this.libraryId = options.library_id
     }
 
     onShow(options) {
@@ -77,6 +79,7 @@
           success: ({code, data}) => {
             this.name = data.name
             this.intro = data.intro
+            this.libraryId = data.library_id
           },
           complete: () => {
             this.loading = false
@@ -88,6 +91,7 @@
     methods = {
       save() {
         // 防抖
+        var self = this
         if (this.loading) return
         if (!this.getString(this.name)) {
           return this.$alert('温馨提示', '请输入分类名称')
@@ -112,7 +116,7 @@
                 content: '保存成功, 返回列表',
                 success: function(res) {
                   if (res.confirm) {
-                    wx.navigateTo({url: '/pages/library/sorts'})
+                    wx.redirectTo({url: '/pages/library/sorts?library_id=' + self.libraryId})
                   } else if (res.cancel) {
                   }
                 }
@@ -123,14 +127,14 @@
             }
           })
         } else {
-          this.$post({url: service.sorts, data: data}, {
+          this.$post({url: service.libraries + '/' + this.libraryId + '/sorts', data: data}, {
             success: ({code, data}) => {
               wx.showModal({
                 title: '提示',
                 content: '保存成功, 返回列表',
                 success: function(res) {
                   if (res.confirm) {
-                    wx.navigateTo({url: '/pages/library/sorts'})
+                    wx.redirectTo({url: '/pages/library/sorts?library_id=' + self.libraryId})
                   } else if (res.cancel) {
                   }
                 }
@@ -154,14 +158,12 @@
             if (res.confirm) {
               self.$delete({url: service.sorts + '/' + self.id}, {
                 success: ({code, data}) => {
-                  // setTimeout(() => {
                   wx.showToast({
                     title: '删除成功',
                     icon: 'success',
                     duration: 2000
                   })
-                  // }, 2000)
-                  wx.navigateTo({url: '/pages/library/sorts'})
+                  wx.redirectTo({url: '/pages/library/sorts?library_id=' + self.libraryId})
                 },
                 fail: ({code, data}) => {
                   // 失败了什么也不做

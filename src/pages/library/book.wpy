@@ -156,6 +156,7 @@
 
     onLoad(query) {
       this.book.id = query && +query.id
+      this.book.library_id = query && +query.library_id
       this.book.title = query && query.title
     }
     onShareAppMessage(res) {

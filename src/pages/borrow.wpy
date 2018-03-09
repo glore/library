@@ -1,21 +1,78 @@
 <template>
-  <view class="borrow">
-    <view class="library-title">{{mylib.name}}</view>
-    <view class="weui-flex library-wrapper">
-      <block wx:for="{{library}}" wx:key="index">
-          <view @tap="goto({{item.url}})" class="weui-flex__item list-item">
-            <view class="color-666 item-title">{{item.value}}{{item.unit}}</view>
-            <view class="color-bbb h5">{{item.subtitle}}</view>
-          </view>
-      </block>
+    <view class="navbar borrow">
+        <view class="page__bd">
+            <view class="weui-tab">
+                <view class="weui-navbar">
+                    <view wx:for="{{tabs}}" wx:key="*this" id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" @tap="tabClick">
+                        <view class="weui-navbar__title">{{item}}</view>
+                    </view>
+                    <view class="weui-navbar__slider" style="width:{{sliderWidth}}px; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+                </view>
+                <view class="weui-tab__panel">
+                    <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
+                      <!--view class="library-title">我的图书馆
+                        <button class="weui-btn mini-btn" @tap="goto('/pages/library/create')" type="primary" size="mini" style="float:right">新建图书馆</button>
+                      </view>
+                      <view class="weui-cells__title"></view-->
+                      <block  wx:for="{{mylibs}}" wx:key="id">
+                      <view class="library-title">{{item.name}}</view>
+                      <view class="weui-flex library-wrapper">
+                        <view @tap="goto('/pages/library/sorts?library_id={{item.id}}')" class="weui-flex__item list-item">
+                          <view class="color-666 item-title">{{item.sorts_count}}类</view>
+                          <view class="color-bbb h5">馆藏分类</view>
+                        </view>
+                        <view @tap="goto('/pages/library/books?library_id={{item.id}}')" class="weui-flex__item list-item">
+                          <view class="color-666 item-title">{{item.library_books_count}}册</view>
+                          <view class="color-bbb h5">馆藏册数</view>
+                        </view>
+                        <view @tap="goto('/pages/library/members?library_id={{item.id}}')" class="weui-flex__item list-item">
+                          <view class="color-666 item-title">{{item.members_count}}位</view>
+                          <view class="color-bbb h5">读书会友</view>
+                        </view>
+                        <view @tap="goto('/pages/library/borrows?library_id={{item.id}}')" class="weui-flex__item list-item">
+                          <view class="color-666 item-title">{{item.borrows_count}}册</view>
+                          <view class="color-bbb h5">借阅册数</view>
+                        </view>
+                      </view>
+
+                      <button wx:if="{{item.status!='JOIN'}}" @tap="scanBorrow({{item.id}})"  class="weui-btn mini-btn" type="primary" size="mini">扫码借书</button>
+                      <button wx:if="{{item.status=='JOIN'}}" @tap="joinTip({{item.id}})"  class="weui-btn mini-btn" type="primary" size="mini">待审核</button>
+                      <button wx:if="{{item.status=='ADMIN'}}" @tap="goto('/pages/library/library?id={{item.id}}')"  class="weui-btn mini-btn" type="primary" size="mini">管理员入口</button>
+                      </block>
+                    </view>
+                    <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
+                      <view style="padding-bottom:25px; padding-top:5px">
+                        <button class="weui-btn mini-btn" @tap="goto('/pages/library/create')" type="primary" size="mini" style="float:right">创建我的图书馆</button>
+                      </view>
+                      <view class="weui-cells__title"></view>
+                      <view class="page__bd"  wx:for="{{libs}}" wx:key="id">
+                        <view class="weui-form-preview">
+                          <view class="weui-form-preview__hd">
+                              <view class="weui-form-preview__item">
+                                  <view class="weui-form-preview__label">{{item.name}}</view>
+                                  <view class="weui-form-preview__value_in-hd"></view>
+                              </view>
+                          </view>
+                          <view class="weui-form-preview__bd">
+                              <view class="weui-form-preview__item">
+                                  <view class="weui-form-preview__label">藏书</view>
+                                  <view class="weui-form-preview__value">{{item.library_books_count}}册</view>
+                              </view>
+                              <view class="weui-form-preview__item">
+                                  <view class="weui-form-preview__label">会员</view>
+                                  <view class="weui-form-preview__value">{{item.members_count}}位</view>
+                              </view>
+                          </view>
+                          <view class="weui-form-preview__ft">
+                              <navigator url="/pages/library/library?id={{item.id}}" class="weui-form-preview__btn weui-form-preview__btn_primary" hover-class="weui-form-preview__btn_active">进入图书馆</navigator>
+                          </view>
+                        </view>
+                      </view>
+                    </view>
+                </view>
+            </view>
+        </view>
     </view>
-
-    <button wx:if="{{mylib.member && mylib.member.status!='JOIN'}}" @tap="scanBorrow"  class="weui-btn mini-btn" type="primary" size="mini">扫码借书</button>
-    <button wx:if="{{!mylib.member}}" @tap="joinLibrary({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">申请加入</button>
-    <button wx:if="{{mylib.member && mylib.member.status=='JOIN'}}" @tap="joinTip"  class="weui-btn mini-btn" type="primary" size="mini">待审核</button>
-    <button wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}" @tap="goto('/pages/library/library?id=1')"  class="weui-btn mini-btn" type="primary" size="mini">管理员入口</button>
-
-  </view>
 </template>
 
 <script>
@@ -34,29 +91,14 @@
       // 后置显示按钮
       loaded: false,
       // 我的图书馆
-      mylib: {},
-      // 面板数据
-      library: [{
-        unit: '类',
-        value: 0,
-        url: '/pages/main/list',
-        subtitle: '馆藏分类'
-      }, {
-        unit: '册',
-        value: 0,
-        url: '/pages/main/list',
-        subtitle: '馆藏册数'
-      }, {
-        unit: '位',
-        value: 0,
-        url: '/pages/library/members',
-        subtitle: '加入会员'
-      }, {
-        unit: '册',
-        value: 0,
-        url: '/pages/library/borrows',
-        subtitle: '已借册数'
-      }]
+      mylibs: [],
+      libs: [],
+      tabs: ['我的图书馆', '全部图书馆'],
+      activeIndex: 0,
+      sliderOffset: 0,
+      sliderLeft: 0,
+      sliderWidth: 0,
+      screenWidth: 360
     }
 
     computed = {
@@ -65,41 +107,63 @@
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
-    onLoad(query) {
+    async onLoad(query) {
       this.mylib.id = 1 // query && +query.id
+      let _this = this
+      wx.getSystemInfo({success: function (rst) {
+        _this.screenWidth = rst.screenWidth
+      }})
+      this.sliderWidth = _this.screenWidth / this.tabs.length
+      this.sliderLeft = 0
+      this.sliderOffset = _this.screenWidth / this.tabs.length * this.activeIndex
     }
     onShow() {
       this.initPageData()
+      // this.getLibraries()
       // google tracker
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
 
     onPullDownRefresh() {
       this.initPageData()
+      if (this.activeIndex === '1') {
+        this.getLibraries()
+      }
     }
 
     // 初始化页面数据
     initPageData() {
       var self = this
       // 图书馆详情
-      this.$get({url: service.libraries + '/' + this.mylib.id}, {
+      this.$get({url: service.my_libraries}, {
         success: ({code, data}) => {
-          var library = this.library
-          library[0].value = data.sorts_count
-          // library[1].value = data.library_books_count
-          library[1].value = data.books_num
-          library[2].value = data.members_count
-          library[3].value = data.borrows_count
-          this.library = library
-          this.mylib = data
+          this.mylibs = data
           self.config.navigationBarTitleText = data.name
         },
         fail: ({code, data}) => {},
         complete: () => { this.loaded = false }
       })
     }
-
+    getLibraries() {
+      let _this = this
+      this.$get({
+        url: service.libraries
+      }, {
+        success: ({code, data}) => {
+          _this.libs = data.data
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loaded = false }
+      })
+    }
     methods = {
+      tabClick (e) {
+        this.sliderOffset = e.currentTarget.offsetLeft
+        this.activeIndex = e.currentTarget.id
+        if (this.activeIndex === '1') {
+          this.getLibraries()
+        }
+      },
       goto(url) {
         wx.navigateTo({url: url})
       },
@@ -109,6 +173,7 @@
           content: '请等待管理员审核！'
         })
       },
+
       joinLibrary() {
         this.$post({
           url: service.libraries + '/' + this.mylib.id + '/join'
@@ -120,6 +185,7 @@
           complete: () => { this.loaded = false }
         })
       },
+
       scanBook() {
         wx.scanCode({
           success: (res) => {
@@ -150,20 +216,17 @@
           }
         })
       },
-      scanBorrow() {
+      scanBorrow(libraryId) {
         wx.scanCode({
           success: (res) => {
             console.log('[dev]', 'scancode', res)
 
             if (res.result) {
-              this.$post({
-                url: service.book_store,
-                data: {
-                  'isbn': res.result
-                }
+              this.$get({
+                url: service.host + '/libraries/' + libraryId + '/book/isbn/' + res.result
               }, {
                 success: ({code, data}) => {
-                  wx.navigateTo({url: '/pages/library/book?id=' + data.id})
+                  wx.navigateTo({url: '/pages/library/book?id=' + data.library_id})
                 },
                 fail: ({code, data}) => {},
                 complete: () => { this.loaded = false }
@@ -182,10 +245,20 @@
 @import "../styles/custom/fn.less";
 
 .borrow{
+  .page__bd{
+      height: 100%;
+  }
+  .page__bd{
+      padding-bottom: 0;
+  }
+  .weui-tab__content{
+      padding-top: 0px;
+      text-align: center;
+  }
   text-align: center;
   background: #fff;
   .library-title{
-    .h4();
+    .h2();
     text-align: left;
     color: #666;
     padding: 20rpx 40rpx 10rpx;
@@ -209,7 +282,7 @@
     line-height: 1;
   }
   .mini-btn{
-    margin: 1em auto;
+  //  margin: 1em auto;
     margin-left: 5px;
     margin-right: 5px;
   }

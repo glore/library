@@ -2,17 +2,27 @@
   <view class="user-library">
     <view class="library-title">{{mylib.name}}</view>
     <view class="weui-flex library-wrapper">
-      <block wx:for="{{library}}" wx:key="index">
-          <view @tap="goto({{item.url}})" class="weui-flex__item list-item">
-            <view class="color-666 item-title">{{item.value}}{{item.unit}}</view>
-            <view class="color-bbb h5">{{item.subtitle}}</view>
-          </view>
-      </block>
+      <view @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')" class="weui-flex__item list-item">
+        <view class="color-666 item-title">{{mylib.sorts_count}}类</view>
+        <view class="color-bbb h5">馆藏分类</view>
+      </view>
+      <view @tap="goto('/pages/library/books?library_id={{mylib.id}}')" class="weui-flex__item list-item">
+        <view class="color-666 item-title">{{mylib.library_books_count}}册</view>
+        <view class="color-bbb h5">馆藏册数</view>
+      </view>
+      <view @tap="goto('/pages/library/members?library_id={{mylib.id}}')" class="weui-flex__item list-item">
+        <view class="color-666 item-title">{{mylib.members_count}}位</view>
+        <view class="color-bbb h5">读书会友</view>
+      </view>
+      <view @tap="goto('/pages/library/borrows?library_id={{mylib.id}}')" class="weui-flex__item list-item">
+        <view class="color-666 item-title">{{mylib.borrows_count}}册</view>
+        <view class="color-bbb h5">借阅册数</view>
+      </view>
     </view>
 
-    <button wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}" @tap="scanReturn"  class="weui-btn mini-btn" type="primary" size="mini">扫码还书</button>
-    <button wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}" @tap="scanBook"  class="weui-btn mini-btn" type="primary" size="mini">扫码录书</button>
-    <button wx:if="{{mylib.member && mylib.member.status=='MEMBER'}}" @tap="scanBorrow"  class="weui-btn mini-btn" type="primary" size="mini">扫码借书</button>
+    <button wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}" @tap="scanReturn({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">扫码还书</button>
+    <button wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}" @tap="scanBook({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">扫码录书</button>
+    <button wx:if="{{mylib.member && mylib.member.status=='MEMBER'}}" @tap="scanBorrow({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">扫码借书</button>
     <button wx:if="{{!mylib.member}}" @tap="joinLibrary({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">申请加入</button>
     <button wx:if="{{mylib.member && mylib.member.status=='JOIN'}}" @tap="joinTip"  class="weui-btn mini-btn" type="primary" size="mini">待审核</button>
 
@@ -35,29 +45,7 @@
       // 后置显示按钮
       loaded: false,
       // 我的图书馆
-      mylib: {},
-      // 面板数据
-      library: [{
-        unit: '类',
-        value: 0,
-        url: '/pages/library/sorts',
-        subtitle: '馆藏分类'
-      }, {
-        unit: '册',
-        value: 0,
-        url: '/pages/main/list',
-        subtitle: '馆藏册数'
-      }, {
-        unit: '位',
-        value: 0,
-        url: '/pages/library/members',
-        subtitle: '加入会员'
-      }, {
-        unit: '册',
-        value: 0,
-        url: '/pages/library/borrows',
-        subtitle: '已借册数'
-      }]
+      mylib: {}
     }
 
     computed = {
@@ -85,13 +73,6 @@
       // 图书馆详情
       this.$get({url: service.libraries + '/' + this.mylib.id}, {
         success: ({code, data}) => {
-          var library = this.library
-          library[0].value = data.sorts_count
-          // library[1].value = data.library_books_count
-          library[1].value = data.books_num
-          library[2].value = data.members_count
-          library[3].value = data.borrows_count
-          this.library = library
           this.mylib = data
           self.config.navigationBarTitleText = data.name
         },
@@ -102,7 +83,7 @@
 
     methods = {
       goto(url) {
-        wx.navigateTo({url: url})
+        wx.redirectTo({url: url})
       },
       joinTip() {
         wx.showModal({
@@ -121,20 +102,26 @@
           complete: () => { this.loaded = false }
         })
       },
-      scanBook() {
+      scanBook(libraryId) {
         wx.scanCode({
           success: (res) => {
             console.log('[dev]', 'scancode', res)
 
+            /*
+             * todo: get library from douban.
+             * 1. get from douban
+             * 2. save to server
+             * 3. jump to book add modify (if get book information failure)
+             */
             if (res.result) {
               this.$post({
-                url: service.book_store,
+                url: service.libraries + '/' + libraryId + '/books',
                 data: {
                   'isbn': res.result
                 }
               }, {
                 success: ({code, data}) => {
-                  wx.navigateTo({url: '/pages/library/book_edit?id=' + data.id})
+                  wx.navigateTo({url: '/pages/library/book_edit?id=' + data.id + '&library_id=' + libraryId})
                 },
                 fail: ({code, data}) => {},
                 complete: () => { this.loaded = false }
@@ -151,7 +138,7 @@
           }
         })
       },
-      scanBorrow() {
+      scanBorrow(libraryId) {
         wx.scanCode({
           success: (res) => {
             console.log('[dev]', 'scancode', res)
