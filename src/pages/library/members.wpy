@@ -47,6 +47,7 @@
       navigationBarTitleText: '会员管理'
     }
     data = {
+      libraryId: 0,
       library: {},
       members: []
     }
@@ -59,7 +60,7 @@
 
     onLoad(query) {
       this.id = query && +query.id
-      this.isbn = query && +query.isbn
+      this.libraryId = query && +query.library_id
     }
 
     onShow() {
@@ -79,7 +80,7 @@
 
     // 获取图书信息
     getMembers() {
-      var url = service.library + '/members'
+      var url = service.libraries + '/' + this.libraryId + '/members'
       this.$get({url: url}, {
         success: ({code, data}) => {
           this.members = data.members
@@ -103,7 +104,7 @@
         })
       },
       memberUpdate(id, ops) {
-        var url = service.library + '/members/' + id + '/' + ops
+        var url = service.libraries + '/' + this.libraryId + '/members/' + id + '/' + ops
         this.$put({url: url}, {
           success: ({code, data}) => {
             wx.redirectTo({url: '/pages/library/members'})

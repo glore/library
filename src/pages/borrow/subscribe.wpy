@@ -57,7 +57,6 @@
   import http from '../../mixins/http'
   import base from '../../mixins/base'
   import user from '../../mixins/user'
-  import { packages } from '../../mixins/demo'
   import radioCard from '../../components/radioCard'
 
   export default class borrowSubscribe extends wepy.page {
@@ -123,12 +122,12 @@
       // })
 
       // ===== 以下随机示例 =====
-      setTimeout(() => {
+      /* setTimeout(() => {
         this.list = this.getArray(packages)
         this.$getUserInfo((user) => {
           this.phone = this.getString(this.getObject(user.identity).mobile)
         })
-      }, 200)
+      }, 200) */
     }
 
     methods = {

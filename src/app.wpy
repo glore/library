@@ -11,7 +11,7 @@ export default class extends wepy.app {
       // tab-bar
       'pages/borrow',
       'pages/index',
-      'pages/party',
+      // 'pages/party',
       'pages/user',
 
       // 首页

@@ -90,13 +90,13 @@
   // import { service } from '../../config.js'
   import http from '../../mixins/http'
   import base from '../../mixins/base'
-  import cart from '../../mixins/cart'
+  // import cart from '../../mixins/cart'
   import user from '../../mixins/user'
   import Swiper from '../../components/swiper'
   import Screen from '../../components/screen'
 
   export default class mainDetail extends wepy.page {
-    mixins = [base, http, cart, user]
+    mixins = [base, http, /* cart, */ user]
     config = {
       navigationBarTitleText: '图书详情'
     }

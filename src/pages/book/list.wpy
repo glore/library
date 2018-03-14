@@ -13,7 +13,6 @@
   import { service } from '../../config.js'
   import base from '../../mixins/base'
   import http from '../../mixins/http'
-  import { funImages } from '../../mixins/demo'
 //  import Swiper from '../../components/swiper'
   import SearchBar from '../../components/searchbar'
 //  import Category from '../../components/category'
@@ -33,10 +32,10 @@
         {image: '/images/swiper.png', url: '/pages/main/search'}
       ],
       categorys: [
-        {title: '今', image: funImages[0]},
+      /*  {title: '今', image: funImages[0]},
         {title: '晚', image: funImages[1]},
         {title: '吃', image: funImages[2]},
-        {title: '鸡', image: funImages[3]}
+        {title: '鸡', image: funImages[3]} */
       ],
 
       noMoreList: false,

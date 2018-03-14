@@ -171,7 +171,7 @@
           this.num = data.library_book.num
 
           // 分类列表
-          this.list = data.library_book.sorts
+          this.list = data.sorts
           for (var i = 0; i < this.list.length; ++i) {
             this.sorts[i] = this.list[i].name
             if (this.getString(this.list[i].id) === this.getString(this.class_id)) {

@@ -21,7 +21,7 @@
                           <view class="color-666 item-title">{{item.sorts_count}}类</view>
                           <view class="color-bbb h5">馆藏分类</view>
                         </view>
-                        <view @tap="goto('/pages/library/books?library_id={{item.id}}')" class="weui-flex__item list-item">
+                        <view @tap="goto('/pages/main/list?library_id={{item.id}}')" class="weui-flex__item list-item">
                           <view class="color-666 item-title">{{item.library_books_count}}册</view>
                           <view class="color-bbb h5">馆藏册数</view>
                         </view>
@@ -226,7 +226,7 @@
                 url: service.host + '/libraries/' + libraryId + '/book/isbn/' + res.result
               }, {
                 success: ({code, data}) => {
-                  wx.navigateTo({url: '/pages/library/book?id=' + data.library_id})
+                  wx.navigateTo({url: '/pages/library/book?id=' + data.book_id + '&library_id=' + data.library_id})
                 },
                 fail: ({code, data}) => {},
                 complete: () => { this.loaded = false }

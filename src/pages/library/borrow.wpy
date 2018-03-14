@@ -72,6 +72,7 @@
       isbn: false,
       id: 0,
       borrow_id: 0,
+      library_id: 1,
       book: {},
       borrows: []
     }
@@ -104,6 +105,9 @@
     onLoad(query) {
       this.id = query && +query.id
       this.isbn = query && +query.isbn
+      if (query && +query.library_id) {
+        this.library_id = query && +query.library_id
+      }
     }
 
     onShow() {
@@ -123,7 +127,7 @@
 
     // 获取图书信息
     getDetail() {
-      var url = service.library
+      var url = service.libraries + '/' + this.library_id
       if (this.isbn) {
         url = url + '/borrow/isbn/' + this.isbn
       } else {
@@ -171,7 +175,7 @@
         })
       },
       borrowReturn() {
-        var url = service.library + '/borrows/' + this.borrow_id + '/' + this.borrow_status
+        var url = service.libraries + '/' + this.library_id + '/borrows/' + this.borrow_id + '/' + this.borrow_status
         this.$put({url: url}, {
           success: ({code, data}) => {
             wx.navigateBack({delta: 1})

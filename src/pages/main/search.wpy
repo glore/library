@@ -81,7 +81,6 @@
       this.$get({url: service.tags}, {
         success: ({code, data}) => {
           // data = [{
-          //   code: 'demo',
           //   name: 'title',
           //   list: [
           //     {name: 'xxx', value: '1'},

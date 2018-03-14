@@ -130,11 +130,11 @@
           }
         })
       },
-      scanReturn() {
+      scanReturn(libraryId) {
         wx.scanCode({
           success: (res) => {
             console.log('[dev]', 'scancode', res)
-            wx.navigateTo({url: '/pages/library/borrow?isbn=' + res.result})
+            wx.navigateTo({url: '/pages/library/borrow?isbn=' + res.result + '&library_id=' + libraryId})
           }
         })
       },
@@ -151,7 +151,7 @@
                 }
               }, {
                 success: ({code, data}) => {
-                  wx.navigateTo({url: '/pages/library/book?id=' + data.id})
+                  wx.navigateTo({url: '/pages/library/book?id=' + data.id + '&library_id=' + libraryId})
                 },
                 fail: ({code, data}) => {},
                 complete: () => { this.loaded = false }

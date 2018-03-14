@@ -68,8 +68,6 @@ export default class userMixin extends wepy.mixin {
     return user
   }
 
-
-
   /* ========================== 用户方法 ========================== */
   // 获取用户信息
   $getUserInfo(callback) {
