@@ -9,10 +9,12 @@ export default class extends wepy.app {
   config = {
     pages: [
       // tab-bar
+      'pages/collect',
       'pages/borrow',
       'pages/index',
       // 'pages/party',
       'pages/user',
+      'pages/qr',
 
       // 首页
       'pages/main/search',
@@ -52,7 +54,7 @@ export default class extends wepy.app {
       enablePullDownRefresh: true
     },
     tabBar: {
-      color: '#AEADAD',
+      color: '#707070',
       selectedColor: '#049BFF',
       backgroundColor: '#fff',
       borderStyle: 'black',
@@ -62,15 +64,15 @@ export default class extends wepy.app {
         iconPath: './images/tabbars/icon-home.png',
         text: '首页'
       }, {
-        pagePath: 'pages/borrow',
+        pagePath: 'pages/collect',
         selectedIconPath: './images/tabbars/icon-book-active.png',
         iconPath: './images/tabbars/icon-book.png',
         text: '藏书'
       }, {
-        pagePath: 'pages/borrow',
-        selectedIconPath: './images/tabbars/icon-shelf-active@2x.png',
-        iconPath: './images/tabbars/icon-shelf@2x.png',
-        text: '借阅'
+        pagePath: 'pages/qr',
+        selectedIconPath: './images/tabbars/icon-qr-active.png',
+        iconPath: './images/tabbars/icon-qr.png',
+        text: '扫码'
       /* }, {
         pagePath: 'pages/party',
         selectedIconPath: './images/tabbars/icon-shelf-active@2x.png',
@@ -78,8 +80,8 @@ export default class extends wepy.app {
         text: '聚会' */
       }, {
         pagePath: 'pages/borrow',
-        selectedIconPath: './images/tabbars/icon-shelf-active@2x.png',
-        iconPath: './images/tabbars/icon-shelf@2x.png',
+        selectedIconPath: './images/tabbars/icon-book2-active.png',
+        iconPath: './images/tabbars/icon-book2.png',
         text: '借阅'
       }, {
         pagePath: 'pages/user',
