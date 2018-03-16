@@ -108,7 +108,8 @@
         // 保存图书信息
         this.$post({url: service.books + '/' + this.book.id + '/comments', data: data}, {
           success: ({code, data}) => {
-            wx.navigateTo({url: '/pages/book/comments?id=' + this.book.id})
+            // wx.navigateTo({url: '/pages/book/comments?id=' + this.book.id})
+            wx.navigateBack();
           },
           fail: ({code, data}) => {
             // 失败了什么也不做

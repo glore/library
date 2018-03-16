@@ -44,7 +44,7 @@
           keyword: this.inputVal || this.placeholder
         }
         wx.navigateTo({
-          url: `/pages/main/list?params=${JSON.stringify(params)}`
+          url: `/pages/book/list?params=${JSON.stringify(params)}`
         })
       },
       clearInput (cb) {
@@ -65,5 +65,5 @@
 
 .weui-search-bar__cancel-btn {
   color: @weuiColorPrimary;
-}
+  }
 </style>

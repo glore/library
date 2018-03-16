@@ -21,7 +21,7 @@
                           <view class="color-666 item-title">{{item.sorts_count}}类</view>
                           <view class="color-bbb h5">馆藏分类</view>
                         </view>
-                        <view @tap="goto('/pages/main/list?library_id={{item.id}}')" class="weui-flex__item list-item">
+                        <view @tap="goto('/pages/book/list?library_id={{item.id}}')" class="weui-flex__item list-item">
                           <view class="color-666 item-title">{{item.library_books_count}}册</view>
                           <view class="color-bbb h5">馆藏册数</view>
                         </view>
@@ -97,7 +97,7 @@
       activeIndex: 0,
       sliderOffset: 0,
       sliderLeft: 0,
-      sliderWidth: 0,
+      sliderWidth: 180,
       screenWidth: 360
     }
 
@@ -108,7 +108,6 @@
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
     async onLoad(query) {
-      this.mylib.id = 1 // query && +query.id
       let _this = this
       wx.getSystemInfo({success: function (rst) {
         _this.screenWidth = rst.screenWidth

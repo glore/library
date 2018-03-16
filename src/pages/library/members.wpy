@@ -22,7 +22,7 @@
                 <button class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'reject')" size="mini" style="margin-right: 10px;" type="danger">移出图书馆</button>
               </block>
               <block  wx:if="{{item.status=='MEMBER'}}">
-                <button class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'admin')" size="mini" style="margin-right: 10px;" type="danger">升为管理同工</button>
+                <button class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'admin')" size="mini" style="margin-right: 10px;" type="danger">升为管理员</button>
                 <button class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'reject')" size="mini" style="margin-right: 10px;" type="danger">移出图书馆</button>
               </block>
             </view>
@@ -104,10 +104,11 @@
         })
       },
       memberUpdate(id, ops) {
-        var url = service.libraries + '/' + this.libraryId + '/members/' + id + '/' + ops
+        let self = this
+        let url = service.libraries + '/' + this.libraryId + '/members/' + id + '/' + ops
         this.$put({url: url}, {
           success: ({code, data}) => {
-            wx.redirectTo({url: '/pages/library/members'})
+            wx.redirectTo({url: '/pages/library/members?library_id=' + self.libraryId})
           },
           fail: ({code, data}) => {}
         })
