@@ -1,10 +1,10 @@
 <template>
   <view class="qr">
     <view class="qr_isbn">
-      <input type="number" placeholder="请输入ISBN" bindblur="ReferBook"/>
+      <input type="number"  confirm-type="search" placeholder="请输入ISBN" bindblur="ReferBook" />
       <!--<button type="primary" size="mini">识别</button>-->
     </view>
-    <view wx:if="{{Show}}" class="{{ShowAnimation ? 'BookList_animation' : ''}}" style="margin-top: -50rpx">
+    <view wx:if="{{Show}}" class="BookList {{ShowAnimation ? 'BookList_animation' : ''}}" style="margin-top: -50rpx;background: none">
       <button class=" flo_r" type="primary" size="mini" @tap="addcollect()" style="margin-right: 20rpx">一键收藏</button>
       <view class="clearfloat"></view>
     </view>
@@ -193,22 +193,25 @@
         })
       },
       deletecollect(_id) {
-        console.log(this.BookId)
-        console.log(this.libraries)
+        let librariearray = []
+        let ids = []
         for (let i = 0; i < this.libraries.length; i++) {
-          if (_id === this.libraries[i].id) {
-            console.log(i)
-            this.libraries.splice(i, 1)
-            this.libraries.length == 0 ? this.Show = false : ''
+          if (this.libraries[i].id !== _id) {
+            librariearray.push(this.libraries[i])
           }
         }
         for (let j = 0; j < this.BookId.length; j++) {
-          if (_id === this.BookId[j]) {
-            console.log(j)
-            this.BookId.splice(j, 1)
+          if (this.BookId[j] !== _id) {
+            ids.push(this.BookId[j])
           }
         }
+        if (librariearray.length == 0) {
+          this.Show = false
+        }
+        this.libraries = librariearray
+        this.BookId = ids
         console.log(this.BookId)
+        console.log(this.libraries)
       },
       inputChange(e) {
         this.EditTitle = e.detail.value
@@ -282,11 +285,11 @@
               }, {
                 success: ({code, data}) => {
                   if (code == 0 && data.image) {
-//                    that.ShowAnimation = false
-                    that.Show = true
-                    that.ShowEdit = false
                     that.libraries.unshift(data)
                     that.BookId.push(data.id)
+                    that.ShowAnimation = false
+                    that.Show = true
+                    that.ShowEdit = false
                   }
                 },
                 fail: ({code, data}) => {

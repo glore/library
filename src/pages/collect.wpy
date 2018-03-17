@@ -26,7 +26,6 @@
         <view class="font_28 ellipsis_1">{{item.title}}</view>
         <view class="font_26 ellipsis_2" >简介：{{item.summary}}</view>
         <text class="font_26">作者：{{item.author}}</text>
-        <!--<button class=" flo_r" type="primary" size="mini" @tap="addcollect()" style="margin-top: 22rpx">加入收藏</button>-->
       </view>
       <view class="clearfloat"></view>
     </view>
@@ -79,17 +78,19 @@
     }
     // 初始化页面数据
     initPageData() {
+      let that = this
       this.$get({url: service.user}, {
         success: ({code, data}) => {
-          this.user = data.user
-          this.libraries = data.libraries
+          that.user = data.user
+          that.libraries = data.libraries
         }
       })
-      this.page = 1
+      that.page = 1
       // 请求列表
       this.updateBookList(this.page)
     }
     updateBookList(page) {
+      let that = this
 //      if (this.loading || this.noMoreList) return
 //      this.loading = true
       // 请求列表
@@ -100,7 +101,7 @@
         }
       }, {
         success: ({code, data}) => {
-          this.noMoreList = false
+          that.noMoreList = false
           if (data.current_page > data.last_page) {
 //            this.noMoreList = true
             return
@@ -108,17 +109,20 @@
           data = data.data
           // 请求到空列表后就认为没有更多了
           if (this.isArray(data) && data.length === 0) {
-            this.noMoreList = true
+            that.noMoreList = true
             return
           }
-          if (this.list.length === 0 || this.page === 1) {
-            this.list = data
+          if (that.list.length === 0 || that.page === 1) {
+            that.list = data
           } else {
-            // 添加到列表中
-            this.list = [
-              ...this.list,
-              ...this.getBooks(data)
-            ]
+            data.map(function (item, index) {
+              that.list.push(item)
+            })
+//            // 添加到列表中
+//            this.list = [
+//              ...this.list,
+//              ...this.getBooks(data)
+//            ]
           }
           // 成功了就增加一页
           this.page += 1
