@@ -20,9 +20,10 @@
   import base from '../../mixins/base'
   import http from '../../mixins/http'
   import BookList from '../../components/bookList'
+  import ShareMessage from '../../mixins/ShareMessage'
 
   export default class userCollect extends wepy.page {
-    mixins = [base, http]
+    mixins = [base, http, ShareMessage]
     config = {
       navigationBarTitleText: '收藏图书',
       enablePullDownRefresh: false

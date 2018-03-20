@@ -23,7 +23,7 @@
       </view>
       <view class=" flo_r">
         <button  type="primary" size="mini" @tap="addbook()" style="margin:22rpx">保存</button>
-        <button class=" flo_r" type="warn" size="mini" @tap="DeleteEdit()" style="margin: 22rpx">取消</button>
+        <button class="flo_r" type="warn" size="mini" @tap="DeleteEdit()" style="margin: 22rpx">取消</button>
       </view>
       <view class="clearfloat"></view>
     </view>
@@ -35,7 +35,7 @@
         <view class="font_28 ellipsis_1">{{item.title}}</view>
         <view class="font_26 ellipsis_3" style="min-height: 120rpx">简介：{{item.summary}}</view>
         <text class="font_26">作者：{{item.author}}</text>
-        <button class="flo_r" type="warn" size="mini" @tap="deletecollect({{item.id}})" style="margin-top: 22rpx">删除</button>
+        <button class="flo_r" type="warn" size="mini" @tap="deletecollect({{item.id}})" style="margin-top: 22rpx;margin-right: 8rpx">删除</button>
       </view>
       <view class="clearfloat"></view>
     </view>
@@ -326,10 +326,10 @@
                     duration: 1500
                   })
 //                  if (code === 1) {
-                    that.ShowEdit = true
-                    if (this.libraries.length == 0) {
-                      this.Show = false
-                    }
+                  that.ShowEdit = true
+                  if (this.libraries.length == 0) {
+                    this.Show = false
+                  }
 //                  }
                 },
                 complete: () => { this.loaded = false }

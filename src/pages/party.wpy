@@ -13,9 +13,10 @@
   import user from '../mixins/user'
   import SearchBar from '../components/searchbar'
   import BookList from '../components/bookList'
+  import ShareMessage from '../mixins/ShareMessage'
 
   export default class pageIndex extends wepy.page {
-    mixins = [base, http, user]
+    mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '聚会',
       navigationBarTextStyle: 'white',

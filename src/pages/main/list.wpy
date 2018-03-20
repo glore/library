@@ -21,9 +21,10 @@
   import http from '../../mixins/http'
   import SearchBar from '../../components/searchbar'
   import BookList from '../../components/bookList'
+  import ShareMessage from '../../mixins/ShareMessage'
 
   export default class mainList extends wepy.page {
-    mixins = [base, http]
+    mixins = [base, http, ShareMessage]
     config = {
       navigationBarTitleText: '查找图书'
     }

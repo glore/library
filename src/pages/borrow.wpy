@@ -81,9 +81,10 @@
   import http from '../mixins/http'
   import base from '../mixins/base'
   import user from '../mixins/user'
+  import ShareMessage from '../mixins/ShareMessage'
 
   export default class Borrow extends wepy.page {
-    mixins = [base, http, user]
+    mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '友福图书馆'
     }
