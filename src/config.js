@@ -3,7 +3,7 @@
 ======================================================== */
 // 域名
 var host = 'https://library.ufutx.com/api'
-
+// 域名
 export const service = {
     // 登录接口
     login: `${host}/login/wechat`,
