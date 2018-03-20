@@ -10,6 +10,8 @@ export default class extends wepy.app {
     pages: [
       // tab-bar
       'pages/index',
+      'pages/collect',
+      'pages/qr',
       'pages/borrow',
       // 'pages/party',
       'pages/user',
@@ -21,9 +23,10 @@ export default class extends wepy.app {
 
       // 图书
       'pages/book/comment',
-      'pages/book/comments',
+      'pages/book/comments',      
       'pages/book/list',
       'pages/book/detail',
+
 
       'pages/library/library',
       'pages/library/borrow',
@@ -54,29 +57,39 @@ export default class extends wepy.app {
       enablePullDownRefresh: true
     },
     tabBar: {
-      color: '#AEADAD',
+      color: '#707070',
       selectedColor: '#049BFF',
       backgroundColor: '#fff',
       borderStyle: 'black',
       list: [{
         pagePath: 'pages/index',
-        selectedIconPath: './images/tabbars/icon-mark-active@2x.png',
-        iconPath: './images/tabbars/icon-mark@2x.png',
+        selectedIconPath: './images/tabbars/icon-home-active.png',
+        iconPath: './images/tabbars/icon-home.png',
         text: '首页'
       }, {
-        pagePath: 'pages/borrow',
-        selectedIconPath: './images/tabbars/icon-shelf-active@2x.png',
-        iconPath: './images/tabbars/icon-shelf@2x.png',
-        text: '借阅'
+        pagePath: 'pages/collect',
+        selectedIconPath: './images/tabbars/icon-book-active.png',
+        iconPath: './images/tabbars/icon-book.png',
+        text: '藏书'
+      }, {
+        pagePath: 'pages/qr',
+        selectedIconPath: './images/tabbars/icon-qr-active.png',
+        iconPath: './images/tabbars/icon-qr.png',
+        text: '扫码'
       /* }, {
         pagePath: 'pages/party',
         selectedIconPath: './images/tabbars/icon-shelf-active@2x.png',
         iconPath: './images/tabbars/icon-shelf@2x.png',
         text: '聚会' */
       }, {
+        pagePath: 'pages/borrow',
+        selectedIconPath: './images/tabbars/icon-book2-active.png',
+        iconPath: './images/tabbars/icon-book2.png',
+        text: '借阅'
+      }, {
         pagePath: 'pages/user',
-        selectedIconPath: './images/tabbars/icon-smile-active@2x.png',
-        iconPath: './images/tabbars/icon-smile@2x.png',
+        selectedIconPath: './images/tabbars/icon-my-active.png',
+        iconPath: './images/tabbars/icon-my.png',
         text: '我的'
       }]
     },

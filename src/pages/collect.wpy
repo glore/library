@@ -1,0 +1,289 @@
+<template>
+  <view class="page-user page-index">
+    <view class="weui-panel">
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell">
+          <view class="weui-cell__bd userinfo clearfix">
+            <image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"/>
+            <view class="userinfo-info">
+              <view class="userinfo-nickname">{{ user.name }}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="user_btn">
+      <view class="page_btn">
+        <button class="weui-btn" type="primary"  open-type="share" size="mini">转发分享</button>
+        <button class=" flo_r" type="primary" size="mini" @tap="scanBook({{mylib.id}})">扫码录书</button>
+      </view>
+    </view>
+    <view class="BookList" wx:for="{{list}}" wx:key="*this"  @tap="scanBorrow({{item.id}})">
+      <view class="flo_l">
+        <image src="{{item.image}}" mode="aspectFit" />
+      </view>
+      <view class="flo_l" style="width: 65%">
+        <view class="font_28 ellipsis_1">{{item.title}}</view>
+        <view class="font_26 ellipsis_2" >简介：{{item.summary}}</view>
+        <text class="font_26">作者：{{item.author}}</text>
+      </view>
+      <view class="clearfloat"></view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import http from '../mixins/http'
+  import base from '../mixins/base'
+  import user from '../mixins/user'
+  import { service } from '../config.js'
+
+  export default class pageCollect extends wepy.page {
+    mixins = [base, http, user]
+    config = {
+      navigationBarTitleText: '藏书阁',
+      enablePullDownRefresh: false
+    }
+    data = {
+      libraries: {},
+      user: {},
+      nickName: '加载中...',
+      list: []
+
+    }
+
+    computed = {
+      nickName() {
+        return (user && user.wechat && user.wechat.nickname) ? user.wechat.nickname : '未授权用户'
+      }
+    }
+    onShow() {
+      // 初始化页面数据
+      this.initPageData()
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+    onPullDownRefresh() {
+      this.noMoreList = false
+//      wx.startPullDownRefresh()
+    }
+    onReachBottom() {
+      setTimeout(() => {
+        this.updateBookList(this.page)
+        this.$apply()
+      }, 200)
+    }
+    // 初始化页面数据
+    initPageData() {
+      let that = this
+      this.$get({url: service.user}, {
+        success: ({code, data}) => {
+          that.user = data.user
+          that.libraries = data.libraries
+        }
+      })
+      that.page = 1
+      // 请求列表
+      this.updateBookList(this.page)
+    }
+    updateBookList(page) {
+      let that = this
+//      if (this.loading || this.noMoreList) return
+//      this.loading = true
+      // 请求列表
+      this.$get({
+        url: service.my_books,
+        data: {
+          page: page
+        }
+      }, {
+        success: ({code, data}) => {
+          that.noMoreList = false
+          if (data.current_page > data.last_page) {
+//            this.noMoreList = true
+            return
+          }
+          data = data.data
+          // 请求到空列表后就认为没有更多了
+          if (this.isArray(data) && data.length === 0) {
+            that.noMoreList = true
+            return
+          }
+          if (that.list.length === 0 || that.page === 1) {
+            that.list = data
+          } else {
+            data.map(function (item, index) {
+              that.list.push(item)
+            })
+//            // 添加到列表中
+//            this.list = [
+//              ...this.list,
+//              ...this.getBooks(data)
+//            ]
+          }
+          // 成功了就增加一页
+          this.page += 1
+        },
+        fail: ({code, data}) => {
+          // 失败了什么也不做
+        },
+        complete: () => {
+          this.loading = false
+        }
+      })
+    }
+    methods = {
+      scanBorrow(_id) {
+        wx.navigateTo({url: '/pages/library/book?id=' + _id})
+      },
+      scanBook(libraryId) {
+        let that = this
+        wx.scanCode({
+          success: (res) => {
+            if (res.result) {
+              this.$post({
+                url: service.books,
+                data: {
+                  'isbn': res.result
+                }
+              }, {
+                success: ({code, data}) => {
+                  if (data.title) {
+                    let id = []
+                    id.push(data.id)
+                    this.$post({
+                      url: service.books_collect,
+                      data: {
+                        'ids': id
+                      }
+                    }, {
+                      success: ({code, data}) => {
+                        setTimeout(() => {
+                          wx.showToast({
+                            title: '已加入收藏',
+                            icon: 'none',
+                            duration: 1500
+                          })
+                          that.updateBookList(that.page)
+                        }, 800)
+                      },
+                      fail: (res) => {},
+                      complete: () => { this.loaded = false }
+                    })
+                  } else {
+                    wx.showToast({
+                      title: '未能识别此书...',
+                      image: '../images/icon/icon-error.png',
+                      duration: 1500
+                    })
+                  }
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loaded = false }
+              })
+            }
+          },
+          fail: (res) => {
+//            wx.showToast({
+//              title: '未能识别出',
+//              image: '../images/icon/icon-error.png',
+//              duration: 1500
+//            })
+          }
+        })
+      }
+    }
+
+    components = {
+    }
+  }
+</script>
+
+<style lang="less">
+  @import "../styles/custom/fn.less";
+
+  .page-user{
+    @userinfoHeight: 100rpx;
+    @userinfoSpace: 8rpx;
+
+    .userinfo{
+      padding: 20rpx 32rpx;
+    }
+
+    .userinfo-avatar {
+      float: left;
+      width: 120rpx;
+      height: 120rpx;
+      border-radius: 50%;
+    }
+
+    // space + space
+    .userinfo-info {
+      float: left;
+      line-height: 1;
+      padding: @userinfoSpace 0;
+      margin-left: 3 * @userinfoSpace;
+    }
+
+    // text + space + text
+    .userinfo-nickname {
+      /*color: @uiColorGreen;*/
+      font-size: (@userinfoHeight - 4 * @userinfoSpace) * (16 / 30);
+      margin-top: 5 * @userinfoSpace;
+      font-weight: 500;
+    }
+    .userinfo-status {
+      color: #999;
+      font-size: (@userinfoHeight - 4 * @userinfoSpace) * (14 / 30);
+    }
+    .page_btn {
+      padding:10rpx 60rpx;
+      border-bottom: 2rpx solid #e5e3e4;
+      margin-top: 8rpx;
+    }
+    .user_btn {
+      background: white;
+      padding:10rpx 60rpx;
+      margin-top: 8rpx;
+    }
+    .flo_r {float: right}
+    .weui-cell {
+      padding: 0;
+    }
+  }
+  .BookList {
+    background: white;
+    box-shadow: 1rpx 12rpx 12rpx #d3d3d3;
+    padding: 6rpx 0;
+    overflow: hidden;
+    margin: 12rpx;
+  }
+  image {
+    width: 240rpx;
+    height: 240rpx;
+  }
+  .inline-block {display: inline-block}
+  .flo_l {float: left}
+  .flo_r {float: right}
+  .font_26 {font-size: 26rpx}
+  .font_28 {font-size: 28rpx}
+  .clearfloat {clear:both}
+  .white {background: white}
+  .ellipsis_2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .ellipsis_1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+</style>

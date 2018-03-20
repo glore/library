@@ -130,16 +130,16 @@ export default class httpMixin extends wepy.mixin {
         } else {
           // 失败回调：其他情况
           return setTimeout(() => {
-            /* if(this.isFunction(fail)) {
+            if (this.isFunction(fail)) {
               fail({statusCode, ...data})
               this.$apply()
-            }else{ */
+            }else{
               wx.showModal({
                 title: '提示',
                 content: data.message,
                 showCancel: false
               })
-            // }
+            }
           })
         }
 
