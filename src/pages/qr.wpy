@@ -34,7 +34,8 @@
         <view class="font_26 ellipsis_3" >简介： <textarea type="text" auto-height  placeholder="请填写书的简介" class="upload-text" style="min-height: 180rpx;padding: 12rpx;" bindinput="textareaChange"/></view>
       </view>
       <view class=" flo_r">
-        <button  type="primary" size="mini" @tap="addbook()" style="margin:30rpx">录入收藏</button>
+        <!--<button  type="primary" size="mini" @tap="addbook()" style="margin:30rpx">录入收藏</button>-->
+        <button class=" flo_r" type="warn" size="mini" style="margin: 22rpx">取消</button>
       </view>
       <view class="clearfloat"></view>
     </view>
@@ -49,10 +50,11 @@
   import http from '../mixins/http'
   import base from '../mixins/base'
   import user from '../mixins/user'
+  import ShareMessage from '../mixins/ShareMessage'
   import { service } from '../config.js'
 
   export default class pageQr extends wepy.page {
-    mixins = [base, http, user]
+    mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '扫码',
       enablePullDownRefresh: false
@@ -74,10 +76,6 @@
     }
     onShow() {
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
-    }
-
-    onPullDownRefresh() {
-      wx.startPullDownRefresh()
     }
     uploadFiles(filePaths, successUp, failUp, i, length) {
       let that = this
@@ -188,7 +186,14 @@
               that.libraries = []
             }, 800)
           },
-          fail: (res) => {},
+          fail: (res) => {
+            wx.showToast({
+              title: '出错了...',
+              image: '../images/icon/icon-error.png',
+              duration: 1500
+            })
+            that.libraries = []
+          },
           complete: () => { this.loaded = false }
         })
       },
@@ -235,6 +240,12 @@
             image: '../images/icon/icon-error.png',
             duration: 1500
           })
+        } else if (!that.EditAuthor) {
+          wx.showToast({
+            title: '请填写作者',
+            image: '../images/icon/icon-error.png',
+            duration: 1500
+          })
         } else if (!that.EditTitle) {
           wx.showToast({
             title: '请填写书的名字',
@@ -252,9 +263,11 @@
             url: service.books,
             data: {
               'image': that.EditImage,
+              'author': that.EditAuthor,
               'title': that.EditTitle,
               'summary': that.EditSummary,
               'isbn': that.EditIsbn
+//              'isbn': 'E003603'
             }
           }, {
             success: ({code, data}) => {
@@ -271,6 +284,7 @@
       },
       scanBook() {
         let that = this
+        that.Show = false
         that.ShowAnimation = false
         wx.scanCode({
           success: (res) => {
@@ -279,7 +293,7 @@
               this.$post({
                 url: service.books,
                 data: {
-//                  'isbn': 1234645
+//                  'isbn': 'E003603'
                   'isbn': that.EditIsbn
                 }
               }, {

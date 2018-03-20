@@ -97,10 +97,11 @@
   import http from '../mixins/http'
   import base from '../mixins/base'
   import user from '../mixins/user'
+  import ShareMessage from '../mixins/ShareMessage'
   import { service } from '../config.js'
 
   export default class pageUser extends wepy.page {
-    mixins = [base, http, user]
+    mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '我的',
       enablePullDownRefresh: false
@@ -138,6 +139,7 @@
         success: ({code, data}) => {
           this.user = data.user
           this.libraries = data.libraries
+          wx.setStorageSync('openid', data.user.wechat.openid)
         }
       })
     }

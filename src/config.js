@@ -2,7 +2,7 @@
                         小程序配置文件
 ======================================================== */
 var host = 'https://library.ufutx.com/api'
-// var host = 'http/://library.glore/api'
+// var host = 'http://library.glore/api'
 // 域名
 
 export const service = {

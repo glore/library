@@ -29,6 +29,17 @@
       </view>
       <view class="clearfloat"></view>
     </view>
+    <block wx:if="{{loading}}">
+      <view class="weui-loadmore">
+        <view class="weui-loading"></view>
+        <view class="weui-loadmore__tips">正在加载</view>
+      </view>
+    </block>
+    <block wx:if="{{noMore}}">
+      <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+        <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+      </view>
+    </block>
   </view>
 </template>
 
@@ -37,26 +48,31 @@
   import http from '../mixins/http'
   import base from '../mixins/base'
   import user from '../mixins/user'
+  import ShareMessage from '../mixins/ShareMessage'
   import { service } from '../config.js'
 
   export default class pageCollect extends wepy.page {
-    mixins = [base, http, user]
+    mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '藏书阁',
-      enablePullDownRefresh: false
+      enablePullDownRefresh: true
     }
     data = {
       libraries: {},
       user: {},
       nickName: '加载中...',
-      list: []
-
+      list: [],
+      loading: true,
+      noMore: false
     }
 
     computed = {
       nickName() {
         return (user && user.wechat && user.wechat.nickname) ? user.wechat.nickname : '未授权用户'
       }
+    }
+    onPullDownRefresh() {
+      this.updateBookList(this.page)
     }
     onShow() {
       // 初始化页面数据
@@ -66,10 +82,7 @@
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
-    onPullDownRefresh() {
-      this.noMoreList = false
-//      wx.startPullDownRefresh()
-    }
+
     onReachBottom() {
       setTimeout(() => {
         this.updateBookList(this.page)
@@ -83,6 +96,7 @@
         success: ({code, data}) => {
           that.user = data.user
           that.libraries = data.libraries
+          wx.setStorageSync('openid', data.user.wechat.openid)
         }
       })
       that.page = 1
@@ -92,7 +106,7 @@
     updateBookList(page) {
       let that = this
 //      if (this.loading || this.noMoreList) return
-//      this.loading = true
+      this.loading = true
       // 请求列表
       this.$get({
         url: service.my_books,
@@ -101,15 +115,17 @@
         }
       }, {
         success: ({code, data}) => {
-          that.noMoreList = false
+//          that.noMoreList = false
+          that.noMore = false
           if (data.current_page > data.last_page) {
 //            this.noMoreList = true
+            that.noMore = true
             return
           }
           data = data.data
           // 请求到空列表后就认为没有更多了
           if (this.isArray(data) && data.length === 0) {
-            that.noMoreList = true
+            that.noMore = true
             return
           }
           if (that.list.length === 0 || that.page === 1) {
@@ -118,17 +134,17 @@
             data.map(function (item, index) {
               that.list.push(item)
             })
-//            // 添加到列表中
-//            this.list = [
-//              ...this.list,
-//              ...this.getBooks(data)
-//            ]
           }
-          // 成功了就增加一页
-          this.page += 1
+          that.noMore = true
+          that.page += 1
         },
         fail: ({code, data}) => {
-          // 失败了什么也不做
+          wx.showToast({
+            title: '出错了...',
+            image: '../images/icon/icon-error.png',
+            duration: 1500
+          })
+          that.noMore = true
         },
         complete: () => {
           this.loading = false
@@ -264,6 +280,9 @@
   image {
     width: 240rpx;
     height: 240rpx;
+  }
+  .weui-loadmore__tips_in-dot {
+    height:auto;
   }
   .inline-block {display: inline-block}
   .flo_l {float: left}

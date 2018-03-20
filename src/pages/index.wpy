@@ -15,11 +15,12 @@
   import base from '../mixins/base'
   import http from '../mixins/http'
   import user from '../mixins/user'
+  import ShareMessage from '../mixins/ShareMessage'
   import SearchBar from '../components/searchbar'
   import BookList from '../components/bookList'
 
   export default class pageIndex extends wepy.page {
-    mixins = [base, http, user]
+    mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '首页',
       navigationBarTextStyle: 'white',
@@ -45,6 +46,11 @@
       // 初始化页面数据
       // this.userInfo = this.$getUser()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+      this.$get({url: service.user}, {
+        success: ({code, data}) => {
+          wx.setStorageSync('openid', data.user.wechat.openid)
+        }
+      })
     }
 
     onPullDownRefresh() {
