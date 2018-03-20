@@ -5,12 +5,30 @@ export default class ShareMessage extends wepy.mixin {
     from_openid: ''
   };
   onLoad(e) {
+    let that = this
     if(Boolean(e.from_openid)) {
-      wx.showToast({
-        title: e.from_openid,
-        icon: 'none',
-        duration: 1500
-      })
+      // this.$post({
+      //   url: service.books,
+      //   data: {
+      //     'from_openid': that.from_openid
+      //   }
+      // }, {
+      //   success: ({code, data}) => {
+          wx.showToast({
+            title: e.from_openid,
+            icon: 'none',
+            duration: 1500
+          })
+        // },
+        // fail: (res) => {
+        //   wx.showToast({
+        //     title: '出错了。。。',
+        //     icon: 'none',
+        //     duration: 1500
+        //   })
+        // },
+        // complete: () => { this.loaded = false }
+      // })
     }
     wx.showShareMenu({
       withShareTicket: true

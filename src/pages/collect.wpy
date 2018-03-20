@@ -197,7 +197,13 @@
                     })
                   }
                 },
-                fail: ({code, data}) => {},
+                fail: ({code, data}) => {
+                  wx.showToast({
+                    title: '未能识别此书...',
+                    image: '../images/icon/icon-error.png',
+                    duration: 1500
+                  })
+                },
                 complete: () => { this.loaded = false }
               })
             }
