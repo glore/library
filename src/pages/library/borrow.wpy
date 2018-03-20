@@ -15,6 +15,7 @@
           <view>出版社：{{book.publisher}}</view>
           <view>出版时间：{{book.pubdate}}</view>
           <view>内部分类：{{book.sort.name}}</view>
+          <view>藏书地：{{book.library.name}}</view>
         </view>
       </view>
     </view>

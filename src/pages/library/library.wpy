@@ -6,13 +6,13 @@
         <view class="color-666 item-title">{{mylib.sorts_count}}类</view>
         <view class="color-bbb h5">馆藏分类</view>
       </view>
-      <view @tap="goto('/pages/library/books?library_id={{mylib.id}}')" class="weui-flex__item list-item">
+      <view @tap="goto('/pages/book/list?library_id={{mylib.id}}')" class="weui-flex__item list-item">
         <view class="color-666 item-title">{{mylib.library_books_count}}册</view>
         <view class="color-bbb h5">馆藏册数</view>
       </view>
       <view @tap="goto('/pages/library/members?library_id={{mylib.id}}')" class="weui-flex__item list-item">
         <view class="color-666 item-title">{{mylib.members_count}}位</view>
-        <view class="color-bbb h5">读书会友</view>
+        <view class="color-bbb h5">会员数量</view>
       </view>
       <view @tap="goto('/pages/library/borrows?library_id={{mylib.id}}')" class="weui-flex__item list-item">
         <view class="color-666 item-title">{{mylib.borrows_count}}册</view>
@@ -26,6 +26,10 @@
     <button wx:if="{{!mylib.member}}" @tap="joinLibrary({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">申请加入</button>
     <button wx:if="{{mylib.member && mylib.member.status=='JOIN'}}" @tap="joinTip"  class="weui-btn mini-btn" type="primary" size="mini">待审核</button>
 
+  </view>
+  <view class="weui-flex library-wrapper">
+        <button  @tap="gotoTab('/pages/index')"  class="weui-btn mini-btn" type="primary" size="mini">返回主页</button>
+        <button  open-type="share"  class="weui-btn mini-btn" type="primary" size="mini">邀请好友</button>
   </view>
 </template>
 
@@ -45,14 +49,15 @@
       // 后置显示按钮
       loaded: false,
       // 我的图书馆
-      mylib: {}
+      mylib: {},
+      name: '友福图书馆'
     }
 
     computed = {
     }
 
     onShareAppMessage(res) {
-      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+      return this.$parent.onShareAppMessage(this.mylib.name)
     }
     onLoad(query) {
       this.mylib.id = query && +query.id
@@ -60,7 +65,7 @@
     onShow() {
       this.initPageData()
       // google tracker
-      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+      this.$parent.getTracker(this.$root.$name, this.mylib.name)
     }
 
     onPullDownRefresh() {
@@ -69,12 +74,13 @@
 
     // 初始化页面数据
     initPageData() {
-      var self = this
       // 图书馆详情
       this.$get({url: service.libraries + '/' + this.mylib.id}, {
         success: ({code, data}) => {
           this.mylib = data
-          self.config.navigationBarTitleText = data.name
+          wx.setNavigationBarTitle({
+            title: data.name // 页面标题为路由参数
+          })
         },
         fail: ({code, data}) => {},
         complete: () => { this.loaded = false }
@@ -83,7 +89,10 @@
 
     methods = {
       goto(url) {
-        wx.redirectTo({url: url})
+        wx.navigateTo({url: url})
+      },
+      gotoTab(url) {
+        wx.switchTab({url: url})
       },
       joinTip() {
         wx.showModal({
@@ -92,11 +101,12 @@
         })
       },
       joinLibrary() {
+        let self = this
         this.$post({
           url: service.libraries + '/' + this.mylib.id + '/join'
         }, {
           success: ({code, data}) => {
-            wx.navigateTo({url: '/pages/library'})
+            wx.navigateTo({url: '/pages/library/library?id=' + self.mylib.id})
           },
           fail: ({code, data}) => {},
           complete: () => { this.loaded = false }

@@ -91,7 +91,6 @@
     methods = {
       save() {
         // 防抖
-        var self = this
         if (this.loading) return
         if (!this.getString(this.name)) {
           return this.$alert('温馨提示', '请输入分类名称')
@@ -116,7 +115,8 @@
                 content: '保存成功, 返回列表',
                 success: function(res) {
                   if (res.confirm) {
-                    wx.redirectTo({url: '/pages/library/sorts?library_id=' + self.libraryId})
+                    // wx.redirectTo({url: '/pages/library/sorts?library_id=' + self.libraryId})
+                    wx.navigateBack({deta: 2})
                   } else if (res.cancel) {
                   }
                 }
@@ -134,7 +134,8 @@
                 content: '保存成功, 返回列表',
                 success: function(res) {
                   if (res.confirm) {
-                    wx.redirectTo({url: '/pages/library/sorts?library_id=' + self.libraryId})
+                    wx.navigateBack({deta: 2})
+                    // wx.redirectTo({url: '/pages/library/sorts?library_id=' + self.libraryId})
                   } else if (res.cancel) {
                   }
                 }
@@ -163,7 +164,7 @@
                     icon: 'success',
                     duration: 2000
                   })
-                  wx.redirectTo({url: '/pages/library/sorts?library_id=' + self.libraryId})
+                  wx.navigateBack({deta: 2})
                 },
                 fail: ({code, data}) => {
                   // 失败了什么也不做

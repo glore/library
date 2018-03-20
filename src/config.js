@@ -1,9 +1,8 @@
 /* ========================================================
                         小程序配置文件
 ======================================================== */
-var host = 'https://library.ufutx.com/api'
-// var host = 'http://library.glore/api'
 // 域名
+var host = 'https://library.ufutx.com/api'
 
 export const service = {
     // 登录接口
