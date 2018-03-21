@@ -11,13 +11,10 @@ export const service = {
     register: `${host}/wechat/register`,
     // 注册发短信接口
     send_register: `${host}/sms/register`,
-
     //用户
     user: `${host}/user`,
-
     //借阅书籍
     reserve: `${host}/libraries/books`,
-
     // 列表接口 GET
     list: `${host}/books`,
     // 图书馆接口

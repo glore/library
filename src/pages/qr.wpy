@@ -40,7 +40,11 @@
       <view class="clearfloat"></view>
     </view>
     <view class="qr_btn">
-      <view class="qr_btn_animation"  @tap="scanBook()">扫一扫</view>
+      <form bindsubmit="formSubmit" report-submit>
+        <button formType="submit" class="btn" data-type="click">
+          <view class="qr_btn_animation"  @tap="scanBook()">扫一扫</view>
+        </button>
+      </form>
     </view>
   </view>
 </template>
@@ -73,7 +77,8 @@
       EditTitle: '',
       EditIsbn: '',
       EditSummary: '',
-      EditAuthor: ''
+      EditAuthor: '',
+      formId: []
     }
     onShow() {
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
@@ -115,7 +120,12 @@
       this.EditIsbn = ''
       this.ShowUpload = false
     }
+
     methods = {
+      formSubmit(e) {
+        this.formId.push(e.detail.formId)
+        console.log(this.formId)
+      },
       scanBorrow(_id) {
         wx.navigateTo({url: '/pages/library/book?id=' + _id})
       },
@@ -181,7 +191,8 @@
         this.$post({
           url: service.books_collect,
           data: {
-            'ids': that.BookId
+            'ids': that.BookId,
+            'formId': this.formId
           }
         }, {
           success: ({code, data}) => {

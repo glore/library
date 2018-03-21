@@ -2,16 +2,6 @@ import wepy from 'wepy'
 import { service } from '../config.js'
 
 export default class httpMixin extends wepy.mixin {
-  onLoad(e) {
-    let that = this
-    if(Boolean(e.from_openid)) {
-      wx.showToast({
-        title: e.from_openid,
-        icon: 'none',
-        duration: 1500
-      })
-    }
-  }
   /* =================== [$get 发起GET请求] =================== */
   $get(
     {url = '', headers = {}, data = {} },
@@ -71,7 +61,6 @@ export default class httpMixin extends wepy.mixin {
   ) {
     // 增强体验：加载中
     wx.showNavigationBarLoading()
-
     // 构造请求体
     const request = {
       url: url + '?XDEBUG_SESSION_START=1&from_openid='+ wx.getStorageSync('from_openid'),

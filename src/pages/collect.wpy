@@ -14,8 +14,12 @@
     </view>
     <view class="user_btn">
       <view class="page_btn">
-        <button class="weui-btn" type="primary"  open-type="share" size="mini">转发分享</button>
-        <button class=" flo_r" type="primary" size="mini" @tap="scanBook({{mylib.id}})">扫码录书</button>
+        <form bindsubmit="formSubmit" report-submit>
+          <button formType="submit" class="btn" data-type="click">
+            <button class="weui-btn" type="primary"  open-type="share" size="mini">转发分享</button>
+            <button class="flo_r" type="primary" size="mini" @tap="scanBook({{mylib.id}})">扫码录书</button>
+          </button>
+        </form>
       </view>
     </view>
     <view class="BookList" wx:for="{{list}}" wx:key="*this"  @tap="scanBorrow({{item.id}})">
@@ -63,9 +67,9 @@
       nickName: '加载中...',
       list: [],
       loading: true,
-      noMore: false
+      noMore: false,
+      formId: []
     }
-
     computed = {
       nickName() {
         return (user && user.wechat && user.wechat.nickname) ? user.wechat.nickname : '未授权用户'
@@ -152,6 +156,10 @@
       })
     }
     methods = {
+      formSubmit(e) {
+        this.formId.push(e.detail.formId)
+        console.log(this.formId)
+      },
       scanBorrow(_id) {
         wx.navigateTo({url: '/pages/library/book?id=' + _id})
       },
@@ -173,7 +181,8 @@
                     this.$post({
                       url: service.books_collect,
                       data: {
-                        'ids': id
+                        'ids': id,
+                        'formId': this.formId
                       }
                     }, {
                       success: ({code, data}) => {
@@ -310,5 +319,13 @@
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
+  }
+  .btn {
+    border: none;
+    text-align: left;
+    padding: 0;
+    margin: 0;
+    line-height: 1.5;
+    background: none;
   }
 </style>
