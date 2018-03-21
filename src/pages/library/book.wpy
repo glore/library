@@ -23,6 +23,23 @@
         </view>
       </view>
     </view>
+    <view wx:if="{{book.library}}" class="weui-panel weui-panel_access">
+      <view class="weui-panel__hd">
+        馆藏地 
+      </view>
+      <view class="weui-panel__bd">
+         <navigator url="/pages/library/library?id={{book.library.id}}" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+             <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+                 <image class="weui-media-box__thumb" src="{{book.library.logo}}" />
+             </view>
+             <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+                <view class="weui-media-box__title">{{book.library.name}}</view>
+                <view class="weui-media-box__desc" wx:if="{{book.library.intro}}">{{book.library.intro}}</view>
+             </view>
+             <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+         </navigator>
+      </view>
+    </view>
     <view class="weui-panel weui-panel_access">
       <view class="weui-panel__hd">
         图书评论
@@ -169,7 +186,6 @@
 
     // 获取图书信息
     getDetail() {
-      let self = this
       // 获取图书详情
       this.$get({url: service.libraries + '/' + this.library_id + '/books/' + this.id}, {
         success: ({code, data}) => {

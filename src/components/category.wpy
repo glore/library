@@ -2,18 +2,24 @@
   <view class="category clearfix">
     <block wx:for="{{list}}" wx:key="index">
 
-      <navigator wx:if="{{item.url}}" url="{{item.url}}" class="category-item" style="width:{{style_width}}">
-        <view class="category-icon-wrapper">
-          <image src="{{item.image}}" class="category-icon" mode="aspectFit"/>
-        </view>
-        <view class="category-text">{{item.title}}</view>
-      </navigator>
-      <view wx:else class="category-item" style="width:{{style_width}}">
+      <view wx:if="{{item.type=='tab'}}" @tap="switchTab({{item.url}})"  class="category-item" style="width:{{style_width}}">
         <view class="category-icon-wrapper">
           <image src="{{item.image}}" class="category-icon" mode="aspectFit"/>
         </view>
         <view class="category-text">{{item.title}}</view>
       </view>
+      <navigator wx:else url="{{item.url}}"  class="category-item" style="width:{{style_width}}">
+        <view class="category-icon-wrapper">
+          <image src="{{item.image}}" class="category-icon" mode="aspectFit"/>
+        </view>
+        <view class="category-text">{{item.title}}</view>
+      </navigator>
+      <!--view wx:else class="category-item" style="width:{{style_width}}">
+        <view class="category-icon-wrapper">
+          <image src="{{item.image}}" class="category-icon" mode="aspectFit"/>
+        </view>
+        <view class="category-text">{{item.title}}</view>
+      </view-->
 
     </block>
   </view>
@@ -47,6 +53,9 @@
     }
 
     methods = {
+      switchTab(url) {
+        wx.switchTab({url:url})
+      }
     }
 
     getPercent(num) {

@@ -23,11 +23,11 @@ export default class extends wepy.app {
 
       // 图书
       'pages/book/comment',
-      'pages/book/comments',      
+      'pages/book/comments',
       'pages/book/list',
       'pages/book/detail',
 
-
+      // 图书馆管理
       'pages/library/library',
       'pages/library/borrow',
       'pages/library/members',
@@ -40,6 +40,7 @@ export default class extends wepy.app {
 
       'pages/borrow/subscribe',
       'pages/borrow/result',
+
       // 我的
       'pages/user/register',
       'pages/user/borrow',

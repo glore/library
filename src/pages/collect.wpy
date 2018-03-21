@@ -6,7 +6,7 @@
           <view class="weui-cell__bd userinfo clearfix">
             <image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"/>
             <view class="userinfo-info">
-              <view class="userinfo-nickname">{{ user.name }}</view>
+              <view class="userinfo-nickname">{{ mylibrary.intro }}</view>
             </view>
           </view>
         </view>
@@ -14,11 +14,11 @@
     </view>
     <view class="user_btn">
       <view class="page_btn">
-        <button class="weui-btn" type="primary"  open-type="share" size="mini">转发分享</button>
+        <button class="weui-btn" type="primary"  open-type="share" size="mini">分享好友</button>
         <button class=" flo_r" type="primary" size="mini" @tap="scanBook({{mylib.id}})">扫码录书</button>
       </view>
     </view>
-    <view class="BookList" wx:for="{{list}}" wx:key="*this"  @tap="scanBorrow({{item.id}})">
+    <view class="BookList" wx:for="{{list}}" wx:key="*this"  @tap="navTo({{mylibrary.id}}, {{item.id}})">
       <view class="flo_l">
         <image src="{{item.image}}" mode="aspectFit" />
       </view>
@@ -47,6 +47,7 @@
     }
     data = {
       libraries: {},
+      mylibrary: {},
       user: {},
       nickName: '加载中...',
       list: []
@@ -83,6 +84,7 @@
         success: ({code, data}) => {
           that.user = data.user
           that.libraries = data.libraries
+          that.mylibrary = data.mylibrary
         }
       })
       that.page = 1
@@ -136,8 +138,8 @@
       })
     }
     methods = {
-      scanBorrow(_id) {
-        wx.navigateTo({url: '/pages/library/book?id=' + _id})
+      navTo(library_id, _id) {
+        wx.navigateTo({url: '/pages/book/detail?library_id=' + library_id + '&id=' + _id})
       },
       scanBook(libraryId) {
         let that = this
