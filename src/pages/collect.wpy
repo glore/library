@@ -26,8 +26,8 @@
       <view class="flo_l">
         <image src="{{item.image}}" mode="aspectFit" />
       </view>
-      <view class="flo_l" style="width: 65%">
-        <view class="font_28 ellipsis_1">{{item.title}}</view>
+      <view class="flo_l" style="width: 65%; padding-top: 10rpx">
+        <view class="font_28 bold ellipsis_1">{{item.title}}</view>
         <view class="font_26 ellipsis_2" >简介：{{item.summary}}</view>
         <text class="font_26">作者：{{item.author}}</text>
       </view>
@@ -133,10 +133,12 @@
             return
           }
           if (that.list.length === 0 || that.page === 1) {
-            that.list = data
+            that.list = data.map(function (item) {
+              return item.book
+            })
           } else {
             data.map(function (item, index) {
-              that.list.push(item)
+              that.list.push(item.book)
             })
           }
           that.noMore = true
@@ -291,11 +293,12 @@
     box-shadow: 1rpx 12rpx 12rpx #d3d3d3;
     padding: 6rpx 0;
     overflow: hidden;
-    margin: 12rpx;
+    margin: 16rpx;
   }
   image {
     width: 240rpx;
     height: 240rpx;
+    margin-top: 8rpx;
   }
   .weui-loadmore__tips_in-dot {
     height:auto;
@@ -305,6 +308,7 @@
   .flo_r {float: right}
   .font_26 {font-size: 26rpx}
   .font_28 {font-size: 28rpx}
+  .bold{font-weight: bold}
   .clearfloat {clear:both}
   .white {background: white}
   .ellipsis_2 {

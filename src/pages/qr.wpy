@@ -32,8 +32,8 @@
         <image src="{{item.image}}" mode="aspectFit" />
       </view>
       <view class="flo_l" style="width: 65%"  >
-        <view class="font_28 ellipsis_1">{{item.title}}</view>
-        <view class="font_26 ellipsis_3" style="min-height: 120rpx">简介：{{item.summary}}</view>
+        <view class="font_28 ellipsis_1 bold">{{item.title}}</view>
+        <view class="font_26 ellipsis_2" style=''>简介：{{item.summary}}</view>
         <text class="font_26">作者：{{item.author}}</text>
         <button class="flo_r" type="warn" size="mini" @tap="deletecollect({{item.id}})" style="margin-top: 22rpx;margin-right: 8rpx">删除</button>
       </view>
@@ -234,7 +234,7 @@
         }
         if (librariearray.length == 0) {
           this.Show = false
-          that.formId = []
+          this.formId = []
         }
         this.libraries = librariearray
         this.BookId = ids
