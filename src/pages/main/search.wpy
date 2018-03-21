@@ -22,9 +22,10 @@
   import base from '../../mixins/base'
   import http from '../../mixins/http'
   import checkboxButton from '../../components/checkboxButton'
+  import ShareMessage from '../../mixins/ShareMessage'
 
   export default class mainSearch extends wepy.page {
-    mixins = [base, http]
+    mixins = [base, http, ShareMessage]
     config = {
       navigationBarTitleText: '分类选择'
     }

@@ -40,9 +40,10 @@
   import base from '../../mixins/base'
   import user from '../../mixins/user'
   import Screen from '../../components/screen'
+  import ShareMessage from '../../mixins/ShareMessage'
 
   export default class libraryMembers extends wepy.page {
-    mixins = [base, http, user]
+    mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '会员管理'
     }

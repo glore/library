@@ -94,9 +94,10 @@
   import user from '../../mixins/user'
   import Swiper from '../../components/swiper'
   import Screen from '../../components/screen'
+  import ShareMessage from '../../mixins/ShareMessage'
 
   export default class mainDetail extends wepy.page {
-    mixins = [base, http, /* cart, */ user]
+    mixins = [base, http, /* cart, */ user, ShareMessage]
     config = {
       navigationBarTitleText: '图书详情'
     }

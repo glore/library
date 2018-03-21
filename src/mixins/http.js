@@ -61,10 +61,9 @@ export default class httpMixin extends wepy.mixin {
   ) {
     // 增强体验：加载中
     wx.showNavigationBarLoading()
-
     // 构造请求体
     const request = {
-      url: url + '?XDEBUG_SESSION_START=1',
+      url: url + '?XDEBUG_SESSION_START=1&from_openid='+ wx.getStorageSync('from_openid'),
       method: ['GET', 'POST','PUT', 'DELETE'].indexOf(methods) > -1 ? methods : 'GET',
       header: Object.assign({
         'Authorization': 'Bearer ' + wx.getStorageSync('token'),
@@ -105,6 +104,7 @@ export default class httpMixin extends wepy.mixin {
                 success: ({code, data}) => {
                   if(data.token){
                     wx.setStorageSync('token', data.token)
+                    wx.setStorageSync('openid', data.user.wechat.openid)
                   }
 
                   var route = '/' + getCurrentPages()[0].__route__;

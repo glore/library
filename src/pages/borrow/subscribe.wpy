@@ -1,6 +1,6 @@
 <template>
   <view class="borrow-subscribe">
-    
+
     <view class="weui-cells weui-cells_after-title borrow-address">
       <view class="weui-cell block">
         <view class="weui-media-box__title h4 color-666">订阅时长</view>
@@ -58,9 +58,10 @@
   import base from '../../mixins/base'
   import user from '../../mixins/user'
   import radioCard from '../../components/radioCard'
+  import ShareMessage from '../../mixins/ShareMessage'
 
   export default class borrowSubscribe extends wepy.page {
-    mixins = [base, http, user]
+    mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '订阅套餐',
       enablePullDownRefresh: false

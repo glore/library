@@ -35,7 +35,7 @@
             </label>
         </radio-group>
     </view>
-    
+
 
     <Screen class="fixed-bottom">
       <view style="display: flex;">
@@ -58,9 +58,10 @@
   import base from '../../mixins/base'
   import user from '../../mixins/user'
   import Screen from '../../components/screen'
+  import ShareMessage from '../../mixins/ShareMessage'
 
   export default class libraryBorrow extends wepy.page {
-    mixins = [base, http, user]
+    mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '借阅管理'
     }

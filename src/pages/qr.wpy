@@ -8,19 +8,7 @@
       <button class=" flo_r" type="primary" size="mini" @tap="addcollect()" style="margin-right: 20rpx">一键收藏</button>
       <view class="clearfloat"></view>
     </view>
-    <view wx:if="{{Show}}" wx:for="{{libraries}}" wx:key="*this" class="BookList {{ShowAnimation ? 'BookList_animation' : ''}}">
-      <view class="flo_l">
-        <image src="{{item.image}}" mode="aspectFit" />
-      </view>
-      <view class="flo_l" style="width: 65%"  >
-        <view class="font_28 ellipsis_1">{{item.title}}</view>
-        <view class="font_26 ellipsis_3" >简介：{{item.summary}}</view>
-        <text class="font_26">作者：{{item.author}}</text>
-        <button class=" flo_r" type="warn" size="mini" @tap="deletecollect({{item.id}})" style="margin-top: 22rpx">删除</button>
-      </view>
-      <view class="clearfloat"></view>
-    </view>
-    <view class="BookList {{ShowAnimation ? 'BookList_animation' : ''}}" wx:if="{{ShowEdit}}">
+    <view class="BookList {{EditAnimation ? 'BookList_animation' : ''}}" wx:if="{{ShowEdit}}">
       <view class="flo_l" wx:if="{{ShowUpload}}" style="margin-top: 32rpx">
         <image src="{{BookImage}}" mode="aspectFit" bindtap="chooseimage"/>
       </view>
@@ -34,12 +22,29 @@
         <view class="font_26 ellipsis_3" >简介： <textarea type="text" auto-height  placeholder="请填写书的简介" class="upload-text" style="min-height: 180rpx;padding: 12rpx;" bindinput="textareaChange"/></view>
       </view>
       <view class=" flo_r">
-        <button  type="primary" size="mini" @tap="addbook()" style="margin:30rpx">录入收藏</button>
+        <button  type="primary" size="mini" @tap="addbook()" style="margin:22rpx">保存</button>
+        <button class="flo_r" type="warn" size="mini" @tap="DeleteEdit()" style="margin: 22rpx">取消</button>
+      </view>
+      <view class="clearfloat"></view>
+    </view>
+    <view wx:if="{{Show}}" wx:for="{{libraries}}" wx:key="*this" class="BookList {{ShowAnimation ? 'BookList_animation' : ''}}">
+      <view class="flo_l">
+        <image src="{{item.image}}" mode="aspectFit" />
+      </view>
+      <view class="flo_l" style="width: 65%"  >
+        <view class="font_28 ellipsis_1">{{item.title}}</view>
+        <view class="font_26 ellipsis_3" style="min-height: 120rpx">简介：{{item.summary}}</view>
+        <text class="font_26">作者：{{item.author}}</text>
+        <button class="flo_r" type="warn" size="mini" @tap="deletecollect({{item.id}})" style="margin-top: 22rpx;margin-right: 8rpx">删除</button>
       </view>
       <view class="clearfloat"></view>
     </view>
     <view class="qr_btn">
-      <view class="qr_btn_animation"  @tap="scanBook()">扫一扫</view>
+      <form bindsubmit="formSubmit" report-submit>
+        <button formType="submit" class="btn" data-type="click">
+          <view class="qr_btn_animation"  @tap="scanBook()">扫一扫</view>
+        </button>
+      </form>
     </view>
   </view>
 </template>
@@ -49,10 +54,11 @@
   import http from '../mixins/http'
   import base from '../mixins/base'
   import user from '../mixins/user'
+  import ShareMessage from '../mixins/ShareMessage'
   import { service } from '../config.js'
 
   export default class pageQr extends wepy.page {
-    mixins = [base, http, user]
+    mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '扫码',
       enablePullDownRefresh: false
@@ -62,22 +68,20 @@
       Show: false,
       ShowEdit: false,
       ShowAnimation: false,
+      EditAnimation: false,
       BookId: [],
       ShowUpload: false,
       files: '',
-      BookImage: '../images/icon/icon-error.png',
+      BookImage: '../images/icon/icon-upload.png',
       EditImage: '',
       EditTitle: '',
       EditIsbn: '',
       EditSummary: '',
-      EditAuthor: ''
+      EditAuthor: '',
+      formId: []
     }
     onShow() {
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
-    }
-
-    onPullDownRefresh() {
-      wx.startPullDownRefresh()
     }
     uploadFiles(filePaths, successUp, failUp, i, length) {
       let that = this
@@ -94,6 +98,7 @@
         },
         success: (resp) => {
           that.EditImage = JSON.parse(resp.data).data
+          that.$apply()
         },
         fail: (res) => {
           failUp++
@@ -107,7 +112,20 @@
         }
       })
     }
+    RemoveEdit() {
+      this.EditImage = ''
+      this.EditAuthor = ''
+      this.EditTitle = ''
+      this.EditSummary = ''
+      this.EditIsbn = ''
+      this.ShowUpload = false
+    }
+
     methods = {
+      formSubmit(e) {
+        this.formId.push(e.detail.formId)
+        console.log(this.formId)
+      },
       scanBorrow(_id) {
         wx.navigateTo({url: '/pages/library/book?id=' + _id})
       },
@@ -160,7 +178,6 @@
           success: function (res) {
             // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
             that.files = res.tempFilePaths
-            console.log(res.tempFilePaths)
             that.ShowUpload = true
             that.BookImage = res.tempFilePaths[0]
             that.$apply()
@@ -169,13 +186,13 @@
         })
       },
       addcollect() {
-//        console.log(this.libraries)
         let that = this
         this.ShowAnimation = true
         this.$post({
           url: service.books_collect,
           data: {
-            'ids': that.BookId
+            'ids': that.BookId,
+            'formId': this.formId
           }
         }, {
           success: ({code, data}) => {
@@ -186,9 +203,19 @@
                 duration: 1500
               })
               that.libraries = []
+              that.Show = false
+              that.formId = []
             }, 800)
           },
-          fail: (res) => {},
+          fail: (res) => {
+            wx.showToast({
+              title: '出错了...',
+              image: '../images/icon/icon-error.png',
+              duration: 1500
+            })
+            that.libraries = []
+            that.Show = false
+          },
           complete: () => { this.loaded = false }
         })
       },
@@ -207,11 +234,10 @@
         }
         if (librariearray.length == 0) {
           this.Show = false
+          that.formId = []
         }
         this.libraries = librariearray
         this.BookId = ids
-        console.log(this.BookId)
-        console.log(this.libraries)
       },
       inputChange(e) {
         this.EditTitle = e.detail.value
@@ -224,14 +250,15 @@
       },
       addbook() {
         let that = this
-        console.log(this.EditImage)
-        console.log(this.EditAuthor)
-        console.log(this.EditTitle)
-        console.log(this.EditSummary)
-        console.log(this.EditIsbn)
         if (!that.EditImage) {
           wx.showToast({
             title: '请先上传图片',
+            image: '../images/icon/icon-error.png',
+            duration: 1500
+          })
+        } else if (!that.EditAuthor) {
+          wx.showToast({
+            title: '请填写作者',
             image: '../images/icon/icon-error.png',
             duration: 1500
           })
@@ -252,26 +279,39 @@
             url: service.books,
             data: {
               'image': that.EditImage,
+              'author': that.EditAuthor,
               'title': that.EditTitle,
               'summary': that.EditSummary,
               'isbn': that.EditIsbn
+//              'isbn': 'E003601'
             }
           }, {
             success: ({code, data}) => {
-              that.ShowAnimation = true
+              that.EditAnimation = true
               setTimeout(() => {
                 that.ShowEdit = false
               }, 800)
             },
             fail: ({code, data}) => {
+              wx.showToast({
+                title: '出错了...',
+                image: '../images/icon/icon-error.png',
+                duration: 1500
+              })
             },
             complete: () => { this.loaded = false }
           })
         }
       },
+      DeleteEdit() {
+        this.ShowEdit = false
+        this.RemoveEdit()
+      },
       scanBook() {
         let that = this
+        that.EditAnimation = false
         that.ShowAnimation = false
+        that.RemoveEdit()
         wx.scanCode({
           success: (res) => {
             if (res.result) {
@@ -279,7 +319,7 @@
               this.$post({
                 url: service.books,
                 data: {
-//                  'isbn': 1234645
+//                  'isbn': 'E0036016'
                   'isbn': that.EditIsbn
                 }
               }, {
@@ -294,14 +334,16 @@
                 },
                 fail: ({code, data}) => {
                   wx.showToast({
-                    title: '未能识别出',
+                    title: '未能识别此书...',
                     image: '../images/icon/icon-error.png',
                     duration: 1500
                   })
-//                  console.log(code,'dslajdkajl')
-                  if (code === 1) {
-                    that.ShowEdit = true
+//                  if (code === 1) {
+                  that.ShowEdit = true
+                  if (this.libraries.length == 0) {
+                    this.Show = false
                   }
+//                  }
                 },
                 complete: () => { this.loaded = false }
               })
@@ -321,110 +363,5 @@
 </script>
 
 <style lang="less">
-  .qr_isbn input {
-    background: white;
-    width: 80%;
-    height: 62rpx;
-    text-align: center;
-    border: 2rpx solid #d3d3d3;
-    border-radius: 8rpx;
-    margin: 10% auto;
-  }
-  .upload-text{
-    width: 92%;
-    /*background: white;*/
-    border: 1rpx solid #c2c2c2;
-    border-radius: 6rpx;
-  }
-  .BookList {
-    background: white;
-    box-shadow: 1rpx 12rpx 12rpx #d3d3d3;
-    padding: 6rpx 0;
-    overflow: hidden;
-    margin: 12rpx;
-  }
-  .BookList_animation {
-    position: absolute;
-    left: 0; bottom: 650rpx;
-    animation: mybook 1000ms 1;
-    animation-fill-mode: forwards;
-  }
-  @keyframes mybook {
-    from {
-      bottom: 650rpx;
-      width: 100%;
-      height: 100%;
-      left: 0;
-    }
-    to {
-      bottom: -25rpx;
-      width: 0;
-      height: 0%;
-      left: 200rpx;
-    }
-  }
-  image {
-    width: 240rpx;
-    height: 240rpx;
-  }
-  .inline-block {display: inline-block}
-  .flo_l {float: left}
-  .flo_r {float: right}
-  .font_26 {font-size: 26rpx}
-  .font_28 {font-size: 28rpx}
-  .clearfloat {clear:both}
-  .white {background: white}
-  .ellipsis_3 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-  }
-  .ellipsis_1 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-  }
-  .qr_btn_animation{
-    width: 180rpx;
-    height: 180rpx;
-    border-radius: 50%;
-    background: #4ba7ff;
-    text-align: center;
-    line-height: 180rpx;
-    color: white;
-    margin: 5% auto;
-    animation: mymove 1500ms infinite;
-    animation-direction:alternate;
-    position: fixed;
-    left: 280rpx;
-    bottom: -100rpx;
-  }
-  .hide_image{
-    width: 200rpx;
-    height: 280rpx;
-    margin: 20rpx;
-    border: 2rpx solid #d3d3d3;
-    text-align: center;
-  }
-  .hide_image image{
-    width: 100rpx;
-    height: 100rpx;
-    margin-top: 100rpx;
-  }
-  @keyframes mymove {
-    from {
-      /*width:180rpx; height: 180rpx;*/
-      /*line-height: 180rpx;*/
-      bottom: -50rpx;
-    }
-    to {
-      /*width:200rpx;height: 200rpx;*/
-      /*line-height: 200rpx;*/
-      bottom: 0rpx;
-    }
-  }
+  @import "../styles/custom/qr.less";
 </style>

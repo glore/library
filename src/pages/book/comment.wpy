@@ -42,9 +42,10 @@
   import { service } from '../../config.js'
   import base from '../../mixins/base'
   import http from '../../mixins/http'
+  import ShareMessage from '../../mixins/ShareMessage'
 
   export default class comment extends wepy.page {
-    mixins = [base, http]
+    mixins = [base, http, ShareMessage]
     config = {
       navigationBarTitleText: '撰写图书评论',
       navigationBarTextStyle: 'white',

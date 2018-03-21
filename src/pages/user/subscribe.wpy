@@ -19,9 +19,10 @@
   import http from '../../mixins/http'
   import base from '../../mixins/base'
   import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
 
   export default class userSubscribe extends wepy.page {
-    mixins = [base, http, user]
+    mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '我的订阅'
     }
