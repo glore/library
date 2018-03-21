@@ -204,6 +204,7 @@
               })
               that.libraries = []
               that.Show = false
+              that.formId = []
             }, 800)
           },
           fail: (res) => {
@@ -233,6 +234,7 @@
         }
         if (librariearray.length == 0) {
           this.Show = false
+          that.formId = []
         }
         this.libraries = librariearray
         this.BookId = ids

@@ -193,6 +193,7 @@
                             duration: 1500
                           })
                           that.updateBookList(that.page)
+                          this.formId = []
                         }, 800)
                       },
                       fail: (res) => {},

@@ -3,11 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="654f390e-268f-4c34-b38e-e2c47046a37b" name="默认的" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/config.js" afterPath="$PROJECT_DIR$/src/config.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/mixins/http.js" afterPath="$PROJECT_DIR$/src/mixins/http.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/collect.wpy" afterPath="$PROJECT_DIR$/src/pages/collect.wpy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/qr.wpy" afterPath="$PROJECT_DIR$/src/pages/qr.wpy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/styles/custom/qr.less" afterPath="$PROJECT_DIR$/src/styles/custom/qr.less" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -25,7 +22,7 @@
         <entry file="file://$PROJECT_DIR$/src/mixins/ShareMessage.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="338">
-              <caret line="13" column="29" lean-forward="true" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
+              <caret line="13" column="29" lean-forward="false" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -35,17 +32,17 @@
         <entry file="file://$PROJECT_DIR$/src/config.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="832">
-              <caret line="34" column="11" lean-forward="true" selection-start-line="34" selection-start-column="11" selection-end-line="34" selection-end-column="11" />
+              <caret line="34" column="11" lean-forward="false" selection-start-line="34" selection-start-column="11" selection-end-line="34" selection-end-column="11" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="collect.wpy" pinned="false" current-in-tab="true">
+      <file leaf-file-name="collect.wpy" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pages/collect.wpy">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="180" column="32" lean-forward="true" selection-start-line="180" selection-start-column="32" selection-end-line="180" selection-end-column="32" />
+            <state relative-caret-position="271">
+              <caret line="184" column="45" lean-forward="true" selection-start-line="184" selection-start-column="45" selection-end-line="184" selection-end-column="45" />
               <folding>
                 <element signature="n#style#0;n#view#1;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
                 <element signature="e#1905#1928#0" expanded="true" />
@@ -78,11 +75,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="qr.wpy" pinned="false" current-in-tab="false">
+      <file leaf-file-name="qr.wpy" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/pages/qr.wpy">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="245">
-              <caret line="186" column="8" lean-forward="true" selection-start-line="186" selection-start-column="8" selection-end-line="186" selection-end-column="8" />
+            <state relative-caret-position="505">
+              <caret line="242" column="39" lean-forward="true" selection-start-line="242" selection-start-column="39" selection-end-line="242" selection-end-column="39" />
               <folding>
                 <element signature="n#style#0;n#view#1;n#view#0;n#template#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#button#0;n#view#1;n#view#0;n#template#0;n#!!top" expanded="true" />
@@ -129,7 +126,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>user</find>
       <find>onPullDownRefres</find>
       <find>screenWidth</find>
       <find>loaded</find>
@@ -156,9 +152,10 @@
       <find>from_openid</find>
       <find>fromSubmit</find>
       <find>btn</find>
-      <find>formId</find>
       <find>formSubmit</find>
       <find>addcollect</find>
+      <find>form</find>
+      <find>formId</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -335,12 +332,12 @@
       <option name="presentableId" value="Default" />
       <updated>1520923598298</updated>
       <workItem from="1520923600047" duration="7137000" />
-      <workItem from="1521279185997" duration="47132000" />
+      <workItem from="1521279185997" duration="47738000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="141635000" />
+    <option name="totallyTimeSpent" value="142241000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -810,7 +807,7 @@
     <entry file="file://$PROJECT_DIR$/src/mixins/ShareMessage.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="338">
-          <caret line="13" column="29" lean-forward="true" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
+          <caret line="13" column="29" lean-forward="false" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
           <folding />
         </state>
       </provider>
@@ -818,7 +815,7 @@
     <entry file="file://$PROJECT_DIR$/src/config.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="832">
-          <caret line="34" column="11" lean-forward="true" selection-start-line="34" selection-start-column="11" selection-end-line="34" selection-end-column="11" />
+          <caret line="34" column="11" lean-forward="false" selection-start-line="34" selection-start-column="11" selection-end-line="34" selection-end-column="11" />
           <folding />
         </state>
       </provider>
@@ -851,10 +848,21 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/collect.wpy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="271">
+          <caret line="184" column="45" lean-forward="true" selection-start-line="184" selection-start-column="45" selection-end-line="184" selection-end-column="45" />
+          <folding>
+            <element signature="n#style#0;n#view#1;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="e#1905#1928#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/qr.wpy">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="186" column="8" lean-forward="true" selection-start-line="186" selection-start-column="8" selection-end-line="186" selection-end-column="8" />
+        <state relative-caret-position="505">
+          <caret line="242" column="39" lean-forward="true" selection-start-line="242" selection-start-column="39" selection-end-line="242" selection-end-column="39" />
           <folding>
             <element signature="n#style#0;n#view#1;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#button#0;n#view#1;n#view#0;n#template#0;n#!!top" expanded="true" />
@@ -870,17 +878,6 @@
             <element signature="n#style#0;n#view#1;n#view#1;n#view#3;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#button#0;n#view#1;n#view#3;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="e#2926#2949#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/collect.wpy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="180" column="32" lean-forward="true" selection-start-line="180" selection-start-column="32" selection-end-line="180" selection-end-column="32" />
-          <folding>
-            <element signature="n#style#0;n#view#1;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="e#1905#1928#0" expanded="true" />
           </folding>
         </state>
       </provider>
