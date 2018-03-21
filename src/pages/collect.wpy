@@ -101,11 +101,8 @@
         success: ({code, data}) => {
           that.user = data.user
           that.libraries = data.libraries
-<<<<<<< HEAD
           that.mylibrary = data.mylibrary
-=======
           wx.setStorageSync('openid', data.user.wechat.openid)
->>>>>>> refs/remotes/origin/master
         }
       })
       that.page = 1
@@ -161,17 +158,12 @@
       })
     }
     methods = {
-<<<<<<< HEAD
       navTo(library_id, _id) {
         wx.navigateTo({url: '/pages/book/detail?library_id=' + library_id + '&id=' + _id})
-=======
+      },
       formSubmit(e) {
         this.formId.push(e.detail.formId)
         console.log(this.formId)
-      },
-      scanBorrow(_id) {
-        wx.navigateTo({url: '/pages/library/book?id=' + _id})
->>>>>>> refs/remotes/origin/master
       },
       scanBook(libraryId) {
         let that = this
