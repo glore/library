@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="654f390e-268f-4c34-b38e-e2c47046a37b" name="默认的" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/icon/icon-share_red.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/pages/test.wpy" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/styles/custom/animation.less" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/styles/custom/library.less" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app.wpy" afterPath="$PROJECT_DIR$/src/app.wpy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/borrow.wpy" afterPath="$PROJECT_DIR$/src/pages/borrow.wpy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/library/library.wpy" afterPath="$PROJECT_DIR$/src/pages/library/library.wpy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/qr.wpy" afterPath="$PROJECT_DIR$/src/pages/qr.wpy" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -128,11 +119,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="503">
-              <caret line="123" column="0" lean-forward="true" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
+            <state relative-caret-position="607">
+              <caret line="138" column="20" lean-forward="true" selection-start-line="138" selection-start-column="20" selection-end-line="138" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -203,11 +194,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="borrow.wpy" pinned="false" current-in-tab="true">
+      <file leaf-file-name="borrow.wpy" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pages/borrow.wpy">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="479">
-              <caret line="27" column="70" lean-forward="true" selection-start-line="27" selection-start-column="70" selection-end-line="27" selection-end-column="70" />
+            <state relative-caret-position="427">
+              <caret line="34" column="86" lean-forward="false" selection-start-line="34" selection-start-column="86" selection-end-line="34" selection-end-column="86" />
               <folding>
                 <element signature="n#style#0;n#view#0;n#view#0;n#view#1;n#view#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#button#0;n#view#0;n#view#0;n#block#0;n#view#0;n#view#1;n#view#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
@@ -301,8 +292,8 @@
         <option value="$PROJECT_DIR$/src/styles/custom/animation.less" />
         <option value="$PROJECT_DIR$/src/styles/custom/library.less" />
         <option value="$PROJECT_DIR$/src/pages/library/library.wpy" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src/pages/borrow.wpy" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -438,12 +429,12 @@
       <option name="presentableId" value="Default" />
       <updated>1520923598298</updated>
       <workItem from="1520923600047" duration="7137000" />
-      <workItem from="1521279185997" duration="106881000" />
+      <workItem from="1521279185997" duration="107381000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="201384000" />
+    <option name="totallyTimeSpent" value="201884000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -984,14 +975,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="503">
-          <caret line="123" column="0" lean-forward="true" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/library/library.wpy">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4527">
@@ -1037,13 +1020,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/borrow.wpy">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="479">
-          <caret line="27" column="70" lean-forward="true" selection-start-line="27" selection-start-column="70" selection-end-line="27" selection-end-column="70" />
+        <state relative-caret-position="427">
+          <caret line="34" column="86" lean-forward="false" selection-start-line="34" selection-start-column="86" selection-end-line="34" selection-end-column="86" />
           <folding>
             <element signature="n#style#0;n#view#0;n#view#0;n#view#1;n#view#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#button#0;n#view#0;n#view#0;n#block#0;n#view#0;n#view#1;n#view#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="e#5488#5511#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="607">
+          <caret line="138" column="20" lean-forward="true" selection-start-line="138" selection-start-column="20" selection-end-line="138" selection-end-column="20" />
+          <folding />
         </state>
       </provider>
     </entry>
