@@ -1,10 +1,16 @@
 <template>
-  <view class="book-list">
+  <view class="main-list">
+    <view class="main-list-title clearfix" wx:if="{{keywords && keywords.length}}">
+      <view class="pull-left width-8p">
+        <block wx:for="{{keywords}}" wx:key="index">
+          <text wx:if="{{index > 0}}">，</text>
+          <text>{{item}}</text>
+        </block>
+      </view>
+      <text @tap="clearSearch" class="link link-blue pull-right">清空筛选</text>
+    </view>
     <SearchBar :placeholder="searchText"></SearchBar>
-    <!--Swiper :list.sync="swipers" height="280"></Swiper-->
-    <!--Category :list.sync="categorys" col="4"></Category-->
-    <UserBookList :list.sync="list" title="图书列表" :loading.sync="loading"
-    :noMore.sync="noMoreList"></UserBookList>
+    <BookList :list.sync="list" :loading.sync="loading" :noMore.sync="noMoreList"></BookList>
   </view>
 </template>
 
@@ -13,65 +19,49 @@
   import { service } from '../../config.js'
   import base from '../../mixins/base'
   import http from '../../mixins/http'
-  import { funImages } from '../../mixins/demo'
-//  import Swiper from '../../components/swiper'
   import SearchBar from '../../components/searchbar'
-//  import Category from '../../components/category'
-  import UserBookList from '../../components/userBookList'
+  import BookList from '../../components/bookList'
+  import ShareMessage from '../../mixins/ShareMessage'
 
-  export default class bookList extends wepy.page {
-    mixins = [base, http]
+  export default class mainList extends wepy.page {
+    mixins = [base, http, ShareMessage]
     config = {
-      navigationBarTitleText: '图书列表',
-      navigationBarTextStyle: 'white',
-      navigationBarBackgroundColor: '#049BFF'
+      navigationBarTitleText: '查找图书'
     }
     data = {
-      searchText: 'ISBN号 书名',
-      swipers: [
-        // 占位图，防止请求错误无图显示
-        {image: '/images/swiper.png', url: '/pages/main/search'}
-      ],
-      categorys: [
-        {title: '今', image: funImages[0]},
-        {title: '晚', image: funImages[1]},
-        {title: '吃', image: funImages[2]},
-        {title: '鸡', image: funImages[3]}
-      ],
+      params: {},
+
+      libraryId: 0,
 
       noMoreList: false,
       loading: false,
       list: [],
       page: 1
     }
-
-    onReady() {
-      this.initPageData()
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+    onShow() {
+      // google analytics
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+    onLoad(query) {
+      let params = query && query.params
+      try {
+        params = JSON.parse(params)
+      } catch (e) {
+        params = {}
+      }
+      this.params = params
+      let libraryId = this.getNumber(query.library_id)
+      this.libraryId = this.isNumber(libraryId) ? libraryId : 0
     }
 
-    onShareAppMessage(res) {
-      /* if (res.from === 'button') {
-        // 来自页面内转发按钮
-        console.log(res.target)
-        } */
-      return {
-        title: '友福图书馆',
-        path: '/pages/index',
-        success: function(res) {
-          // 转发成功
-          console.log('success')
-          console.log(res.target)
-        },
-        fail: function(res) {
-          // 转发失败
-          console.log('failed')
-          console.log(res.target)
-        }
-      }
+    onReady() {
+      this.initPageData(this.page)
     }
 
     onPullDownRefresh() {
-      this.noMoreList = false
       this.initPageData()
     }
 
@@ -82,40 +72,50 @@
       }, 200)
     }
 
+    methods = {
+      clearSearch() {
+        // 清空参数
+        this.params = {}
+        // 初始化页面
+        this.initPageData()
+      }
+    }
+
+    computed = {
+      keywords() {
+        const title = this.params && this.params.title
+        const words = this.params && this.params.keyword
+        const keywords = this.getString(words || title).split(/\s+/g)
+        return keywords.filter((item) => item) || []
+      }
+    }
+
     // 初始化页面数据
     initPageData() {
       // 初始化参数
       this.page = 1
+      this.loading = false
+      this.noMoreList = false
+      this.list = []
 
-      // 请求列表
+      // 请求推荐列表
       this.updateBookList(this.page)
-
-      // 处理轮播图
-      this.swipers.push({image: '/images/swiper.png'})
-      // 处理菜单栏
-      this.categorys.map((cate, index) => {
-        const xnum = Math.min(Math.max(index, 1), 3)
-        cate.url = `/pages/main/search?params=${this.$json({
-          value: [xnum, 4 - xnum].map(item => this.getString(item)),
-          index: index + 1,
-          title: cate.title
-        })}`
-      })
     }
 
     // 更新图书列表
     updateBookList(page) {
       if (this.loading || this.noMoreList) return
       this.loading = true
-      // 请求列表
+      // 推荐列表
       this.$get({
-        url: service.list,
-        data: {
+        url: service.list + '?library_id=' + this.libraryId,
+        data: Object.assign({}, this.getObject(this.params), {
           // 默认从1开始为第一页
           page: page
-        }
+        })
       }, {
         success: ({code, data}) => {
+          this.size = data.per_page
           this.noMoreList = false
           if (data.current_page > data.last_page) {
             this.noMoreList = true
@@ -128,7 +128,7 @@
             this.noMoreList = true
             return
           }
-          if (this.list.length === 0 || this.page === 1) {
+          if (this.list.length === 0) {
             this.list = this.getBooks(data)
           } else {
             // 添加到列表中
@@ -141,7 +141,7 @@
           this.page += 1
         },
         fail: ({code, data}) => {
-          // 失败了什么也不做
+          console.log('[updateBookList fail]', code, data)
         },
         complete: () => {
           this.loading = false
@@ -154,30 +154,35 @@
       return this.getArray(data).map((book, index) => {
         // 拼接示例数据
         return {
-          id: book.book.id,
-          title: book.book.title ? book.book.title : '无标题',
-          content: `简介: ${book.book.summary}.`,
-          image: book.book.image ? book.book.image : 'http://images.ufutx.com/201709/27/97bae3e1de000df7b4b6b28a3195a4de.png',
-          tags: [book.book.author ? book.book.author : '无'],
-          status: 1
+          id: book.id,
+          title: book.title ? book.title : '无标题',
+          content: `简介: ${book.summary}.`,
+          image: book.image ? book.image : 'http://images.ufutx.com/201709/27/97bae3e1de000df7b4b6b28a3195a4de.png',
+          tags: [book.author ? book.author : '无']
+          // status: book.num > book.library_book.lent_num
         }
       })
     }
 
-    methods = {
-    }
-
     components = {
-      SearchBar,
-//      Category,
-      UserBookList
-//      Swiper
+      BookList,
+      SearchBar
     }
   }
 </script>
 
 <style lang="less">
-.page-index{
-  // some style
+@import "../../styles/weui/base/fn.wxss";
+
+.main-list{
+  .width-8p{
+    width: 80% !important;
+  }
+
+  .main-list-title {
+    padding: 1em @weuiCellGapH;
+    color: @weuiTextColorGray;
+    font-size: @weuiCellTipsFontSize;
+  }
 }
 </style>

@@ -1,0 +1,67 @@
+<style lang="less">
+  @import "../styles/custom/animation.less";
+</style>
+<template>
+  <view class="scan">
+    <view class="scan_home {{rotate ? 'rotate' : ''}}" @tap="rotate" style="z-index: 12">
+      <image  class="imgicon" mode="aspectFit" src="../images/icon/icon-scan.png" style="width: 60rpx;height: 60rpx"></image>
+    </view>
+    <view class="scan_home {{changerotate ? 'changerotate1' : ''}} {{shrink ? 'changeshrink1' : ''}}">
+      <image  class="imgicon" mode="aspectFit" src="../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>
+      <text style="font-size: 22rpx;position: absolute;left: 20rpx;bottom: -8rpx;">录书</text>
+    </view>
+    <view class="scan_home {{changerotate ? 'changerotate2' : ''}} {{shrink ? 'changeshrink2' : ''}}">
+      <image  class="imgicon" mode="aspectFit" src="../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>
+      <text style="font-size: 22rpx;position: absolute;left: 20rpx;bottom: -8rpx;">还书</text>
+    </view>
+    <view class="scan_home {{changerotate ? 'changerotate3' : ''}} {{shrink ? 'changeshrink3' : ''}}">
+      <image  class="imgicon" mode="aspectFit" src="../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>
+      <text style="font-size: 22rpx;position: absolute;left: 20rpx;bottom: -8rpx;">借书</text>
+    </view>
+  </view>
+</template>
+
+<script>
+
+  import wepy from 'wepy'
+//  import { service } from '../config.js'
+  export default class pageIndex extends wepy.page {
+    config = {
+      navigationBarTitleText: '测试',
+      navigationBarTextStyle: 'white',
+      navigationBarBackgroundColor: '#049BFF'
+    }
+    data = {
+      rotate: false,
+      changerotate: false,
+      shrink: false,
+      showanimation: true
+    }
+
+    onReady() {
+    }
+    methods = {
+      rotate() {
+        if(this.showanimation){
+          console.log(this.rotate)
+//          this.rotate = true
+          this.changerotate = true
+          setTimeout(() => {
+//            this.rotate = false
+            this.$apply()
+          }, 500)
+          this.shrink = false
+          return this.showanimation = false
+        }else{
+          console.log(this.rotate)
+          setTimeout(() => {
+//            this.rotate = false
+            this.$apply()
+          }, 500)
+          this.shrink = true
+          return this.showanimation = true
+        }
+      }
+    }
+  }
+</script>

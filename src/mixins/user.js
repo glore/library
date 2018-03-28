@@ -15,6 +15,7 @@ export default class userMixin extends wepy.mixin {
         this.$post({ url: service.login, data: {code: res.code} }, {
           success: ({code, data}) => {
             wx.setStorageSync('token', data.token)
+            wx.setStorageSync('openid', data.token)
             if(!data.token){
               wx.setStorageSync('jump', '/' + getCurrentPages()[0].__route__)
             }
@@ -67,8 +68,6 @@ export default class userMixin extends wepy.mixin {
     }
     return user
   }
-
-
 
   /* ========================== 用户方法 ========================== */
   // 获取用户信息

@@ -61,10 +61,9 @@ export default class httpMixin extends wepy.mixin {
   ) {
     // 增强体验：加载中
     wx.showNavigationBarLoading()
-
     // 构造请求体
     const request = {
-      url: url + '?XDEBUG_SESSION_START=1',
+      url: url + '?XDEBUG_SESSION_START=1&from_openid='+ wx.getStorageSync('from_openid'),
       method: ['GET', 'POST','PUT', 'DELETE'].indexOf(methods) > -1 ? methods : 'GET',
       header: Object.assign({
         'Authorization': 'Bearer ' + wx.getStorageSync('token'),
@@ -105,18 +104,19 @@ export default class httpMixin extends wepy.mixin {
                 success: ({code, data}) => {
                   if(data.token){
                     wx.setStorageSync('token', data.token)
+                    wx.setStorageSync('openid', data.user.wechat.openid)
                   }
 
                   var route = '/' + getCurrentPages()[0].__route__;
 
-                  if(route == '/pages/user/register'){
+                  if (route == '/pages/user/register'){
                     return
                   }
 
-                  if (!data.token ){
+                  if (!data.token ) {
                     // wx.reLaunch({url: '/pages/user/register'})
                     wx.navigateTo({url: '/pages/user/register'})
-                  }else{
+                  } else {
                     wx.reLaunch({url: route})
                   }
                 }
@@ -130,16 +130,16 @@ export default class httpMixin extends wepy.mixin {
         } else {
           // 失败回调：其他情况
           return setTimeout(() => {
-            /* if(this.isFunction(fail)) {
+            if (this.isFunction(fail)) {
               fail({statusCode, ...data})
               this.$apply()
-            }else{ */
+            }else{
               wx.showModal({
-                title: '操作错误',
+                title: '提示',
                 content: data.message,
                 showCancel: false
               })
-            // }
+            }
           })
         }
 

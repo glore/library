@@ -2,8 +2,8 @@
 <template>
   <view class="book-sorts">
     <view class="weui-cells__title">
-      图书列表
-      <button class="weui-btn mini-btn" @tap="add" type="primary" size="mini" style="float:right">添加分类</button>
+      {{library.name}}分类列表
+      <button class="weui-btn mini-btn" @tap="add({{library.id}})" type="primary" size="mini" style="float:right">添加分类</button>
     </view>
     <view class="weui-cells__title"></view>
     <view class="weui-cells weui-cells_after-title">
@@ -23,9 +23,10 @@
   import http from '../../mixins/http'
   import base from '../../mixins/base'
   import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
 
   export default class bookSort extends wepy.page {
-    mixins = [base, http, user]
+    mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '图书分类',
       enablePullDownRefresh: false
@@ -34,18 +35,19 @@
       loading: false,
 
       // 图书分类
-      sorts: []
+      sorts: [],
+      library_id: 0,
+      library: {}
     }
 
     computed = {
     }
 
     onLoad(options) {
+      this.library_id = options && +options.library_id
     }
 
     onShow(options) {
-      // 清空code
-      this.code = ''
       // 初始化页面数据
       this.initPageData()
     }
@@ -57,9 +59,10 @@
     // 初始化页面数据
     initPageData() {
       // 获取分类列表
-      this.$get({url: service.sorts}, {
+      this.$get({url: service.libraries + '/' + this.library_id + '/sorts'}, {
         success: ({code, data}) => {
-          this.sorts = data
+          this.sorts = data.sorts
+          this.library = data.library
         },
         fail: ({code, data}) => {
           // 失败了什么也不做
@@ -71,93 +74,8 @@
     }
 
     methods = {
-      add() {
-        wx.navigateTo({url: '/pages/library/sort'})
-      },
-
-      save() {
-        // 防抖
-        if (this.loading) return
-        if (!this.getString(this.title)) {
-          return this.$alert('温馨提示', '请输入图书标题')
-        }
-        if (!this.getString(this.author)) {
-          return this.$alert('温馨提示', '请输入作者')
-        }
-        if (!this.getString(this.num)) {
-          return this.$alert('温馨提示', '请设置馆藏册数')
-        }
-
-        const data = {
-          title: this.getString(this.title),
-          origin_title: this.getString(this.origin_title),
-          class_id: this.getString(this.class_id),
-          author: this.getString(this.author),
-          translator: this.getString(this.translator),
-          summary: this.getString(this.summary),
-          publisher: this.getString(this.publisher),
-          price: this.getString(this.price),
-          image: this.getString(this.image),
-          pubdate: this.getString(this.pubdate),
-          pages: this.getString(this.pages),
-          num: this.getString(this.num)
-        }
-        // 开防抖
-        this.loading = true
-
-        // 保存图书信息
-        this.$put({url: service.books + '/' + this.id, data: data}, {
-          success: ({code, data}) => {
-            wx.showModal({
-              title: '提示',
-              content: '保存成功, 继续录入',
-              success: function(res) {
-                if (res.confirm) {
-                  wx.switchTab({url: '/pages/library'})
-                } else if (res.cancel) {
-                }
-              }
-            })
-          },
-          fail: ({code, data}) => {
-            // 失败了什么也不做
-          },
-          complete: () => {
-            this.loading = false
-          }
-        })
-      },
-      destroy() {
-        var self = this
-        wx.showModal({
-          title: '提示',
-          content: '确认删除该图书信息？',
-          success: function(res) {
-            if (res.confirm) {
-              self.$delete({url: service.books + '/' + self.id}, {
-                success: ({code, data}) => {
-                  // setTimeout(() => {
-                  wx.showToast({
-                    title: '删除成功',
-                    icon: 'success',
-                    duration: 2000
-                  })
-                  // }, 2000)
-                  wx.navigateBack({
-                    delta: 2
-                  })
-                },
-                fail: ({code, data}) => {
-                  // 失败了什么也不做
-                },
-                complete: () => {
-                  self.loading = false
-                }
-              })
-            } else if (res.cancel) {
-            }
-          }
-        })
+      add(libraryId) {
+        wx.navigateTo({url: '/pages/library/sort?library_id=' + libraryId})
       },
       typing (type, e) {
         if (this.isDefined(this[type])) {

@@ -65,10 +65,10 @@
   import { service } from '../../config.js'
   import http from '../../mixins/http'
   import base from '../../mixins/base'
-  import { funImages } from '../../mixins/demo'
+  import ShareMessage from '../../mixins/ShareMessage'
 
   export default class userBorrow extends wepy.page {
-    mixins = [base, http]
+    mixins = [base, http, ShareMessage]
     config = {
       navigationBarTitleText: '我的借阅'
     }
@@ -140,7 +140,7 @@
         return {
           id: xlen,
           title: book.title,
-          image: funImages[(xlen + 4) % 8]
+          image: ''
         }
       })
     }

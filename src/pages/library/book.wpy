@@ -14,24 +14,68 @@
           <view>作者：{{book.author}}</view>
           <view>出版社：{{book.publisher}}</view>
           <view>出版时间：{{book.pubdate}}</view>
-          <view>内部分类：{{book.sort.name}}</view>
-          <view>册数：{{book.library_book.num}}册<span wx:if="book.library_book.lent_num">(已借{{book.library_book.lent_num}}册)</span></view>
+          <view>分类：{{book.sort.name}}</view>
+          <view>ISBN编码：{{book.isbn}}</view>
+          <view>册数：共{{book.library_book.num}}册<span wx:if="{{book.library_book.lent_num}}">(已借{{book.library_book.lent_num}}册)</span></view>
         </view>
         <view class="detail-tags">
           <text wx:for="{{book.tags}}" wx:key="index" wx:for-item="tag" class="tag">{{tag}}</text>
         </view>
       </view>
     </view>
-
-    <view wx:if="{{book.borrows.length>0}}" class="weui-panel weui-panel_access">
-      <view class="weui-panel__hd">借阅列表</view>
+    <view wx:if="{{book.library}}" class="weui-panel weui-panel_access">
+      <view class="weui-panel__hd">
+        馆藏地 
+      </view>
       <view class="weui-panel__bd">
-         <navigator wx:for="{{book.borrows}}" url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+         <navigator url="/pages/library/library?id={{book.library.id}}" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+             <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+                 <image class="weui-media-box__thumb" src="{{book.library.logo}}" />
+             </view>
+             <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+                <view class="weui-media-box__title">{{book.library.name}}</view>
+                <view class="weui-media-box__desc" wx:if="{{book.library.intro}}">{{book.library.intro}}</view>
+             </view>
+             <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+         </navigator>
+      </view>
+    </view>
+    <view class="weui-panel weui-panel_access">
+      <view class="weui-panel__hd">
+        图书评论
+        <button class="weui-btn mini-btn" @tap="goto('/pages/book/comment?id={{book.id}}')" type="primary" size="mini" style="float:right">写评论</button>
+      </view>
+      <view class="weui-panel__bd">
+         <navigator wx:for="{{book.comments}}" wx:key="id" url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
              <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
                  <image class="weui-media-box__thumb" src="{{item.user.wechat.avatar}}" />
              </view>
              <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-                 <view class="weui-media-box__title">{{item.user.name}}[{{item.status=='BORROW'?'借阅中':(item.status=='JOIN'?'预借':'已读完')}}]</view>
+                 <view class="weui-media-box__title">{{item.user.name}}</view>
+                 <view class="weui-media-box__info">{{item.comment}}</view>
+             </view>
+         </navigator>
+      </view>
+      <view class="weui-panel__ft">
+         <navigator class="weui-cell weui-cell_access weui-cell_link" url="/pages/book/comments?id={{book.id}}">
+             <view class="weui-cell__bd">更多评论</view>
+             <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+         </navigator>
+      </view>
+    </view>
+    <view wx:if="{{book.borrows.length>0}}" class="weui-panel weui-panel_access">
+      <view class="weui-panel__hd">
+        借阅列表
+      </view>
+      <view class="weui-panel__bd">
+         <navigator wx:for="{{book.borrows}}" wx:key="id" url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+             <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+                 <image class="weui-media-box__thumb" src="{{item.user.wechat.avatar}}" />
+             </view>
+             <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+                 <view class="weui-media-box__title" wx:if="{{item.status==='BORROW'}}">{{item.user.name}}[借阅中]</view>
+                 <view class="weui-media-box__title"  wx:if="{{item.status==='RETURN'}}">{{item.user.name}}[已读完]</view>
+                 <view class="weui-media-box__title"  wx:if="{{item.status==='RESERVE'}}">{{item.user.name}}[预借]</view>
                  <view class="weui-media-box__desc">借书/续借时间：{{item.updated_at}}</view>
                  <view class="weui-media-box__desc">还书时间：{{item.return_time}}</view>
              </view>
@@ -57,7 +101,7 @@
           </view>
       </view>
     </view>
-
+    <view style="height: 100rpx"></view>
     <Screen class="fixed-bottom">
       <view style="display: flex;">
         <!--button @tap="toStar" class="weui-btn btn-block btn-flex-1">
@@ -79,7 +123,6 @@
           <text wx:else>借阅</text>
         </button>
       </view>
-      <button slot="placeholder" class="weui-btn btn-block" type="primary">借阅</button>
     </Screen>
 
   </view>
@@ -90,12 +133,13 @@
   import { service } from '../../config.js'
   import http from '../../mixins/http'
   import base from '../../mixins/base'
-  import cart from '../../mixins/cart'
+  // import cart from '../../mixins/cart'
   import user from '../../mixins/user'
   import Screen from '../../components/screen'
+  import ShareMessage from '../../mixins/ShareMessage'
 
   export default class mainDetail extends wepy.page {
-    mixins = [base, http, cart, user]
+    mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '图书详情'
     }
@@ -105,34 +149,25 @@
       icon_star_active: '/images/icon/icon-star-active@2x.png',
       icon_shelf: '/images/tabbars/icon-shelf@2x.png',
       navigate: false,
-      book: {}
-    }
-
-    computed = {
-      banners () {
-        return this.getArray(this.book && this.book.images)
+      book: {
+        'library_book': {
+          'lent_num': 0,
+          'num': 0
+        }
       },
-      description() {
-        const desc = this.book && this.book.desc
-        return desc || [{
-          type: 'text',
-          value: '暂无图书简介'
-        }]
-      },
-      isCollect() {
-        return Boolean(this.book && +this.book.collected)
-      },
-      isEnabled() {
-        return Boolean(this.book.book_libraries && this.book.book_libraries[0].lent_num < this.book.book_libraries[0].num)
-      }
+      id: 0,
+      library_id: 1,
+      title: ''
     }
 
     onLoad(query) {
-      this.book.id = query && +query.id
-      this.book.title = query && query.title
+      this.id = query && +query.id
+      if (query && +query.library_id) {
+        this.library_id = query && +query.library_id
+      }
     }
     onShareAppMessage(res) {
-      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+      return this.$parent.onShareAppMessage(this.book.library.name + '藏书-' + this.book.name)
     }
     onShow() {
       this.initPageData()
@@ -152,10 +187,13 @@
 
     // 获取图书信息
     getDetail() {
-      // 根据业务接口处理数据
-      this.$get({url: service.books + '/' + this.book.id}, {
+      // 获取图书详情
+      this.$get({url: service.libraries + '/' + this.library_id + '/books/' + this.id}, {
         success: ({code, data}) => {
           this.book = data
+          wx.setNavigationBarTitle({
+            title: data.library.name + '藏书-' + data.title
+          })
         }
       })
 
@@ -203,6 +241,10 @@
         // 查看书架
         wx.switchTab({url: '/pages/borrow'})
       },
+      goto(url) {
+        // url jump
+        wx.navigateTo({url: url})
+      },
       toAdd(book) {
         var that = this
         wx.showModal({
@@ -211,7 +253,7 @@
           showCancel: true,
           success: function(res) {
             if (res.confirm) {
-              that.$post({url: service.library + '/books/' + book.id + '/reserve'}, {
+              that.$post({url: service.libraries + '/' + that.library_id + '/books/' + book.id + '/reserve'}, {
                 success: ({code, data}) => {
                   wx.showModal({
                     title: '预约借书成功',
@@ -227,6 +269,24 @@
     }
     components = {
       Screen
+    }
+    computed = {
+      banners () {
+        return this.getArray(this.book && this.book.images)
+      },
+      description() {
+        const desc = this.book && this.book.desc
+        return desc || [{
+          type: 'text',
+          value: '暂无图书简介'
+        }]
+      },
+      isCollect() {
+        return Boolean(this.book && +this.book.collected)
+      },
+      isEnabled() {
+        return Boolean(this.book.library_book.lent_num < this.book.library_book.num)
+      }
     }
   }
 </script>

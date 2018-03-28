@@ -99,15 +99,17 @@
   import http from '../../mixins/http'
   import base from '../../mixins/base'
   import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
 
   export default class borrowSubscribe extends wepy.page {
-    mixins = [base, http, user]
+    mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '图书编辑',
       enablePullDownRefresh: false
     }
     data = {
       id: 0,
+      library_id: 0,
       title: '',
       origin_title: '',
       class_id: 0,
@@ -137,6 +139,7 @@
 
     onLoad(options) {
       this.id = options.id
+      this.libraryId = options.library_id
     }
 
     onShow(options) {
@@ -151,7 +154,7 @@
     // 初始化页面数据
     initPageData() {
       // 拉取图书详情
-      this.$get({url: service.books + '/' + this.id}, {
+      this.$get({url: service.libraries + '/' + this.libraryId + '/books/' + this.id}, {
         success: ({code, data}) => {
           this.id = data.id
           this.title = data.title
@@ -169,7 +172,7 @@
           this.num = data.library_book.num
 
           // 分类列表
-          this.list = data.library_book.sorts
+          this.list = data.sorts
           for (var i = 0; i < this.list.length; ++i) {
             this.sorts[i] = this.list[i].name
             if (this.getString(this.list[i].id) === this.getString(this.class_id)) {
@@ -220,7 +223,7 @@
         this.loading = true
 
         // 保存图书信息
-        this.$put({url: service.books + '/' + this.id, data: data}, {
+        this.$put({url: service.libraries + '/' + this.libraryId + '/books/' + this.id, data: data}, {
           success: ({code, data}) => {
             wx.showModal({
               title: '提示',

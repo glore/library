@@ -1,0 +1,115 @@
+.qr_isbn input {
+  background: white;
+  width: 80%;
+  height: 62rpx;
+  text-align: center;
+  border: 2rpx solid #d3d3d3;
+  border-radius: 8rpx;
+  margin: 10% auto;
+}
+.upload-text{
+  width: 92%;
+  /*background: white;*/
+  border: 1rpx solid #c2c2c2;
+  border-radius: 6rpx;
+}
+.BookList {
+  background: white;
+  box-shadow: 1rpx 12rpx 12rpx #d3d3d3;
+  padding: 6rpx 0;
+  overflow: hidden;
+  margin: 12rpx;
+}
+.BookList_animation {
+  position: absolute;
+  left: 0; bottom: 650rpx;
+  animation: mybook 1000ms 1;
+  animation-fill-mode: forwards;
+}
+@keyframes mybook {
+  from {
+    bottom: 650rpx;
+    width: 100%;
+    height: 100%;
+    left: 0;
+  }
+  to {
+    bottom: -25rpx;
+    width: 0;
+    height: 0%;
+    left: 200rpx;
+  }
+}
+image {
+  width: 240rpx;
+  height: 240rpx;
+}
+.inline-block {display: inline-block}
+.flo_l {float: left}
+.flo_r {float: right}
+.font_26 {font-size: 26rpx}
+.font_28 {font-size: 28rpx}
+.bold{font-weight: bold}
+.clearfloat {clear:both}
+.white {background: white}
+.ellipsis_2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.ellipsis_1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+.qr_btn_animation{
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 50%;
+  background: #4ba7ff;
+  text-align: center;
+  line-height: 180rpx;
+  color: white;
+  margin: 5% auto;
+  animation: mymove 1500ms infinite;
+  animation-direction:alternate;
+  position: fixed;
+  left: 280rpx;
+  bottom: -100rpx;
+}
+.hide_image{
+  width: 200rpx;
+  height: 280rpx;
+  margin: 20rpx;
+  border: 2rpx solid #d3d3d3;
+  text-align: center;
+}
+.hide_image image{
+  width: 100rpx;
+  height: 100rpx;
+  margin-top: 100rpx;
+}
+@keyframes mymove {
+  from {
+    /*width:180rpx; height: 180rpx;*/
+    /*line-height: 180rpx;*/
+    bottom: -50rpx;
+  }
+  to {
+    /*width:200rpx;height: 200rpx;*/
+    /*line-height: 200rpx;*/
+    bottom: 0rpx;
+  }
+}
+.btn {
+  border: none;
+  text-align: left;
+  padding: 0;
+  margin: 0;
+  line-height: 1.5;
+  background: none;
+}

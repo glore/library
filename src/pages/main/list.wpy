@@ -21,14 +21,17 @@
   import http from '../../mixins/http'
   import SearchBar from '../../components/searchbar'
   import BookList from '../../components/bookList'
+  import ShareMessage from '../../mixins/ShareMessage'
 
   export default class mainList extends wepy.page {
-    mixins = [base, http]
+    mixins = [base, http, ShareMessage]
     config = {
       navigationBarTitleText: '查找图书'
     }
     data = {
       params: {},
+
+      libraryId: 0,
 
       noMoreList: false,
       loading: false,
@@ -50,6 +53,8 @@
         params = {}
       }
       this.params = params
+      let libraryId = this.getNumber(query.library_id)
+      this.libraryId = this.isNumber(libraryId) ? libraryId : 0
     }
 
     onReady() {
@@ -103,7 +108,7 @@
       this.loading = true
       // 推荐列表
       this.$get({
-        url: service.list,
+        url: service.list + '?library_id=' + this.libraryId,
         data: Object.assign({}, this.getObject(this.params), {
           // 默认从1开始为第一页
           page: page
@@ -149,12 +154,12 @@
       return this.getArray(data).map((book, index) => {
         // 拼接示例数据
         return {
-          id: book.book.id,
-          title: book.book.title ? book.book.title : '无标题',
-          content: `简介: ${book.book.summary}.`,
-          image: book.book.image ? book.book.image : 'http://images.ufutx.com/201709/27/97bae3e1de000df7b4b6b28a3195a4de.png',
-          tags: [book.book.author ? book.book.author : '无'],
-          status: book.num > book.lent_num
+          id: book.id,
+          title: book.title ? book.title : '无标题',
+          content: `简介: ${book.summary}.`,
+          image: book.image ? book.image : 'http://images.ufutx.com/201709/27/97bae3e1de000df7b4b6b28a3195a4de.png',
+          tags: [book.author ? book.author : '无']
+          // status: book.num > book.library_book.lent_num
         }
       })
     }

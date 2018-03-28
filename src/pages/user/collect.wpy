@@ -19,11 +19,11 @@
   import { service } from '../../config.js'
   import base from '../../mixins/base'
   import http from '../../mixins/http'
-  import { funImages } from '../../mixins/demo'
   import BookList from '../../components/bookList'
+  import ShareMessage from '../../mixins/ShareMessage'
 
   export default class userCollect extends wepy.page {
-    mixins = [base, http]
+    mixins = [base, http, ShareMessage]
     config = {
       navigationBarTitleText: '收藏图书',
       enablePullDownRefresh: false
@@ -121,7 +121,7 @@
           id: xlen,
           title: book.title,
           content: `简介: 大吉大利，今晚吃鸡。${book.title}；${book.title}。`,
-          image: funImages[(xlen + 4) % 8],
+          image: '',
           tags: ['tag1', 'tag2'],
           status: xlen % 2,
           collected: 1

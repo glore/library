@@ -1,20 +1,21 @@
 <template>
   <view class="page-index">
     <SearchBar :placeholder="searchText"></SearchBar>
-    <!--Swiper :list.sync="swipers" height="280"></Swiper-->
-    <!--Category :list.sync="categorys" col="4"></Category-->
+    <Category :list.sync="categorys" col="3"></Category>
     <BookList :list.sync="list" title="图书推荐"
      :loading.sync="loading" :noMore.sync="noMoreList"></BookList>
   </view>
 </template>
 
 <script>
+
   import wepy from 'wepy'
   import { service } from '../config.js'
   import base from '../mixins/base'
   import http from '../mixins/http'
   import user from '../mixins/user'
   import SearchBar from '../components/searchbar'
+  import Category from '../components/category'
   import BookList from '../components/bookList'
 
   export default class pageIndex extends wepy.page {
@@ -29,6 +30,11 @@
       noMoreList: false,
       loading: false,
       list: [],
+      categorys: [
+        {'title': '全部图书', 'image': '/images/category/cate-all@2x.png', 'url': '/pages/book/list'},
+        {'title': '录入图书', 'image': '/images/category/cate-scan@2x.png', 'url': '/pages/qr', 'type': 'tab'},
+        {'title': '图书馆', 'image': '/images/category/cate-library@2x.png', 'url': '/pages/borrow', 'type': 'tab'}
+      ],
       page: 1
     }
 
@@ -133,7 +139,8 @@
 
     components = {
       SearchBar,
-      BookList
+      BookList,
+      Category
     }
   }
 </script>

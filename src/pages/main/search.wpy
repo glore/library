@@ -22,9 +22,10 @@
   import base from '../../mixins/base'
   import http from '../../mixins/http'
   import checkboxButton from '../../components/checkboxButton'
+  import ShareMessage from '../../mixins/ShareMessage'
 
   export default class mainSearch extends wepy.page {
-    mixins = [base, http]
+    mixins = [base, http, ShareMessage]
     config = {
       navigationBarTitleText: '分类选择'
     }
@@ -81,7 +82,6 @@
       this.$get({url: service.tags}, {
         success: ({code, data}) => {
           // data = [{
-          //   code: 'demo',
           //   name: 'title',
           //   list: [
           //     {name: 'xxx', value: '1'},

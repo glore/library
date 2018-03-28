@@ -9,13 +9,13 @@
 //
 
 function GoogleAnalytics(app) {
-    this.app = app; //小程序App实例
+    this.app = app; // 小程序App实例
     this.systemInfo = wx.getSystemInfoSync();
-    this.trackers = ['UA-109097480-1']; //可以有多个跟踪器，第一个为默认跟踪器
-    this.appName = "友福同享";
-    this.appVersion = "ver";
+    this.trackers = ['UA-109097480-1']; // 可以有多个跟踪器，第一个为默认跟踪器
+    this.appName = '友福同享';
+    this.appVersion = 'ver';
 
-    console.log(this.systemInfo);
+    // console.log(this.systemInfo);
 
     var cidKey = '_ga_cid'; // 存用户身份(UUID)
 
@@ -173,7 +173,7 @@ Tracker.prototype.send_queue_push = function (ga, hit) {
         data[k] = hit[k];
     }
 
-    console.log(["ga.queue.push", data]);
+    // console.log(["ga.queue.push", data]);
 
     this.send_queue.push([data, new Date()]);
 
@@ -225,18 +225,18 @@ Tracker.prototype._do_send = function () {
         payloads.push(payload);
         this.send_queue.shift();
 
-        console.log(["ga.queue.presend[" + (payloads.length - 1) + "]", data]);
+        // console.log(["ga.queue.presend[" + (payloads.length - 1) + "]", data]);
     }
 
     var payloadData = payloads.join("\r\n");
 
     var apiUrl = 'https://ga.ufutx.net/collect';
     if (payloads.length > 1) {
-        console.log(["ga.queue.send.batch", payloadData]);
+        // console.log(["ga.queue.send.batch", payloadData]);
         //使用批量上报接口
         apiUrl = 'https://ga.ufutx.net/batch';
     } else {
-        console.log(["ga.queue.send.collect", payloadData]);
+        // console.log(["ga.queue.send.collect", payloadData]);
     }
     wx.request({
         url: apiUrl,
@@ -247,7 +247,7 @@ Tracker.prototype._do_send = function () {
         },
         success: function (res) {
             // success
-            console.log(["ga:success", res]);
+            // console.log(["ga:success", res]);
         },
         fail: function (res) {
             // fail
