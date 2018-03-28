@@ -2,7 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="654f390e-268f-4c34-b38e-e2c47046a37b" name="默认的" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app.wpy" afterPath="$PROJECT_DIR$/src/app.wpy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/collect.wpy" afterPath="$PROJECT_DIR$/src/pages/collect.wpy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/library/library.wpy" afterPath="$PROJECT_DIR$/src/pages/library/library.wpy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/qr.wpy" afterPath="$PROJECT_DIR$/src/pages/qr.wpy" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -14,107 +19,28 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="DockManager">
-    <window id="2">
-      <content type="file-editors">
-        <state>
-          <leaf>
-            <file leaf-file-name="qr.wpy" pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/src/pages/qr.wpy">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="310">
-                    <caret line="313" column="0" lean-forward="false" selection-start-line="313" selection-start-column="0" selection-end-line="314" selection-end-column="0" />
-                    <folding>
-                      <element signature="n#style#0;n#view#1;n#view#0;n#template#0;n#!!top" expanded="true" />
-                      <element signature="n#style#0;n#button#0;n#view#1;n#view#0;n#template#0;n#!!top" expanded="true" />
-                      <element signature="n#style#0;n#view#0;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-                      <element signature="n#style#0;n#view#2;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-                      <element signature="n#style#0;n#view#0;n#view#2;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-                      <element signature="n#style#0;n#input#0;n#view#0;n#view#2;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-                      <element signature="n#style#0;n#input#0;n#view#1;n#view#2;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-                      <element signature="n#style#0;n#textarea#0;n#view#2;n#view#2;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-                      <element signature="n#style#0;n#button#0;n#view#3;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-                      <element signature="n#style#0;n#button#1;n#view#3;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-                      <element signature="n#style#0;n#view#1;n#view#3;n#view#0;n#template#0;n#!!top" expanded="true" />
-                      <element signature="n#style#0;n#button#0;n#view#1;n#view#3;n#view#0;n#template#0;n#!!top" expanded="true" />
-                      <element signature="e#2941#2964#0" expanded="true" />
-                    </folding>
-                  </state>
-                </provider>
-              </entry>
-            </file>
-            <file leaf-file-name="qr.less" pinned="false" current-in-tab="false">
-              <entry file="file://$PROJECT_DIR$/src/styles/custom/qr.less">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="457">
-                    <caret line="83" column="0" lean-forward="false" selection-start-line="83" selection-start-column="0" selection-end-line="94" selection-end-column="1" />
-                    <folding />
-                  </state>
-                </provider>
-              </entry>
-            </file>
-          </leaf>
-        </state>
-      </content>
-    </window>
-  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="result.wpy" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/pages/borrow/result.wpy">
+      <file leaf-file-name="index.wpy" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pages/index.wpy">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-78">
-              <caret line="29" column="32" lean-forward="false" selection-start-line="29" selection-start-column="32" selection-end-line="29" selection-end-column="32" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="config.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/config.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="11" column="14" lean-forward="true" selection-start-line="11" selection-start-column="14" selection-end-line="11" selection-end-column="14" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="app.wpy" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/app.wpy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="104">
-              <caret line="17" column="19" lean-forward="true" selection-start-line="17" selection-start-column="19" selection-end-line="17" selection-end-column="19" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test.wpy" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/pages/test.wpy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="899">
-              <caret line="63" column="7" lean-forward="true" selection-start-line="43" selection-start-column="6" selection-end-line="63" selection-end-column="7" />
+            <state relative-caret-position="449">
+              <caret line="54" column="25" lean-forward="true" selection-start-line="54" selection-start-column="25" selection-end-line="54" selection-end-column="25" />
               <folding>
-                <element signature="n#style#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#image#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#image#0;n#view#1;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#text#0;n#view#1;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#image#0;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#text#0;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#image#0;n#view#3;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#text#0;n#view#3;n#view#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="e#297#320#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="animation.less" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/styles/custom/animation.less">
+      <file leaf-file-name="bookList.wpy" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/bookList.wpy">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="416">
-              <caret line="16" column="17" lean-forward="true" selection-start-line="15" selection-start-column="15" selection-end-line="16" selection-end-column="17" />
-              <folding />
+            <state relative-caret-position="1285">
+              <caret line="116" column="19" lean-forward="false" selection-start-line="116" selection-start-column="6" selection-end-line="116" selection-end-column="19" />
+              <folding>
+                <element signature="e#3370#3393#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -122,88 +48,9 @@
       <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="607">
-              <caret line="138" column="20" lean-forward="true" selection-start-line="138" selection-start-column="20" selection-end-line="138" selection-end-column="20" />
+            <state relative-caret-position="503">
+              <caret line="155" column="21" lean-forward="true" selection-start-line="155" selection-start-column="21" selection-end-line="155" selection-end-column="21" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="user.wpy" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/pages/user.wpy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="479">
-              <caret line="141" column="0" lean-forward="false" selection-start-line="141" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="library.wpy" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/pages/library/library.wpy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4527">
-              <caret line="196" column="24" lean-forward="true" selection-start-line="196" selection-start-column="24" selection-end-line="196" selection-end-column="24" />
-              <folding>
-                <element signature="n#style#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#view#1;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#button#0;n#view#1;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#button#1;n#view#1;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#view#3;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#button#0;n#view#3;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#view#1;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#button#0;n#view#1;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#view#0;n#view#2;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#view#2;n#view#2;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#view#0;n#view#2;n#view#2;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#input#0;n#view#0;n#view#2;n#view#2;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#input#0;n#view#1;n#view#2;n#view#2;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#textarea#0;n#view#2;n#view#2;n#view#2;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#button#0;n#view#3;n#view#2;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#button#1;n#view#3;n#view#2;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#view#0;n#view#3;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#view#1;n#view#3;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#view#2;n#view#1;n#view#3;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#view#3;n#view#1;n#view#3;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#text#0;n#view#0;n#view#0;n#picker#0;n#view#3;n#view#1;n#view#3;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#view#4;n#view#1;n#view#3;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#button#0;n#view#4;n#view#1;n#view#3;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#view#0;n#view#4;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#image#0;n#view#0;n#view#4;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#image#0;n#view#1;n#view#4;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#text#0;n#view#1;n#view#4;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#image#0;n#view#2;n#view#4;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#text#0;n#view#2;n#view#4;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#image#0;n#view#3;n#view#4;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#text#0;n#view#3;n#view#4;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#image#0;n#view#0;n#view#5;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#text#0;n#view#0;n#view#5;n#template#0;n#!!top" expanded="true" />
-                <element signature="e#8531#8554#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="library.less" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/styles/custom/library.less">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1120">
-              <caret line="128" column="45" lean-forward="true" selection-start-line="128" selection-start-column="45" selection-end-line="128" selection-end-column="45" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="borrow.wpy" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/pages/borrow.wpy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="427">
-              <caret line="34" column="86" lean-forward="false" selection-start-line="34" selection-start-column="86" selection-end-line="34" selection-end-column="86" />
-              <folding>
-                <element signature="n#style#0;n#view#0;n#view#0;n#view#1;n#view#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#button#0;n#view#0;n#view#0;n#block#0;n#view#0;n#view#1;n#view#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="e#5488#5511#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -212,36 +59,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>删除</find>
-      <find>deletecollect</find>
-      <find>BookId</find>
-      <find>librarydata</find>
-      <find>libraries</find>
-      <find>ShowEdit</find>
-      <find>EditIsbn</find>
-      <find>qr_btn_animation</find>
-      <find>ShowUpload</find>
-      <find>BookImage</find>
-      <find>inputChange_author</find>
-      <find>DeleteEdit</find>
       <find>scanBorrow</find>
-      <find>hide_image</find>
-      <find>sorts_typeChange</find>
       <find>sorts_Change</find>
       <find>sortsindex</find>
       <find>_id</find>
       <find>sorts_id</find>
       <find>addbook</find>
       <find>scanBook</find>
-      <find>RemoveEdit</find>
       <find>EditAnimation</find>
       <find>CollectAnimation</find>
       <find>scan_home</find>
-      <find>mybook</find>
       <find>BookList_animation</find>
-      <find>sortslist</find>
+      <find>RemoveEdit</find>
+      <find>删除</find>
+      <find>navTo</find>
       <find>initPageData</find>
+      <find>debugger</find>
+      <find>librarydata</find>
+      <find>library_sort_index</find>
+      <find>ShowSorts</find>
+      <find>libraries</find>
+      <find>sortslist</find>
+      <find>sorts_typeChange</find>
+      <find>deletecollect</find>
+      <find>hide_image</find>
+      <find>mylibrary</find>
+      <find>借书</find>
+      <find>mybook</find>
       <find>list</find>
+      <find>isCollectList</find>
+      <find>twoWay</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -284,15 +131,15 @@
         <option value="$PROJECT_DIR$/src/mixins/ShareMessage.js" />
         <option value="$PROJECT_DIR$/src/mixins/http.js" />
         <option value="$PROJECT_DIR$/src/styles/custom/qr.less" />
-        <option value="$PROJECT_DIR$/src/pages/collect.wpy" />
         <option value="$PROJECT_DIR$/src/pages/test.wpy" />
-        <option value="$PROJECT_DIR$/src/app.wpy" />
         <option value="$PROJECT_DIR$/src/config.js" />
-        <option value="$PROJECT_DIR$/src/pages/qr.wpy" />
         <option value="$PROJECT_DIR$/src/styles/custom/animation.less" />
         <option value="$PROJECT_DIR$/src/styles/custom/library.less" />
-        <option value="$PROJECT_DIR$/src/pages/library/library.wpy" />
         <option value="$PROJECT_DIR$/src/pages/borrow.wpy" />
+        <option value="$PROJECT_DIR$/src/app.wpy" />
+        <option value="$PROJECT_DIR$/src/pages/collect.wpy" />
+        <option value="$PROJECT_DIR$/src/pages/library/library.wpy" />
+        <option value="$PROJECT_DIR$/src/pages/qr.wpy" />
         <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
@@ -363,6 +210,12 @@
               <item name="library" type="b2602c69:ProjectViewProjectNode" />
               <item name="library" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="library" type="b2602c69:ProjectViewProjectNode" />
+              <item name="library" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="pages" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -370,13 +223,6 @@
               <item name="library" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="styles" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="library" type="b2602c69:ProjectViewProjectNode" />
-              <item name="library" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="styles" type="462c0819:PsiDirectoryNode" />
-              <item name="custom" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -429,12 +275,12 @@
       <option name="presentableId" value="Default" />
       <updated>1520923598298</updated>
       <workItem from="1520923600047" duration="7137000" />
-      <workItem from="1521279185997" duration="107381000" />
+      <workItem from="1521279185997" duration="126507000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="201884000" />
+    <option name="totallyTimeSpent" value="221010000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -473,7 +319,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/pages/collect.wpy</url>
-          <line>59</line>
+          <line>55</line>
           <properties />
           <option name="timeStamp" value="3" />
         </line-breakpoint>
@@ -558,76 +404,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/bookList.wpy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="164" column="0" lean-forward="false" selection-start-line="164" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
-          <folding>
-            <marker date="1521540551855" expanded="true" signature="464:2633" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="512:609" ph="..." />
-            <marker date="1521540551855" expanded="false" signature="577:588" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="659:2612" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="857:1862" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="911:1084" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="1114:1279" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="1365:1841" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="1421:1616" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="1631:1819" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="1911:2594" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="1989:2070" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="2115:2574" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="2170:2349" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="2381:2552" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="2682:2851" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="2719:2836" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="2886:3098" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="2960:3083" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="3131:3334" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="3185:3321" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="3366:5595" ph="..." />
-            <marker date="1521540551855" expanded="false" signature="3377:3506" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="3563:5586" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="3603:4035" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="3617:3668" ph="{&quot;type&quot;: Object...}" />
-            <marker date="1521540551855" expanded="true" signature="3683:3736" ph="{&quot;type&quot;: String...}" />
-            <marker date="1521540551855" expanded="true" signature="3753:3808" ph="{&quot;type&quot;: Boolean...}" />
-            <marker date="1521540551855" expanded="true" signature="3824:3879" ph="{&quot;type&quot;: Boolean...}" />
-            <marker date="1521540551855" expanded="true" signature="3887:3961" ph="/** [type 列表类型：常规列表/收藏列表] ...*/" />
-            <marker date="1521540551855" expanded="true" signature="3974:4029" ph="{&quot;type&quot;: String...}" />
-            <marker date="1521540551855" expanded="true" signature="4048:4278" ph="{&quot;icon_eye&quot;: '/images/icon/icon-eye@2x.png'...}" />
-            <marker date="1521540551855" expanded="true" signature="4295:4373" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="4319:4367" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="4389:5582" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="4417:5576" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="4626:4758" ph="{&quot;url&quot;: service.collect...}" />
-            <marker date="1521540551855" expanded="true" signature="4676:4748" ph="{&quot;type&quot;: newType...}" />
-            <marker date="1521540551855" expanded="true" signature="4760:5567" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="4799:5096" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="4874:4940" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="4966:5083" ph="{&quot;title&quot;: `${newTypeText}收藏！`...}" />
-            <marker date="1521540551855" expanded="true" signature="5132:5557" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="5146:5346" ph="//..." />
-            <marker date="1521540551855" expanded="true" signature="5372:5544" ph="{&quot;title&quot;: `${newTypeText}收藏失败！`...}" />
-            <marker date="1521540551855" expanded="true" signature="5616:7620" ph="..." />
-            <marker date="1521540551855" expanded="true" signature="5724:5931" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="5946:6272" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="6131:6270" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="6287:6501" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="6476:6499" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="6525:6713" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="6739:6924" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="6940:7041" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="7057:7115" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="7134:7178" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="7193:7267" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="7281:7432" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="7449:7571" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="7533:7568" ph="{...}" />
-            <marker date="1521540551855" expanded="true" signature="7586:7612" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/book/comment.wpy">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="442">
@@ -666,10 +442,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="338">
           <caret line="121" column="0" lean-forward="false" selection-start-line="121" selection-start-column="0" selection-end-line="122" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#view#4;n#view#0;n#template#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#view#0;n#Screen#0;n#view#0;n#template#0;n#!!top" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -833,16 +606,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/index.wpy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="347">
-          <caret line="135" column="1" lean-forward="false" selection-start-line="135" selection-start-column="1" selection-end-line="135" selection-end-column="1" />
-          <folding>
-            <element signature="e#302#325#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/mixins/http.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="253">
@@ -869,21 +632,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/collect.wpy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="92" column="0" lean-forward="false" selection-start-line="92" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#view#1;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="e#1930#1953#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/test.wpy">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="899">
-          <caret line="63" column="7" lean-forward="true" selection-start-line="43" selection-start-column="6" selection-end-line="63" selection-end-column="7" />
+          <caret line="63" column="7" lean-forward="false" selection-start-line="43" selection-start-column="6" selection-end-line="63" selection-end-column="7" />
           <folding>
             <element signature="n#style#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#image#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
@@ -894,14 +646,6 @@
             <element signature="n#style#0;n#image#0;n#view#3;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#text#0;n#view#3;n#view#0;n#template#0;n#!!top" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/app.wpy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="17" column="19" lean-forward="true" selection-start-line="17" selection-start-column="19" selection-end-line="17" selection-end-column="19" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -924,61 +668,67 @@
     <entry file="file://$PROJECT_DIR$/src/config.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="234">
-          <caret line="11" column="14" lean-forward="true" selection-start-line="11" selection-start-column="14" selection-end-line="11" selection-end-column="14" />
+          <caret line="11" column="14" lean-forward="false" selection-start-line="11" selection-start-column="14" selection-end-line="11" selection-end-column="14" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/styles/custom/qr.less">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="457">
-          <caret line="83" column="0" lean-forward="false" selection-start-line="83" selection-start-column="0" selection-end-line="94" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/qr.wpy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="310">
-          <caret line="313" column="0" lean-forward="false" selection-start-line="313" selection-start-column="0" selection-end-line="314" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#view#1;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#button#0;n#view#1;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#view#0;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#view#2;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#view#0;n#view#2;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#view#0;n#view#2;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#view#1;n#view#2;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#textarea#0;n#view#2;n#view#2;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#button#0;n#view#3;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#button#1;n#view#3;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#view#1;n#view#3;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#button#0;n#view#1;n#view#3;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="e#2941#2964#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/styles/custom/animation.less">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="416">
-          <caret line="16" column="17" lean-forward="true" selection-start-line="15" selection-start-column="15" selection-end-line="16" selection-end-column="17" />
+          <caret line="16" column="17" lean-forward="false" selection-start-line="15" selection-start-column="15" selection-end-line="16" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/borrow.wpy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="401">
+          <caret line="34" column="86" lean-forward="false" selection-start-line="34" selection-start-column="86" selection-end-line="34" selection-end-column="86" />
+          <folding>
+            <element signature="n#style#0;n#view#0;n#view#0;n#view#1;n#view#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#0;n#view#0;n#view#0;n#block#0;n#view#0;n#view#1;n#view#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="e#5488#5511#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/styles/custom/qr.less">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-114">
+          <caret line="83" column="12" lean-forward="false" selection-start-line="83" selection-start-column="12" selection-end-line="83" selection-end-column="12" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/styles/custom/library.less">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1120">
-          <caret line="128" column="45" lean-forward="true" selection-start-line="128" selection-start-column="45" selection-end-line="128" selection-end-column="45" />
+        <state relative-caret-position="286">
+          <caret line="23" column="14" lean-forward="true" selection-start-line="23" selection-start-column="14" selection-end-line="23" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/app.wpy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="520">
+          <caret line="83" column="55" lean-forward="true" selection-start-line="83" selection-start-column="55" selection-end-line="83" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/collect.wpy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="18" column="87" lean-forward="false" selection-start-line="18" selection-start-column="83" selection-end-line="18" selection-end-column="87" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/library/library.wpy">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4527">
-          <caret line="196" column="24" lean-forward="true" selection-start-line="196" selection-start-column="24" selection-end-line="196" selection-end-column="24" />
+        <state relative-caret-position="406">
+          <caret line="97" column="46" lean-forward="false" selection-start-line="97" selection-start-column="41" selection-end-line="97" selection-end-column="46" />
           <folding>
             <element signature="n#style#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#view#1;n#view#0;n#template#0;n#!!top" expanded="true" />
@@ -1001,6 +751,7 @@
             <element signature="n#style#0;n#view#2;n#view#1;n#view#3;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#view#3;n#view#1;n#view#3;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#text#0;n#view#0;n#view#0;n#picker#0;n#view#3;n#view#1;n#view#3;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#text#1;n#view#0;n#view#0;n#picker#0;n#view#3;n#view#1;n#view#3;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#view#4;n#view#1;n#view#3;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#button#0;n#view#4;n#view#1;n#view#3;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#view#0;n#view#4;n#template#0;n#!!top" expanded="true" />
@@ -1013,27 +764,57 @@
             <element signature="n#style#0;n#text#0;n#view#3;n#view#4;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#image#0;n#view#0;n#view#5;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#text#0;n#view#0;n#view#5;n#template#0;n#!!top" expanded="true" />
-            <element signature="e#8531#8554#0" expanded="true" />
+            <element signature="e#8744#8767#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/borrow.wpy">
+    <entry file="file://$PROJECT_DIR$/src/pages/qr.wpy">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="34" column="86" lean-forward="false" selection-start-line="34" selection-start-column="86" selection-end-line="34" selection-end-column="86" />
+        <state relative-caret-position="130">
+          <caret line="26" column="13" lean-forward="true" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
           <folding>
-            <element signature="n#style#0;n#view#0;n#view#0;n#view#1;n#view#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#button#0;n#view#0;n#view#0;n#block#0;n#view#0;n#view#1;n#view#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="e#5488#5511#0" expanded="true" />
+            <element signature="n#style#0;n#view#1;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#0;n#view#1;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#view#0;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#view#2;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#view#0;n#view#2;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#view#0;n#view#2;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#view#1;n#view#2;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#view#2;n#view#2;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#0;n#view#3;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#1;n#view#3;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#view#1;n#view#3;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#0;n#view#1;n#view#3;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="e#2947#2970#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/bookList.wpy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1285">
+          <caret line="116" column="19" lean-forward="false" selection-start-line="116" selection-start-column="6" selection-end-line="116" selection-end-column="19" />
+          <folding>
+            <element signature="e#3370#3393#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/index.wpy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="449">
+          <caret line="54" column="25" lean-forward="true" selection-start-line="54" selection-start-column="25" selection-end-line="54" selection-end-column="25" />
+          <folding>
+            <element signature="e#297#320#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="607">
-          <caret line="138" column="20" lean-forward="true" selection-start-line="138" selection-start-column="20" selection-end-line="138" selection-end-column="20" />
+        <state relative-caret-position="503">
+          <caret line="155" column="21" lean-forward="true" selection-start-line="155" selection-start-column="21" selection-end-line="155" selection-end-column="21" />
           <folding />
         </state>
       </provider>

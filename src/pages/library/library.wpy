@@ -87,7 +87,10 @@
       <view  class="list" style="width: 78%">
         <picker  value="{{item.sortslist.index}}" range="{{item.sortslist.name}}" id="{{item.id}}" data-current="{{idx}}" bindchange="sorts_typeChange" >
           <view class="picker">
-            <view class="font_26">分类：<text style="border-bottom: 1rpx solid #d3d3d3">{{item.sortslist.name[item.sortslist.index]}}</text></view>
+            <view class="font_26">分类：
+              <text style="border-bottom: 1rpx solid #d3d3d3" wx:if="{{item.sortslist.ShowSorts}}">{{item.sortslist.name[item.sortslist.index]}}</text>
+              <text style="border-bottom: 1rpx solid #d3d3d3" wx:else>{{library_sort_list[item.library_sort_index].name}}</text>
+            </view>
           </view>
         </picker>
       </view>
@@ -119,7 +122,7 @@
   <view class="scan"  wx:if="{{mylib.member && mylib.member.status=='MEMBER'}}">
     <view class="scan_home scan_active {{changerotate ? 'changerotate3' : ''}} {{shrink ? 'changeshrink3' : ''}}"  @tap="scanBorrow({{mylib.id}})">
       <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>
-      <text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;">借书</text>
+      <text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;margin-bottom: 4rpx">借书</text>
     </view>
   </view>
 </template>
@@ -164,7 +167,11 @@
       ShowEdit: false,
       librarydata: [],
       BookImage: '../images/icon/icon-upload.png',
-      ShowUpload: false
+      ShowUpload: false,
+      ShowSorts: false,
+      library_sort_id: '',
+      library_sort_list: '',
+      library_sort_index: ''
     }
 
     computed = {
@@ -191,10 +198,11 @@
       this.$get({url: service.libraries + '/' + this.mylib.id}, {
         success: ({code, data}) => {
           this.mylib = data
+//          debugger
           let name = data.sorts.map(function (item) {
             return item.name
           })
-          this.sortslist = {name: name, index: 0}
+          this.sortslist = {name: name, index: 0, ShowSorts: false}
           wx.setNavigationBarTitle({
             title: data.name // 页面标题为路由参数
           })
@@ -315,15 +323,29 @@
                 }
               }, {
                 success: ({code, data}) => {
-                  data.sortslist = this.sortslist
-                  that.libraries.unshift(data)
                   that.ShowAnimation = false
+                  that.library_sort_id = data.library_book.sort_id
+                  that.library_sort_list = data.sorts
+                  if (!that.library_sort_id) {
+                    that.ShowSorts = true
+//                    debugger
+                  }
+                  that.library_sort_list.forEach(function (item, index, arr) {
+                    if(that.library_sort_id == arr[index].id) {
+                      that.library_sort_index = index
+                    }
+                  })
+                  data.sortslist = this.sortslist
+                  data.library_sort_index = that.library_sort_index
+                  that.libraries.unshift(data)
                   that.Show = true
                   that.ShowEdit = false
                   let sortsarr = {
-                    id: data.id, sort_id: that.mylib.sorts[0].id
+                    id: data.id, sort_id: that.library_sort_id
                   }
                   that.librarydata.push(sortsarr)
+                  that.$apply()
+//                  debugger
                 },
                 fail: ({code, data}) => {
                   wx.showToast({
@@ -351,11 +373,13 @@
       },
       sorts_typeChange(e) {
         let that = this
+        that.ShowSorts = true
         let _id = ''
         let id = Number(e.currentTarget.id)
         that.sortsindex = e.detail.value
         const curindex = e.target.dataset.current
         that.libraries[curindex].sortslist.index = e.detail.value
+        that.libraries[curindex].sortslist.ShowSorts = true
         that.$apply()
         this.mylib.sorts.forEach(function (item, index, arr) {
           if (that.sortslist.name[that.sortsindex] == arr[index].name) {
@@ -406,6 +430,7 @@
           data: data
         }, {
           success: ({code, data}) => {
+            that.Show = false
             setTimeout(() => {
               wx.showToast({
                 title: '录入成功',
@@ -413,7 +438,6 @@
                 duration: 1500
               })
               that.libraries = []
-              that.Show = false
               that.librarydata = []
             }, 800)
             that.initPageData()

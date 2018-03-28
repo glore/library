@@ -87,7 +87,7 @@ export default class extends wepy.app {
         pagePath: 'pages/borrow',
         selectedIconPath: './images/tabbars/icon-book2-active.png',
         iconPath: './images/tabbars/icon-book2.png',
-        text: '借阅'
+        text: '书房'
       }, {
         pagePath: 'pages/user',
         selectedIconPath: './images/tabbars/icon-my-active.png',

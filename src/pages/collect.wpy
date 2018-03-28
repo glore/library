@@ -161,6 +161,7 @@
     }
     methods = {
       navTo(library_id, _id) {
+//        debugger
         wx.navigateTo({url: '/pages/book/detail?library_id=' + library_id + '&id=' + _id})
       },
       formSubmit(e) {

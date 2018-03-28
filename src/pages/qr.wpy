@@ -35,7 +35,7 @@
         <view class="font_28 ellipsis_1 bold">{{item.title}}</view>
         <view class="font_26 ellipsis_2" style=''>简介：{{item.summary}}</view>
         <text class="font_26">作者：{{item.author}}</text>
-        <button class="flo_r" type="warn" size="mini" @tap="deletecollect({{item.id}})" style="margin-top: 22rpx;margin-right: 8rpx">删除</button>
+        <button class="flo_r" type="warn" size="mini" plain @tap="deletecollect({{item.id}})" style="margin-top: 22rpx;margin-right: 8rpx">删除</button>
       </view>
       <view class="clearfloat"></view>
     </view>
@@ -149,7 +149,7 @@
               if (data.title) {
                 that.ShowAnimation = false
                 that.Show = true
-                that.libraries = data
+                that.libraries.unshift(data)
                 that.BookId.push(data.id)
               } else {
                 wx.showToast({
