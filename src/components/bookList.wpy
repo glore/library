@@ -38,11 +38,14 @@
                 <view class="booklist-tag">{{tag}}</view>
               </block>
               <view class="booklist-status">
+                <block wx:if="{{item.publisher}}">
+                  <text class="booklist-text color-blue">{{item.publisher}}</text>
+                </block>
                 <block wx:if="{{item.status == '1'}}">
                   <image src="{{icon_eye_active}}" class="imgicon" mode="aspectFit"/>
                   <text class="booklist-text color-blue">可借阅</text>
                 </block>
-                <block wx:else>
+                <block wx:if="{{item.status == '0'}}">
                   <image src="{{icon_eye}}" class="imgicon" mode="aspectFit"/>
                   <text class="booklist-text color-bbb">已借完</text>
                 </block>

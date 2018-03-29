@@ -158,8 +158,8 @@
           title: book.title ? book.title : '无标题',
           content: `简介: ${book.summary}.`,
           image: book.image ? book.image : 'http://images.ufutx.com/201709/27/97bae3e1de000df7b4b6b28a3195a4de.png',
-          tags: [book.author ? book.author : '无']
-          // status: book.num > book.library_book.lent_num
+          tags: [book.author ? book.author : '无'],
+          publisher: book.publisher
         }
       })
     }
