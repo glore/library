@@ -11,6 +11,7 @@
       <view class="weui-media-box weui-media-box_text weui-cells_in-small-appmsg">
         <view class="h3 color-333">{{book.name}}</view>
         <view class="detail-info">
+          <view>书名：{{book.title}}</view>
           <view>作者：{{book.author}}</view>
           <view>出版社：{{book.publisher}}</view>
           <view>出版时间：{{book.pubdate}}</view>
