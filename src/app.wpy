@@ -31,6 +31,7 @@ export default class extends wepy.app {
       // 图书馆管理
       'pages/library/library',
       'pages/library/borrow',
+      'pages/library/usercollect',
       'pages/library/members',
       'pages/library/borrows',
       'pages/library/book',
@@ -44,6 +45,8 @@ export default class extends wepy.app {
 
       // 我的
       'pages/user/register',
+      'pages/user/follower',
+      'pages/user/booklist',
       'pages/user/borrow',
       'pages/user/borrows',
       'pages/user/return',

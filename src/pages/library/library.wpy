@@ -331,7 +331,7 @@
 //                    debugger
                   }
                   that.library_sort_list.forEach(function (item, index, arr) {
-                    if(that.library_sort_id == arr[index].id) {
+                    if (that.library_sort_id == arr[index].id) {
                       that.library_sort_index = index
                     }
                   })

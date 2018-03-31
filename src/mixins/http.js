@@ -61,9 +61,10 @@ export default class httpMixin extends wepy.mixin {
   ) {
     // 增强体验：加载中
     wx.showNavigationBarLoading()
+
     // 构造请求体
     const request = {
-      url: url + '?XDEBUG_SESSION_START=1&from_openid='+ wx.getStorageSync('from_openid'),
+      url: url + '?XDEBUG_SESSION_START=1',
       method: ['GET', 'POST','PUT', 'DELETE'].indexOf(methods) > -1 ? methods : 'GET',
       header: Object.assign({
         'Authorization': 'Bearer ' + wx.getStorageSync('token'),
@@ -75,7 +76,7 @@ export default class httpMixin extends wepy.mixin {
     }
 
     // 控制台调试日志
-    console.table(request)
+    // console.table(request)
 
     // 发起请求
     wepy.request(Object.assign(request, {
@@ -87,7 +88,8 @@ export default class httpMixin extends wepy.mixin {
         if (0 === +data.code && data.data) {
           // 成功回调
           return setTimeout(() => {
-            this.isFunction(success) && success({statusCode, ...data})
+            let successExist = this.isFunction(success)
+            successExist && success({statusCode, ...data})
             this.$apply()
           })
         } else if (data.code == 2) {
@@ -104,7 +106,6 @@ export default class httpMixin extends wepy.mixin {
                 success: ({code, data}) => {
                   if(data.token){
                     wx.setStorageSync('token', data.token)
-                    wx.setStorageSync('openid', data.user.wechat.openid)
                   }
 
                   var route = '/' + getCurrentPages()[0].__route__;
@@ -162,7 +163,8 @@ export default class httpMixin extends wepy.mixin {
         wx.stopPullDownRefresh()
         // 完成回调
         return (() => {
-          this.isFunction(complete) && complete(res)
+          let completeExist = this.isFunction(complete)
+           completeExist && complete(res)
           this.$apply()
         })()
       }

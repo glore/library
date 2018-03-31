@@ -4,7 +4,7 @@
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell">
           <view class="weui-cell__bd userinfo clearfix">
-            <image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"/>
+            <image class="userinfo-avatar" src="{{user.wechat.avatar }}" background-size="cover"/>
             <view class="flo_r" style="margin:26rpx">
               <button  type="default" size="mini"  @tap="gotoTab('/pages/index')"  style="padding:2rpx 12rpx;line-height: 42rpx;margin-right: 22rpx">
                 <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-home.png" style="margin-top: -4rpx"></image>主页
@@ -12,6 +12,11 @@
               <button  type="warn" size="mini" plain open-type="share"  style="padding:2rpx 12rpx;line-height: 42rpx">
                 分享<image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-share_red.png" style="margin-top: -4rpx"></image>
               </button>
+            </view>
+            <view class="clearfloat"></view>
+            <view class="flo_r" style="margin-top:-26rpx;">
+              <button  @tap="joinLibrary({{user.id}})"  wx:if="{{showfollow}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">+ 关注</button>
+              <button  @tap="joinLibrary({{user.id}})"  wx:else style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">取消关注</button>
             </view>
             <view class="userinfo-info" >
               <view class="userinfo-nickname">{{ mylibrary.intro }}</view>
@@ -44,10 +49,9 @@
         <view class="font_26"  style="color:#5c8092;">所有藏书</view>
       </view>
     </view>
-    <view @tap="goto('/pages/library/usercollect?library_id=14')">ceshi1</view>
     <ClassifyList :list.sync="list" :library_id.sync="library_id"></ClassifyList>
     <!--<view class="BookList" wx:for="{{list}}" wx:key="*this"  @tap="navTo({{mylibrary.id}}, {{item.id}})">-->
-      <!--<view class="flo_l">--> 
+      <!--<view class="flo_l">-->
         <!--<image src="{{item.image}}" mode="aspectFit" />-->
       <!--</view>-->
       <!--<view class="flo_l" style="width: 65%; padding-top: 10rpx">-->
@@ -73,17 +77,17 @@
 
 <script>
   import wepy from 'wepy'
-  import http from '../mixins/http'
-  import base from '../mixins/base'
-  import user from '../mixins/user'
-  import ShareMessage from '../mixins/ShareMessage'
-  import { service } from '../config.js'
-  import ClassifyList from '../components/classifyList'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
+  import { service } from '../../config.js'
+  import ClassifyList from '../../components/classifyList'
 
-  export default class pageCollect extends wepy.page {
+  export default class userCollect extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
-      navigationBarTitleText: '藏书阁',
+      navigationBarTitleText: '好友藏书',
       enablePullDownRefresh: true
     }
     data = {
@@ -95,7 +99,9 @@
       loading: true,
       noMore: false,
       formId: [],
-      library_id: ''
+      library_id: '',
+      showfollow: true,
+      id: '' // 用户参数id
     }
     computed = {
       nickName() {
@@ -110,9 +116,14 @@
       this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+    onLoad(e) {
+      this.id = e.library_id
+      console.log(this.id)
+    }
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
+
     onReachBottom() {
       setTimeout(() => {
 //        this.updateBookList(this.page)
@@ -122,13 +133,17 @@
     // 初始化页面数据
     initPageData() {
       let that = this
-      this.$get({url: service.user}, {
+      this.$get({url: service.user + 's/' + this.id}, {
         success: ({code, data}) => {
           that.user = data.user
           that.libraries = data.libraries
           that.list = data.mylibrary.library_sorts
           that.mylibrary = data.mylibrary
           that.library_id = data.mylibrary.id
+          if (that.user.is_following) {
+            that.showfollow = false
+            that.$apply()
+          }
           wx.setStorageSync('openid', data.user.wechat.openid)
           setTimeout(() => {
             this.loading = false
@@ -204,6 +219,36 @@
         this.formId.push(e.detail.formId)
         console.log(this.formId)
       },
+      joinLibrary(_id) {
+        let self = this
+        this.$put({
+          url: service.user + 's/' + _id + '/follow'
+        }, {
+          success: ({code, data}) => {
+            let follow = data.is_following
+            if (follow) {
+              wx.showToast({
+                title: '关注成功',
+                icon: 'succse',
+                duration: 1500
+              })
+              self.showfollow = false
+              self.$apply()
+            } else {
+              wx.showToast({
+                title: '取消成功',
+                icon: 'succse',
+                duration: 1500
+              })
+              self.showfollow = true
+              self.$apply()
+            }
+//            wx.navigateTo({url: '/pages/library/library?id=' + self.mylib.id})
+          },
+          fail: ({code, data}) => {},
+          complete: () => { this.loaded = false }
+        })
+      },
       scanBook(libraryId) {
 //        let that = this
         wx.scanCode({
@@ -277,7 +322,7 @@
 </script>
 
 <style lang="less">
-  @import "../styles/custom/fn.less";
+  @import "../../styles/custom/fn.less";
 
   .page-user{
     @userinfoHeight: 100rpx;

@@ -1,0 +1,77 @@
+<template>
+    <view class="classifyList" wx:for="{{list}}" wx:key="*this"  @tap="goto('/pages/user/booklist?library_id={{library_id}}&id={{item.id}}')">
+      <view class="flo_r">
+        <image src="{{item.image}}" mode="aspectFit" style="width: 100rpx;height: 140rpx;margin-right: 42rpx"/>
+      </view>
+      <view class="flo_l" style="width: 25%; padding-top: 32rpx;text-align: center">
+        <view class="font_28 bold">
+          <span style="color: #5c8092;font-size: 48rpx">{{item.count}}</span><br/>
+          <view style="margin-top: -12rpx;color: #a4a4a4">{{item.name}}</view>
+        </view>
+      </view>
+      <view class="flo_l" style="width: 48%; padding-top: 38rpx">
+        <view class="font_28 bold ellipsis_2"><span wx:for="{{item.book_titls}}" wx:key="*this" wx:for-item="titles">{{titles}}、</span></view>
+      </view>
+      <view class="clearfloat"></view>
+    </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+//  import { service } from '../config.js'
+  import http from '../mixins/http'
+  import base from '../mixins/base'
+  import ShareMessage from '../mixins/ShareMessage'
+  export default class ClassifyList extends wepy.component {
+    mixins = [base, http]
+    props = {
+      list: {
+        type: Object,
+        default: []
+      },
+      library_id: {
+        type: Number,
+        default: null
+      }
+    };
+    onLoad () {
+      console.log(this.library_id)
+    }
+    methods = {
+      goto(url) {
+        console.log(this.library_id)
+        wx.navigateTo({url: url})
+      }
+    }
+  }
+</script>
+
+<style type="less">
+  .inline-block {display: inline-block}
+  .flo_l {float: left}
+  .flo_r {float: right}
+  .font_26 {font-size: 26rpx}
+  .font_28 {font-size: 28rpx}
+  .bold{font-weight: bold}
+  .clearfloat {clear:both}
+  .white {background: white}
+  .ellipsis_2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .ellipsis_1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+  .classifyList{
+    background: white;
+    border-bottom: 1rpx solid #d3d3d3;
+  }
+
+</style>

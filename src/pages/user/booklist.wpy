@@ -1,0 +1,144 @@
+<template>
+  <view wx:for="{{list}}" wx:key="*this" @tap="goto('/pages/book/detail?id={{item.id}}')">
+      <view style="width: 33%;text-align: center;margin-top: 32rpx" class="flo_l">
+        <image src="{{item.image}}" mode="aspectFit" style="width: 180rpx;height: 200rpx;"></image>
+        <view class="font_26 text-center ellipsis_1">{{item.title}}</view>
+      </view>
+  </view>
+  <block wx:if="{{loading}}">
+    <view class="weui-loadmore">
+      <view class="weui-loading"></view>
+      <view class="weui-loadmore__tips">正在加载</view>
+    </view>
+  </block>
+  <block wx:if="{{noMore}}">
+    <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+      <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+    </view>
+  </block>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
+  import { service } from '../../config.js'
+  export default class Booklist extends wepy.page {
+    mixins = [http, base, user, ShareMessage]
+    config = {
+      navigationBarTitleText: '所有藏书',
+      enablePullDownRefresh: true
+    }
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+    onPullDownRefresh() {
+      this.updateBookList()
+    }
+    onReachBottom() {
+      setTimeout(() => {
+        this.updateBookList(this.page)
+        this.$apply()
+      }, 200)
+    }
+    data = {
+      loading: true,
+      noMore: false,
+      list: [],
+      library_id: '',
+      id: '',
+      page: 1
+    }
+    onShow () {
+      this.updateBookList()
+    }
+    onLoad (e) {
+      this.library_id = e.library_id
+      this.id = e.id
+    }
+    updateBookList () {
+      let that = this
+      this.loading = true
+      this.$get({
+        url: service.libraries + '/' + that.library_id + '/sorts/' + that.id + '/books?page=' + that.page,
+        data: {
+          page: that.page
+        }
+      }, {
+        success: ({code, data}) => {
+          that.noMoreList = false
+          that.noMore = false
+          if (data.current_page > data.last_page) {
+            this.noMoreList = true
+            that.noMore = true
+            return
+          }
+          data = data.data
+          // 请求到空列表后就认为没有更多
+          if (this.isArray(data) && data.length === 0) {
+            that.noMore = true
+            return
+          }
+          if (that.list.length === 0 || that.page === 1) {
+            that.list = data.map(function (item) {
+              return item
+            })
+          } else {
+            data.map(function (item, index) {
+              that.list.push(item)
+            })
+          }
+          that.noMore = true
+          that.page += 1
+        },
+        fail: ({code, data}) => {
+          wx.showToast({
+            title: '出错了...',
+            image: '../images/icon/icon-error.png',
+            duration: 1500
+          })
+          that.noMore = true
+        },
+        complete: () => {
+          this.loading = false
+        }
+      })
+    }
+    methods = {
+      goto(url) {
+        wx.navigateTo({url: url})
+      }
+    }
+  }
+</script>
+
+<style type="less">
+  .inline-block {display: inline-block}
+  .flo_l {float: left}
+  .flo_r {float: right}
+  .font_26 {font-size: 26rpx}
+  .font_28 {font-size: 28rpx}
+  .bold{font-weight: bold}
+  .clearfloat {clear:both}
+  .white {background: white}
+  .ellipsis_2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .ellipsis_1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+  .weui-loadmore__tips_in-dot {
+    height:auto;
+  }
+</style>

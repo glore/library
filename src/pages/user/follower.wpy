@@ -1,0 +1,189 @@
+<template>
+  <block wx:if="{{follower}}">
+      <view wx:for="{{list}}" wx:key="*this"  style="padding: 20rpx;border-bottom: 1rpx solid #d3d3d3">
+        <view class="flo_l">
+          <image src="{{item.wechat.avatar}}" mode="aspectFit" style="width: 100rpx;height: 100rpx;border-radius: 50%"></image>
+        </view>
+        <view class="font_28 flo_l bold" style="line-height: 68rpx;margin-left: 22rpx;">{{item.name}}</view>
+        <view class="flo_r" style="margin-top: 32rpx">
+          <button  @tap="joinLibrary({{item.id}})"  wx:if="{{item.is_following}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">+ 关注</button>
+          <button  @tap="joinLibrary({{item.id}})"  wx:else style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">取消关注</button>
+        </view>
+        <view class="clearfloat"></view>
+      </view>
+  </block>
+  <block wx:else>
+    <view wx:for="{{list}}" wx:key="*this"  style="padding: 20rpx;border-bottom: 1rpx solid #d3d3d3">
+      <view class="flo_l">
+        <image src="{{item.wechat.avatar}}" mode="aspectFit" style="width: 100rpx;height: 100rpx;border-radius: 50%"></image>
+      </view>
+      <view class="font_28 flo_l bold" style="line-height: 68rpx;margin-left: 22rpx;">{{item.name}}</view>
+      <view class="flo_r" style="margin-top: 32rpx">
+        <button  @tap="joinLibrary({{item.id}})"  wx:if="{{!item.is_following}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">+ 关注</button>
+        <button  @tap="joinLibrary({{item.id}})"  wx:else style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">取消关注</button>
+      </view>
+      <view class="clearfloat"></view>
+    </view>
+  </block>
+  <block wx:if="{{loading}}">
+    <view class="weui-loadmore">
+      <view class="weui-loading"></view>
+      <view class="weui-loadmore__tips">正在加载</view>
+    </view>
+  </block>
+  <block wx:if="{{noMore}}">
+    <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+      <!--<view class="weui-loadmore__tips" style="margin-top: 22rpx">———— 到底了... ————</view>-->
+    </view>
+  </block>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import { service } from '../../config.js'
+//  import ShareMessage from '../mixins/ShareMessage'
+  export default class Follower extends wepy.page {
+    mixins = [base, http]
+    config = {
+      navigationBarTitleText: '关注',
+      enablePullDownRefresh: true
+    }
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+    onPullDownRefresh() {
+      console.log('上啦中....')
+    }
+    onReachBottom() {
+      setTimeout(() => {
+        console.log('到低了点。。。。')
+        this.loading = false
+        this.noMore = true
+        this.$apply()
+      }, 500)
+    }
+    onLoad (e) {
+      this.user_id = e.user_id
+      if (e.type == 'follower') {
+        //      粉丝
+        this.follower = true
+        this.followerlist(this.user_id )
+        this.showfollow = true
+        this.$apply()
+      } else {
+//        关注
+        this.showfollow = false
+        this.followinglist(this.user_id )
+        this.$apply()
+      }
+      console.log(e)
+      console.log(this.title)
+    }
+//    关注
+    followinglist(_id) {
+      this.$get({url: service.user + 's/' + _id + '/followings'}, {
+        success: ({code, data}) => {
+          this.loading = false
+          this.noMore = true
+          this.list = data.data
+        }
+      })
+    }
+    //    粉丝
+    followerlist(_id) {
+      this.$get({url: service.user + 's/' + _id + '/followers'}, {
+        success: ({code, data}) => {
+          this.loading = false
+          this.noMore = true
+          this.list = data.data
+        }
+      })
+    }
+    data = {
+      loading: true,
+      noMore: false,
+      follower: false,
+      list: [],
+      showfollow: true,
+      user_id: ''
+    }
+    methods = {
+      joinLibrary(_id) {
+        let self = this
+        this.$put({
+          url: service.user + 's/' + _id + '/follow'
+        }, {
+          success: ({code, data}) => {
+            let follow = data.is_following
+            if (follow) {
+              wx.showToast({
+                title: '关注成功',
+                icon: 'succse',
+                duration: 1500
+              })
+              self.showfollow = false
+              this.list.forEach(function (item, index, arr) {
+                if (_id == arr[index]) {
+                  arr[index].is_following = false
+                }
+              })
+              self.$apply()
+            } else {
+              wx.showToast({
+                title: '取消成功',
+                icon: 'succse',
+                duration: 1500
+              })
+              self.showfollow = true
+              this.list.forEach(function (item, index, arr) {
+                if (_id == arr[index]) {
+                  arr[index].is_following = true
+                  self.$apply()
+                }
+              })
+              self.$apply()
+              setTimeout(() => {
+                if(this.follower) {
+                  self.followerlist(self.user_id )
+                }else {
+                  self.followinglist(self.user_id )
+                }
+
+              }, 500)
+            }
+          },
+          fail: ({code, data}) => {},
+          complete: () => { this.loaded = false }
+        })
+      }
+    }
+  }
+</script>
+
+<style type="less">
+  .inline-block {display: inline-block}
+  .flo_l {float: left}
+  .flo_r {float: right}
+  .font_26 {font-size: 26rpx}
+  .font_28 {font-size: 28rpx}
+  .bold{font-weight: bold}
+  .clearfloat {clear:both}
+  .white {background: white}
+  .ellipsis_2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .ellipsis_1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+
+</style>
