@@ -53,7 +53,7 @@
       </form>
       <block wx:if="{{Show}}">
         <view   class="{{!ShowAnimation ? 'qr_addcollect' : ''}} {{ShowAnimation ? 'BookList_animation' : ''}}"  @tap="addcollect()">
-          <view class="font_26">入库</view>
+          <view class="font_26">收藏</view>
         </view>
       </block>
     </view>

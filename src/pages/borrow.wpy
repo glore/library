@@ -18,35 +18,35 @@
                         <button  @tap="goto('/pages/library/create')" type="primary" size="mini" >创建我的图书馆</button>
                       </view>
                         <block  wx:for="{{mylibs}}" wx:key="id">
-                          <!--<view wx:for="{{item.images}}" wx:for-item="itemimage" class="flo_l">-->
-                            <!--<image src="{{itemimage}}" mode="aspectFit" style="width: 80rpx;height: 100rpx;" class="flo_l"></image>-->
-                          <!--</view>-->
-                          <!--<view>-->
-                            <!--{{item.name}}-->
-                          <!--</view>-->
-                          <view class="list">
-                            <view class="library-title">{{item.name}}
-                              <button  @tap="goto('/pages/library/library?id={{item.id}}')"  class="weui-btn mini-btn" style="float: right; padding:8rpx 22rpx;line-height: 40rpx;" type="default" size="mini">详情</button>
-                            </view>
-                            <view class="weui-flex library-wrapper">
-                              <view @tap="goto('/pages/library/sorts?library_id={{item.id}}')" class="weui-flex__item list-item">
-                                <view class="color-666 item-title">{{item.sorts_count}}类</view>
-                                <view class="color-bbb h5">馆藏分类</view>
-                              </view>
-                              <view @tap="goto('/pages/book/list?library_id={{item.id}}')" class="weui-flex__item list-item">
-                                <view class="color-666 item-title">{{item.library_books_count}}册</view>
-                                <view class="color-bbb h5">馆藏册数</view>
-                              </view>
-                              <view @tap="goto('/pages/library/members?library_id={{item.id}}')" class="weui-flex__item list-item">
-                                <view class="color-666 item-title">{{item.members_count}}位</view>
-                                <view class="color-bbb h5">读书会友</view>
-                              </view>
-                              <view @tap="goto('/pages/library/borrows?library_id={{item.id}}')" class="weui-flex__item list-item">
-                                <view class="color-666 item-title">{{item.borrows_count}}册</view>
-                                <view class="color-bbb h5">借阅册数</view>
-                              </view>
-                            </view>
+                          <view wx:for="{{item.images}}" wx:for-item="itemimage" class="flo_l">
+                            <image src="{{itemimage}}" mode="aspectFit" style="width: 80rpx;height: 80rpx;" class="flo_l"></image>
                           </view>
+                          <view>
+                            {{item.name}}
+                          </view>
+                          <!--<view class="list">-->
+                            <!--<view class="library-title">{{item.name}}-->
+                              <!--<button  @tap="goto('/pages/library/library?id={{item.id}}')"  class="weui-btn mini-btn" style="float: right; padding:8rpx 22rpx;line-height: 40rpx;" type="default" size="mini">详情</button>-->
+                            <!--</view>-->
+                            <!--<view class="weui-flex library-wrapper">-->
+                              <!--<view @tap="goto('/pages/library/sorts?library_id={{item.id}}')" class="weui-flex__item list-item">-->
+                                <!--<view class="color-666 item-title">{{item.sorts_count}}类</view>-->
+                                <!--<view class="color-bbb h5">馆藏分类</view>-->
+                              <!--</view>-->
+                              <!--<view @tap="goto('/pages/book/list?library_id={{item.id}}')" class="weui-flex__item list-item">-->
+                                <!--<view class="color-666 item-title">{{item.library_books_count}}册</view>-->
+                                <!--<view class="color-bbb h5">馆藏册数</view>-->
+                              <!--</view>-->
+                              <!--<view @tap="goto('/pages/library/members?library_id={{item.id}}')" class="weui-flex__item list-item">-->
+                                <!--<view class="color-666 item-title">{{item.members_count}}位</view>-->
+                                <!--<view class="color-bbb h5">读书会友</view>-->
+                              <!--</view>-->
+                              <!--<view @tap="goto('/pages/library/borrows?library_id={{item.id}}')" class="weui-flex__item list-item">-->
+                                <!--<view class="color-666 item-title">{{item.borrows_count}}册</view>-->
+                                <!--<view class="color-bbb h5">借阅册数</view>-->
+                              <!--</view>-->
+                            <!--</view>-->
+                          <!--</view>-->
                           <!--<button wx:if="{{item.status!='JOIN'}}" @tap="scanBorrow({{item.id}})"  class="weui-btn mini-btn" type="primary" size="mini">扫码借书</button>-->
                           <!--<button wx:if="{{item.status=='JOIN'}}" @tap="joinTip({{item.id}})"  class="weui-btn mini-btn" type="primary" size="mini">待审核</button>-->
 
