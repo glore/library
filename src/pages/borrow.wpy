@@ -18,6 +18,12 @@
                         <button  @tap="goto('/pages/library/create')" type="primary" size="mini" >创建我的图书馆</button>
                       </view>
                         <block  wx:for="{{mylibs}}" wx:key="id">
+                          <!--<view wx:for="{{item.images}}" wx:for-item="itemimage" class="flo_l">-->
+                            <!--<image src="{{itemimage}}" mode="aspectFit" style="width: 80rpx;height: 100rpx;" class="flo_l"></image>-->
+                          <!--</view>-->
+                          <!--<view>-->
+                            <!--{{item.name}}-->
+                          <!--</view>-->
                           <view class="list">
                             <view class="library-title">{{item.name}}
                               <button  @tap="goto('/pages/library/library?id={{item.id}}')"  class="weui-btn mini-btn" style="float: right; padding:8rpx 22rpx;line-height: 40rpx;" type="default" size="mini">详情</button>
@@ -141,6 +147,7 @@
       this.$get({url: service.my_libraries}, {
         success: ({code, data}) => {
           this.mylibs = data
+//          debugger
           self.config.navigationBarTitleText = data.name
         },
         fail: ({code, data}) => {},
@@ -297,4 +304,23 @@ page{
     /*background: red;*/
     box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
   }
+.inline-block {display: inline-block}
+.flo_l {float: left}
+.flo_r {float: right}
+.font_26 {font-size: 26rpx}
+.font_28 {font-size: 28rpx}
+.bold{font-weight: bold}
+.clearfloat {clear:both}
+.white {background: white}
+.ellipsis_2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.imagebox{
+  width: 33%;
+
+}
 </style>

@@ -1,12 +1,12 @@
 <template>
   <block wx:if="{{follower}}">
-      <view wx:for="{{list}}" wx:key="*this"  style="padding: 20rpx;border-bottom: 1rpx solid #d3d3d3">
-        <view class="flo_l">
+      <view wx:for="{{list}}" wx:key="*this"  style="padding: 20rpx;border-bottom: 1rpx solid #d3d3d3" >
+        <view class="flo_l" @tap="goto('/pages/library/usercollect?library_id={{item.id}}')">
           <image src="{{item.wechat.avatar}}" mode="aspectFit" style="width: 100rpx;height: 100rpx;border-radius: 50%"></image>
         </view>
-        <view class="font_28 flo_l bold" style="line-height: 68rpx;margin-left: 22rpx;">{{item.name}}</view>
+        <view class="font_28 flo_l bold" style="line-height: 68rpx;margin-left: 22rpx;width: 55%" @tap="goto('/pages/library/usercollect?library_id={{item.id}}')">{{item.name}}</view>
         <view class="flo_r" style="margin-top: 32rpx">
-          <button  @tap="joinLibrary({{item.id}})"  wx:if="{{item.is_following}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">+ 关注</button>
+          <button  @tap="joinLibrary({{item.id}})"  wx:if="{{!item.is_following}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">+ 关注</button>
           <button  @tap="joinLibrary({{item.id}})"  wx:else style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">取消关注</button>
         </view>
         <view class="clearfloat"></view>
@@ -14,10 +14,10 @@
   </block>
   <block wx:else>
     <view wx:for="{{list}}" wx:key="*this"  style="padding: 20rpx;border-bottom: 1rpx solid #d3d3d3">
-      <view class="flo_l">
+      <view class="flo_l"  @tap="goto('/pages/library/usercollect?library_id={{item.id}}')">
         <image src="{{item.wechat.avatar}}" mode="aspectFit" style="width: 100rpx;height: 100rpx;border-radius: 50%"></image>
       </view>
-      <view class="font_28 flo_l bold" style="line-height: 68rpx;margin-left: 22rpx;">{{item.name}}</view>
+      <view class="font_28 flo_l bold" style="line-height: 68rpx;margin-left: 22rpx;width: 55%"  @tap="goto('/pages/library/usercollect?library_id={{item.id}}')">{{item.name}}</view>
       <view class="flo_r" style="margin-top: 32rpx">
         <button  @tap="joinLibrary({{item.id}})"  wx:if="{{!item.is_following}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">+ 关注</button>
         <button  @tap="joinLibrary({{item.id}})"  wx:else style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">取消关注</button>
@@ -55,27 +55,38 @@
     }
     onPullDownRefresh() {
       console.log('上啦中....')
+      this.page = 1
+      if (this.follower) {
+        this.followerlist(this.user_id)
+      } else {
+        this.followinglist(this.user_id)
+      }
     }
     onReachBottom() {
-      setTimeout(() => {
-        console.log('到低了点。。。。')
-        this.loading = false
-        this.noMore = true
-        this.$apply()
-      }, 500)
+//      setTimeout(() => {
+//        console.log('到低了点。。。。')
+//        this.loading = false
+//        this.noMore = true
+//        this.$apply()
+//      }, 500)
+      if (this.follower) {
+        this.followerlist(this.page)
+      } else {
+        this.followinglist(this.page)
+      }
     }
     onLoad (e) {
       this.user_id = e.user_id
       if (e.type == 'follower') {
         //      粉丝
         this.follower = true
-        this.followerlist(this.user_id )
+        this.followerlist(this.user_id)
         this.showfollow = true
         this.$apply()
       } else {
 //        关注
         this.showfollow = false
-        this.followinglist(this.user_id )
+        this.followinglist(this.user_id)
         this.$apply()
       }
       console.log(e)
@@ -83,21 +94,40 @@
     }
 //    关注
     followinglist(_id) {
-      this.$get({url: service.user + 's/' + _id + '/followings'}, {
+      let that = this
+      this.$get({url: service.user + 's/' + _id + '/followings?page=' + that.page}, {
         success: ({code, data}) => {
-          this.loading = false
-          this.noMore = true
-          this.list = data.data
+          that.loading = false
+          that.noMore = true
+          if (data.current_page > data.last_page) {
+            that.noMore = true
+            return
+          }
+          data = data.data
+          if (this.isArray(data) && data.length === 0) {
+            that.noMore = true
+            return
+          }
+          if (that.list.length === 0 || that.page === 1) {
+            that.list = data
+          } else {
+            data.map(function (item, index) {
+              that.list.push(item)
+            })
+          }
+          that.noMore = true
+          that.page += 1
         }
       })
     }
     //    粉丝
     followerlist(_id) {
+      let that = this
       this.$get({url: service.user + 's/' + _id + '/followers'}, {
         success: ({code, data}) => {
-          this.loading = false
-          this.noMore = true
-          this.list = data.data
+          that.loading = false
+          that.noMore = true
+          that.list = data.data
         }
       })
     }
@@ -107,9 +137,13 @@
       follower: false,
       list: [],
       showfollow: true,
-      user_id: ''
+      user_id: '',
+      page: 1
     }
     methods = {
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
       joinLibrary(_id) {
         let self = this
         this.$put({
@@ -124,9 +158,9 @@
                 duration: 1500
               })
               self.showfollow = false
-              this.list.forEach(function (item, index, arr) {
-                if (_id == arr[index]) {
-                  arr[index].is_following = false
+              self.list.forEach(function (item, index, arr) {
+                if (_id == arr[index].id) {
+                  arr[index].is_following = true
                 }
               })
               self.$apply()
@@ -138,20 +172,19 @@
               })
               self.showfollow = true
               this.list.forEach(function (item, index, arr) {
-                if (_id == arr[index]) {
-                  arr[index].is_following = true
+                if (_id == arr[index].id) {
+                  arr[index].is_following = false
                   self.$apply()
                 }
               })
               self.$apply()
-              setTimeout(() => {
-                if(this.follower) {
-                  self.followerlist(self.user_id )
-                }else {
-                  self.followinglist(self.user_id )
-                }
-
-              }, 500)
+//              setTimeout(() => {
+//                if (this.follower) {
+//                  self.followerlist(self.user_id)
+//                } else {
+//                  self.followinglist(self.user_id)
+//                }
+//              }, 500)
             }
           },
           fail: ({code, data}) => {},
@@ -179,11 +212,9 @@
     -webkit-box-orient: vertical;
   }
   .ellipsis_1 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
+    text-overflow : ellipsis;
+    white-space : nowrap;
+    overflow : hidden;
   }
 
 </style>

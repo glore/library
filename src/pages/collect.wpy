@@ -44,10 +44,10 @@
         <view class="font_26"  style="color:#5c8092;">所有藏书</view>
       </view>
     </view>
-    <view @tap="goto('/pages/library/usercollect?library_id=14')">ceshi1</view>
+    <!--<view @tap="goto('/pages/library/usercollect?library_id=14')">ceshi1</view>-->
     <ClassifyList :list.sync="list" :library_id.sync="library_id"></ClassifyList>
     <!--<view class="BookList" wx:for="{{list}}" wx:key="*this"  @tap="navTo({{mylibrary.id}}, {{item.id}})">-->
-      <!--<view class="flo_l">--> 
+      <!--<view class="flo_l">-->
         <!--<image src="{{item.image}}" mode="aspectFit" />-->
       <!--</view>-->
       <!--<view class="flo_l" style="width: 65%; padding-top: 10rpx">-->
@@ -350,11 +350,9 @@
     -webkit-box-orient: vertical;
   }
   .ellipsis_1 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
+    text-overflow : ellipsis;
+    white-space : nowrap;
+    overflow : hidden;
   }
   .btn {
     border: none;

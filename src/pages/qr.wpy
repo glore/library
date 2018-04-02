@@ -1,13 +1,17 @@
 <template>
   <view class="qr">
-    <view class="qr_isbn">
-      <input type="number"  confirm-type="search" placeholder="请输入ISBN" bindblur="ReferBook" />
+    <!--<view class="qr_isbn">-->
+      <!--<input type="number"  confirm-type="search" placeholder="请输入ISBN" bindblur="ReferBook" />-->
       <!--<button type="primary" size="mini">识别</button>-->
+    <!--</view>-->
+    <view wx:if="{{libraries.length < 3}}">
+      <image src="../images/saoma.png"  mode="aspectFit" style="width: 380rpx;height: 380rpx;margin:10% 0 0 31%"></image>
+      <view style="margin-left:28%;color: #666666;" class="font_28">扫描书籍背后的ISBN条形码</view>
     </view>
-    <view wx:if="{{Show}}" class="BookList {{ShowAnimation ? 'BookList_animation' : ''}}" style="margin-top: -50rpx;background: none">
-      <button class=" flo_r" type="primary" size="mini" @tap="addcollect()" style="margin-right: 20rpx">一键收藏</button>
-      <view class="clearfloat"></view>
-    </view>
+    <!--<view wx:if="{{Show}}" class="BookList {{ShowAnimation ? 'BookList_animation' : ''}}" style="margin-top: -50rpx;background: none">-->
+      <!--<button class=" flo_r" type="primary" size="mini" @tap="addcollect()" style="margin-right: 20rpx">一键收藏</button>-->
+      <!--<view class="clearfloat"></view>-->
+    <!--</view>-->
     <view class="BookList {{EditAnimation ? 'BookList_animation' : ''}}" wx:if="{{ShowEdit}}">
       <view class="flo_l" wx:if="{{ShowUpload}}" style="margin-top: 32rpx">
         <image src="{{BookImage}}" mode="aspectFit" bindtap="chooseimage"/>
@@ -42,9 +46,16 @@
     <view class="qr_btn">
       <form bindsubmit="formSubmit" report-submit>
         <button formType="submit" class="btn" data-type="click">
-          <view class="qr_btn_animation"  @tap="scanBook()">扫一扫</view>
+          <view class="qr_btn_animation"  @tap="scanBook()">
+            <view>{{text}}</view>
+          </view>
         </button>
       </form>
+      <block wx:if="{{Show}}">
+        <view   class="{{!ShowAnimation ? 'qr_addcollect' : ''}} {{ShowAnimation ? 'BookList_animation' : ''}}"  @tap="addcollect()">
+          <view class="font_26">入库</view>
+        </view>
+      </block>
     </view>
   </view>
 </template>
@@ -78,7 +89,9 @@
       EditIsbn: '',
       EditSummary: '',
       EditAuthor: '',
-      formId: []
+      formId: [],
+      changerotate: true,
+      text: '扫一扫'
     }
     onShow() {
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
@@ -151,6 +164,7 @@
                 that.Show = true
                 that.libraries.unshift(data)
                 that.BookId.push(data.id)
+                that.text = '继续扫'
               } else {
                 wx.showToast({
                   title: '未能识别此书...',
@@ -330,6 +344,7 @@
                     that.ShowAnimation = false
                     that.Show = true
                     that.ShowEdit = false
+                    that.text = '继续扫'
                   }
                 },
                 fail: ({code, data}) => {
