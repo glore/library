@@ -18,7 +18,11 @@
     <view class="clearfloat"></view>
     <view class="library-title">{{mylib.name}}</view>
     <view class="weui-flex library-wrapper">
-      <view @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')" class="weui-flex__item list-item">
+      <view @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')" wx:if="{{member_type == 'ADMIN'}}" class="weui-flex__item list-item">
+        <view class="color-666 item-title">{{mylib.sorts_count}}类</view>
+        <view class="color-bbb h5">馆藏分类</view>
+      </view>
+      <view @tap="goto('/pages/library/sorts_list?library_id={{mylib.id}}')" wx:else class="weui-flex__item list-item">
         <view class="color-666 item-title">{{mylib.sorts_count}}类</view>
         <view class="color-bbb h5">馆藏分类</view>
       </view>
@@ -71,7 +75,7 @@
       <view class="font_26 ellipsis_3" >简介 : <textarea type="text" auto-height  placeholder="请填写书的简介" class="upload-text" style="min-height: 180rpx;padding: 12rpx;width: 92%" bindinput="textareaChange"/></view>
     </view>
     <view class=" flo_r">
-      <button  type="primary" size="mini" @tap="addbookV()" style="margin:22rpx">保存</button>
+      <button  type="primary" size="mini" @tap="addbookV()" style="margin:22rpx">保 存</button>
       <button class="flo_r" type="warn" size="mini" @tap="DeleteEdit()" style="margin: 22rpx">取消</button>
     </view>
     <view class="clearfloat"></view>
@@ -102,7 +106,8 @@
     </view>
     <view class="clearfloat"></view>
   </view>
-  <view class="scan"  wx:if="{{mylib.member && mylib.member.status=='ADMIN' || mylib.member.status=='JOIN'}}">
+  <ClassifyList :list.sync="list" :library_id.sync="library_id"></ClassifyList>
+  <view class="scan"  wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}">
     <view class="scan_home {{rotate ? 'rotate' : ''}}" @tap="rotate" style="z-index: 12;">
       <image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-scan.png" style="width: 60rpx;height: 60rpx"></image>
     </view>
@@ -119,7 +124,7 @@
       <text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;">借书</text>
     </view>
   </view>
-  <view class="scan"  wx:if="{{mylib.member && mylib.member.status=='MEMBER'}}">
+  <view class="scan"  wx:if="{{mylib.member && mylib.member.status=='MEMBER'|| mylib.member.status=='JOIN'}}">
     <view class="scan_home scan_active {{changerotate ? 'changerotate3' : ''}} {{shrink ? 'changeshrink3' : ''}}"  @tap="scanBorrow({{mylib.id}})">
       <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>
       <text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;margin-bottom: 4rpx">借书</text>
@@ -135,11 +140,15 @@
   import base from '../../mixins/base'
   import user from '../../mixins/user'
   import ShareMessage from '../../mixins/ShareMessage'
+  import ClassifyList from '../../components/classifyList'
 
   export default class userSubscribe extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '友福图书馆'
+    }
+    components = {
+      ClassifyList: ClassifyList
     }
     data = {
       loaded: false,
@@ -171,10 +180,10 @@
       ShowSorts: false,
       library_sort_id: '',
       library_sort_list: '',
-      library_sort_index: ''
-    }
-
-    computed = {
+      library_sort_index: '',
+      list: [],
+      library_id: '',
+      member_type: ''
     }
 
     onShareAppMessage(res) {
@@ -186,6 +195,7 @@
     onShow() {
       this.initPageData()
       // google tracker
+//      console.log(this.mylib.id)
       this.$parent.getTracker(this.$root.$name, this.mylib.name)
     }
 
@@ -198,7 +208,9 @@
       this.$get({url: service.libraries + '/' + this.mylib.id}, {
         success: ({code, data}) => {
           this.mylib = data
-//          debugger
+          this.list = data.library_sorts
+          this.library_id = data.id
+          this.member_type = data.member ? data.member.status : ''
           let name = data.sorts.map(function (item) {
             return item.name
           })
@@ -430,13 +442,13 @@
           data: data
         }, {
           success: ({code, data}) => {
-            that.Show = false
             setTimeout(() => {
               wx.showToast({
                 title: '录入成功',
                 icon: 'none',
                 duration: 1500
               })
+              that.Show = false
               that.libraries = []
               that.librarydata = []
             }, 800)

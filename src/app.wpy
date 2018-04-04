@@ -37,6 +37,7 @@ export default class extends wepy.app {
       'pages/library/book',
       'pages/library/book_edit',
       'pages/library/sorts',
+      'pages/library/sorts_list',
       'pages/library/sort',
       'pages/library/create',
 

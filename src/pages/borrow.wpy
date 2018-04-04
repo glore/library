@@ -8,7 +8,7 @@
                     </view>
                     <view class="weui-navbar__slider" style="width:{{sliderWidth}}px; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
                 </view>
-                <view class="weui-tab__panel">
+                <view class="weui-tab__panel"style="padding-bottom: 12rpx">
                     <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
                       <!--view class="library-title">我的图书馆
                         <button class="weui-btn mini-btn" @tap="goto('/pages/library/create')" type="primary" size="mini" style="float:right">新建图书馆</button>
@@ -17,13 +17,21 @@
                       <view class="list" style="padding: 12rpx">
                         <button  @tap="goto('/pages/library/create')" type="primary" size="mini" >创建我的图书馆</button>
                       </view>
-                        <block  wx:for="{{mylibs}}" wx:key="id">
-                          <view wx:for="{{item.images}}" wx:for-item="itemimage" class="flo_l">
-                            <image src="{{itemimage}}" mode="aspectFit" style="width: 80rpx;height: 80rpx;" class="flo_l"></image>
+                          <view  wx:for="{{mylibs}}" wx:key="id" >
+                            <view style="" class="flo_l borrowlist" @tap="goto('/pages/library/library?id={{item.id}}')">
+                              <view class="flo_l lisimage" >
+                                <image src="{{itemimage}}" mode="aspectFit"  wx:for="{{item.images}}" wx:key="*this" wx:for-item="itemimage" style="width: 60rpx;height: 60rpx;margin-left: 12rpx;margin-top: 12rpx" class="flo_l"></image>
+                              </view>
+                              <view class="clearfloat"></view>
+                              <view class="font_26 listtext">
+                                {{item.name}}
+                              </view>
+                              <view style="position: absolute;right: 0;bottom: -10rpx;" wx:if="{{item.status=='JOIN'}}">
+                                <image src="../images/tabbars/icon-authstr.png" style="width: 120rpx;height: 120rpx;"></image>
+                              </view>
+                            </view>
                           </view>
-                          <view>
-                            {{item.name}}
-                          </view>
+
                           <!--<view class="list">-->
                             <!--<view class="library-title">{{item.name}}-->
                               <!--<button  @tap="goto('/pages/library/library?id={{item.id}}')"  class="weui-btn mini-btn" style="float: right; padding:8rpx 22rpx;line-height: 40rpx;" type="default" size="mini">详情</button>-->
@@ -49,33 +57,40 @@
                           <!--</view>-->
                           <!--<button wx:if="{{item.status!='JOIN'}}" @tap="scanBorrow({{item.id}})"  class="weui-btn mini-btn" type="primary" size="mini">扫码借书</button>-->
                           <!--<button wx:if="{{item.status=='JOIN'}}" @tap="joinTip({{item.id}})"  class="weui-btn mini-btn" type="primary" size="mini">待审核</button>-->
-
-                        </block>
                     </view>
                     <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
                       <view class="weui-cells__title"></view>
-                      <view class="page__bd"  wx:for="{{libs}}" wx:key="id">
-                        <view class="weui-form-preview">
-                          <view class="weui-form-preview__hd">
-                              <view class="weui-form-preview__item">
-                                  <view class="weui-form-preview__label">{{item.name}}</view>
-                                  <view class="weui-form-preview__value_in-hd"></view>
-                              </view>
+                      <view class="page__bd"  wx:for="{{libs}}" wx:key="*this" >
+                        <view class="flo_l borrowlist" @tap="goto('/pages/library/library?id={{item.id}}')">
+                          <view class="flo_l lisimage" >
+                            <image src="{{itemimage}}" mode="aspectFit"  wx:for="{{item.images}}" wx:key="*this" wx:for-item="itemimage" style="width: 60rpx;height: 60rpx;margin-left: 12rpx;margin-top: 12rpx" class="flo_l"></image>
                           </view>
-                          <view class="weui-form-preview__bd">
-                              <view class="weui-form-preview__item">
-                                  <view class="weui-form-preview__label">藏书</view>
-                                  <view class="weui-form-preview__value">{{item.library_books_count}}册</view>
-                              </view>
-                              <view class="weui-form-preview__item">
-                                  <view class="weui-form-preview__label">会员</view>
-                                  <view class="weui-form-preview__value">{{item.members_count}}位</view>
-                              </view>
-                          </view>
-                          <view class="weui-form-preview__ft">
-                              <navigator url="/pages/library/library?id={{item.id}}" class="weui-form-preview__btn weui-form-preview__btn_primary" hover-class="weui-form-preview__btn_active">进入图书馆</navigator>
+                          <view class="clearfloat"></view>
+                          <view  class="font_26 listtext">
+                            {{item.name}}
                           </view>
                         </view>
+                        <!--<view class="weui-form-preview">-->
+                          <!--<view class="weui-form-preview__hd">-->
+                              <!--<view class="weui-form-preview__item">-->
+                                  <!--<view class="weui-form-preview__label">{{item.name}}</view>-->
+                                  <!--<view class="weui-form-preview__value_in-hd"></view>-->
+                              <!--</view>-->
+                          <!--</view>-->
+                          <!--<view class="weui-form-preview__bd">-->
+                              <!--<view class="weui-form-preview__item">-->
+                                  <!--<view class="weui-form-preview__label">藏书</view>-->
+                                  <!--<view class="weui-form-preview__value">{{item.library_books_count}}册</view>-->
+                              <!--</view>-->
+                              <!--<view class="weui-form-preview__item">-->
+                                  <!--<view class="weui-form-preview__label">会员</view>-->
+                                  <!--<view class="weui-form-preview__value">{{item.members_count}}位</view>-->
+                              <!--</view>-->
+                          <!--</view>-->
+                          <!--<view class="weui-form-preview__ft">-->
+                              <!--<navigator url="/pages/library/library?id={{item.id}}" class="weui-form-preview__btn weui-form-preview__btn_primary" hover-class="weui-form-preview__btn_active">进入图书馆</navigator>-->
+                          <!--</view>-->
+                        <!--</view>-->
                       </view>
                     </view>
                 </view>
@@ -147,7 +162,6 @@
       this.$get({url: service.my_libraries}, {
         success: ({code, data}) => {
           this.mylibs = data
-//          debugger
           self.config.navigationBarTitleText = data.name
         },
         fail: ({code, data}) => {},
@@ -161,6 +175,7 @@
       }, {
         success: ({code, data}) => {
           _this.libs = data.data
+//          debugger
         },
         fail: ({code, data}) => {},
         complete: () => { this.loaded = false }
@@ -183,7 +198,6 @@
           content: '请等待管理员审核！'
         })
       },
-
       joinLibrary() {
         this.$post({
           url: service.libraries + '/' + this.mylib.id + '/join'
@@ -321,6 +335,21 @@ page{
 }
 .imagebox{
   width: 33%;
-
 }
+.borrowlist{
+  width: 30%;
+  box-shadow: 1rpx 1rpx 18rpx #d3d3d3;
+  margin-left: 19rpx;
+  margin-top: 18rpx;
+  border-radius: 6rpx;
+  position: relative
+}
+  .lisimage {
+    margin-bottom: 12rpx;
+    min-height: 220rpx;
+  }
+  .listtext {
+    padding: 12rpx 0 16rpx 0;
+    border-top: 1rpx solid #d3d3d3;
+  }
 </style>

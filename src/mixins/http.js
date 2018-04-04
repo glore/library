@@ -63,7 +63,7 @@ export default class httpMixin extends wepy.mixin {
     wx.showNavigationBarLoading()
     // 构造请求体
     const request = {
-      url: url + '?XDEBUG_SESSION_START=1',
+      url: url + '?XDEBUG_SESSION_START=1&from_openid='+ wx.getStorageSync('from_openid'),
       method: ['GET', 'POST','PUT', 'DELETE'].indexOf(methods) > -1 ? methods : 'GET',
       header: Object.assign({
         'Authorization': 'Bearer ' + wx.getStorageSync('token'),
@@ -91,7 +91,13 @@ export default class httpMixin extends wepy.mixin {
             successExist && success({statusCode, ...data})
             this.$apply()
           })
-        } else if (data.code == 2) {
+        } else if (data.code == 1) {
+          wx.showModal({
+            title: '提示',
+            content: data.message,
+            showCancel: false
+          })
+        }else if (data.code == 2) {
           // 删除过时token
           wx.removeStorageSync('token', null)
 

@@ -1,6 +1,14 @@
 <template>
   <view class="main-detail">
     <view class="weui-panel weui-panel_access">
+      <view class="weui-navbar">
+        <view wx:for="{{tabs}}" wx:key="*this" id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" @tap="tabClick">
+          <view class="weui-navbar__title">{{item}}</view>
+          <view class="weui-navbar">{{library_num}}</view>
+        </view>
+        <view class="weui-navbar__slider" style="width:{{sliderWidth}}px; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+      </view>
+      <view style="width: 100%;height: 100rpx"></view>
       <view class="weui-panel__hd">
         {{library.name}}会员管理
       </view>
@@ -50,7 +58,14 @@
     data = {
       libraryId: 0,
       library: {},
-      members: []
+      members: [],
+      tabs: ['待审核', '会员', '管理员'],
+      activeIndex: 0,
+      sliderOffset: 0,
+      sliderLeft: 0,
+      sliderWidth: 180,
+      screenWidth: 360,
+      library_num:  0
     }
 
     computed = {
@@ -62,6 +77,13 @@
     onLoad(query) {
       this.id = query && +query.id
       this.libraryId = query && +query.library_id
+      let _this = this
+      wx.getSystemInfo({success: function (rst) {
+        _this.screenWidth = rst.screenWidth
+      }})
+      this.sliderWidth = _this.screenWidth / this.tabs.length
+      this.sliderLeft = 0
+      this.sliderOffset = _this.screenWidth / this.tabs.length * this.activeIndex
     }
 
     onShow() {
@@ -76,13 +98,29 @@
     // 初始化页面数据
     initPageData() {
       // 请求图书详情
-      this.getMembers()
+      this.getMembers(this.activeIndex)
     }
 
     // 获取图书信息
-    getMembers() {
-      var url = service.libraries + '/' + this.libraryId + '/members'
-      this.$get({url: url}, {
+    getMembers(Index) {
+      let url = ''
+      let statusIndex = ''
+      if (Index == 0) {
+        statusIndex = 'JOIN'
+        url = service.libraries + '/' + this.libraryId + '/members'
+      } else if (Index == 1) {
+        statusIndex = 'MEMBER'
+        url = service.libraries + '/' + this.libraryId + '/members'
+      } else if (Index == 2) {
+        statusIndex = 'ADMIN'
+        url = service.libraries + '/' + this.libraryId + '/members'
+      }
+      this.$get({
+        url: url,
+        data: {
+          'status': statusIndex
+        }
+      }, {
         success: ({code, data}) => {
           this.members = data.members
           this.library = data.library
@@ -95,6 +133,11 @@
     }
 
     methods = {
+      tabClick (e) {
+        this.sliderOffset = e.currentTarget.offsetLeft
+        this.activeIndex = e.currentTarget.id
+        this.getMembers(this.activeIndex)
+      },
       checkUser(e) {
         console.log('radio发生change事件，携带value值为：', e.detail.value)
         this.borrow_id = e.detail.value
