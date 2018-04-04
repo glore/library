@@ -58,6 +58,7 @@
       <view class="weui-panel__hd">
         图书评论
         <button class="weui-btn mini-btn" @tap="goto('/pages/book/comment?id={{book.id}}')" type="primary" size="mini" style="float:right">写评论</button>
+        <view class="clearfloat"></view>
       </view>
       <view class="weui-panel__bd">
          <navigator wx:for="{{book.comments}}" wx:key="id" url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
@@ -120,7 +121,7 @@
       },
       isCollect() {
         return Boolean(this.book && +this.book.collected)
-      }    
+      }
     }
 
     onLoad(query) {
@@ -296,6 +297,7 @@
     line-height: 1;
     color: #777;
   }
+  .clearfloat {clear:both}
 
 }
 </style>

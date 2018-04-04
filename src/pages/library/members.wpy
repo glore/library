@@ -3,10 +3,10 @@
     <view class="weui-panel weui-panel_access">
       <view class="weui-navbar">
         <view wx:for="{{tabs}}" wx:key="*this" id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" @tap="tabClick">
-          <view class="weui-navbar__title">{{item}}</view>
-          <view class="weui-navbar">{{library_num}}</view>
+          <view class="weui-navbar__title" >{{item}}</view>
         </view>
         <view class="weui-navbar__slider" style="width:{{sliderWidth}}px; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+        <view  class="library_num {{activeIndex == 1 ? 'library_member' : ''}} {{activeIndex == 2 ? 'library_admin' : ''}}">{{library_num}}</view>
       </view>
       <view style="width: 100%;height: 100rpx"></view>
       <view class="weui-panel__hd">
@@ -14,15 +14,20 @@
       </view>
       <view class="weui-panel__bd">
         <view  wx:for="{{members}}" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
-          <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+          <view class="weui-media-box__hd weui-media-box__hd_in-appmsg" @tap="goto('/pages/library/usercollect?library_id={{item.user.id}}')">
             <image class="weui-media-box__thumb" src="{{item.user.wechat.avatar}}" />
           </view>
-          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-            <view class="weui-media-box__title"  @tap="makePhoneCall('{{item.user.mobile}}')" >姓名：{{item.user.name}}</view>
-            <view class="weui-media-box__desc"   @tap="makePhoneCall('{{item.user.mobile}}')" >电话: {{item.user.mobile}}</view>
-            <view class="weui-media-box__desc" wx:if="{{item.status=='JOIN'}}" style="color:red">状态：待审核</view>
-            <view class="weui-media-box__desc" wx:if="{{item.status=='MEMBER'}}" style="color:green">状态：会员</view>
-            <view class="weui-media-box__desc" wx:if="{{item.status=='ADMIN'}}"  style="color:blue">状态：管理员</view>
+          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg" style="position: relative">
+            <view style="width: 80%"  @tap="goto('/pages/library/usercollect?library_id={{item.user.id}}')">
+              <view class="weui-media-box__title" >姓名：{{item.user.name}}</view>
+              <view class="weui-media-box__desc"  >电话: {{item.user.mobile}}</view>
+              <view class="weui-media-box__desc" wx:if="{{item.status=='JOIN'}}" style="color:red">状态：待审核</view>
+              <view class="weui-media-box__desc" wx:if="{{item.status=='MEMBER'}}" style="color:green">状态：会员</view>
+              <view class="weui-media-box__desc" wx:if="{{item.status=='ADMIN'}}"  style="color:blue">状态：管理员</view>
+            </view>
+            <view style="position: absolute; right: 12rpx; top: 12rpx;" @tap="makePhoneCall('{{item.user.mobile}}')">
+              <image src="../../images/tabbars/icon-phone.png" style="width: 60rpx;height: 60rpx"></image>
+            </view>
             <view class="weui-media-box__info">
               <button class="weui-btn mini-btn" size="mini" style="margin-right: 10px;" wx:if="{{item.status=='ADMIN'}}" @tap = "memberUpdate({{item.id}}, 'member')" type="primary">移除管理权</button>
               <block  wx:if="{{item.status=='JOIN'}}">
@@ -124,6 +129,7 @@
         success: ({code, data}) => {
           this.members = data.members
           this.library = data.library
+          this.library_num = this.members.length
         },
         fail: ({code, data}) => {}
       })
@@ -133,6 +139,9 @@
     }
 
     methods = {
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
       tabClick (e) {
         this.sliderOffset = e.currentTarget.offsetLeft
         this.activeIndex = e.currentTarget.id
@@ -233,5 +242,22 @@
     color: red;
   }
 
+}
+.library_num{
+  position: absolute;
+  left: 24%;top: 12rpx;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  width: 32rpx;height: 32rpx;
+  text-align: center;
+  line-height: 32rpx;
+  font-size: 22rpx;
+}
+.library_member{
+  left: 55%;
+}
+.library_admin{
+  left: 90%;
 }
 </style>

@@ -76,7 +76,7 @@
         <view class="weui-cells weui-cells_after-title">
           <view class="weui-cell">
             <view class="weui-cell__bd h3 color-red">
-              <textarea class="weui-textarea" @input="typing('summary')" value="{{summary}}" auto-height="true" auto-focus="true" class="weui-input" placeholder="图书简介" />
+              <textarea class="weui-textarea" @input="typing('summary')" value="{{summary}}" auto-height="true" auto-focus="true" class="weui-input" placeholder="图书简介" style="width: 100%"/>
               <view class="weui-textarea-counter"></view>
             </view>
           </view>

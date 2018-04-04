@@ -96,6 +96,17 @@
                 </view>
             </view>
         </view>
+      <block wx:if="{{loading}}">
+        <view class="weui-loadmore">
+          <view class="weui-loading"></view>
+          <view class="weui-loadmore__tips">正在加载</view>
+        </view>
+      </block>
+      <block wx:if="{{noMore}}">
+        <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+          <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+        </view>
+      </block>
     </view>
 </template>
 
@@ -123,7 +134,10 @@
       sliderOffset: 0,
       sliderLeft: 0,
       sliderWidth: 180,
-      screenWidth: 360
+      screenWidth: 360,
+      page: 1,
+      noMore: false,
+      loading: false
     }
 
     computed = {
@@ -149,15 +163,26 @@
     }
 
     onPullDownRefresh() {
-      this.initPageData()
-      if (this.activeIndex === '1') {
-        this.getLibraries()
+      if (this.activeIndex == '1') {
+        this.getLibraries(this.page)
+      } else {
+        this.initPageData()
       }
     }
-
+    onReachBottom() {
+      setTimeout(() => {
+      if (this.activeIndex == '1') {
+        this.getLibraries(this.page)
+      } else {
+        this.initPageData()
+      }
+        this.$apply()
+      }, 200)
+    }
     // 初始化页面数据
     initPageData() {
       var self = this
+      self.loading = false
       // 图书馆详情
       this.$get({url: service.my_libraries}, {
         success: ({code, data}) => {
@@ -171,11 +196,40 @@
     getLibraries() {
       let _this = this
       this.$get({
-        url: service.libraries
+        url: service.libraries,
+        data: {
+          page: this.page
+        }
       }, {
         success: ({code, data}) => {
-          _this.libs = data.data
-//          debugger
+          _this.noMore = false
+          _this.loading = true
+          if (data.data.length == 0) {
+            _this.loading = false
+            _this.noMore = true
+            return
+          }
+          if (data.current_page > data.last_page) {
+            _this.noMore = true
+            _this.loading = true
+            return
+          }
+          data = data.data
+          if (this.isArray(data) && data.length === 0) {
+            _this.noMore = true
+            return
+          }
+          if (_this.libs.length === 0 || _this.page === 1) {
+            _this.libs = data
+          } else {
+            data.map(function (item, index) {
+              _this.libs.push(item)
+            })
+          }
+          _this.noMore = true
+          _this.page += 1
+
+//          _this.libs = data.data
         },
         fail: ({code, data}) => {},
         complete: () => { this.loaded = false }
@@ -186,7 +240,7 @@
         this.sliderOffset = e.currentTarget.offsetLeft
         this.activeIndex = e.currentTarget.id
         if (this.activeIndex === '1') {
-          this.getLibraries()
+          this.getLibraries(this.page)
         }
       },
       goto(url) {

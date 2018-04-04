@@ -26,7 +26,7 @@
     </view>
     <view wx:if="{{book.library}}" class="weui-panel weui-panel_access">
       <view class="weui-panel__hd">
-        馆藏地 
+        馆藏地
       </view>
       <view class="weui-panel__bd">
          <navigator url="/pages/library/library?id={{book.library.id}}" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
@@ -44,7 +44,9 @@
     <view class="weui-panel weui-panel_access">
       <view class="weui-panel__hd">
         图书评论
+        <button wx:if="{{member_status == 'ADMIN'}}" class="weui-btn mini-btn" @tap="goto('/pages/library/book_edit?id={{book.id}}&library_id={{library_id}}')" type="danger" size="mini" style="float:right;margin-left: 12rpx" >编辑</button>
         <button class="weui-btn mini-btn" @tap="goto('/pages/book/comment?id={{book.id}}')" type="primary" size="mini" style="float:right">写评论</button>
+        <view class="clearfloat"></view>
       </view>
       <view class="weui-panel__bd">
          <navigator wx:for="{{book.comments}}" wx:key="id" url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
@@ -158,7 +160,8 @@
       },
       id: 0,
       library_id: 1,
-      title: ''
+      title: '',
+      member_status: ''
     }
 
     onLoad(query) {
@@ -192,6 +195,7 @@
       this.$get({url: service.libraries + '/' + this.library_id + '/books/' + this.id}, {
         success: ({code, data}) => {
           this.book = data
+          this.member_status = data.member.status
           wx.setNavigationBarTitle({
             title: data.library.name + '藏书-' + data.title
           })
@@ -354,6 +358,6 @@
     line-height: 1;
     color: #777;
   }
-
+  .clearfloat {clear:both}
 }
 </style>

@@ -3,18 +3,27 @@
   <view class="book-sort">
 
     <view class="weui-cells__title">每个人都有一个属于自己的图书馆</view>
+    <view class="flo_l" wx:if="{{ShowUpload}}" style="margin: 32rpx 12rpx 0 20rpx" @tap="chooseimage">
+      <image src="{{BookImage}}" mode="aspectFit" style="box-shadow: 1rpx 1rpx 12rpx #d3d3d3"/>
+    </view>
+    <view class="flo_l hide_image" wx:else bindtap="chooseimage">
+      <image src="../../images/icon/icon-upload.png" mode="aspectFit" @tap="chooseimage"/>
+      <text class="font_26">上传logo</text>
+    </view>
+    <!--<view class="font_26 flo_r" style="width: 60%;padding: 18rpx;background: white;margin-top: 30%">上传属于你自己的图书馆LOGO</view>-->
+    <view class="clearfloat"></view>
     <view class="weui-cells weui-cells_after-title book-address">
-      <view class="weui-cell weui-cell_input">
+      <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
         <view class="weui-cell__hd">
           <view class="weui-label reset-label-left">名称</view>
         </view>
         <view class="weui-cell__bd h3  color-red">
-            <input @input="typing('name')" value="{{name}}" placeholder="请输入你的图书馆名称" />
+          <input @input="typing('name')" value="{{name}}" placeholder="请输入你的图书馆名称" />
         </view>
       </view>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <view class="weui-cell weui-cell_input">
+      <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
         <view class="weui-cell__hd">
           <view class="weui-label reset-label-left">简介</view>
         </view>
@@ -36,8 +45,8 @@
             </label>
         </radio-group>
     </view>
-    <button @tap="save" class="weui-btn btn-primary" type="primary">创建</button>
-    <button wx:if="{{id}}" @tap="destroy" class="weui-btn btn-danger" type="danger" >删除</button>
+    <button @tap="save" class="weui-btn div_btn" type="primary">创建</button>
+    <button wx:if="{{id}}" @tap="destroy" class="weui-btn div_btn" type="danger" >删除</button>
   </view>
 </template>
 
@@ -67,9 +76,12 @@
         {name: '机构图书馆', value: 'STORE', checked: false}
       ],
       loading: false,
-
+      ShowUpload: false,
+      BookImage: '',
+      EditImage: [],
       // 图书分类
-      sort: null
+      sort: null,
+      files: []
     }
 
     computed = {
@@ -103,13 +115,56 @@
         })
       }
     }
-
+    uploadFiles(filePaths, successUp, failUp, i, length) {
+      let that = this
+      let token = wx.getStorageSync('token')
+      wx.uploadFile({
+        url: service.books_upload,
+        filePath: filePaths,
+        method: 'POST',
+        name: 'fileData',
+        header: {
+          'Authorization': 'Bearer ' + token,
+          'content-type': 'multipart/form-data',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        success: (resp) => {
+          that.EditImage = JSON.parse(resp.data).data
+          that.$apply()
+        },
+        fail: (res) => {
+          failUp++
+        },
+        complete: () => {
+          i++
+          if (i === length) {
+          } else {
+            that.uploadFiles(filePaths, successUp, failUp, i, length)
+          }
+        }
+      })
+    }
     methods = {
       radioChange (e) {
         console.log('radio发生change事件，携带value值为：', e.detail.value)
         this.radioItems.forEach(v => {
           v.checked = v.value === e.detail.value
           this.type = v.value
+        })
+      },
+      chooseimage() {
+        var that = this
+        wx.chooseImage({
+          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+          success: function (res) {
+            // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+            that.files = res.tempFilePaths
+            that.ShowUpload = true
+            that.BookImage = res.tempFilePaths[0]
+            that.$apply()
+            that.uploadFiles(that.BookImage, 0, 0, 0, that.files.length)
+          }
         })
       },
       save() {
@@ -125,7 +180,8 @@
         const data = {
           name: this.getString(this.name),
           intro: this.getString(this.intro),
-          type: this.getString(this.type)
+          type: this.getString(this.type),
+          logo: this.getString(this.EditImage)
         }
         // 开防抖
         this.loading = true
@@ -213,7 +269,10 @@
 
 <style lang="less">
 @import "../../styles/custom/fn.less";
-
+image {
+  width: 200rpx;
+  height: 200rpx;
+}
 .book-sort{
   .weui-media-box__title{
     padding-bottom: 0.5em;
@@ -249,5 +308,29 @@
   .reset-input{
     padding: 6px 15px;
   }
+}
+.flo_l {float: left}
+.flo_r {float: right}
+.font_26 {font-size: 26rpx}
+.font_28 {font-size: 28rpx}
+.bold{font-weight: bold}
+.clearfloat {clear:both}
+.white {background: white}
+  .div_btn{
+    position: fixed;
+    left: 0;bottom: 0;
+    width: 100%;
+  }
+.hide_image{
+  width: 200rpx;
+  height: 280rpx;
+  margin: 20rpx;
+  border: 2rpx solid #d3d3d3;
+  text-align: center;
+}
+.hide_image image{
+  width: 100rpx;
+  height: 100rpx;
+  margin-top: 100rpx;
 }
 </style>
