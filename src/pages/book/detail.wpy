@@ -54,7 +54,7 @@
                 <view class="weui-media-box__desc" wx:if="{{item.library.intro}}">{{item.library.intro}}</view>
              </view>
            <!--<view>-->
-             <button class="weui-btn mini-btn" @tap="goto('/pages/book/comment?id={{book.id}}')" type="primary" size="mini" style="float:right;margin-left: 12rpx;">借阅 {{item.lent_num}}/{{item.num}}</button>
+             <button class="weui-btn mini-btn" @tap="toAdd({{book}})" type="primary" size="mini" style="float:right;margin-left: 12rpx;">借阅 {{item.lent_num}}/{{item.num}}</button>
            <!--</view>-->
            <!--<view>-->
              <!--<button class="weui-btn mini-btn" @tap="goto('/pages/book/comment?id={{book.id}}')" type="primary" size="mini" style="float:right" disabled>已借阅</button>-->
@@ -197,9 +197,8 @@
           wx.navigateTo({url: '/pages/library/book?library_id=' + _id + '&id=' + book_id})
         } else {
           console.log(book_id)
+          wx.navigateTo({url: '/pages/library/library?id=' + _id})
         }
-//        debugger
-//
       },
       toStar() {
         // 将要发生的收藏动作

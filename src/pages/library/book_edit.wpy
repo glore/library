@@ -227,7 +227,7 @@
           pages: this.getString(this.pages),
           num: this.getString(this.num)
         }
-        debugger
+//        debugger
         // 开防抖
         this.loading = true
 
