@@ -17,6 +17,9 @@
           <view>出版时间：{{book.pubdate}}</view>
           <view>分类：{{book.sort.name}}</view>
           <view>ISBN编码：{{book.isbn}}</view>
+          <!--<view class="icon-edit">-->
+            <!--<image class="" src="../../images/icon/icon-edit.png" />-->
+          <!--</view>-->
         </view>
         <view class="detail-tags">
           <text wx:for="{{book.tags}}" wx:key="index" wx:for-item="tag" class="tag">{{tag}}</text>
@@ -41,23 +44,30 @@
         馆藏列表
       </view>
       <view class="weui-panel__bd">
-         <navigator wx:for="{{book.book_libraries}}" wx:key="id" url="/pages/library/book?library_id={{item.library_id}}&id={{item.book_id}}" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
-             <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+         <navigator wx:for="{{book.book_libraries}}" wx:key="id" url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+             <view class="weui-media-box__hd weui-media-box__hd_in-appmsg" @tap="link({{item.library_id}},{{item.book_id}},{{item.member}})">
                  <image class="weui-media-box__thumb" src="{{item.library.logo}}" />
              </view>
-             <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+             <view class="weui-media-box__bd weui-media-box__bd_in-appmsg" @tap="link({{item.library_id}},{{item.book_id}},{{item.member}})">
                 <view class="weui-media-box__title">{{item.library.name}}</view>
                 <view class="weui-media-box__desc">册数：共{{item.num}}册<span wx:if="{{item.lent_num}}">(已借出{{item.lent_num}}册)</span></view>
                 <view class="weui-media-box__desc" wx:if="{{item.library.intro}}">{{item.library.intro}}</view>
              </view>
-             <view class="weui-cell__ft weui-cell__ft_in-access"></view>
+           <!--<view>-->
+             <button class="weui-btn mini-btn" @tap="goto('/pages/book/comment?id={{book.id}}')" type="primary" size="mini" style="float:right;margin-left: 12rpx;">借阅 {{item.lent_num}}/{{item.num}}</button>
+           <!--</view>-->
+           <!--<view>-->
+             <!--<button class="weui-btn mini-btn" @tap="goto('/pages/book/comment?id={{book.id}}')" type="primary" size="mini" style="float:right" disabled>已借阅</button>-->
+           <!--</view>-->
+           <!--<view class="weui-cell__ft weui-cell__ft_in-access"></view>-->
          </navigator>
       </view>
     </view>
     <view class="weui-panel weui-panel_access">
       <view class="weui-panel__hd">
         图书评论
-        <button class="weui-btn mini-btn" @tap="goto('/pages/book/comment?id={{book.id}}')" type="primary" size="mini" style="float:right">写评论</button>
+        <!--<button class="weui-btn mini-btn" @tap="goto('/pages/book/comment?id={{book.id}}')" type="primary" size="mini" style="float:right">写评论</button>-->
+        <!--<button  class="weui-btn mini-btn" @tap="goto('/pages/library/book_edit?id={{book.id}}&library_id={{library_id}}')" type="danger" size="mini" style="float:right;margin-right: 12rpx" >编辑</button>-->
         <view class="clearfloat"></view>
       </view>
       <view class="weui-panel__bd">
@@ -76,6 +86,9 @@
              <view class="weui-cell__bd">更多评论</view>
              <view class="weui-cell__ft weui-cell__ft_in-access"></view>
          </navigator>
+      </view>
+      <view class="comment_btn" @tap="goto('/pages/book/comment?id={{book.id}}')">
+        <image class="" src="../../images/icon/icon-comment.png" />
       </view>
     </view>
   </view>
@@ -179,6 +192,15 @@
     }
 
     methods = {
+      link(_id, book_id, member) {
+        if(member && member.status == 'ADMIN'){
+          wx.navigateTo({url: '/pages/library/book?library_id=' + _id + '&id=' + book_id})
+        } else {
+          console.log(book_id)
+        }
+//        debugger
+//
+      },
       toStar() {
         // 将要发生的收藏动作
         const newType = this.isCollect ? 0 : 1
@@ -298,6 +320,40 @@
     color: #777;
   }
   .clearfloat {clear:both}
+  .comment_btn {
+    width:120rpx;
+    height:120rpx;
+    border-radius:50%;
+    background:-webkit-gradient(linear, 0 0, 0 100%, from(#cfb64c), to(#e690a2));
+    text-align:center;
+    color:white;
+    position:fixed;
+    right:42rpx;
+    bottom:120rpx;
+    box-shadow: -1rpx 6rpx 16rpx #a3a3a3;
 
-}
+  }
+  .comment_btn image{
+    width: 72rpx;
+    height: 82rpx;
+    margin-top: 26rpx;
+  }
+  .comment_btn:active {
+    transform: scale(1.1,1.1)
+  }
+  .icon-edit:active {
+    transform: scale(1.1,1.1)
+  }
+  .icon-edit {
+    float: right;
+    margin: -52rpx 8rpx 6rpx 0rpx;
+    border-radius: 8rpx;
+    box-shadow: -1rpx 6rpx 12rpx #b7b7b7;
+    padding: 0rpx 8rpx;
+  }
+  .icon-edit image{
+    width: 72rpx;
+    height: 68rpx;
+  }
+  }
 </style>

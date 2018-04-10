@@ -3,9 +3,16 @@
     <view class="weui-cells weui-cells_after-title borrow-address">
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
-          <view class="weui-label reset-label-left">
-          <image class="imgicon" style="width:4em; height:4em" src="{{image}}" mode="aspectFit"/>
+          <view class="weui-label reset-label-left" bindtap="chooseimage">
+            <image class="imgicon"  wx:if="{{ShowUpload}}" src="{{BookImage}}" mode="aspectFit"/>
+            <image class="imgicon"  wx:else src="{{image}}" mode="aspectFit"/>
           </view>
+          <!--<view class="flo_l" wx:if="{{ShowUpload}}" style="margin-top: 32rpx">-->
+            <!--<image src="{{BookImage}}" mode="aspectFit" bindtap="chooseimage"/>-->
+          <!--</view>-->
+          <!--<view class="flo_l hide_image"  bindtap="chooseimage">-->
+            <!--<image src="../../images/icon/icon-upload.png" mode="aspectFit" />-->
+          <!--</view>-->
         </view>
         <view class="weui-cell__bd h3  color-red">
             <input @input="typing('title')" cclass="weui-input" style="margin-top:10px" value="{{title}}" placeholder="图书标题"/>
@@ -100,9 +107,10 @@
   import base from '../../mixins/base'
   import user from '../../mixins/user'
   import ShareMessage from '../../mixins/ShareMessage'
+  import uploadimage from '../../mixins/upload_image'
 
   export default class borrowSubscribe extends wepy.page {
-    mixins = [base, http, user, ShareMessage]
+    mixins = [base, http, user, ShareMessage, uploadimage]
     config = {
       navigationBarTitleText: '图书编辑',
       enablePullDownRefresh: false
@@ -214,11 +222,12 @@
           publisher: this.getString(this.publisher),
           price: this.getString(this.price),
           isbn: this.getString(this.isbn),
-          image: this.getString(this.image),
+          image: this.getString(this.Image) ? this.getString(this.Image) : this.getString(this.image),
           pubdate: this.getString(this.pubdate),
           pages: this.getString(this.pages),
           num: this.getString(this.num)
         }
+        debugger
         // 开防抖
         this.loading = true
 
@@ -325,6 +334,10 @@
 
   .reset-input{
     padding: 6px 15px;
+  }
+  .imgicon {
+    width:7em;
+    height:7em;
   }
 }
 </style>

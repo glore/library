@@ -13,7 +13,7 @@
         {{library.name}}会员管理
       </view>
       <view class="weui-panel__bd">
-        <view  wx:for="{{members}}" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+        <view  wx:for="{{members}}" wx:key="*this" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
           <view class="weui-media-box__hd weui-media-box__hd_in-appmsg" @tap="goto('/pages/library/usercollect?library_id={{item.user.id}}')">
             <image class="weui-media-box__thumb" src="{{item.user.wechat.avatar}}" />
           </view>

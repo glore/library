@@ -39,6 +39,7 @@ export default class ShareMessage extends wepy.mixin {
       }else {
         url = link + '?from_openid=' + that.from_openid
       }
+      // debugger
       if (res.from === 'menu') {
         console.log(res.target)
       }

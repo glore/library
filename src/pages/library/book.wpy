@@ -18,33 +18,36 @@
           <view>分类：{{book.sort.name}}</view>
           <view>ISBN编码：{{book.isbn}}</view>
           <view>册数：共{{book.library_book.num}}册<span wx:if="{{book.library_book.lent_num}}">(已借{{book.library_book.lent_num}}册)</span></view>
+          <view class="icon-edit"  wx:if="{{member_status == 'ADMIN'}}" @tap="goto('/pages/library/book_edit?id={{book.id}}&library_id={{library_id}}')" >
+            <image class="" src="../../images/icon/icon-edit.png" />
+          </view>
         </view>
         <view class="detail-tags">
           <text wx:for="{{book.tags}}" wx:key="index" wx:for-item="tag" class="tag">{{tag}}</text>
         </view>
       </view>
     </view>
-    <view wx:if="{{book.library}}" class="weui-panel weui-panel_access">
-      <view class="weui-panel__hd">
-        馆藏地
-      </view>
-      <view class="weui-panel__bd">
-         <navigator url="/pages/library/library?id={{book.library.id}}" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
-             <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-                 <image class="weui-media-box__thumb" src="{{book.library.logo}}" />
-             </view>
-             <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-                <view class="weui-media-box__title">{{book.library.name}}</view>
-                <view class="weui-media-box__desc" wx:if="{{book.library.intro}}">{{book.library.intro}}</view>
-             </view>
-             <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-         </navigator>
-      </view>
-    </view>
+    <!--<view wx:if="{{book.library}}" class="weui-panel weui-panel_access">-->
+      <!--<view class="weui-panel__hd">-->
+        <!--馆藏地-->
+      <!--</view>-->
+      <!--<view class="weui-panel__bd">-->
+         <!--<navigator url="/pages/library/library?id={{book.library.id}}" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">-->
+             <!--<view class="weui-media-box__hd weui-media-box__hd_in-appmsg">-->
+                 <!--<image class="weui-media-box__thumb" src="{{book.library.logo}}" />-->
+             <!--</view>-->
+             <!--<view class="weui-media-box__bd weui-media-box__bd_in-appmsg">-->
+                <!--<view class="weui-media-box__title">{{book.library.name}}</view>-->
+                <!--<view class="weui-media-box__desc" wx:if="{{book.library.intro}}">{{book.library.intro}}</view>-->
+             <!--</view>-->
+             <!--<view class="weui-cell__ft weui-cell__ft_in-access"></view>-->
+         <!--</navigator>-->
+      <!--</view>-->
+    <!--</view>-->
     <view class="weui-panel weui-panel_access">
       <view class="weui-panel__hd">
         图书评论
-        <button wx:if="{{member_status == 'ADMIN'}}" class="weui-btn mini-btn" @tap="goto('/pages/library/book_edit?id={{book.id}}&library_id={{library_id}}')" type="danger" size="mini" style="float:right;margin-left: 12rpx" >编辑</button>
+        <!--<button wx:if="{{member_status == 'ADMIN'}}" class="weui-btn mini-btn" @tap="goto('/pages/library/book_edit?id={{book.id}}&library_id={{library_id}}')" type="danger" size="mini" style="float:right;margin-left: 12rpx" >编辑</button>-->
         <button class="weui-btn mini-btn" @tap="goto('/pages/book/comment?id={{book.id}}')" type="primary" size="mini" style="float:right">写评论</button>
         <view class="clearfloat"></view>
       </view>
@@ -107,6 +110,13 @@
     <view style="height: 100rpx"></view>
     <Screen class="fixed-bottom">
       <view style="display: flex;">
+        <button @tap="goto('/pages/library/library?id={{book.library.id}}')" class="weui-btn btn-block btn-flex-full" type="primary">
+          <text>进入图书馆</text>
+        </button>
+      </view>
+    </Screen>
+    <!--<Screen class="fixed-bottom">-->
+      <!--<view style="display: flex;">-->
         <!--button @tap="toStar" class="weui-btn btn-block btn-flex-1">
           <block wx:if="{{isCollect}}">
             <image class="imgicon" src="{{icon_star_active}}" mode="aspectFit"/>
@@ -120,13 +130,14 @@
           <image class="imgicon" src="{{icon_shelf}}" mode="aspectFit"/>
           <view class="btn-text-bottom">书架</view>
         </button-->
-        <button @tap="toAdd({{book}})" disabled="{{!isEnabled}}" class="weui-btn btn-block btn-flex-full" type="primary">
-          <text wx:if="{{!isEnabled}}">已借完</text>
-          <text wx:elif="{{book.exist}}">已添加，查看书架</text>
-          <text wx:else>借阅</text>
-        </button>
-      </view>
-    </Screen>
+        <!--<button @tap="toAdd({{book}})" disabled="{{!isEnabled}}" class="weui-btn btn-block btn-flex-full" type="primary">-->
+          <!--<text wx:if="{{!isEnabled}}">已借完</text>-->
+          <!--<text wx:elif="{{book.exist}}">已添加，查看书架</text>-->
+          <!--<text wx:else>借阅</text>-->
+          <!--<text>进入图书馆</text>-->
+        <!--</button>-->
+      <!--</view>-->
+    <!--</Screen>-->
 
   </view>
 </template>
@@ -195,7 +206,7 @@
       this.$get({url: service.libraries + '/' + this.library_id + '/books/' + this.id}, {
         success: ({code, data}) => {
           this.book = data
-          this.member_status = data.member.status
+          this.member_status = data.member ? data.member.status : ''
           wx.setNavigationBarTitle({
             title: data.library.name + '藏书-' + data.title
           })
@@ -359,5 +370,19 @@
     color: #777;
   }
   .clearfloat {clear:both}
+  .icon-edit:active {
+    transform: scale(1.1,1.1)
+  }
+  .icon-edit {
+    float: right;
+    margin: -52rpx 8rpx 6rpx 0rpx;
+    border-radius: 8rpx;
+    box-shadow: -1rpx 6rpx 12rpx #b7b7b7;
+    padding: 0rpx 8rpx;
+  }
+  .icon-edit image{
+    width: 72rpx;
+    height: 68rpx;
+  }
 }
 </style>

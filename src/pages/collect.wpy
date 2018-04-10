@@ -76,12 +76,12 @@
   import http from '../mixins/http'
   import base from '../mixins/base'
   import user from '../mixins/user'
-  import ShareMessage from '../mixins/ShareMessage'
+//  import ShareMessage from '../mixins/ShareMessage'
   import { service } from '../config.js'
   import ClassifyList from '../components/classifyList'
 
   export default class pageCollect extends wepy.page {
-    mixins = [base, http, user, ShareMessage]
+    mixins = [base, http, user]
     config = {
       navigationBarTitleText: '藏书阁',
       enablePullDownRefresh: true
@@ -95,7 +95,8 @@
       loading: true,
       noMore: false,
       formId: [],
-      library_id: ''
+      library_id: '',
+      from_openid: ''
     }
     computed = {
       nickName() {
@@ -103,16 +104,16 @@
       }
     }
     onPullDownRefresh() {
-//      this.updateBookList(this.page)
+      this.initPageData()
     }
     onShow() {
       // 初始化页面数据
       this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
-    onShareAppMessage(res) {
-      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
-    }
+//    onShareAppMessage(res) {
+//      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+//    }
     onReachBottom() {
       setTimeout(() => {
 //        this.updateBookList(this.page)
@@ -130,16 +131,44 @@
           that.mylibrary = data.mylibrary
           that.library_id = data.mylibrary.id
           wx.setStorageSync('openid', data.user.wechat.openid)
-          setTimeout(() => {
-            this.loading = false
-            this.noMore = true
-            this.$apply()
-          }, 500)
+//          setTimeout(() => {
+          this.loading = false
+          this.noMore = true
+          this.$apply()
+//          }, 500)
         }
       })
       that.page = 1
       // 请求列表
 //      this.updateBookList(this.page)
+    }
+    onShareAppMessage(res) {
+      let that = this
+      let url = '/pages/library/library/?id=' + that.library_id
+//      debugger
+      if (res.from === 'menu') {
+        console.log(res.target)
+      }
+      return {
+        title: that.mylibrary.intro,
+        path: url,
+        // 设置转发image，不设默认当前截
+        imageUrl: '',
+        success: function(res) {
+          wx.showToast({
+            title: '转发成功',
+            icon: 'success',
+            duration: 1500
+          })
+          var shareTickets = res.shareTickets
+          if (shareTickets.length == 0) {
+            return false
+          }
+        },
+        fail: function(res) {
+          // 转发失败
+        }
+      }
     }
 //    updateBookList(page) {
 //      let that = this
