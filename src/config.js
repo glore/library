@@ -2,8 +2,8 @@
                         小程序配置文件
 ======================================================== */
 // 域名
-var host = 'https://library.ufutx.com/api'
-// var host = 'http://library.glore/api'
+// var host = 'https://library.ufutx.com/api'
+var host = 'http://library.hankin.com/api'
 export const service = {
     // 登录接口
     login: `${host}/login/wechat`,
