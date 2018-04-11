@@ -117,7 +117,7 @@
       navigate: false,
       book: {},
       id: 0,
-      library_id: 1,
+      library_id: 0,
       title: ''
     }
 
@@ -169,6 +169,7 @@
       this.$get({url: service.books + '/' + this.book.id}, {
         success: ({code, data}) => {
           this.book = data
+          this.library_id = data.library_book.library_id
         }
       })
 
@@ -242,6 +243,7 @@
                     title: '预约借书成功',
                     content: '请找管理员取书！'
                   })
+                  that.getDetail()
                 }
               })
             }

@@ -164,6 +164,7 @@
       // 拉取图书详情
       this.$get({url: service.libraries + '/' + this.libraryId + '/books/' + this.id}, {
         success: ({code, data}) => {
+          this.library_id = data.library.id
           this.id = data.id
           this.title = data.title
           this.origin_title = data.origin_title
@@ -258,12 +259,13 @@
       },
       destroy() {
         var self = this
+        console.log(this.library_id)
         wx.showModal({
           title: '提示',
           content: '确认删除该图书信息？',
           success: function(res) {
             if (res.confirm) {
-              self.$delete({url: service.books + '/' + self.id}, {
+              self.$delete({url: service.libraries + '/' + self.library_id + '/books/' + self.id}, {
                 success: ({code, data}) => {
                   // setTimeout(() => {
                   wx.showToast({
