@@ -4,7 +4,7 @@
 
     <view class="weui-cells__title">每个人都有一个属于自己的图书馆</view>
     <view class="flo_l" wx:if="{{ShowUpload}}" style="margin: 32rpx 12rpx 0 20rpx" @tap="chooseimage">
-      <image src="{{BookImage}}" mode="aspectFit" style="box-shadow: 1rpx 1rpx 12rpx #d3d3d3"/>
+      <image src="{{EditImage}}" mode="aspectFit" style="box-shadow: 1rpx 1rpx 12rpx #d3d3d3"/>
     </view>
     <view class="flo_l hide_image" wx:else bindtap="chooseimage">
       <image src="../../images/icon/icon-upload.png" mode="aspectFit" @tap="chooseimage"/>
@@ -55,8 +55,8 @@
             </label>
         </radio-group>
     </view>
-    <button @tap="save" class="weui-btn div_btn" type="primary">创建</button>
-    <button wx:if="{{id}}" @tap="destroy" class="weui-btn div_btn" type="danger" >删除</button>
+    <button @tap="save" class="weui-btn div_btn" type="primary">{{text}}</button>
+    <!--<button wx:if="{{id}}" @tap="destroy" class="weui-btn div_btn" type="danger" >删除</button>-->
   </view>
 </template>
 
@@ -89,10 +89,11 @@
       loading: false,
       ShowUpload: false,
       BookImage: '',
-      EditImage: [],
+      EditImage: '',
       // 图书分类
       sort: null,
-      files: []
+      files: [],
+      text: '创建'
     }
 
     computed = {
@@ -100,11 +101,12 @@
 
     onLoad(options) {
       this.id = options.id
+      this.initPageData()
     }
 
     onShow(options) {
       // 初始化页面数据
-      this.initPageData()
+
     }
 
     onPullDownRefresh() {
@@ -113,13 +115,25 @@
 
     // 初始化页面数据
     initPageData() {
+      let that = this
       // 获取分类列表
       if (this.id) {
-        this.$get({url: service.sorts + '/' + this.id}, {
+        this.text = '保存'
+        this.ShowUpload = true
+        this.$get({url: service.libraries + '/' + this.id}, {
           success: ({code, data}) => {
             this.name = data.name
             this.intro = data.intro
             this.count = data.count
+            this.EditImage = data.logo
+            for(let i=0; i<that.radioItems.length; i++){
+              that.radioItems[i].checked = false
+              if (that.radioItems[i].value == data.type) {
+                that.radioItems[i].checked = true
+                console.log(i)
+//                debugger
+              }
+            }
           },
           complete: () => {
             this.loading = false
@@ -161,7 +175,8 @@
         console.log('radio发生change事件，携带value值为：', e.detail.value)
         this.radioItems.forEach(v => {
           v.checked = v.value === e.detail.value
-          this.type = v.value
+          this.type = e.detail.value
+          this.$apply()
         })
       },
       chooseimage() {
@@ -192,7 +207,6 @@
         if (!this.getNumber(this.count) || this.count == 0) {
           return this.$alert('温馨提示', '请输入图书馆每人借阅数')
         }
-
         const data = {
           name: this.getString(this.name),
           intro: this.getString(this.intro),
@@ -205,6 +219,7 @@
 
         // 保存图书信息
         if (this.id) {
+          let that = this
           this.$put({url: service.host + '/libraries/' + this.id, data: data}, {
             success: ({code, data}) => {
               wx.showModal({
@@ -212,7 +227,7 @@
                 content: '保存成功',
                 success: function(res) {
                   if (res.confirm) {
-                    wx.navigateTo({url: '/pages/borrow'})
+                    wx.navigateTo({url: '/pages/library/library?id=' + that.id})
                   } else if (res.cancel) {
                   }
                 }

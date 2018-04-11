@@ -1,9 +1,9 @@
 <template>
   <view class="user-library">
-    <!--<view  class="flo_l" style="padding-top: 12rpx;padding-left: 42rpx" wx:if="{{member_type == 'ADMIN'}}" @tap="goto('/pages/library/create?id={{mylib.id}}')">-->
-      <!--<image class="library-image flo_l" mode="aspectFit" src="{{mylib.logo}}"></image>-->
-    <!--</view>-->
-    <view  class="flo_l" style="padding-top: 12rpx;padding-left: 42rpx">
+    <view  class="flo_l" style="padding-top: 12rpx;padding-left: 42rpx" wx:if="{{member_type == 'ADMIN'}}" @tap="goto('/pages/library/create?id={{mylib.id}}')">
+      <image class="library-image flo_l" mode="aspectFit" src="{{mylib.logo}}"></image>
+    </view>
+    <view  class="flo_l" style="padding-top: 12rpx;padding-left: 42rpx" wx:else>
       <image class="library-image flo_l" mode="aspectFit" src="{{mylib.logo}}"></image>
     </view>
     <view class="flo_r" style="margin:26rpx">
@@ -23,24 +23,26 @@
     <view class="library-title">{{mylib.name}}</view>
     <view class="weui-flex library-wrapper">
       <view @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')" wx:if="{{member_type == 'ADMIN'}}" class="weui-flex__item list-item">
-        <view class="color-666 item-title">{{mylib.sorts_count}}类</view>
+        <view class="color-666 item-title"><span class="num">{{mylib.sorts_count}}</span>类</view>
         <view class="color-bbb h5">馆藏分类</view>
       </view>
       <view @tap="goto('/pages/library/sorts_list?library_id={{mylib.id}}')" wx:else class="weui-flex__item list-item">
-        <view class="color-666 item-title">{{mylib.sorts_count}}类</view>
+        <view class="color-666 item-title"><span class="num">{{mylib.sorts_count}}</span>类</view>
         <view class="color-bbb h5">馆藏分类</view>
       </view>
       <view @tap="goto('/pages/book/list?library_id={{mylib.id}}')" class="weui-flex__item list-item">
-        <view class="color-666 item-title">{{mylib.library_books_count}}册</view>
+        <view class="color-666 item-title"><span class="num">{{mylib.library_books_count}}</span>册</view>
         <view class="color-bbb h5">馆藏册数</view>
       </view>
-      <view @tap="goto('/pages/library/members?library_id={{mylib.id}}')" class="weui-flex__item list-item">
-        <view class="color-666 item-title">{{mylib.members_count}}位</view>
+      <view @tap="goto('/pages/library/members?library_id={{mylib.id}}')" class="weui-flex__item list-item" style="position: relative">
+        <view class="color-666 item-title"><span class="num">{{mylib.members_count}}</span>位</view>
         <view class="color-bbb h5">会员数量</view>
+        <view class="lead" wx:if="{{mylib.join_member_num > 0 && member_type == 'ADMIN'}}">{{mylib.join_member_num}}</view>
       </view>
-      <view @tap="goto('/pages/library/borrows?library_id={{mylib.id}}')" class="weui-flex__item list-item">
-        <view class="color-666 item-title">{{mylib.borrows_count}}册</view>
+      <view @tap="goto('/pages/library/borrows?library_id={{mylib.id}}')" class="weui-flex__item list-item" style="position: relative">
+        <view class="color-666 item-title" ><span class="num">{{mylib.borrows_count}}</span>册</view>
         <view class="color-bbb h5">借阅册数</view>
+        <view class="lead" wx:if="{{mylib.reserve_book_num > 0 && member_type == 'ADMIN'}}"> {{mylib.reserve_book_num}}</view>
       </view>
     </view>
     <view class="placeholder_26"></view>
