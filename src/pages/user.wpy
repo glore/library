@@ -50,6 +50,7 @@
         </view>
         <view class="weui-cell__bd">[{{item.type}}]{{item.name}}</view>
         <view class="weui-cell__ft weui-cell__ft_in-access">进入管理</view>
+        <view class="lead"></view>
       </navigator>
     </block>
     </view>
@@ -189,6 +190,13 @@
     color: #999;
     font-size: (@userinfoHeight - 4 * @userinfoSpace) * (14 / 30);
 
+  }
+  .lead {
+    width: 16rpx;
+    height: 16rpx;
+    background: red;
+    margin-top: -24rpx;
+    border-radius: 50%;
   }
 }
 </style>

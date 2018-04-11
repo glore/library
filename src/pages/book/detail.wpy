@@ -44,7 +44,7 @@
         馆藏列表
       </view>
       <view class="weui-panel__bd">
-         <navigator wx:for="{{book.book_libraries}}" wx:key="id" url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+         <view wx:for="{{book.book_libraries}}" wx:key="id" url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
              <view class="weui-media-box__hd weui-media-box__hd_in-appmsg" @tap="link({{item.library_id}},{{item.book_id}},{{item.member}})">
                  <image class="weui-media-box__thumb" src="{{item.library.logo}}" />
              </view>
@@ -54,13 +54,13 @@
                 <view class="weui-media-box__desc" wx:if="{{item.library.intro}}">{{item.library.intro}}</view>
              </view>
            <!--<view>-->
-             <button class="weui-btn mini-btn" @tap="toAdd({{book}})" type="primary" size="mini" style="float:right;margin-left: 12rpx;">借阅 {{item.lent_num}}/{{item.num}}</button>
+             <button class="weui-btn mini-btn" @tap="toAdd({{book}}, {{item}})" type="primary" size="mini" style="float:right;margin-left: 12rpx;">借阅 {{item.lent_num}}/{{item.num}}</button>
            <!--</view>-->
            <!--<view>-->
              <!--<button class="weui-btn mini-btn" @tap="goto('/pages/book/comment?id={{book.id}}')" type="primary" size="mini" style="float:right" disabled>已借阅</button>-->
            <!--</view>-->
            <!--<view class="weui-cell__ft weui-cell__ft_in-access"></view>-->
-         </navigator>
+         </view>
       </view>
     </view>
     <view class="weui-panel weui-panel_access">
@@ -229,27 +229,40 @@
         // url jump
         wx.navigateTo({url: url})
       },
-      toAdd(book) {
-        var that = this
-        wx.showModal({
-          title: '借阅确认',
-          content: '是否借阅该本书？',
-          showCancel: true,
-          success: function(res) {
-            if (res.confirm) {
-              that.$post({url: service.libraries + '/' + that.library_id + '/books/' + book.id + '/reserve'}, {
-                success: ({code, data}) => {
-                  wx.showModal({
-                    title: '预约借书成功',
-                    content: '请找管理员取书！'
-                  })
-                  that.getDetail()
-                }
-              })
+      toAdd(book, item) {
+        if (item.member) {
+          var that = this
+          wx.showModal({
+            title: '借阅确认',
+            content: '是否借阅该本书？',
+            showCancel: true,
+            success: function(res) {
+              if (res.confirm) {
+                that.$post({url: service.libraries + '/' + item.library_id + '/books/' + book.id + '/reserve'}, {
+                  success: ({code, data}) => {
+                    wx.showModal({
+                      title: '预约借书成功',
+                      content: '请找管理员取书！'
+                    })
+                    that.getDetail()
+                  }
+                })
+              }
             }
-          }
-
-        })
+          })
+        } else {
+          wx.showModal({
+            title: '提示',
+            content: '你还不是该书房的会员...',
+            showCancel: true,
+            confirmText: '去申请',
+            success: function(res) {
+              if (res.confirm) {
+                wx.navigateTo({url: '/pages/library/library?id=' + item.library_id})
+              }
+            }
+          })
+        }
       }
     }
     components = {

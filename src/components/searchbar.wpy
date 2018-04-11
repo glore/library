@@ -27,14 +27,16 @@
       placeholder: {
         type: String,
         default: '搜索'
+      },
+      libraryId: {
+        type: Number,
+        default: null
       }
     }
-
     data = {
       inputShowed: false,
       inputVal: ''
     }
-
     methods = {
       showInput () {
         this.inputShowed = true
@@ -43,8 +45,9 @@
         const params = {
           keyword: this.inputVal || this.placeholder
         }
+        console.log(this.libraryId)
         wx.navigateTo({
-          url: `/pages/book/list?params=${JSON.stringify(params)}`
+          url: '/pages/book/list?library_id=' + this.libraryId + '&params=' + JSON.stringify(params)
         })
       },
       clearInput (cb) {

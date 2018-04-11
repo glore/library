@@ -9,7 +9,7 @@
       </view>
       <text @tap="clearSearch" class="link link-blue pull-right">清空筛选</text>
     </view>
-    <SearchBar :placeholder="searchText"></SearchBar>
+    <SearchBar :placeholder.sync="searchText" :libraryId.sync='libraryId'></SearchBar>
     <BookList :list.sync="list" :loading.sync="loading" :noMore.sync="noMoreList"></BookList>
   </view>
 </template>
@@ -36,7 +36,8 @@
       noMoreList: false,
       loading: false,
       list: [],
-      page: 1
+      page: 1,
+      keyword: ''
     }
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
@@ -52,9 +53,16 @@
       } catch (e) {
         params = {}
       }
+      if(!params == 'object'){
+        this.keyword = params
+      }else {
+        this.keyword = ''
+      }
       this.params = params
-      let libraryId = this.getNumber(query.library_id)
-      this.libraryId = this.isNumber(libraryId) ? libraryId : 0
+      let library_Id = this.getNumber(query.library_id)
+      this.libraryId = this.isNumber(library_Id) ? library_Id : 0
+      this.$apply()
+//      debugger
     }
 
     onReady() {
@@ -108,7 +116,7 @@
       this.loading = true
       // 推荐列表
       this.$get({
-        url: service.list + '?library_id=' + this.libraryId,
+        url: service.list + '?library_id=' + this.libraryId + '&keyword=' + this.keyword,
         data: Object.assign({}, this.getObject(this.params), {
           // 默认从1开始为第一页
           page: page

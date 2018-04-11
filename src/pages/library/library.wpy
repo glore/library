@@ -16,7 +16,8 @@
     </view>
     <view class="clearfloat"></view>
     <view class="flo_r" style="margin-right:26rpx;">
-      <button  @tap="joinLibrary({{mylib.id}})"  wx:if="{{!mylib.member}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">申请加入</button>
+      <button  @tap="joinLibrary('member')"  wx:if="{{!mylib.member}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">申请加入</button>
+      <button  @tap="joinLibrary('join')"  wx:if="{{mylib.member && mylib.member.status == 'JOIN'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="warn" size="mini">待审核...</button>
     </view>
     <view class="clearfloat"></view>
     <view class="library-title">{{mylib.name}}</view>
@@ -127,7 +128,7 @@
       <text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;">借书</text>
     </view>
   </view>
-  <view class="scan"  wx:if="{{mylib.member && mylib.member.status=='MEMBER'|| mylib.member.status=='JOIN'}}">
+  <view class="scan"  wx:if="{{mylib.member && mylib.member.status=='MEMBER'}}">
     <view class="scan_home scan_active {{changerotate ? 'changerotate3' : ''}} {{shrink ? 'changeshrink3' : ''}}"  @tap="scanBorrow({{mylib.id}})">
       <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>
       <text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;margin-bottom: 4rpx">借书</text>
@@ -276,17 +277,31 @@
           content: '请等待管理员审核！'
         })
       },
-      joinLibrary() {
-        let self = this
-        this.$post({
-          url: service.libraries + '/' + this.mylib.id + '/join'
-        }, {
-          success: ({code, data}) => {
-            wx.redirectTo({url: '/pages/library/library?id=' + self.mylib.id})
-          },
-          fail: ({code, data}) => {},
-          complete: () => { this.loaded = false }
-        })
+      joinLibrary(status) {
+        if (status == 'join') {
+          wx.showToast({
+            title: '管理员审核中...',
+            image: '../../images/icon/icon-error.png',
+            duration: 1500
+          })
+        } else {
+          let self = this
+          this.$post({
+            url: service.libraries + '/' + this.mylib.id + '/join'
+          }, {
+            success: ({code, data}) => {
+              wx.showToast({
+                title: '申请成功',
+                icon: 'none',
+                duration: 1500
+              })
+              this.initPageData()
+//              wx.redirectTo({url: '/pages/library/library?id=' + self.mylib.id})
+            },
+            fail: ({code, data}) => {},
+            complete: () => { this.loaded = false }
+          })
+        }
       },
       chooseimage() {
         var that = this
