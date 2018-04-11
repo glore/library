@@ -18,7 +18,17 @@
           <view class="weui-label reset-label-left">名称</view>
         </view>
         <view class="weui-cell__bd h3  color-red">
-          <input @input="typing('name')" value="{{name}}" placeholder="请输入你的图书馆名称" />
+          <input type = "number" @input="typing('name')" value="{{name}}" placeholder="请输入你的图书馆名称" />
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells weui-cells_after-title book-address">
+      <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
+        <view class="weui-cell__hd">
+          <view class="weui-label reset-label-left">每人可借阅数</view>
+        </view>
+        <view class="weui-cell__bd h3  color-red">
+          <input type = "number" @input="typing('count')" value="{{count}}" placeholder="请输入可借阅数" />
         </view>
       </view>
     </view>
@@ -69,6 +79,7 @@
       id: 0,
       name: '',
       intro: '',
+      count: 3,
       type: 'FAMILY',
       radioItems: [
         {name: '个人家庭图书馆', value: 'FAMILY', checked: true},
@@ -108,6 +119,7 @@
           success: ({code, data}) => {
             this.name = data.name
             this.intro = data.intro
+            this.count = data.count
           },
           complete: () => {
             this.loading = false
@@ -177,12 +189,16 @@
         if (!this.getString(this.intro)) {
           return this.$alert('温馨提示', '请输入图书馆简介')
         }
+        if (!this.getNumber(this.count) || this.count == 0) {
+          return this.$alert('温馨提示', '请输入图书馆每人借阅数')
+        }
 
         const data = {
           name: this.getString(this.name),
           intro: this.getString(this.intro),
           type: this.getString(this.type),
-          logo: this.getString(this.EditImage)
+          logo: this.getString(this.EditImage),
+          count: this.count
         }
         // 开防抖
         this.loading = true
