@@ -69,8 +69,8 @@
       <text class="font_26">上传封面</text>
     </view>
     <view class="flo_l" style="width: 65%">
-      <view class="font_28" style="margin-top: 20rpx"><view class="flo_l">作者： </view><input type="text" placeholder="请填写作者"  class="upload-text" style="width: 80%;padding-left: 12rpx" bindinput="inputChange_author"/></view>
       <view class="font_28"><view class="flo_l">书名： </view><input type="text" placeholder="请填写书的名字"  class="upload-text" style="width: 80%;padding-left: 12rpx;"bindinput="inputChange"/></view>
+      <view class="font_28" style="margin-top: 20rpx"><view class="flo_l">作者： </view><input type="text" placeholder="请填写作者"  class="upload-text" style="width: 80%;padding-left: 12rpx" bindinput="inputChange_author"/></view>
       <!--<view  class="list" style="width: 78%">-->
         <!--<picker  value="{{sorts_id}}" range="{{sortslist.name}}"  bindchange="sorts_Change" >-->
           <!--<view class="picker">-->
