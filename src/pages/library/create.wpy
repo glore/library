@@ -82,8 +82,7 @@
       count: 3,
       type: 'FAMILY',
       radioItems: [
-        {name: '个人家庭图书馆', value: 'FAMILY', checked: true},
-        {name: '书店图书馆', value: 'ORG', checked: false},
+        {name: '书店图书馆', value: 'ORG', checked: true},
         {name: '机构图书馆', value: 'STORE', checked: false}
       ],
       loading: false,
