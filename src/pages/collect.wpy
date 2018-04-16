@@ -14,7 +14,7 @@
               </button>
             </view>
             <view class="userinfo-info" >
-              <view class="userinfo-nickname">{{ mylibrary.intro }}</view>
+              <view class="userinfo-nickname">{{ mylibrary.name }}</view>
             </view>
           </view>
         </view>
@@ -150,7 +150,7 @@
         console.log(res.target)
       }
       return {
-        title: that.mylibrary.intro,
+        title: that.mylibrary.name,
         path: url,
         // 设置转发image，不设默认当前截
         imageUrl: '',

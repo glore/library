@@ -8,7 +8,7 @@
           <view class="booklist-cover-wrapper">
             <image src="{{item.image}}" mode="widthFix" style="width:100%;" />
           </view>
-          <view class="booklist-content-wrapper">
+          <view class="booklist-content-wrapper" >
             <view class="booklist-title">{{item.title}}</view>
             <view class="booklist-abstract">{{item.content}}</view>
             <view wx:if="{{isCollectList}}" class="booklist-tags">
@@ -31,7 +31,6 @@
                   <text class="booklist-text reset-text-star color-blue">收藏</text>
                 </block>
               </view>
-
             </view>
             <view wx:else class="booklist-tags">
               <block wx:for="{{item.tags}}" wx:key="index" wx:for-item="tag">
@@ -49,6 +48,10 @@
                   <image src="{{icon_eye}}" class="imgicon" mode="aspectFit"/>
                   <text class="booklist-text color-bbb">已借完</text>
                 </block>
+                <view class="icon-edit" @tap.stop="goto('/pages/library/book_edit?id={{item.id}}&library_id={{libraryId}}')" wx:if="{{isAdmin == '1'}}">
+                  <image class="" src="/images/icon/icon-edit.png" />
+                  <view style="clear: both"></view>
+                </view>
               </view>
             </view>
           </view>
@@ -99,6 +102,14 @@
         type: Boolean,
         default: false
       },
+      libraryId: {
+        type: Number,
+        default: null
+      },
+      isAdmin: {
+        type: Number,
+        default: null
+      },
       /**
        * [type 列表类型：常规列表/收藏列表]
        * @type {list/collect}
@@ -121,8 +132,11 @@
         return this.type === 'collect'
       }
     }
-
     methods = {
+      goto(url) {
+        // url jump
+        wx.navigateTo({url: url})
+      },
       toStar(book, index) {
         // 将要发生的收藏动作
         const isCollect = Boolean(book && +book.collected)
@@ -268,6 +282,20 @@
     vertical-align: text-top;
   }
 
+}
+.icon-edit:active {
+  transform: scale(1.1,1.1)
+}
+.icon-edit {
+  float: right;
+  margin: 0rpx 0rpx 6rpx 12rpx;
+  border-radius: 8rpx;
+  box-shadow: -1rpx 6rpx 12rpx #b7b7b7;
+  padding: 0rpx 8rpx;
+}
+.icon-edit image{
+  width: 48rpx;
+  height: 46rpx;
 }
 .booklist-text{
   padding-left: 0.3em;

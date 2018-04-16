@@ -8,7 +8,7 @@
         <view class="weui-cell__hd">
           <view class="weui-label reset-label-left">名称</view>
         </view>
-        <view class="weui-cell__bd h3  color-red">
+        <view class="weui-cell__bd h3  color-red" style="padding: 12rpx">
             <input @input="typing('name')" value="{{name}}" placeholder="请输入分类名称" />
         </view>
       </view>
@@ -18,13 +18,15 @@
         <view class="weui-cell__hd">
           <view class="weui-label reset-label-left">简介</view>
         </view>
-        <view class="weui-cell__bd h3  color-red">
+        <view class="weui-cell__bd h3  color-red" style="padding: 12rpx">
             <input @input="typing('intro')" value="{{intro}}" placeholder="分类说明" />
         </view>
       </view>
     </view>
-    <button @tap="save" class="weui-btn btn-primary" type="primary">保存</button>
-    <button wx:if="{{id}}" @tap="destroy" class="weui-btn btn-danger" type="danger" >删除</button>
+    <view style="position: fixed;bottom: 0;left: 0;width: 100%">
+      <button @tap="save" class="weui-btn btn-primary" type="primary">保存</button>
+      <button wx:if="{{id}}" @tap="destroy" class="weui-btn btn-danger" type="danger" >删除</button>
+    </view>
   </view>
 </template>
 

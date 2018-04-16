@@ -16,11 +16,17 @@
     </view>
     <view class="clearfloat"></view>
     <view class="flo_r" style="margin-right:26rpx;">
-      <button  @tap="joinLibrary('member')"  wx:if="{{!mylib.member}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">申请加入</button>
+      <form bindsubmit="formSubmit" report-submit>
+        <button formType="submit" class="btn" data-type="click">
+          <button  @tap="joinLibrary('member')"  wx:if="{{!mylib.member}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">申请加入</button>
+        </button>
+      </form>
       <button  @tap="joinLibrary('join')"  wx:if="{{mylib.member && mylib.member.status == 'JOIN'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="warn" size="mini">待审核...</button>
     </view>
     <view class="clearfloat"></view>
-    <view class="library-title">{{mylib.name}}</view>
+    <view class="library-title">{{mylib.name}}
+      <image src="../../images/icon/icon-modification.png" style="width: 32rpx;height: 32rpx;margin-bottom: -4rpx;" wx:if="{{member_type == 'ADMIN'}}" @tap="goto('/pages/library/create?id={{mylib.id}}')"></image>
+    </view>
     <view class="weui-flex library-wrapper">
       <view @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')" wx:if="{{member_type == 'ADMIN'}}" class="weui-flex__item list-item">
         <view class="color-666 item-title"><span class="num">{{mylib.sorts_count}}</span>类</view>
@@ -30,7 +36,7 @@
         <view class="color-666 item-title"><span class="num">{{mylib.sorts_count}}</span>类</view>
         <view class="color-bbb h5">馆藏分类</view>
       </view>
-      <view @tap="goto('/pages/book/list?library_id={{mylib.id}}')" class="weui-flex__item list-item">
+      <view @tap="goto('/pages/book/list?library_id={{mylib.id}}&member_type={{member_type}}')" class="weui-flex__item list-item">
         <view class="color-666 item-title"><span class="num">{{mylib.library_books_count}}</span>册</view>
         <view class="color-bbb h5">馆藏册数</view>
       </view>
@@ -57,8 +63,12 @@
     <!--</view>-->
   </view>
   <view wx:if="{{Show}}" class="BookList {{CollectAnimation ? 'BookList_animation' : ''}}" style="background: none">
-    <button class=" flo_r" type="primary" size="mini" @tap="addcollect({{mylib.id}})" style="margin-right: 20rpx">一键录入</button>
-    <view class="clearfloat"></view>
+    <form bindsubmit="formSubmit" report-submit>
+      <button formType="submit" class="btn" data-type="click">
+        <button class=" flo_r" type="primary" size="mini" @tap="addcollect({{mylib.id}})" style="margin-right: 20rpx">一键录入</button>
+        <view class="clearfloat"></view>
+      </button>
+    </form>
   </view>
   <view class="BookList {{EditAnimation ? 'BookList_animation' : ''}}" wx:if="{{ShowEdit}}">
     <view class="flo_l " wx:if="{{ShowUpload}}" style="margin-top: 32rpx;margin-right: 12rpx;">
@@ -69,8 +79,8 @@
       <text class="font_26">上传封面</text>
     </view>
     <view class="flo_l" style="width: 65%">
-      <view class="font_28" style="margin-top: 20rpx"><view class="flo_l">作者： </view><input type="text" placeholder="请填写作者"  class="upload-text" style="width: 80%;padding-left: 12rpx" bindinput="inputChange_author"/></view>
       <view class="font_28"><view class="flo_l">书名： </view><input type="text" placeholder="请填写书的名字"  class="upload-text" style="width: 80%;padding-left: 12rpx;"bindinput="inputChange"/></view>
+      <view class="font_28" style="margin-top: 20rpx"><view class="flo_l">作者： </view><input type="text" placeholder="请填写作者"  class="upload-text" style="width: 80%;padding-left: 12rpx" bindinput="inputChange_author"/></view>
       <!--<view  class="list" style="width: 78%">-->
         <!--<picker  value="{{sorts_id}}" range="{{sortslist.name}}"  bindchange="sorts_Change" >-->
           <!--<view class="picker">-->
@@ -95,27 +105,54 @@
       <view class="font_26 ellipsis_2" style=''>简介：{{item.summary}}</view>
       <view class="font_26" style="width: 78%">作者：{{item.author}}</view>
       <view  class="list" style="width: 78%">
-        <picker  value="{{item.sortslist.index}}" range="{{item.sortslist.name}}" id="{{item.id}}" data-current="{{idx}}" bindchange="sorts_typeChange" >
+        <bolck wx:if="{{mylib.sorts_count == '0'}}">
           <view class="picker">
             <view class="font_26">分类：
-              <text style="border-bottom: 1rpx solid #d3d3d3" wx:if="{{item.sortslist.ShowSorts}}">{{item.sortslist.name[item.sortslist.index]}}</text>
-              <text style="border-bottom: 1rpx solid #d3d3d3" wx:else>{{library_sort_list[item.library_sort_index].name}}</text>
+              <text style="border-bottom: 1rpx solid #d3d3d3; color: #4ba7ff"   @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')">新增分类</text>
             </view>
           </view>
-        </picker>
+        </bolck>
+        <block wx:else>
+          <picker  value="{{item.sortslist.index}}" range="{{item.sortslist.name}}" id="{{item.id}}" data-current="{{idx}}" bindchange="sorts_typeChange" >
+            <view class="picker">
+              <view class="font_26">分类：
+                <text style="border-bottom: 1rpx solid #d3d3d3; color: #4ba7ff" wx:if="{{item.sortslist.ShowSorts}}">{{item.sortslist.name[item.sortslist.index]}}</text>
+                <text style="border-bottom: 1rpx solid #d3d3d3; color: #4ba7ff"  wx:else>{{library_sort_list[item.library_sort_index].name}}</text>
+              </view>
+            </view>
+          </picker>
+        </block>
       </view>
       <view class="flo_r" style="margin-top: -50rpx">
         <button  type="warn" size="mini" plain class="flo_r" @tap="deletecollect({{item.id}})"  style="padding:2rpx 12rpx;line-height: 42rpx;margin-bottom: 22rpx;margin-right: 8rpx">
           删除
         </button>
       </view>
-    </view>
+      </view>
     <view class="clearfloat"></view>
   </view>
-  <ClassifyList :list.sync="list" :library_id.sync="library_id"></ClassifyList>
+  <block wx:if="{{mylib.sorts_count == '0' && member_type == 'ADMIN' && !show && !ShowEdit}}">
+    <view style="margin: auto;margin-top: -32rpx;position: relative">
+      <image src='../../images/message.png'  mode="aspectFit"  style="transform: rotateX(180deg);width: 280rpx;height: 214rpx "></image>
+      <view class="font_26" style="position: absolute;left: 60rpx;bottom: 62rpx;">1.先去<span style="color: #4ba7ff"  @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')">新增分类</span>
+      </view>
+    </view>
+    <view style="margin: auto;margin-bottom: -32rpx;position: fixed;right: 38rpx;bottom: 228rpx;">
+      <image src='../../images/message.png'  mode="aspectFit"  style="transform: rotateY(180deg) rotateZ(16deg);width: 340rpx;height: 218rpx;"></image>
+      <view class="font_26" style="position: absolute;left: 72rpx;bottom: 136rpx;transform: rotateZ(-10deg);">2.扫码录入图书</view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <ClassifyList :list.sync="list" :library_id.sync="library_id"></ClassifyList>
+  </block>
   <view class="scan"  wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}">
     <view class="scan_home {{rotate ? 'rotate' : ''}}" @tap="rotate" style="z-index: 12;">
-      <image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-scan.png" style="width: 60rpx;height: 60rpx"></image>
+      <form bindsubmit="formSubmit" report-submit>
+        <button formType="submit" class="btn" data-type="click">
+          <image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-scan.png" style="width: 60rpx;height: 60rpx"></image>
+        </button>
+      </form>
     </view>
     <view class="scan_home scan_active {{changerotate ? 'changerotate1' : ''}} {{shrink ? 'changeshrink1' : ''}}" @tap="scanBook({{mylib.id}})">
       <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>
@@ -185,11 +222,12 @@
       ShowUpload: false,
       ShowSorts: false,
       library_sort_id: '',
-      library_sort_list: '',
-      library_sort_index: '',
+      library_sort_list: [],
+      library_sort_index: 0,
       list: [],
       library_id: '',
-      member_type: ''
+      member_type: '',
+      formId: []
     }
 
     onShareAppMessage(res) {
@@ -267,6 +305,10 @@
       this.ShowUpload = false
     }
     methods = {
+      formSubmit(e) {
+        this.formId.push(e.detail.formId)
+        console.log(this.formId)
+      },
       goto(url) {
         wx.navigateTo({url: url})
       },
@@ -289,7 +331,10 @@
         } else {
           let self = this
           this.$post({
-            url: service.libraries + '/' + this.mylib.id + '/join'
+            url: service.libraries + '/' + self.mylib.id + '/join',
+            data: {
+              'formId': self.formId
+            }
           }, {
             success: ({code, data}) => {
               wx.showToast({
@@ -357,11 +402,15 @@
               }, {
                 success: ({code, data}) => {
                   that.ShowAnimation = false
-                  that.library_sort_id = data.library_book.sort_id
+                  if (data.library_book.sort_id) {
+                    that.library_sort_id = data.library_book.sort_id == '0' ? data.sorts[0].id : data.library_book.sort_id
+                  } else {
+                    that.library_sort_id = data.sorts[0].id
+                  }
+                  that.$apply()
                   that.library_sort_list = data.sorts
-                  if (!that.library_sort_id) {
+                  if (that.library_sort_id == '0') {
                     that.ShowSorts = true
-//                    debugger
                   }
                   that.library_sort_list.forEach(function (item, index, arr) {
                     if (that.library_sort_id == arr[index].id) {
@@ -456,7 +505,8 @@
         let that = this
         that.CollectAnimation = true
         let data = {
-          books: that.librarydata
+          books: that.librarydata,
+          formId: that.formId
         }
         this.$post({
           url: service.libraries + '/' + _id + '/books/store',
@@ -537,6 +587,7 @@
               setTimeout(() => {
                 that.ShowEdit = false
               }, 800)
+              that.initPageData()
             },
             fail: ({code, data}) => {
               wx.showToast({

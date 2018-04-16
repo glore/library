@@ -54,7 +54,7 @@
 
     methods = {
       switchTab(url) {
-        wx.switchTab({url:url})
+        wx.switchTab({url: url})
       }
     }
 

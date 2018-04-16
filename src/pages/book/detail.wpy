@@ -46,7 +46,7 @@
       <view class="weui-panel__bd">
          <view wx:for="{{book.book_libraries}}" wx:key="id" url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
              <view class="weui-media-box__hd weui-media-box__hd_in-appmsg" @tap="link({{item.library_id}},{{item.book_id}},{{item.member}})">
-                 <image class="weui-media-box__thumb" src="{{item.library.logo}}" />
+                 <image class="weui-media-box__thumb" src="{{item.library.logo}}" mode="aspectFit" />
              </view>
              <view class="weui-media-box__bd weui-media-box__bd_in-appmsg" @tap="link({{item.library_id}},{{item.book_id}},{{item.member}})">
                 <view class="weui-media-box__title">{{item.library.name}}</view>
@@ -193,11 +193,11 @@
     }
 
     methods = {
-      link(_id, book_id, member) {
-        if(member && member.status == 'ADMIN'){
-          wx.navigateTo({url: '/pages/library/book?library_id=' + _id + '&id=' + book_id})
+      link(_id, bookid, member) {
+        if (member && member.status == 'ADMIN') {
+          wx.navigateTo({url: '/pages/library/book?library_id=' + _id + '&id=' + bookid})
         } else {
-          console.log(book_id)
+//          console.log(bookid)
           wx.navigateTo({url: '/pages/library/library?id=' + _id})
         }
       },

@@ -20,15 +20,17 @@
           <view class="weui-media-box__bd weui-media-box__bd_in-appmsg" style="position: relative">
             <view style="width: 80%"  @tap="goto('/pages/library/usercollect?library_id={{item.user.id}}')">
               <view class="weui-media-box__title" >姓名：{{item.user.name}}</view>
-              <view class="weui-media-box__desc"  >电话: {{item.user.mobile}}</view>
-              <view class="weui-media-box__desc" wx:if="{{item.status=='JOIN'}}" style="color:red">状态：待审核</view>
-              <view class="weui-media-box__desc" wx:if="{{item.status=='MEMBER'}}" style="color:green">状态：会员</view>
-              <view class="weui-media-box__desc" wx:if="{{item.status=='ADMIN'}}"  style="color:blue">状态：管理员</view>
+              <block wx:if="{{library.is_admin == '1'}}">
+                <view class="weui-media-box__desc"  >电话: {{item.user.mobile}}</view>
+                <view class="weui-media-box__desc" wx:if="{{item.status=='JOIN'}}" style="color:red">状态：待审核</view>
+                <view class="weui-media-box__desc" wx:if="{{item.status=='MEMBER'}}" style="color:green">状态：会员</view>
+                <view class="weui-media-box__desc" wx:if="{{item.status=='ADMIN'}}"  style="color:blue">状态：管理员</view>
+              </block>
             </view>
-            <view style="position: absolute; right: 12rpx; top: 12rpx;" @tap="makePhoneCall('{{item.user.mobile}}')">
+            <view style="position: absolute; right: 12rpx; top: 12rpx;" @tap="makePhoneCall('{{item.user.mobile}}')" wx:if="{{library.is_admin == '1'}}">
               <image src="../../images/tabbars/icon-phone.png" style="width: 60rpx;height: 60rpx"></image>
             </view>
-            <view class="weui-media-box__info">
+            <view class="weui-media-box__info" wx:if="{{library.is_admin == '1'}}">
               <button class="weui-btn mini-btn" size="mini" style="margin-right: 10px;" wx:if="{{item.status=='ADMIN'}}" @tap = "memberUpdate({{item.id}}, 'member')" type="primary">移除管理权</button>
               <block  wx:if="{{item.status=='JOIN'}}">
                 <button  class="weui-btn mini-btn" @tap="memberUpdate({{item.id}}, 'member')" size="mini" style="margin-right: 10px;" type="primary">同意加入</button>
@@ -70,7 +72,7 @@
       sliderLeft: 0,
       sliderWidth: 180,
       screenWidth: 360,
-      library_num:  0
+      library_num: 0
     }
 
     computed = {

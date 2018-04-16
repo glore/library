@@ -51,6 +51,10 @@
         <view class="weui-cell__bd">[{{item.type}}]{{item.name}}</view>
         <view class="weui-cell__ft weui-cell__ft_in-access">进入管理</view>
         <view class="lead" wx:if="{{item.join_number_count > 0 || item.reserve_book_num > 0}}"></view>
+        <!--<view class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0">-->
+          <!--<view style="display: inline-block;vertical-align:middle; font-size: 17px;">详细信息</view>-->
+          <!--<view class="weui-badge weui-badge_dot" style="margin-left: 5px;margin-right: 5px;"></view>-->
+        <!--</view>-->
       </navigator>
     </block>
     </view>

@@ -4,7 +4,7 @@
       <!--<input type="number"  confirm-type="search" placeholder="请输入ISBN" bindblur="ReferBook" />-->
       <!--<button type="primary" size="mini">识别</button>-->
     <!--</view>-->
-    <view wx:if="{{libraries.length < 3}}">
+    <view wx:if="{{ShowMessage}}">
       <image src="../images/saoma.png"  mode="aspectFit" style="width: 380rpx;height: 380rpx;margin:10% 0 0 31%"></image>
       <view style="margin-left:28%;color: #666666;" class="font_28">扫描书籍背后的ISBN条形码</view>
     </view>
@@ -52,9 +52,13 @@
         </button>
       </form>
       <block wx:if="{{Show}}">
-        <view   class="{{!ShowAnimation ? 'qr_addcollect' : ''}} {{ShowAnimation ? 'BookList_animation' : ''}}"  @tap="addcollect()">
-          <view class="font_26">收藏</view>
-        </view>
+        <form bindsubmit="formSubmit" report-submit>
+          <button formType="submit" class="btn" data-type="click">
+            <view   class="{{!ShowAnimation ? 'qr_addcollect' : ''}} {{ShowAnimation ? 'BookList_animation' : ''}}"  @tap="addcollect()">
+              <view class="font_26">收藏</view>
+            </view>
+          </button>
+        </form>
       </block>
     </view>
   </view>
@@ -78,6 +82,7 @@
       libraries: [],
       Show: false,
       ShowEdit: false,
+      ShowMessage: true,
       ShowAnimation: false,
       EditAnimation: false,
       BookId: [],
@@ -132,6 +137,7 @@
       this.EditSummary = ''
       this.EditIsbn = ''
       this.ShowUpload = false
+//      this.ShowMessage = true
     }
 
     methods = {
@@ -211,6 +217,7 @@
           }
         }, {
           success: ({code, data}) => {
+            that.ShowMessage = true
             setTimeout(() => {
               wx.showToast({
                 title: '已加入收藏',
@@ -250,6 +257,7 @@
         if (librariearray.length == 0) {
           this.Show = false
           this.formId = []
+          this.ShowMessage = true
         }
         this.libraries = librariearray
         this.BookId = ids
@@ -305,6 +313,7 @@
               that.EditAnimation = true
               setTimeout(() => {
                 that.ShowEdit = false
+                that.ShowMessage = true
               }, 800)
             },
             fail: ({code, data}) => {
@@ -324,6 +333,7 @@
       },
       scanBook() {
         let that = this
+        that.ShowMessage = false
         that.EditAnimation = false
         that.ShowAnimation = false
         that.RemoveEdit()
@@ -340,6 +350,7 @@
               }, {
                 success: ({code, data}) => {
                   if (code == 0 && data.image) {
+                    that.ShowMessage = false
                     that.libraries.unshift(data)
                     that.BookId.push(data.id)
                     that.ShowAnimation = false
@@ -356,6 +367,7 @@
                   })
 //                  if (code === 1) {
                   that.ShowEdit = true
+                  that.ShowMessage = false
                   if (this.libraries.length == 0) {
                     this.Show = false
                   }
@@ -366,6 +378,8 @@
             }
           },
           fail: (res) => {
+            that.ShowMessage = true
+            that.$apply()
 //            wx.showToast({
 //              title: '未能识别出',
 //              image: '../images/icon/icon-error.png',

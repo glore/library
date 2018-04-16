@@ -13,7 +13,7 @@
         {{library.name}}借阅管理
       </view>
       <view class="weui-panel__bd"  hidden="{{activeIndex != 0}}">
-        <navigator  wx:for="{{borrows}}" wx:key="index" url="/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+        <view  wx:for="{{borrows}}" wx:key="index"  class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
           <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
             <image class="weui-media-box__thumb" src="{{item.user.wechat.avatar}}" />
           </view>
@@ -22,14 +22,20 @@
             <view class="weui-media-box__desc">书名：{{item.book.title}}</view>
             <view class="weui-media-box__desc">借书时间：{{item.created_at}}</view>
             <view class="weui-media-box__desc"  wx:if="{{item.status=='BORROW'}}" style="color:red">最迟还书时间：{{item.return_time}}</view>
-            <view class="weui-media-box__desc"  style="color:red" wx:if="{{item.status=='RESERVE'}}"><button type="primary" size="mini">借书管理</button></view>
-            <view class="weui-media-box__desc"  style="color:blue" wx:if="{{item.status=='BORROW'}}"><button type="danger" size="mini">还书管理</button></view>
             <view class="weui-media-box__desc"  style="color:green" wx:if="{{item.status=='RETURN'}}">还书时间：{{item.updated_at}}</view>
+            <block wx:if="{{library.is_admin == '1'}}">
+              <view class="weui-media-box__desc"  style="color:red" wx:if="{{item.status=='RESERVE'}}">
+                <button type="primary" size="mini"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">借书管理</button>
+              </view>
+              <view class="weui-media-box__desc"  style="color:blue" wx:if="{{item.status=='BORROW'}}">
+                <button type="danger" size="mini"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">还书管理</button>
+              </view>
+            </block>
           </view>
-         </navigator>
+         </view>
       </view>
       <view class="weui-panel__bd"   hidden="{{activeIndex != 1}}">
-        <navigator  wx:for="{{borrows}}" wx:key="index"  url="/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+        <view  wx:for="{{borrows}}" wx:key="index" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
           <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
             <image class="weui-media-box__thumb" src="{{item.user.wechat.avatar}}" />
           </view>
@@ -38,14 +44,20 @@
             <view class="weui-media-box__desc">书名：{{item.book.title}}</view>
             <view class="weui-media-box__desc">借书时间：{{item.created_at}}</view>
             <view class="weui-media-box__desc"  wx:if="{{item.status=='BORROW'}}" style="color:red">最迟还书时间：{{item.return_time}}</view>
-            <view class="weui-media-box__desc"  style="color:red" wx:if="{{item.status=='RESERVE'}}"><button type="primary" size="mini">借书管理</button></view>
-            <view class="weui-media-box__desc"  style="color:blue" wx:if="{{item.status=='BORROW'}}"><button type="danger" size="mini">还书管理</button></view>
             <view class="weui-media-box__desc"  style="color:green" wx:if="{{item.status=='RETURN'}}">还书时间：{{item.updated_at}}</view>
+            <block wx:if="{{library.is_admin == '1'}}" @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">
+              <view class="weui-media-box__desc"  style="color:red" wx:if="{{item.status=='RESERVE'}}">
+                <button type="primary" size="mini"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">借书管理</button>
+              </view>
+              <view class="weui-media-box__desc"  style="color:blue" wx:if="{{item.status=='BORROW'}}">
+                <button type="danger" size="mini"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">还书管理</button>
+              </view>
+            </block>
           </view>
-        </navigator>
+        </view>
       </view>
       <view class="weui-panel__bd"   hidden="{{activeIndex != 2}}">
-        <navigator  wx:for="{{borrows}}" wx:key="index" url="/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+        <view  wx:for="{{borrows}}" wx:key="index" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
           <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
             <image class="weui-media-box__thumb" src="{{item.user.wechat.avatar}}" />
           </view>
@@ -54,11 +66,17 @@
             <view class="weui-media-box__desc">书名：{{item.book.title}}</view>
             <view class="weui-media-box__desc">借书时间：{{item.created_at}}</view>
             <view class="weui-media-box__desc"  wx:if="{{item.status=='BORROW'}}" style="color:red">最迟还书时间：{{item.return_time}}</view>
-            <view class="weui-media-box__desc"  style="color:red" wx:if="{{item.status=='RESERVE'}}"><button type="primary" size="mini">借书管理</button></view>
-            <view class="weui-media-box__desc"  style="color:blue" wx:if="{{item.status=='BORROW'}}"><button type="danger" size="mini">还书管理</button></view>
             <view class="weui-media-box__desc"  style="color:green" wx:if="{{item.status=='RETURN'}}">还书时间：{{item.updated_at}}</view>
+            <block wx:if="{{library.is_admin == '1'}}"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">
+              <view class="weui-media-box__desc"  style="color:red" wx:if="{{item.status=='RESERVE'}}">
+                <button type="primary" size="mini"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">借书管理</button>
+              </view>
+              <view class="weui-media-box__desc"  style="color:blue" wx:if="{{item.status=='BORROW'}}">
+                <button type="danger" size="mini"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">还书管理</button>
+              </view>
+            </block>
           </view>
-        </navigator>
+        </view>
       </view>
       <!--view class="weui-panel__ft">
          <navigator class="weui-cell weui-cell_access weui-cell_link" url="/pages/book/comments?id={{book.id}}">
@@ -94,7 +112,7 @@
       sliderLeft: 0,
       sliderWidth: 180,
       screenWidth: 360,
-      library_num:  0
+      library_num: 0
     }
 
     computed = {
@@ -162,6 +180,9 @@
     }
 
     methods = {
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
       tabClick (e) {
         this.sliderOffset = e.currentTarget.offsetLeft
         this.activeIndex = e.currentTarget.id

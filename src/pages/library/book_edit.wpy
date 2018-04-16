@@ -83,7 +83,10 @@
         <view class="weui-cells weui-cells_after-title">
           <view class="weui-cell">
             <view class="weui-cell__bd h3 color-red">
-              <textarea class="weui-textarea" @input="typing('summary')" value="{{summary}}" auto-height="true" auto-focus="true" class="weui-input" placeholder="图书简介" style="width: 100%"/>
+              <!--<view style="height: 250rpx; overflow-x: auto;line-height: 56rpx" @tap="showText('text')" wx:if="{{show}}">-->
+                <!--{{summary}}-->
+              <!--</view>-->
+              <textarea class="weui-textarea" @input="typing('summary')"  value="{{summary}}" auto-height="true" auto-focus="true" class="weui-input" placeholder="图书简介" style="width: 100%"/>
               <view class="weui-textarea-counter"></view>
             </view>
           </view>
@@ -94,8 +97,11 @@
         <view class="color-999">1. 图书馆藏书册数必需填写</view>
         <view class="color-999">2. 图书标题和作者需要填写</view>
       </view>
-      <button @tap="save" class="weui-btn btn-primary" type="primary">保存</button>
-      <button @tap="destroy" class="weui-btn btn-danger" type="danger" >删除</button>
+    <view style="height: 86rpx"></view>
+    <view style="position: fixed;bottom: 0;left: 0;width: 100%">
+      <button @tap="save" type="primary" style="float: left;width: 50%;border-radius: 0">保存</button>
+      <button @tap="destroy"  type="danger" style="border-radius: 0">删除</button>
+    </view>
       </view>
   </view>
 </template>
@@ -139,7 +145,8 @@
       // 图书分类
       list: [],
       sorts: [],
-      sortIndex: 0
+      sortIndex: 0,
+      show: true
     }
 
     computed = {
@@ -289,6 +296,14 @@
             }
           }
         })
+      },
+      showText(type) {
+        console.log('lkl')
+        if (type == 'show') {
+          this.show = true
+        } else {
+          this.show = false
+        }
       },
       typing (type, e) {
         if (this.isDefined(this[type])) {

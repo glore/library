@@ -138,7 +138,9 @@
               code: this.getString(this.code),
               name: this.getString(this.name),
               wechat_code: this.getString(this.$getCode()),
-              info: res.userInfo
+              info: res.userInfo,
+              encryptedData: res.encryptedData,
+              iv: res.iv
             }
 
             // 绑定手机号

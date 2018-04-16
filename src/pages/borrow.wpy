@@ -171,11 +171,11 @@
     }
     onReachBottom() {
       setTimeout(() => {
-      if (this.activeIndex == '1') {
-        this.getLibraries(this.page)
-      } else {
-        this.initPageData()
-      }
+        if (this.activeIndex == '1') {
+          this.getLibraries(this.page)
+        } else {
+          this.initPageData()
+        }
         this.$apply()
       }, 200)
     }

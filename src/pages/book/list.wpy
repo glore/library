@@ -10,7 +10,7 @@
       <text @tap="clearSearch" class="link link-blue pull-right">清空筛选</text>
     </view>
     <SearchBar :placeholder.sync="searchText" :libraryId.sync='libraryId'></SearchBar>
-    <BookList :list.sync="list" :loading.sync="loading" :noMore.sync="noMoreList"></BookList>
+    <BookList :list.sync="list" :loading.sync="loading" :noMore.sync="noMoreList" :libraryId.sync='libraryId' :isAdmin.sync='isAdmin'></BookList>
   </view>
 </template>
 
@@ -37,7 +37,8 @@
       loading: false,
       list: [],
       page: 1,
-      keyword: ''
+      keyword: '',
+      isAdmin: 0
     }
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
@@ -53,14 +54,17 @@
       } catch (e) {
         params = {}
       }
-      if(!params == 'object'){
+      if (!params == 'object') {
         this.keyword = params
-      }else {
+      } else {
         this.keyword = ''
       }
       this.params = params
-      let library_Id = this.getNumber(query.library_id)
-      this.libraryId = this.isNumber(library_Id) ? library_Id : 0
+      let libraryid = this.getNumber(query.library_id)
+      this.libraryId = this.isNumber(libraryid) ? libraryid : 0
+      if (query.member_type) {
+        this.isAdmin = query.member_type == 'ADMIN' ? 1 : 0
+      }
       this.$apply()
 //      debugger
     }

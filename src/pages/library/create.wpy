@@ -10,6 +10,9 @@
       <image src="../../images/icon/icon-upload.png" mode="aspectFit" @tap="chooseimage"/>
       <text class="font_26">上传logo</text>
     </view>
+    <view>
+      <image src="../../images/upload.png" mode="aspectFit" @tap="chooseimage"/>
+    </view>
     <!--<view class="font_26 flo_r" style="width: 60%;padding: 18rpx;background: white;margin-top: 30%">上传属于你自己的图书馆LOGO</view>-->
     <view class="clearfloat"></view>
     <view class="weui-cells weui-cells_after-title book-address">
@@ -18,7 +21,7 @@
           <view class="weui-label reset-label-left">名称</view>
         </view>
         <view class="weui-cell__bd h3  color-red">
-          <input type = "number" @input="typing('name')" value="{{name}}" placeholder="请输入你的图书馆名称" />
+          <input  @input="typing('name')" value="{{name}}" placeholder="请输入你的图书馆名称" />
         </view>
       </view>
     </view>
@@ -72,7 +75,7 @@
   export default class bookSort extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
-      navigationBarTitleText: '创建属于自己的图书馆',
+      navigationBarTitleText: '属于自己的图书馆',
       enablePullDownRefresh: false
     }
     data = {
@@ -82,7 +85,6 @@
       count: 3,
       type: 'FAMILY',
       radioItems: [
-        {name: '个人家庭图书馆', value: 'FAMILY', checked: true},
         {name: '书店图书馆', value: 'ORG', checked: false},
         {name: '机构图书馆', value: 'STORE', checked: false}
       ],
@@ -102,6 +104,9 @@
     onLoad(options) {
       this.id = options.id
       this.initPageData()
+      if (this.id) {
+        this.radioItems.unshift({name: '个人家庭图书馆', value: 'FAMILY', checked: true})
+      }
     }
 
     onShow(options) {
@@ -126,7 +131,7 @@
             this.intro = data.intro
             this.count = data.count
             this.EditImage = data.logo
-            for(let i=0; i<that.radioItems.length; i++){
+            for (let i = 0; i < that.radioItems.length; i++) {
               that.radioItems[i].checked = false
               if (that.radioItems[i].value == data.type) {
                 that.radioItems[i].checked = true
