@@ -21,8 +21,8 @@
         <text class="font_26">上传封面</text>
       </view>
       <view class="flo_l" style="width: 65%">
-        <view class="font_28" style="margin-top: 20rpx"><view class="flo_l">作者： </view><input type="text" placeholder="请填写作者"  class="upload-text" style="width: 80%;padding-left: 12rpx" bindinput="inputChange_author"/></view>
         <view class="font_28"><view class="flo_l">书名： </view><input type="text" placeholder="请填写书的名字"  class="upload-text" style="width: 80%;padding-left: 12rpx" bindinput="inputChange"/></view>
+        <view class="font_28" style="margin-top: 20rpx"><view class="flo_l">作者： </view><input type="text" placeholder="请填写作者"  class="upload-text" style="width: 80%;padding-left: 12rpx" bindinput="inputChange_author"/></view>
         <view class="font_26 ellipsis_3" >简介： <textarea type="text" auto-height  placeholder="请填写书的简介" class="upload-text" style="min-height: 180rpx;padding: 12rpx;" bindinput="textareaChange"/></view>
       </view>
       <view class=" flo_r">

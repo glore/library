@@ -145,8 +145,7 @@
       // 图书分类
       list: [],
       sorts: [],
-      sortIndex: 0,
-      show: true
+	    sort: null
     }
 
     computed = {
@@ -186,12 +185,13 @@
           this.pubdate = data.pubdate
           this.pages = data.pages
           this.num = data.library_book.num
+          this.sort = data.sort
 
           // 分类列表
           this.list = data.sorts
           for (var i = 0; i < this.list.length; ++i) {
             this.sorts[i] = this.list[i].name
-            if (this.getString(this.list[i].id) === this.getString(this.class_id)) {
+            if (this.getString(this.list[i].id) === this.getString(this.sort.id)) {
               this.sortIndex = i
             }
           }
