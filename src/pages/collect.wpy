@@ -111,9 +111,9 @@
       this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
-//    onShareAppMessage(res) {
-//      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
-//    }
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
     onReachBottom() {
       setTimeout(() => {
 //        this.updateBookList(this.page)
@@ -142,34 +142,34 @@
       // 请求列表
 //      this.updateBookList(this.page)
     }
-    onShareAppMessage(res) {
-      let that = this
-      let url = '/pages/library/library/?id=' + that.library_id
-//      debugger
-      if (res.from === 'menu') {
-        console.log(res.target)
-      }
-      return {
-        title: that.mylibrary.name,
-        path: url,
-        // 设置转发image，不设默认当前截
-        imageUrl: '',
-        success: function(res) {
-          wx.showToast({
-            title: '转发成功',
-            icon: 'success',
-            duration: 1500
-          })
-          var shareTickets = res.shareTickets
-          if (shareTickets.length == 0) {
-            return false
-          }
-        },
-        fail: function(res) {
-          // 转发失败
-        }
-      }
-    }
+//    onShareAppMessage(res) {
+//      let that = this
+//      let url = '/pages/library/library/?id=' + that.library_id
+////      debugger
+//      if (res.from === 'menu') {
+//        console.log(res.target)
+//      }
+//      return {
+//        title: that.mylibrary.name,
+//        path: url,
+//        // 设置转发image，不设默认当前截
+//        imageUrl: '',
+//        success: function(res) {
+//          wx.showToast({
+//            title: '转发成功',
+//            icon: 'success',
+//            duration: 1500
+//          })
+//          var shareTickets = res.shareTickets
+//          if (shareTickets.length == 0) {
+//            return false
+//          }
+//        },
+//        fail: function(res) {
+//          // 转发失败
+//        }
+//      }
+//    }
 //    updateBookList(page) {
 //      let that = this
 //      this.loading = true

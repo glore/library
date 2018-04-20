@@ -169,7 +169,6 @@
           fail: (res) => { }
         })
       },
-
       typing (type, e) {
         if (this.isDefined(this[type])) {
           this[type] = e.detail.value
