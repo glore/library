@@ -48,7 +48,10 @@
       setTimeout(() => {
         this.updateBookList(this.page)
         this.$apply()
-      }, 200)
+      }, 800)
+      if (this.page) {
+      } else {
+      }
     }
     data = {
       loading: true,
@@ -67,6 +70,7 @@
       this.id = e.id
     }
     updateBookList () {
+      console.log(this.page)
       let that = this
       this.loading = true
       this.$get({

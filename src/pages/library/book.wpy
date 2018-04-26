@@ -113,6 +113,12 @@
         <button @tap="goto('/pages/library/library?id={{book.library.id}}')" class="weui-btn btn-block btn-flex-full" type="primary">
           <text>进入图书馆</text>
         </button>
+        <!--<button @tap="toAdd({{book}})" disabled="{{!isEnabled}}" class="weui-btn btn-block btn-flex-full" type="primary">-->
+        <!--<text wx:if="{{!isEnabled}}">已借完</text>-->
+        <!--<text wx:elif="{{book.exist}}">已添加，查看书架</text>-->
+        <!--<text wx:else>借阅</text>-->
+        <!--<text>进入图书馆</text>-->
+        <!--</button>-->
       </view>
     </Screen>
     <!--<Screen class="fixed-bottom">-->

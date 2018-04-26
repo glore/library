@@ -26,9 +26,15 @@
           <view class="weui-label reset-label-left">分类</view>
         </view>
         <view class="weui-cell__bd h3  color-red">
-          <picker @change="sortChange" value="{{sortIndex}}" range="{{sorts}}">
-            <view class="weui-select">{{sorts[sortIndex]}}</view>
+          <picker @change="sortChange" value="{{sortIndex}}" range="{{sorts}}"  range-key="name">
+            <input @change="sortChange"  class="weui-input" wx:if="{{class_id == 0}}" disabled placeholder="选择分类"/>
+            <input @change="sortChange"  class="weui-input" wx:else value="{{sorts[sortIndex].name}}" disabled placeholder=""/>
           </picker>
+            <!--<picker @change="sortChange" value="{{sortIndex}}" range="{{sorts}}"  range-key="name">-->
+              <!--<view class="picker">-->
+                <!--当前选择：{{sorts[sortIndex].name}}-->
+              <!--</view>-->
+            <!--</picker>-->
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -86,7 +92,7 @@
               <!--<view style="height: 250rpx; overflow-x: auto;line-height: 56rpx" @tap="showText('text')" wx:if="{{show}}">-->
                 <!--{{summary}}-->
               <!--</view>-->
-              <textarea class="weui-textarea" @input="typing('summary')"  value="{{summary}}" auto-height="true" auto-focus="true" class="weui-input" placeholder="图书简介" style="width: 100%"/>
+              <textarea @input="typing('summary')"  value="{{summary}}" class="weui-input" placeholder="图书简介" style="width: 100%"/>
               <view class="weui-textarea-counter"></view>
             </view>
           </view>
@@ -137,14 +143,13 @@
       pubdate: '',
       pages: '',
       num: '',
-
       loading: false,
       timer: null,
       time: 0,
-
       // 图书分类
       list: [],
       sorts: [],
+      sortIndex: 0,
 	    sort: null
     }
 
@@ -174,7 +179,7 @@
           this.id = data.id
           this.title = data.title
           this.origin_title = data.origin_title
-          this.class_id = data.class_id
+          this.class_id = data.library_book.sort_id
           this.author = data.author
           this.translator = data.translator
           this.summary = data.summary
@@ -186,15 +191,14 @@
           this.pages = data.pages
           this.num = data.library_book.num
           this.sort = data.sort
-
           // 分类列表
-          this.list = data.sorts
-          for (var i = 0; i < this.list.length; ++i) {
-            this.sorts[i] = this.list[i].name
-            if (this.getString(this.list[i].id) === this.getString(this.sort.id)) {
-              this.sortIndex = i
+          this.sorts = data.sorts
+          this.sorts.forEach((item, index, arr) => {
+            if (arr[index].id == this.class_id) {
+              this.sortIndex = index
+              this.$apply()
             }
-          }
+          })
         },
         fail: ({code, data}) => {}
       })
@@ -202,9 +206,11 @@
 
     methods = {
       sortChange(e) {
-        console.log('radio发生change事件，携带value值为：', e.detail.value)
+        this.class_id = this.sorts[e.detail.value].id
         this.sortIndex = e.detail.value
-        this.class_id = this.list[this.sortIndex].id
+        this.sorts[this.sortIndex].name
+        this.$apply()
+//        this.class_id = this.list[this.sortIndex].id
       },
 
       save() {

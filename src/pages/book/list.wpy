@@ -9,7 +9,7 @@
       </view>
       <text @tap="clearSearch" class="link link-blue pull-right">清空筛选</text>
     </view>
-    <SearchBar :placeholder.sync="searchText" :libraryId.sync='libraryId'></SearchBar>
+    <SearchBar :placeholder.sync="searchText" :libraryId.sync='libraryId' :isAdmin.sync='isAdmin'></SearchBar>
     <BookList :list.sync="list" :loading.sync="loading" :noMore.sync="noMoreList" :libraryId.sync='libraryId' :isAdmin.sync='isAdmin'></BookList>
   </view>
 </template>
@@ -30,9 +30,7 @@
     }
     data = {
       params: {},
-
       libraryId: 0,
-
       noMoreList: false,
       loading: false,
       list: [],

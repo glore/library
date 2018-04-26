@@ -306,7 +306,7 @@
               'title': that.EditTitle,
               'summary': that.EditSummary,
               'isbn': that.EditIsbn
-//              'isbn': 'E003601'
+//              'isbn': 'E01030003'
             }
           }, {
             success: ({code, data}) => {
@@ -315,6 +315,33 @@
                 that.ShowEdit = false
                 that.ShowMessage = true
               }, 800)
+              let book_id = []
+              book_id.push(data.id)
+              this.$post({
+                url: service.books_collect,
+                data: {
+                  'ids': book_id,
+                  'formId': this.formId
+                }
+              }, {
+                success: ({code, data}) => {
+                  setTimeout(() => {
+                    wx.showToast({
+                      title: '已加入收藏',
+                      icon: 'none',
+                      duration: 1500
+                    })
+                  }, 800)
+                },
+                fail: (res) => {
+                  wx.showToast({
+                    title: '出错了...',
+                    image: '../images/icon/icon-error.png',
+                    duration: 1500
+                  })
+                },
+                complete: () => { this.loaded = false }
+              })
             },
             fail: ({code, data}) => {
               wx.showToast({
@@ -344,7 +371,7 @@
               this.$post({
                 url: service.books,
                 data: {
-//                  'isbn': '03601'
+//                  'isbn': 'E01030003'
                   'isbn': that.EditIsbn
                 }
               }, {

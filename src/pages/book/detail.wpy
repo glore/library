@@ -194,12 +194,12 @@
 
     methods = {
       link(_id, bookid, member) {
-        if (member && member.status == 'ADMIN') {
-          wx.navigateTo({url: '/pages/library/book?library_id=' + _id + '&id=' + bookid})
-        } else {
+//        if (member && member.status == 'ADMIN') {
+//          wx.navigateTo({url: '/pages/library/book?library_id=' + _id + '&id=' + bookid})
+//        } else {
 //          console.log(bookid)
           wx.navigateTo({url: '/pages/library/library?id=' + _id})
-        }
+//        }
       },
       toStar() {
         // 将要发生的收藏动作

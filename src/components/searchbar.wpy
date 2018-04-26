@@ -31,6 +31,10 @@
       libraryId: {
         type: Number,
         default: null
+      },
+      isAdmin: {
+        type: Number,
+        default: null
       }
     }
     data = {
@@ -45,9 +49,13 @@
         const params = {
           keyword: this.inputVal || this.placeholder
         }
-        console.log(this.libraryId)
+        console.log(this.isAdmin)
+        let url = '/pages/book/list?library_id=' + this.libraryId + '&params=' + JSON.stringify(params)
+        if (this.isAdmin == 1) {
+          url = '/pages/book/list?library_id=' + this.libraryId + '&params=' + JSON.stringify(params) + '&member_type=ADMIN'
+        }
         wx.navigateTo({
-          url: '/pages/book/list?library_id=' + this.libraryId + '&params=' + JSON.stringify(params)
+          url: url
         })
       },
       clearInput (cb) {

@@ -397,7 +397,7 @@
                 url: service.libraries + '/' + libraryId + '/books',
                 data: {
                   'isbn': that.EditIsbn
-//                  'isbn': 'E00360161'
+//                  'isbn': 'E0036000'
                 }
               }, {
                 success: ({code, data}) => {
@@ -579,7 +579,7 @@
               'summary': that.EditSummary,
 //              'sorts_id': that.sorts_id,
               'isbn': that.EditIsbn
-//              'isbn': 'E00360161'
+//              'isbn': 'E0036000'
             }
           }, {
             success: ({code, data}) => {
@@ -587,6 +587,41 @@
               setTimeout(() => {
                 that.ShowEdit = false
               }, 800)
+              console.log(data.id)
+              let books = [{
+                id: data.id, sort_id: 0
+              }]
+              this.$post({
+                url: service.libraries + '/' + that.library_id + '/books/store',
+                data: {
+                  books: books
+                }
+              }, {
+                success: ({code, data}) => {
+                  setTimeout(() => {
+                    wx.showToast({
+                      title: '录入成功',
+                      icon: 'none',
+                      duration: 1500
+                    })
+                    that.Show = false
+                    that.libraries = []
+                    that.librarydata = []
+                  }, 800)
+                  that.initPageData()
+                },
+                fail: (res) => {
+                  wx.showToast({
+                    title: '出错了...',
+                    image: '../../images/icon/icon-error.png',
+                    duration: 1500
+                  })
+                  that.libraries = []
+                  that.Show = false
+                },
+                complete: () => { this.loaded = false }
+              })
+//              加入收藏
               that.initPageData()
             },
             fail: ({code, data}) => {
@@ -623,10 +658,11 @@
                 url: service.book_store,
                 data: {
                   'isbn': res.result
+//                  'isbn': 'E0036099100'
                 }
               }, {
                 success: ({code, data}) => {
-                  wx.navigateTo({url: '/pages/library/book?id=' + data.id + '&library_id=' + libraryId})
+                  wx.navigateTo({url: '/pages/book/detail?id=' + data.id + '&library_id=' + libraryId})
                 },
                 fail: ({code, data}) => {},
                 complete: () => { this.loaded = false }
