@@ -51,6 +51,7 @@
           </view>
         </button>
       </form>
+      <view class="font_28" style="color: #23a5ff;position: absolute;right: 60rpx;bottom: 22rpx;" @tap="goto('/pages/library/book_edit')">手动录用</view>
       <block wx:if="{{Show}}">
         <form bindsubmit="formSubmit" report-submit>
           <button formType="submit" class="btn" data-type="click">
@@ -141,6 +142,9 @@
     }
 
     methods = {
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
       formSubmit(e) {
         this.formId.push(e.detail.formId)
         console.log(this.formId)

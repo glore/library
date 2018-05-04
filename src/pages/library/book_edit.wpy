@@ -3,10 +3,11 @@
     <view class="weui-cells weui-cells_after-title borrow-address">
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
-          <view class="weui-label reset-label-left" bindtap="chooseimage">
+          <view class="weui-label reset-label-left text-center" @tap="chooseimage">
             <image class="imgicon"  wx:if="{{ShowUpload}}" src="{{BookImage}}" mode="aspectFit"/>
-            <image class="imgicon"  wx:else src="{{image}}" mode="aspectFit"/>
+            <image class="imgicon"  wx:else src="{{image}}" mode="aspectFit" style="width: 180rpx;height: 180rpx;"/>
           </view>
+
           <!--<view class="flo_l" wx:if="{{ShowUpload}}" style="margin-top: 32rpx">-->
             <!--<image src="{{BookImage}}" mode="aspectFit" bindtap="chooseimage"/>-->
           <!--</view>-->
@@ -92,7 +93,7 @@
               <!--<view style="height: 250rpx; overflow-x: auto;line-height: 56rpx" @tap="showText('text')" wx:if="{{show}}">-->
                 <!--{{summary}}-->
               <!--</view>-->
-              <textarea @input="typing('summary')"  value="{{summary}}" class="weui-input" placeholder="图书简介" style="width: 100%"/>
+              <textarea @input="typing('summary')"  value="{{summary}}" class="weui-input" placeholder="图书简介" style="width: 100%;min-height: 320rpx;"/>
               <view class="weui-textarea-counter"></view>
             </view>
           </view>
@@ -104,10 +105,17 @@
         <view class="color-999">2. 图书标题和作者需要填写</view>
       </view>
     <view style="height: 86rpx"></view>
-    <view style="position: fixed;bottom: 0;left: 0;width: 100%">
-      <button @tap="save" type="primary" style="float: left;width: 50%;border-radius: 0">保存</button>
-      <button @tap="destroy"  type="danger" style="border-radius: 0">删除</button>
-    </view>
+    <block wx:if="{{id}}">
+      <view style="position: fixed;bottom: 0;left: 0;width: 100%">
+        <button @tap="save" type="primary" style="float: left;width: 50%;border-radius: 0">保存</button>
+        <button @tap="destroy"  type="danger" style="border-radius: 0">删除</button>
+      </view>
+    </block>
+    <block wx:else>
+      <view style="position: fixed;bottom: 0;left: 0;width: 100%">
+        <button @tap="save" type="primary" style="float: left;width: 100%;border-radius: 0">保存</button>
+      </view>
+    </block>
       </view>
   </view>
 </template>
@@ -139,7 +147,7 @@
       publisher: '',
       price: '',
       isbn: '',
-      image: '',
+      image: '../../images/icon/icon-upload.png',
       pubdate: '',
       pages: '',
       num: '',
@@ -150,20 +158,24 @@
       list: [],
       sorts: [],
       sortIndex: 0,
-	    sort: null
+      sort: null
     }
 
     computed = {
     }
 
     onLoad(options) {
-      this.id = options.id
-      this.libraryId = options.library_id
+      if (options.id) {
+        this.id = options.id
+        this.libraryId = options.library_id
+      }
     }
 
     onShow(options) {
       // 初始化页面数据
-      this.initPageData()
+      if (this.id) {
+        this.initPageData()
+      }
     }
 
     onPullDownRefresh() {
@@ -208,7 +220,7 @@
       sortChange(e) {
         this.class_id = this.sorts[e.detail.value].id
         this.sortIndex = e.detail.value
-        this.sorts[this.sortIndex].name
+//        this.sorts[this.sortIndex].name
         this.$apply()
 //        this.class_id = this.list[this.sortIndex].id
       },
@@ -244,31 +256,78 @@
 //        debugger
         // 开防抖
         this.loading = true
-
         // 保存图书信息
-        this.$put({url: service.libraries + '/' + this.libraryId + '/books/' + this.id, data: data}, {
-          success: ({code, data}) => {
-            wx.showModal({
-              title: '提示',
-              content: '保存成功, 继续录入',
-              success: function(res) {
-                if (res.confirm) {
-                  // wx.navigateTo({url: '/pages/library/library?id=' + data.library_book.library_id})
-                  wx.navigateBack({
-                    delta: 1
-                  })
-                } else if (res.cancel) {
+        if (this.id) {
+          this.$put({url: service.libraries + '/' + this.libraryId + '/books/' + this.id, data: data}, {
+            success: ({code, data}) => {
+              wx.showModal({
+                title: '提示',
+                content: '保存成功, 继续录入',
+                success: function(res) {
+                  if (res.confirm) {
+                    wx.navigateBack({
+                      delta: 1
+                    })
+                  } else if (res.cancel) {
+                  }
                 }
-              }
+              })
+            },
+            fail: ({code, data}) => {
+            },
+            complete: () => {
+              this.loading = false
+            }
+          })
+        } else {
+          if (this.Image.indexOf('http') == '-1') {
+            console.log(this.Image)
+            this.$alert('温馨提示', '请上传图片')
+          } else {
+            this.$post({
+              url: service.books,
+              data: data
+            }, {
+              success: ({code, data}) => {
+                let bookId = []
+                bookId.push(data.id)
+                this.$post({
+                  url: service.books_collect,
+                  data: {
+                    'ids': bookId
+//                  'formId': this.formId
+                  }
+                }, {
+                  success: ({code, data}) => {
+                    setTimeout(() => {
+                      wx.showToast({
+                        title: '已加入收藏',
+                        icon: 'none',
+                        duration: 1500
+                      })
+                    }, 800)
+                  },
+                  fail: (res) => {
+                    wx.showToast({
+                      title: '出错了...',
+                      image: '../../images/icon/icon-error.png',
+                      duration: 1500
+                    })
+                  },
+                  complete: () => { this.loaded = false }
+                })
+              },
+              fail: ({code, data}) => {
+                wx.showToast({
+                  title: '出错了...',
+                  image: '../../images/icon/icon-error.png',
+                  duration: 1500
+                })
+              },
+              complete: () => { this.loaded = false }
             })
-          },
-          fail: ({code, data}) => {
-            // 失败了什么也不做
-          },
-          complete: () => {
-            this.loading = false
           }
-        })
+        }
       },
       destroy() {
         var self = this

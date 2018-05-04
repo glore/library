@@ -99,6 +99,16 @@ export default class httpMixin extends wepy.mixin {
           })
         }else if (data.code == 2) {
           // 删除过时token
+          var pages = getCurrentPages()    //获取加载的页面
+
+          var currentPage = pages[pages.length-1]    //获取当前页面的对象
+
+          var options = currentPage.options
+
+          var url = currentPage.route
+          // var url = currentPage.route  + '?party_id=' + options.party_id //当前页面url
+          wx.setStorageSync('jump', url)
+          // debugge
           wx.removeStorageSync('token', null)
 
           // 重新登录
