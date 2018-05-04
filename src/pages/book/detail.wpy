@@ -41,7 +41,7 @@
     </view>
     <view wx:if="{{book.book_libraries.length>0}}" class="weui-panel weui-panel_access">
       <view class="weui-panel__hd">
-        馆藏列表
+        其他馆藏
       </view>
       <view class="weui-panel__bd">
          <view wx:for="{{book.book_libraries}}" wx:key="id" url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
@@ -54,7 +54,9 @@
                 <view class="weui-media-box__desc" wx:if="{{item.library.intro}}">{{item.library.intro}}</view>
              </view>
            <!--<view>-->
-             <button class="weui-btn mini-btn" @tap="toAdd({{book}}, {{item}})" type="primary" size="mini" style="float:right;margin-left: 12rpx;">借阅 {{item.lent_num}}/{{item.num}}</button>
+             <!--<button class="weui-btn mini-btn" @tap="toAdd({{book}}, {{item}})" type="primary" size="mini" style="float:right;margin-left: 12rpx;">借阅 {{item.lent_num}}/{{item.num}}</button>-->
+           <button class="weui-btn mini-btn" @tap="goto('/pages/book/detail?id={{item.book_id}}&library_id={{item.library_id}}')" type="primary" size="mini" style="float:right;margin-left: 12rpx;">借阅 {{item.lent_num}}/{{item.num}}</button>
+
            <!--</view>-->
            <!--<view>-->
              <!--<button class="weui-btn mini-btn" @tap="goto('/pages/book/comment?id={{book.id}}')" type="primary" size="mini" style="float:right" disabled>已借阅</button>-->
@@ -91,8 +93,9 @@
         <image class="" src="../../images/icon/icon-comment.png" />
       </view>
     </view>
-    <view style="position: fixed; left: 0;bottom: 0;">
-      <button class="weui-btn " @tap="toAdd({{book}}, {{item}})" type="primary" s >借阅 {{item.lent_num}}/{{item.num}}</button>
+    <view style="height: 100rpx;"></view>
+    <view style="position: fixed; left: 0;bottom: 0;width: 100%;">
+      <button class="weui-btn " @tap="toAdd({{book_library}}, {{book_library}})" type="primary" style="width: 100%;">借阅 {{book_library.lent_num}}/{{book_library.num}}</button>
     </view>
   </view>
 </template>
@@ -121,7 +124,8 @@
       book: {},
       id: 0,
       library_id: 0,
-      title: ''
+      title: '',
+      book_library: []
     }
 
     computed = {
@@ -178,8 +182,7 @@
       this.$get({url: service.books + '/' + this.book.id + '/v2',data}, {
         success: ({code, data}) => {
           this.book = data
-//          debugger
-
+          this.book_library = data.book_library
           this.library_id = data.library_book.library_id
         }
       })

@@ -109,8 +109,8 @@
       <file leaf-file-name="bookList.wpy" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/bookList.wpy">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="156">
-              <caret line="6" column="111" lean-forward="false" selection-start-line="6" selection-start-column="111" selection-end-line="6" selection-end-column="111" />
+            <state relative-caret-position="182">
+              <caret line="7" column="47" lean-forward="true" selection-start-line="7" selection-start-column="47" selection-end-line="7" selection-end-column="47" />
               <folding />
             </state>
           </provider>
@@ -119,13 +119,15 @@
       <file leaf-file-name="detail.wpy" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/pages/book/detail.wpy">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="479">
-              <caret line="177" column="33" lean-forward="false" selection-start-line="177" selection-start-column="33" selection-end-line="177" selection-end-column="33" />
+            <state relative-caret-position="557">
+              <caret line="70" column="53" lean-forward="true" selection-start-line="70" selection-start-column="53" selection-end-line="70" selection-end-column="53" />
               <folding>
                 <element signature="n#style#0;n#button#0;n#view#0;n#view#1;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#view#4;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <marker date="1525423299675" expanded="false" signature="3143:3154" ph="..." />
-                <marker date="1525423299675" expanded="false" signature="3555:3566" ph="..." />
+                <element signature="n#style#0;n#view#5;n#view#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#button#0;n#view#5;n#view#0;n#template#0;n#!!top" expanded="true" />
+                <marker date="1525424758880" expanded="false" signature="3391:3402" ph="..." />
+                <marker date="1525424758880" expanded="false" signature="3803:3814" ph="..." />
               </folding>
             </state>
           </provider>
@@ -164,10 +166,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>EditSummary</find>
-      <find>this.libraries</find>
-      <find>BookId</find>
-      <find>deletecollect</find>
       <find>librarydata</find>
       <find>joinLibrary</find>
       <find>hiddenmodalput</find>
@@ -194,6 +192,10 @@
       <find>libraryId</find>
       <find>initPageData</find>
       <find>getDetail</find>
+      <find>book</find>
+      <find>toAdd</find>
+      <find>goto</find>
+      <find>library_id</find>
     </findStrings>
     <replaceStrings>
       <replace>https://img3.doubanio.com/mpic/s1771902.jpg</replace>
@@ -453,12 +455,12 @@
       <workItem from="1524212859435" duration="3489000" />
       <workItem from="1524558439592" duration="21967000" />
       <workItem from="1525250748650" duration="1375000" />
-      <workItem from="1525333538104" duration="24842000" />
+      <workItem from="1525333538104" duration="26357000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="500555000" />
+    <option name="totallyTimeSpent" value="502070000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -527,7 +529,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/pages/book/detail.wpy</url>
-          <line>357</line>
+          <line>360</line>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -948,21 +950,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/bookList.wpy">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="6" column="111" lean-forward="false" selection-start-line="6" selection-start-column="111" selection-end-line="6" selection-end-column="111" />
+        <state relative-caret-position="182">
+          <caret line="7" column="47" lean-forward="true" selection-start-line="7" selection-start-column="47" selection-end-line="7" selection-end-column="47" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/book/detail.wpy">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="479">
-          <caret line="177" column="33" lean-forward="false" selection-start-line="177" selection-start-column="33" selection-end-line="177" selection-end-column="33" />
+        <state relative-caret-position="557">
+          <caret line="70" column="53" lean-forward="true" selection-start-line="70" selection-start-column="53" selection-end-line="70" selection-end-column="53" />
           <folding>
             <element signature="n#style#0;n#button#0;n#view#0;n#view#1;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#view#4;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <marker date="1525423299675" expanded="false" signature="3143:3154" ph="..." />
-            <marker date="1525423299675" expanded="false" signature="3555:3566" ph="..." />
+            <element signature="n#style#0;n#view#5;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#0;n#view#5;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <marker date="1525424758880" expanded="false" signature="3391:3402" ph="..." />
+            <marker date="1525424758880" expanded="false" signature="3803:3814" ph="..." />
           </folding>
         </state>
       </provider>
