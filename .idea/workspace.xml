@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="654f390e-268f-4c34-b38e-e2c47046a37b" name="默认的" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/bookList.wpy" afterPath="$PROJECT_DIR$/src/components/bookList.wpy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/book/detail.wpy" afterPath="$PROJECT_DIR$/src/pages/book/detail.wpy" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -120,12 +119,13 @@
       <file leaf-file-name="detail.wpy" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/pages/book/detail.wpy">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="609">
-              <caret line="92" column="11" lean-forward="false" selection-start-line="92" selection-start-column="11" selection-end-line="92" selection-end-column="11" />
+            <state relative-caret-position="479">
+              <caret line="177" column="33" lean-forward="false" selection-start-line="177" selection-start-column="33" selection-end-line="177" selection-end-column="33" />
               <folding>
                 <element signature="n#style#0;n#button#0;n#view#0;n#view#1;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <marker date="1525422900324" expanded="false" signature="3143:3154" ph="..." />
-                <marker date="1525422900324" expanded="false" signature="3555:3566" ph="..." />
+                <element signature="n#style#0;n#view#4;n#view#0;n#template#0;n#!!top" expanded="true" />
+                <marker date="1525423299675" expanded="false" signature="3143:3154" ph="..." />
+                <marker date="1525423299675" expanded="false" signature="3555:3566" ph="..." />
               </folding>
             </state>
           </provider>
@@ -453,12 +453,12 @@
       <workItem from="1524212859435" duration="3489000" />
       <workItem from="1524558439592" duration="21967000" />
       <workItem from="1525250748650" duration="1375000" />
-      <workItem from="1525333538104" duration="24696000" />
+      <workItem from="1525333538104" duration="24842000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="500409000" />
+    <option name="totallyTimeSpent" value="500555000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -527,7 +527,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/pages/book/detail.wpy</url>
-          <line>354</line>
+          <line>357</line>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -956,12 +956,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/book/detail.wpy">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="609">
-          <caret line="92" column="11" lean-forward="false" selection-start-line="92" selection-start-column="11" selection-end-line="92" selection-end-column="11" />
+        <state relative-caret-position="479">
+          <caret line="177" column="33" lean-forward="false" selection-start-line="177" selection-start-column="33" selection-end-line="177" selection-end-column="33" />
           <folding>
             <element signature="n#style#0;n#button#0;n#view#0;n#view#1;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <marker date="1525422900324" expanded="false" signature="3143:3154" ph="..." />
-            <marker date="1525422900324" expanded="false" signature="3555:3566" ph="..." />
+            <element signature="n#style#0;n#view#4;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <marker date="1525423299675" expanded="false" signature="3143:3154" ph="..." />
+            <marker date="1525423299675" expanded="false" signature="3555:3566" ph="..." />
           </folding>
         </state>
       </provider>

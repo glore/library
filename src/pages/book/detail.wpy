@@ -91,6 +91,9 @@
         <image class="" src="../../images/icon/icon-comment.png" />
       </view>
     </view>
+    <view style="position: fixed; left: 0;bottom: 0;">
+      <button class="weui-btn " @tap="toAdd({{book}}, {{item}})" type="primary" s >借阅 {{item.lent_num}}/{{item.num}}</button>
+    </view>
   </view>
 </template>
 
@@ -175,7 +178,7 @@
       this.$get({url: service.books + '/' + this.book.id + '/v2',data}, {
         success: ({code, data}) => {
           this.book = data
-          debugger
+//          debugger
 
           this.library_id = data.library_book.library_id
         }
