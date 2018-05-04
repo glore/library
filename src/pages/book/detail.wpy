@@ -17,6 +17,7 @@
           <view>出版时间：{{book.pubdate}}</view>
           <view>分类：{{book.sort.name}}</view>
           <view>ISBN编码：{{book.isbn}}</view>
+          <view class="font_32">所属书房：{{book_library.library.name}}</view>
           <!--<view class="icon-edit">-->
             <!--<image class="" src="../../images/icon/icon-edit.png" />-->
           <!--</view>-->
@@ -94,7 +95,7 @@
       </view>
     </view>
     <view style="height: 100rpx;"></view>
-    <view style="position: fixed; left: 0;bottom: 0;width: 100%;">
+    <view style="position: fixed; left: 0;bottom: 0;width: 100%;" wx:if="{{book_library !== null}}">
       <button class="weui-btn " @tap="toAdd({{book_library}}, {{book_library}})" type="primary" style="width: 100%;">借阅 {{book_library.lent_num}}/{{book_library.num}}</button>
     </view>
   </view>
@@ -252,7 +253,7 @@
             showCancel: true,
             success: function(res) {
               if (res.confirm) {
-                that.$post({url: service.libraries + '/' + item.library_id + '/books/' + book.id + '/reserve'}, {
+                that.$post({url: service.libraries + '/' + item.library_id + '/books/' + book.book_id + '/reserve'}, {
                   success: ({code, data}) => {
                     wx.showModal({
                       title: '预约借书成功',

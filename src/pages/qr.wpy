@@ -61,6 +61,12 @@
           </button>
         </form>
       </block>
+      <!--<block wx:if="{{Show}}">-->
+        <!--<view class="{{!ShowAnimation ? 'qr_addcollectv' : ''}}"  style="margin: auto;margin-bottom: -32rpx;" >-->
+          <!--<image   src='../../images/message.png'  mode="aspectFit"  style="transform: rotateY(0deg) rotateZ(16deg);width: 340rpx;height: 218rpx;"></image>-->
+          <!--<view class="font_26" style="position: absolute;left: 92rpx;bottom: 136rpx;transform: rotateZ(14deg);">记得点我收藏哦！</view>-->
+        <!--</view>-->
+      <!--</block>-->
     </view>
   </view>
 </template>
@@ -231,6 +237,7 @@
               that.libraries = []
               that.Show = false
               that.formId = []
+              that.$apply()
             }, 800)
           },
           fail: (res) => {

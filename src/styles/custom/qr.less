@@ -105,6 +105,28 @@ image {
   left: 480rpx;
   bottom: -200rpx;
 }
+.qr_addcollectv{
+  animation: mymoveV3 1500ms infinite linear ;
+  animation-direction:alternate;
+  position: fixed;
+  right: -40rpx;
+  bottom: 210rpx;
+}
+@keyframes mymoveV3 {
+  from {
+    /*width:180rpx; height: 180rpx;*/
+    /*line-height: 180rpx;*/
+    transform: scale(1.1);
+    bottom: 220rpx;
+  }
+  to {
+    /*width:200rpx;height: 200rpx;*/
+    /*line-height: 200rpx;*/
+    //transform: rotate(360deg);
+    transform: scale(1);
+    bottom: 210rpx;
+  }
+}
 .hide_image{
   width: 200rpx;
   height: 280rpx;
