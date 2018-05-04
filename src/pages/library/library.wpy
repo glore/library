@@ -22,6 +22,7 @@
         </button>
       </form>
       <button  @tap="joinLibrary('join')"  wx:if="{{mylib.member && mylib.member.status == 'JOIN'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="warn" size="mini">待审核...</button>
+      <view  @tap="joinLibrary('admin')" class="font_28"  wx:if="{{mylib.member && mylib.member.status == 'ADMIN'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx;color: #049BFF;" >联系取书</view>
     </view>
     <view class="clearfloat"></view>
     <view class="library-title">{{mylib.name}}
@@ -124,7 +125,7 @@
         </block>
       </view>
       <view class="flo_r" style="margin-top: -50rpx">
-        <button  type="warn" size="mini" plain class="flo_r" @tap="deletecollect({{item.id}})"  style="padding:2rpx 12rpx;line-height: 42rpx;margin-bottom: 22rpx;margin-right: 8rpx">
+        <button  type="warn" size="mini" plain class="flo_r" @tap="deletecollect({{item.id}}, {{idx}})"  style="padding:2rpx 12rpx;line-height: 42rpx;margin-bottom: 22rpx;margin-right: 8rpx">
           删除
         </button>
       </view>
@@ -173,6 +174,10 @@
       <text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;margin-bottom: 4rpx">借书</text>
     </view>
   </view>
+  <modal hidden="{{hiddenmodalput}}" title="联系管理员取书" confirm-text="拨打电话" cancel-text="取消" bindcancel="cancel" bindconfirm="confirm({{mylib.link_mobile}})">
+    <input type='text'placeholder="请输入内容" value="管理员：{{mylib.link_name}}"/>
+    <input type='text'placeholder="请输入内容" value="电话号码：{{mylib.link_mobile}}"/>
+  </modal>
 </template>
 
 
@@ -227,7 +232,8 @@
       list: [],
       library_id: '',
       member_type: '',
-      formId: []
+      formId: [],
+      hiddenmodalput: true
     }
 
     onShareAppMessage(res) {
@@ -305,6 +311,19 @@
       this.ShowUpload = false
     }
     methods = {
+      //取消按钮
+      cancel: function(){
+        this.hiddenmodalput = true
+        this.$apply()
+      },
+      //确认
+      confirm: function(mobile){
+        this.hiddenmodalput = true
+        this.$apply()
+        wx.makePhoneCall({
+          phoneNumber: mobile
+        })
+      },
       formSubmit(e) {
         this.formId.push(e.detail.formId)
         console.log(this.formId)
@@ -322,7 +341,10 @@
         })
       },
       joinLibrary(status) {
-        if (status == 'join') {
+        if(status == 'admin'){
+          this.hiddenmodalput = false
+          this.$apply()
+        }else if (status == 'join') {
           wx.showToast({
             title: '管理员审核中...',
             image: '../../images/icon/icon-error.png',
@@ -482,24 +504,9 @@
       sorts_Change(e) {
         this.sorts_id = e.detail.value
       },
-      deletecollect(_id) {
-        let librariearray = []
-        let ids = []
-        for (let i = 0; i < this.libraries.length; i++) {
-          if (this.libraries[i].id !== _id) {
-            librariearray.push(this.libraries[i])
-          }
-        }
-        for (let j = 0; j < this.librarydata.length; j++) {
-          if (_id !== this.librarydata[j].id) {
-            ids.push(this.librarydata[j])
-          }
-        }
-        if (librariearray.length == 0) {
-          this.Show = false
-        }
-        this.libraries = librariearray
-        this.librarydata = ids
+      deletecollect(_id, index) {
+        this.libraries.splice(index, 1)
+        this.librarydata.splice(index, 1)
       },
       addcollect(_id) {
         let that = this

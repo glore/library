@@ -3,13 +3,15 @@
     <view class="weui-panel">
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell">
-          <view class="weui-cell__bd userinfo clearfix">
-            <image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"/>
-            <view class="userinfo-info">
-              <view class="userinfo-nickname">{{ user.name }}(微信名称:{{user.wechat.nickname}})</view>
-              <view class="userinfo-status">手机号：{{user.mobile}}</view>
+          <navigator url="/pages/user/registerV2" >
+            <view class="weui-cell__bd userinfo clearfix">
+              <image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"/>
+              <view class="userinfo-info">
+                <view class="userinfo-nickname">{{ user.name }}(微信名称:{{user.wechat.nickname}})</view>
+                <view class="userinfo-status">手机号：{{user.mobile}}</view>
+              </view>
             </view>
-          </view>
+          </navigator>
         </view>
       </view>
     </view>
@@ -49,12 +51,12 @@
           <image src="{{icon}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
         </view>
         <view class="weui-cell__bd">[{{item.type}}]{{item.name}}</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0">
-          <view style="display: inline-block;vertical-align:middle; font-size: 17px;">详细信息</view>
-          <view class="weui-badge weui-badge_dot" style="margin-left: 5px;margin-right: 5px;"></view>
-        </view>
-        <!--<view class="weui-cell__ft weui-cell__ft_in-access">进入管理</view>-->
-        <!--<view class="lead" wx:if="{{item.join_number_count > 0 || item.reserve_book_num > 0}}"></view>-->
+        <!--<view class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0">-->
+          <!--<view style="display: inline-block;vertical-align:middle; font-size: 17px;">详细信息</view>-->
+          <!--<view class="weui-badge weui-badge_dot" style="margin-left: 5px;margin-right: 5px;"></view>-->
+        <!--</view>-->
+        <view class="weui-cell__ft weui-cell__ft_in-access">进入管理</view>
+        <view class="lead" wx:if="{{item.join_number_count > 0 || item.reserve_book_num > 0}}"></view>
         <!--<view class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0">-->
           <!--<view style="display: inline-block;vertical-align:middle; font-size: 17px;">详细信息</view>-->
           <!--<view class="weui-badge weui-badge_dot" style="margin-left: 5px;margin-right: 5px;"></view>-->
@@ -204,8 +206,8 @@
 
   }
   .lead {
-    width: 12rpx;
-    height: 12rpx;
+    width: 16rpx;
+    height: 16rpx;
     background: red;
     margin-top: -24rpx;
     border-radius: 50%;

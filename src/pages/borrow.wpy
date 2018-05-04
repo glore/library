@@ -59,6 +59,22 @@
                           <!--<button wx:if="{{item.status=='JOIN'}}" @tap="joinTip({{item.id}})"  class="weui-btn mini-btn" type="primary" size="mini">待审核</button>-->
                     </view>
                     <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
+                      <view class="weui-search-bar">
+                        <view class="weui-search-bar__form">
+                          <view class="weui-search-bar__box">
+                            <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+                            <input type="text" class="weui-search-bar__input" placeholder="搜索" value="{{inputVal}}" focus="{{inputShowed}}" @confirm="inputTyping" />
+                            <view class="weui-icon-clear" wx:if="{{inputVal.length > 0}}" bindtap="clearInput">
+                              <icon type="clear" size="14"></icon>
+                            </view>
+                          </view>
+                          <label class="weui-search-bar__label" hidden="{{inputShowed}}" bindtap="showInput">
+                            <icon class="weui-icon-search" type="search" size="14"></icon>
+                            <view class="weui-search-bar__text">搜索</view>
+                          </label>
+                        </view>
+                        <view class="weui-search-bar__cancel-btn" hidden="{{!inputShowed}}" bindtap="hideInput">取消</view>
+                      </view>
                       <view class="weui-cells__title"></view>
                       <view class="page__bd"  wx:for="{{libs}}" wx:key="*this" >
                         <view class="flo_l borrowlist" @tap="goto('/pages/library/library?id={{item.id}}')">
@@ -137,7 +153,9 @@
       screenWidth: 360,
       page: 1,
       noMore: false,
-      loading: false
+      loading: false,
+      inputShowed: false,
+      inputVal: ''
     }
 
     computed = {
@@ -164,7 +182,7 @@
 
     onPullDownRefresh() {
       if (this.activeIndex == '1') {
-        this.getLibraries(this.page)
+        this.getLibraries()
       } else {
         this.initPageData()
       }
@@ -172,7 +190,7 @@
     onReachBottom() {
       setTimeout(() => {
         if (this.activeIndex == '1') {
-          this.getLibraries(this.page)
+          this.getLibraries()
         } else {
           this.initPageData()
         }
@@ -193,17 +211,22 @@
         complete: () => { this.loaded = false }
       })
     }
-    getLibraries() {
+    getLibraries(keyword) {
       let _this = this
+      _this.loading = true
+      let url = service.libraries
+      if (keyword) {
+        url = service.libraries + '?keyword=' + keyword
+      }
       this.$get({
-        url: service.libraries,
+        url: url,
         data: {
           page: this.page
         }
       }, {
         success: ({code, data}) => {
           _this.noMore = false
-          _this.loading = true
+          _this.loading = false
           if (data.data.length == 0) {
             _this.loading = false
             _this.noMore = true
@@ -236,11 +259,27 @@
       })
     }
     methods = {
+      showInput () {
+        this.inputShowed = true;
+      },
+      hideInput () {
+        this.inputVal = '';
+        this.inputShowed = false;
+      },
+      clearInput () {
+        this.inputVal = '';
+      },
+      inputTyping (e) {
+        this.inputVal = e.detail.value;
+        console.log(this.inputVal)
+        this.page = 1
+        this.getLibraries(this.inputVal)
+      },
       tabClick (e) {
         this.sliderOffset = e.currentTarget.offsetLeft
         this.activeIndex = e.currentTarget.id
         if (this.activeIndex === '1') {
-          this.getLibraries(this.page)
+          this.getLibraries()
         }
       },
       goto(url) {

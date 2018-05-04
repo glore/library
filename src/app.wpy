@@ -46,6 +46,7 @@ export default class extends wepy.app {
 
       // 我的
       'pages/user/register',
+      'pages/user/registerV2',
       'pages/user/follower',
       'pages/user/booklist',
       'pages/user/borrow',

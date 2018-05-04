@@ -39,7 +39,7 @@
         <view class="font_28 ellipsis_1 bold">{{item.title}}</view>
         <view class="font_26 ellipsis_2" style=''>简介：{{item.summary}}</view>
         <text class="font_26">作者：{{item.author}}</text>
-        <button class="flo_r" type="warn" size="mini" plain @tap="deletecollect({{item.id}})" style="margin-top: 22rpx;margin-right: 8rpx">删除</button>
+        <button class="flo_r" type="warn" size="mini" plain @tap="deletecollect({{item.id}},{{index}})" style="margin-top: 22rpx;margin-right: 8rpx">删除</button>
       </view>
       <view class="clearfloat"></view>
     </view>
@@ -245,26 +245,11 @@
           complete: () => { this.loaded = false }
         })
       },
-      deletecollect(_id) {
-        let librariearray = []
-        let ids = []
-        for (let i = 0; i < this.libraries.length; i++) {
-          if (this.libraries[i].id !== _id) {
-            librariearray.push(this.libraries[i])
-          }
-        }
-        for (let j = 0; j < this.BookId.length; j++) {
-          if (this.BookId[j] !== _id) {
-            ids.push(this.BookId[j])
-          }
-        }
-        if (librariearray.length == 0) {
-          this.Show = false
-          this.formId = []
-          this.ShowMessage = true
-        }
-        this.libraries = librariearray
-        this.BookId = ids
+      deletecollect(_id, index) {
+        this.libraries.splice(index, 1)
+        this.BookId = this.libraries.map(function (item) {
+          return item.id
+        })
       },
       inputChange(e) {
         this.EditTitle = e.detail.value
@@ -319,12 +304,12 @@
                 that.ShowEdit = false
                 that.ShowMessage = true
               }, 800)
-              let book_id = []
-              book_id.push(data.id)
+              let bookId = []
+              bookId.push(data.id)
               this.$post({
                 url: service.books_collect,
                 data: {
-                  'ids': book_id,
+                  'ids': bookId,
                   'formId': this.formId
                 }
               }, {
@@ -389,6 +374,7 @@
                     that.ShowEdit = false
                     that.text = '继续扫'
                   }
+                  console.log(that.libraries)
                 },
                 fail: ({code, data}) => {
                   wx.showToast({

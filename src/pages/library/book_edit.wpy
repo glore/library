@@ -285,7 +285,7 @@
             this.$alert('温馨提示', '请上传图片')
           } else {
             this.$post({
-              url: service.books,
+              url: service.books + '/v2',
               data: data
             }, {
               success: ({code, data}) => {
@@ -299,11 +299,16 @@
                   }
                 }, {
                   success: ({code, data}) => {
-                    setTimeout(() => {
+//                    setTimeout(() => {
                       wx.showToast({
                         title: '已加入收藏',
                         icon: 'none',
                         duration: 1500
+                      })
+//                    }, 800)
+                    setTimeout(() => {
+                      wx.navigateBack({
+                        delta: 2
                       })
                     }, 800)
                   },
@@ -366,7 +371,6 @@
         })
       },
       showText(type) {
-        console.log('lkl')
         if (type == 'show') {
           this.show = true
         } else {

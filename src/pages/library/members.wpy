@@ -21,13 +21,13 @@
             <view style="width: 80%"  @tap="goto('/pages/library/usercollect?library_id={{item.user.id}}')">
               <view class="weui-media-box__title" >姓名：{{item.user.name}}</view>
               <block wx:if="{{library.is_admin == '1'}}">
-                <view class="weui-media-box__desc"  >电话: {{item.user.mobile}}</view>
+                <!--<view class="weui-media-box__desc"  >电话: {{item.user.mobile}}</view>-->
                 <view class="weui-media-box__desc" wx:if="{{item.status=='JOIN'}}" style="color:red">状态：待审核</view>
                 <view class="weui-media-box__desc" wx:if="{{item.status=='MEMBER'}}" style="color:green">状态：会员</view>
                 <view class="weui-media-box__desc" wx:if="{{item.status=='ADMIN'}}"  style="color:blue">状态：管理员</view>
               </block>
             </view>
-            <view style="position: absolute; right: 12rpx; top: 12rpx;" @tap="makePhoneCall('{{item.user.mobile}}')" wx:if="{{library.is_admin == '1'}}">
+            <view style="position: absolute; right: 12rpx; top: 12rpx;" @tap="makePhoneCall('{{item.user.mobile}}')">
               <image src="../../images/tabbars/icon-phone.png" style="width: 60rpx;height: 60rpx"></image>
             </view>
             <view class="weui-media-box__info" wx:if="{{library.is_admin == '1'}}">

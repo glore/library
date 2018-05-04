@@ -58,8 +58,17 @@
             </label>
         </radio-group>
     </view>
-    <button @tap="save" class="weui-btn div_btn" type="primary">{{text}}</button>
-    <!--<button wx:if="{{id}}" @tap="destroy" class="weui-btn div_btn" type="danger" >删除</button>-->
+    <block wx:if="{{id}}">
+      <view class="div_btn">
+        <button @tap="save"   class="weui-btn flo_l" type="primary" style="width: 50%;border-radius: 0px">{{text}}</button>
+        <button @tap="destroy" class="weui-btn flo_r" type="danger" style="width: 50%;border-radius: 0px" >删除</button>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="div_btn">
+        <button @tap="save"   class="weui-btn" type="primary">{{text}}</button>
+      </view>
+    </block>
   </view>
 </template>
 
@@ -269,11 +278,14 @@
         var self = this
         wx.showModal({
           title: '提示',
-          content: '确认删除该图书分类？',
+          content: '确认删除该图书馆？',
           success: function(res) {
             if (res.confirm) {
-              self.$delete({url: service.sorts + '/' + self.id}, {
+              self.$delete({url: service.libraries + '/' + self.id}, {
                 success: ({code, data}) => {
+                  wx.navigateBack({
+                    delta: 2
+                  })
                   // setTimeout(() => {
                   wx.showToast({
                     title: '删除成功',
@@ -281,7 +293,8 @@
                     duration: 2000
                   })
                   // }, 2000)
-                  wx.navigateTo({url: '/pages/library/sorts'})
+//                  wx.redirectTo({url: '/pages/library/library?id=' + data.id})
+                  console.log('asdkjlas')
                 },
                 fail: ({code, data}) => {
                   // 失败了什么也不做
@@ -371,4 +384,3 @@ image {
   margin-top: 100rpx;
 }
 </style>
-

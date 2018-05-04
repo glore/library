@@ -17,20 +17,24 @@
           <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
             <image class="weui-media-box__thumb" src="{{item.user.wechat.avatar}}" />
           </view>
-          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-            <view class="weui-media-box__title">姓名：{{item.user.name}}</view>
-            <view class="weui-media-box__desc">书名：{{item.book.title}}</view>
+          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg" style="position: relative">
+            <view class="weui-media-box__title" style="width: 80%;">姓名：{{item.user.name}}</view>
+            <view class="weui-media-box__desc" style="width: 80%;">书名：{{item.book.title}}</view>
             <view class="weui-media-box__desc">借书时间：{{item.created_at}}</view>
             <view class="weui-media-box__desc"  wx:if="{{item.status=='BORROW'}}" style="color:red">最迟还书时间：{{item.return_time}}</view>
             <view class="weui-media-box__desc"  style="color:green" wx:if="{{item.status=='RETURN'}}">还书时间：{{item.updated_at}}</view>
             <block wx:if="{{library.is_admin == '1'}}">
-              <view class="weui-media-box__desc"  style="color:red" wx:if="{{item.status=='RESERVE'}}">
+              <view class="weui-media-box__desc"  style="color:red" wx:if="{{item.status=='RESERVE'}}" style="margin-top: 12rpx;">
                 <button type="primary" size="mini"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">借书管理</button>
+                <button type="danger" size="mini"  @tap="cancel({{item.library_id}}, {{item.id}})" style="margin-left: 12rpx;">取消预约</button>
               </view>
               <view class="weui-media-box__desc"  style="color:blue" wx:if="{{item.status=='BORROW'}}">
                 <button type="danger" size="mini"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">还书管理</button>
               </view>
             </block>
+            <view style="position: absolute; right: 12rpx; top: 12rpx;" @tap="makePhoneCall('{{item.user.mobile}}')">
+              <image src="../../images/tabbars/icon-phone.png" style="width: 60rpx;height: 60rpx"></image>
+            </view>
           </view>
          </view>
       </view>
@@ -39,9 +43,9 @@
           <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
             <image class="weui-media-box__thumb" src="{{item.user.wechat.avatar}}" />
           </view>
-          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-            <view class="weui-media-box__title">姓名：{{item.user.name}}</view>
-            <view class="weui-media-box__desc">书名：{{item.book.title}}</view>
+          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg" style="position: relative">
+            <view class="weui-media-box__title" style="width: 80%;">姓名：{{item.user.name}}</view>
+            <view class="weui-media-box__desc" style="width: 80%;">书名：{{item.book.title}}</view>
             <view class="weui-media-box__desc">借书时间：{{item.created_at}}</view>
             <view class="weui-media-box__desc"  wx:if="{{item.status=='BORROW'}}" style="color:red">最迟还书时间：{{item.return_time}}</view>
             <view class="weui-media-box__desc"  style="color:green" wx:if="{{item.status=='RETURN'}}">还书时间：{{item.updated_at}}</view>
@@ -53,6 +57,9 @@
                 <button type="danger" size="mini"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">还书管理</button>
               </view>
             </block>
+            <view style="position: absolute; right: 12rpx; top: 12rpx;" @tap="makePhoneCall('{{item.user.mobile}}')">
+              <image src="../../images/tabbars/icon-phone.png" style="width: 60rpx;height: 60rpx"></image>
+            </view>
           </view>
         </view>
       </view>
@@ -61,9 +68,9 @@
           <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
             <image class="weui-media-box__thumb" src="{{item.user.wechat.avatar}}" />
           </view>
-          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-            <view class="weui-media-box__title">姓名：{{item.user.name}}</view>
-            <view class="weui-media-box__desc">书名：{{item.book.title}}</view>
+          <view class="weui-media-box__bd weui-media-box__bd_in-appmsg" style="position: relative">
+            <view class="weui-media-box__title" style="width: 80%;">姓名：{{item.user.name}}</view>
+            <view class="weui-media-box__desc" style="width: 80%;">书名：{{item.book.title}}</view>
             <view class="weui-media-box__desc">借书时间：{{item.created_at}}</view>
             <view class="weui-media-box__desc"  wx:if="{{item.status=='BORROW'}}" style="color:red">最迟还书时间：{{item.return_time}}</view>
             <view class="weui-media-box__desc"  style="color:green" wx:if="{{item.status=='RETURN'}}">还书时间：{{item.updated_at}}</view>
@@ -75,6 +82,9 @@
                 <button type="danger" size="mini"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">还书管理</button>
               </view>
             </block>
+            <view style="position: absolute; right: 12rpx; top: 12rpx;" @tap="makePhoneCall('{{item.user.mobile}}')">
+              <image src="../../images/tabbars/icon-phone.png" style="width: 60rpx;height: 60rpx"></image>
+            </view>
           </view>
         </view>
       </view>
@@ -180,6 +190,22 @@
     }
 
     methods = {
+      cancel(libraryId, id) {
+        console.log(libraryId)
+        console.log(id)
+        this.$delete({
+          url: service.libraries + '/' + libraryId + '/borrows/' + id
+        }, {
+          success: ({code, data}) => {
+            this.getMembers(this.activeIndex)
+          }
+        })
+      },
+      makePhoneCall(mobile) {
+        wx.makePhoneCall({
+          phoneNumber: mobile
+        })
+      },
       goto(url) {
         wx.navigateTo({url: url})
       },
