@@ -339,16 +339,19 @@
             if (res.confirm) {
               self.$delete({url: service.libraries + '/' + self.library_id + '/books/' + self.id}, {
                 success: ({code, data}) => {
-                  // setTimeout(() => {
+                  setTimeout(() => {
+                    wx.redirectTo({
+                      url: '/pages/book/list?library_id=' + self.library_id + '&member_type=ADMIN'
+                    })
+                  }, 1000)
                   wx.showToast({
                     title: '删除成功',
                     icon: 'success',
-                    duration: 2000
+                    duration: 1000
                   })
-                  // }, 2000)
-                  wx.navigateBack({
-                    delta: 2
-                  })
+//                  wx.navigateBack({
+//                    delta: 1
+//                  })
                 },
                 fail: ({code, data}) => {
                   // 失败了什么也不做
