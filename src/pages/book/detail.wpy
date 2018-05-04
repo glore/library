@@ -166,9 +166,17 @@
     // 获取图书信息
     getDetail() {
       // 获取图书详情
-      this.$get({url: service.books + '/' + this.book.id}, {
+      let data = {}
+      if (this.library_id) {
+        data = {
+          library_id: this.library_id
+        }
+      }
+      this.$get({url: service.books + '/' + this.book.id + '/v2',data}, {
         success: ({code, data}) => {
           this.book = data
+          debugger
+
           this.library_id = data.library_book.library_id
         }
       })

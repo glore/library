@@ -4,7 +4,7 @@
     <block wx:if="{{list.length > 0}}">
       <block wx:for="{{list}}" wx:key="index">
         <!--navigator url="/pages/book/detail?id={{item.id}}&title={{item.title}}&status={{item.status}}" class="booklist-item clearfix"-->
-        <navigator url="/pages/book/detail?id={{item.id}}&title={{item.title}}&status={{item.status}}" class="booklist-item clearfix">
+        <navigator url="/pages/book/detail?id={{item.id}}&title={{item.title}}&status={{item.status}}&library_id={{libraryId}}" class="booklist-item clearfix">
           <view class="booklist-cover-wrapper">
             <image src="{{item.image}}" mode="widthFix" style="width:100%;" />
           </view>
