@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="654f390e-268f-4c34-b38e-e2c47046a37b" name="默认的" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/bookList.wpy" afterPath="$PROJECT_DIR$/src/components/bookList.wpy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/library/book_edit.wpy" afterPath="$PROJECT_DIR$/src/pages/library/book_edit.wpy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/user/booklist.wpy" afterPath="$PROJECT_DIR$/src/pages/user/booklist.wpy" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/book/detail.wpy" afterPath="$PROJECT_DIR$/src/pages/book/detail.wpy" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -56,18 +54,18 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="detail.wpy" pinned="false" current-in-tab="false">
+      <file leaf-file-name="detail.wpy" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/pages/book/detail.wpy">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-873">
-              <caret line="215" column="64" lean-forward="false" selection-start-line="215" selection-start-column="8" selection-end-line="215" selection-end-column="64" />
+            <state relative-caret-position="453">
+              <caret line="190" column="9" lean-forward="true" selection-start-line="190" selection-start-column="9" selection-end-line="190" selection-end-column="9" />
               <folding>
                 <element signature="n#style#0;n#button#0;n#view#0;n#view#1;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#view#4;n#view#0;n#template#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#view#5;n#view#0;n#template#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#button#0;n#view#5;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <marker date="1525509376556" expanded="false" signature="3465:3476" ph="..." />
-                <marker date="1525509376556" expanded="false" signature="3877:3888" ph="..." />
+                <marker date="1525513143827" expanded="false" signature="3465:3476" ph="..." />
+                <marker date="1525513143827" expanded="false" signature="3877:3888" ph="..." />
               </folding>
             </state>
           </provider>
@@ -118,11 +116,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="booklist.wpy" pinned="false" current-in-tab="true">
+      <file leaf-file-name="booklist.wpy" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pages/user/booklist.wpy">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="12" column="40" lean-forward="true" selection-start-line="12" selection-start-column="40" selection-end-line="12" selection-end-column="40" />
+            <state relative-caret-position="364">
+              <caret line="14" column="11" lean-forward="true" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="11" />
               <folding>
                 <element signature="n#style#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#image#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
@@ -165,8 +163,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>inputTyping</find>
-      <find>avatarUrl</find>
       <find>weui-input</find>
       <find>mobiled</find>
       <find>mobile</find>
@@ -179,12 +175,9 @@
       <find>续借</find>
       <find>cancel</find>
       <find>libraryId</find>
-      <find>initPageData</find>
-      <find>getDetail</find>
       <find>book</find>
       <find>toAdd</find>
       <find>goto</find>
-      <find>library_id</find>
       <find>qr_addcollect</find>
       <find>mymoveV2</find>
       <find>ShowV</find>
@@ -195,6 +188,11 @@
       <find>nickName</find>
       <find>mymoveV3</find>
       <find>that.Show</find>
+      <find>this.library_id</find>
+      <find>initPageData</find>
+      <find>getDetail</find>
+      <find>1</find>
+      <find>library_id</find>
     </findStrings>
     <replaceStrings>
       <replace>https://img3.doubanio.com/mpic/s1771902.jpg</replace>
@@ -254,7 +252,6 @@
         <option value="$PROJECT_DIR$/src/app.wpy" />
         <option value="$PROJECT_DIR$/src/pages/user/registerV2.wpy" />
         <option value="$PROJECT_DIR$/src/pages/library/library.wpy" />
-        <option value="$PROJECT_DIR$/src/pages/book/detail.wpy" />
         <option value="$PROJECT_DIR$/src/pages/user.wpy" />
         <option value="$PROJECT_DIR$/src/pages/index.wpy" />
         <option value="$PROJECT_DIR$/src/pages/collect.wpy" />
@@ -263,6 +260,7 @@
         <option value="$PROJECT_DIR$/src/pages/library/book_edit.wpy" />
         <option value="$PROJECT_DIR$/src/components/bookList.wpy" />
         <option value="$PROJECT_DIR$/src/pages/user/booklist.wpy" />
+        <option value="$PROJECT_DIR$/src/pages/book/detail.wpy" />
       </list>
     </option>
   </component>
@@ -441,12 +439,12 @@
       <workItem from="1524212859435" duration="3489000" />
       <workItem from="1524558439592" duration="21967000" />
       <workItem from="1525250748650" duration="1375000" />
-      <workItem from="1525333538104" duration="44460000" />
+      <workItem from="1525333538104" duration="45519000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="520173000" />
+    <option name="totallyTimeSpent" value="521232000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -515,7 +513,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/pages/book/detail.wpy</url>
-          <line>361</line>
+          <line>366</line>
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -901,6 +899,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/book/list.wpy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="27" column="14" lean-forward="false" selection-start-line="27" selection-start-column="14" selection-end-line="27" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/bookList.wpy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26">
+          <caret line="19" column="29" lean-forward="false" selection-start-line="19" selection-start-column="29" selection-end-line="19" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/user/booklist.wpy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="14" column="11" lean-forward="true" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="11" />
+          <folding>
+            <element signature="n#style#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#image#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="e#939#962#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/library/library.wpy">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8667">
@@ -921,43 +947,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/book/detail.wpy">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-873">
-          <caret line="215" column="64" lean-forward="false" selection-start-line="215" selection-start-column="8" selection-end-line="215" selection-end-column="64" />
+        <state relative-caret-position="453">
+          <caret line="190" column="9" lean-forward="true" selection-start-line="190" selection-start-column="9" selection-end-line="190" selection-end-column="9" />
           <folding>
             <element signature="n#style#0;n#button#0;n#view#0;n#view#1;n#view#2;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#view#4;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#view#5;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#button#0;n#view#5;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <marker date="1525509376556" expanded="false" signature="3465:3476" ph="..." />
-            <marker date="1525509376556" expanded="false" signature="3877:3888" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/book/list.wpy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="27" column="14" lean-forward="false" selection-start-line="27" selection-start-column="14" selection-end-line="27" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/bookList.wpy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26">
-          <caret line="19" column="29" lean-forward="false" selection-start-line="19" selection-start-column="29" selection-end-line="19" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/user/booklist.wpy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="12" column="40" lean-forward="true" selection-start-line="12" selection-start-column="40" selection-end-line="12" selection-end-column="40" />
-          <folding>
-            <element signature="n#style#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#image#0;n#view#0;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="e#939#962#0" expanded="true" />
+            <marker date="1525513143827" expanded="false" signature="3465:3476" ph="..." />
+            <marker date="1525513143827" expanded="false" signature="3877:3888" ph="..." />
           </folding>
         </state>
       </provider>

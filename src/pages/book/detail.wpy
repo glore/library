@@ -146,10 +146,12 @@
     }
 
     onLoad(query) {
-      this.book.id = query && +query.id
-      if (query && +query.library_id) {
-        this.library_id = query && +query.library_id
+      this.book.id = query.id
+      if (query && query.library_id) {
+//        debugger
+        this.library_id = query.library_id
       }
+      this.$apply()
       this.book.title = query && query.title
     }
     onShareAppMessage(res) {
@@ -184,7 +186,8 @@
         success: ({code, data}) => {
           this.book = data
           this.book_library = data.book_library
-          this.library_id = data.library_book.library_id
+//          this.library_id = data.library_book.library_id
+//          debugger
         }
       })
 
@@ -259,6 +262,8 @@
                       title: '预约借书成功',
                       content: '请找管理员取书！'
                     })
+                    that.library_id = item.library_id
+                    that.$apply()
                     that.getDetail()
                   }
                 })
