@@ -158,6 +158,10 @@
             wx.showTabBarRedDot({
               index: 4
             })
+          } else {
+            wx.hideTabBarRedDot({
+              index: 4
+            })
           }
         }
       })
