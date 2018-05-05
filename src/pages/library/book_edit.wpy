@@ -300,11 +300,11 @@
                 }, {
                   success: ({code, data}) => {
 //                    setTimeout(() => {
-                      wx.showToast({
-                        title: '已加入收藏',
-                        icon: 'none',
-                        duration: 1500
-                      })
+                    wx.showToast({
+                      title: '已加入收藏',
+                      icon: 'none',
+                      duration: 1500
+                    })
 //                    }, 800)
                     setTimeout(() => {
                       wx.navigateBack({

@@ -158,7 +158,7 @@
         }
         const data = {
           mobile: this.getString(this.mobile),
-          name: this.getString(this.name),
+          name: this.getString(this.name)
         }
         // 绑定手机号
         this.loading = true

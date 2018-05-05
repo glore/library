@@ -311,13 +311,11 @@
       this.ShowUpload = false
     }
     methods = {
-      //取消按钮
-      cancel: function(){
+      cancel: function () {
         this.hiddenmodalput = true
         this.$apply()
       },
-      //确认
-      confirm: function(mobile){
+      confirm: function (mobile) {
         this.hiddenmodalput = true
         this.$apply()
         wx.makePhoneCall({
@@ -341,10 +339,10 @@
         })
       },
       joinLibrary(status) {
-        if(status == 'admin'){
+        if (status == 'admin') {
           this.hiddenmodalput = false
           this.$apply()
-        }else if (status == 'join') {
+        } else if (status == 'join') {
           wx.showToast({
             title: '管理员审核中...',
             image: '../../images/icon/icon-error.png',

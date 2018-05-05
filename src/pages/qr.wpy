@@ -61,12 +61,12 @@
           </button>
         </form>
       </block>
-      <!--<block wx:if="{{Show}}">-->
-        <!--<view class="{{!ShowAnimation ? 'qr_addcollectv' : ''}}"  style="margin: auto;margin-bottom: -32rpx;" >-->
-          <!--<image   src='../../images/message.png'  mode="aspectFit"  style="transform: rotateY(0deg) rotateZ(16deg);width: 340rpx;height: 218rpx;"></image>-->
-          <!--<view class="font_26" style="position: absolute;left: 92rpx;bottom: 136rpx;transform: rotateZ(14deg);">记得点我收藏哦！</view>-->
-        <!--</view>-->
-      <!--</block>-->
+      <block wx:if="{{ShowV}}">
+        <view class="{{!ShowAnimation ? 'qr_addcollectv' : ''}}"  style="margin: auto;margin-bottom: -32rpx;" >
+          <image   src='../images/message.png'  mode="aspectFit"  style="transform: rotateY(0deg) rotateZ(16deg);width: 340rpx;height: 218rpx;"></image>
+          <view class="font_26" style="position: absolute;left: 82rpx;bottom: 136rpx;transform: rotateZ(14deg);">记得点我收藏哦！</view>
+        </view>
+      </block>
     </view>
   </view>
 </template>
@@ -102,6 +102,7 @@
       EditSummary: '',
       EditAuthor: '',
       formId: [],
+      ShowV: false,
       changerotate: true,
       text: '扫一扫'
     }
@@ -137,6 +138,9 @@
         }
       })
     }
+    onLoad() {
+      this.getMessage()
+    }
     RemoveEdit() {
       this.EditImage = ''
       this.EditAuthor = ''
@@ -146,7 +150,25 @@
       this.ShowUpload = false
 //      this.ShowMessage = true
     }
-
+    getMessage() {
+      var isNew = wx.getStorageSync('is_new')
+      if (!isNew) {
+        this.$get({url: service.user}, {
+          success: ({code, data}) => {
+            wx.setStorageSync('is_new', data.user.is_news)
+            if (data.user.is_news) {
+              wx.showTabBarRedDot({
+                index: 4
+              })
+            }
+          }
+        })
+      } else {
+        wx.showTabBarRedDot({
+          index: 4
+        })
+      }
+    }
     methods = {
       goto(url) {
         wx.navigateTo({url: url})
@@ -178,6 +200,7 @@
               if (data.title) {
                 that.ShowAnimation = false
                 that.Show = true
+                that.ShowV = true
                 that.libraries.unshift(data)
                 that.BookId.push(data.id)
                 that.text = '继续扫'
@@ -219,6 +242,7 @@
       addcollect() {
         let that = this
         this.ShowAnimation = true
+        that.ShowV = false
         this.$post({
           url: service.books_collect,
           data: {
@@ -234,8 +258,8 @@
                 icon: 'none',
                 duration: 1500
               })
-              that.libraries = []
               that.Show = false
+              that.libraries = []
               that.formId = []
               that.$apply()
             }, 800)
@@ -378,6 +402,7 @@
                     that.BookId.push(data.id)
                     that.ShowAnimation = false
                     that.Show = true
+                    that.ShowV = true
                     that.ShowEdit = false
                     that.text = '继续扫'
                   }

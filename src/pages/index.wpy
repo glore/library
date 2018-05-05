@@ -39,6 +39,7 @@
     }
 
     onReady() {
+      this.getMessage()
       this.initPageData()
     }
 
@@ -62,6 +63,25 @@
         this.updateBookList(this.page)
         this.$apply()
       }, 200)
+    }
+    getMessage() {
+      var isNew = wx.getStorageSync('is_new')
+      if (!isNew) {
+        this.$get({url: service.user}, {
+          success: ({code, data}) => {
+            wx.setStorageSync('is_new', data.user.is_news)
+            if (data.user.is_news) {
+              wx.showTabBarRedDot({
+                index: 4
+              })
+            }
+          }
+        })
+      } else {
+        wx.showTabBarRedDot({
+          index: 4
+        })
+      }
     }
 
     // 初始化页面数据

@@ -59,7 +59,7 @@
                           <!--<button wx:if="{{item.status=='JOIN'}}" @tap="joinTip({{item.id}})"  class="weui-btn mini-btn" type="primary" size="mini">待审核</button>-->
                     </view>
                     <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
-                      <view class="weui-search-bar">
+                      <view class="weui-search-bar" >
                         <view class="weui-search-bar__form">
                           <view class="weui-search-bar__box">
                             <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
@@ -172,6 +172,7 @@
       this.sliderWidth = _this.screenWidth / this.tabs.length
       this.sliderLeft = 0
       this.sliderOffset = _this.screenWidth / this.tabs.length * this.activeIndex
+      this.getMessage()
     }
     onShow() {
       this.initPageData()
@@ -196,6 +197,25 @@
         }
         this.$apply()
       }, 200)
+    }
+    getMessage() {
+      var isNew = wx.getStorageSync('is_new')
+      if (!isNew) {
+        this.$get({url: service.user}, {
+          success: ({code, data}) => {
+            wx.setStorageSync('is_new', data.user.is_news)
+            if (data.user.is_news) {
+              wx.showTabBarRedDot({
+                index: 4
+              })
+            }
+          }
+        })
+      } else {
+        wx.showTabBarRedDot({
+          index: 4
+        })
+      }
     }
     // 初始化页面数据
     initPageData() {
@@ -227,9 +247,10 @@
         success: ({code, data}) => {
           _this.noMore = false
           _this.loading = false
-          if (data.data.length == 0) {
+          if (data.data.length == 0 && data.data.last_page == 1) {
             _this.loading = false
             _this.noMore = true
+            _this.libs = []
             return
           }
           if (data.current_page > data.last_page) {
@@ -240,6 +261,7 @@
           data = data.data
           if (this.isArray(data) && data.length === 0) {
             _this.noMore = true
+            _this.libs = []
             return
           }
           if (_this.libs.length === 0 || _this.page === 1) {
@@ -260,17 +282,17 @@
     }
     methods = {
       showInput () {
-        this.inputShowed = true;
+        this.inputShowed = true
       },
       hideInput () {
-        this.inputVal = '';
-        this.inputShowed = false;
+        this.inputVal = ''
+        this.inputShowed = false
       },
       clearInput () {
-        this.inputVal = '';
+        this.inputVal = ''
       },
       inputTyping (e) {
-        this.inputVal = e.detail.value;
+        this.inputVal = e.detail.value
         console.log(this.inputVal)
         this.page = 1
         this.getLibraries(this.inputVal)

@@ -131,6 +131,12 @@
           that.mylibrary = data.mylibrary
           that.library_id = data.mylibrary.id
           wx.setStorageSync('openid', data.user.wechat.openid)
+          wx.setStorageSync('is_new', data.user.is_news)
+          if (data.user.is_news) {
+            wx.showTabBarRedDot({
+              index: 4
+            })
+          }
 //          setTimeout(() => {
           this.loading = false
           this.noMore = true
@@ -145,7 +151,7 @@
 //    onShareAppMessage(res) {
 //      let that = this
 //      let url = '/pages/library/library/?id=' + that.library_id
-////      debugger
+//      debugger
 //      if (res.from === 'menu') {
 //        console.log(res.target)
 //      }

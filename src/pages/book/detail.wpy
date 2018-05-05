@@ -180,7 +180,7 @@
           library_id: this.library_id
         }
       }
-      this.$get({url: service.books + '/' + this.book.id + '/v2',data}, {
+      this.$get({url: service.books + '/' + this.book.id + '/v2', data}, {
         success: ({code, data}) => {
           this.book = data
           this.book_library = data.book_library
@@ -213,7 +213,7 @@
 //          wx.navigateTo({url: '/pages/library/book?library_id=' + _id + '&id=' + bookid})
 //        } else {
 //          console.log(bookid)
-          wx.navigateTo({url: '/pages/library/library?id=' + _id})
+        wx.navigateTo({url: '/pages/library/library?id=' + _id})
 //        }
       },
       toStar() {
