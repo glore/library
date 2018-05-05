@@ -22,11 +22,11 @@
             <input @input="typing('translator')" class="weui-input" value="{{translator}}" style="margin-top:10px" placeholder="翻译"/>
         </view>
       </view>
-      <view class="weui-cell weui-cell_input">
+      <view class="weui-cell weui-cell_input" wx:if="{{id}}">
         <view class="weui-cell__hd">
           <view class="weui-label reset-label-left">分类</view>
         </view>
-        <view class="weui-cell__bd h3  color-red">
+        <view class="weui-cell__bd h3  color-red" >
           <picker @change="sortChange" value="{{sortIndex}}" range="{{sorts}}"  range-key="name">
             <input @change="sortChange"  class="weui-input" wx:if="{{class_id == 0}}" disabled placeholder="选择分类"/>
             <input @change="sortChange"  class="weui-input" wx:else value="{{sorts[sortIndex].name}}" disabled placeholder=""/>

@@ -21,7 +21,6 @@
                 <image src="{{icon_eye}}" class="imgicon" mode="aspectFit"/>
                 <text class="booklist-text color-bbb">已借完</text>
               </block>
-
               <view @tap.stop="toStar({{item}}, {{index}})" class="booklist-status">
                 <block wx:if="{{item.collected == 1}}">
                   <image class="imgicon" src="{{icon_star_active}}" mode="aspectFit"/>
