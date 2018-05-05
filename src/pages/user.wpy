@@ -115,7 +115,7 @@
     mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '我的',
-      enablePullDownRefresh: false
+      enablePullDownRefresh: true
     }
     data = {
       libraries: {},
