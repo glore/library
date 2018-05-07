@@ -132,6 +132,7 @@
 
     onShow() {
       // 初始化页面数据
+      this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
     onShareAppMessage(res) {
@@ -139,7 +140,7 @@
     }
 
     onLoad() {
-      this.initPageData()
+
     }
 
     onPullDownRefresh() {

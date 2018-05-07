@@ -284,6 +284,7 @@
         complete: () => { this.loaded = false }
       })
     }
+
     methods = {
       showInput () {
         this.inputShowed = true
