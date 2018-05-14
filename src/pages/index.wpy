@@ -70,16 +70,16 @@
         this.$get({url: service.user}, {
           success: ({code, data}) => {
             wx.setStorageSync('is_new', data.user.is_news)
-             if (data.user.is_news) {
-                wepy.showTabBarRedDot({
-                  index: 4
-                })
-              } else {
-                wepy.hideTabBarRedDot({
-                  index: 4
-                })
-              }
+            if (data.user.is_news) {
+              wepy.showTabBarRedDot({
+                index: 4
+              })
+            } else {
+              wepy.hideTabBarRedDot({
+                index: 4
+              })
             }
+          }
         })
       } else {
         wepy.showTabBarRedDot({

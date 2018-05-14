@@ -164,7 +164,7 @@
               complete: () => { this.loading = false }
             })
           },
-          fail: (res) => {debugger }
+          fail: (res) => { }
         })
       },
       typing (type, e) {

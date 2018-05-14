@@ -9,7 +9,7 @@ export default class extends wepy.app {
   config = {
     pages: [
       // tab-bar
-//      'pages/test',
+//      'pages/map',
       'pages/index',
       'pages/collect',
       'pages/qr',
