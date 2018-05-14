@@ -105,7 +105,7 @@ export default class httpMixin extends wepy.mixin {
 
           var options = currentPage.options
 
-          var url = currentPage.route
+          var url = '/' + currentPage.route
           // var url = currentPage.route  + '?party_id=' + options.party_id //当前页面url
           wx.setStorageSync('jump', url)
           // debugge

@@ -41,8 +41,7 @@
       <view class="color-999">立即登录, 使用即可使用友福图书馆</view>
     </view>
 
-    <button @tap="do_login" class="weui-btn btn-primary" type="primary">立即登录</button>
-
+    <button @getuserinfo="do_login" class="weui-btn btn-primary" type="primary" open-type="getUserInfo">立即登录</button>
   </view>
 </template>
 
@@ -66,7 +65,7 @@
       mobile: '',
       code: '',
       wechat_code: '',
-
+      canIUse: wx.canIUse('button.open-type.getUserInfo'),
       loading: false,
       timer: null,
       time: 0
@@ -129,7 +128,7 @@
           return this.$alert('温馨提示', '请输入姓名')
         }
 
-        wepy.getUserInfo({
+        wx.getUserInfo({
           success: (res) => {
             // 缓存用户信息
             wx.setStorageSync('user', res.userInfo)
@@ -142,7 +141,6 @@
               encryptedData: res.encryptedData,
               iv: res.iv
             }
-
             // 绑定手机号
             this.loading = true
             this.$post({url: service.register, data}, {
@@ -155,7 +153,7 @@
                   success: (res) => {
                     var jump = wx.getStorageSync('jump')
                     if (jump) {
-                      wx.navigateTo({url: jump})
+                      wx.switchTab({url: jump})
                     } else {
                       wx.switchTab({url: '/pages/user'})
                     }
@@ -166,7 +164,7 @@
               complete: () => { this.loading = false }
             })
           },
-          fail: (res) => { }
+          fail: (res) => {debugger }
         })
       },
       typing (type, e) {
