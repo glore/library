@@ -9,7 +9,7 @@ export default class extends wepy.app {
   config = {
     pages: [
       // tab-bar
-//      'pages/test',
+      'pages/map',
       'pages/index',
       'pages/collect',
       'pages/qr',
@@ -69,7 +69,7 @@ export default class extends wepy.app {
       backgroundColor: '#fff',
       borderStyle: 'black',
       list: [{
-        pagePath: 'pages/index',
+        pagePath: 'pages/map',
         selectedIconPath: './images/tabbars/icon-home-active.png',
         iconPath: './images/tabbars/icon-home.png',
         text: '首页'

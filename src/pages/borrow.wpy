@@ -164,7 +164,7 @@
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
-    async onLoad(query) {
+    async onLoad(e) {
       let _this = this
       wx.getSystemInfo({success: function (rst) {
         _this.screenWidth = rst.screenWidth
@@ -175,7 +175,11 @@
       this.getMessage()
     }
     onShow() {
-      this.initPageData()
+      if (this.activeIndex == '1') {
+        this.getLibraries()
+      } else {
+        this.initPageData()
+      }
       // this.getLibraries()
       // google tracker
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
@@ -284,6 +288,7 @@
         complete: () => { this.loaded = false }
       })
     }
+
     methods = {
       showInput () {
         this.inputShowed = true
@@ -304,8 +309,10 @@
       tabClick (e) {
         this.sliderOffset = e.currentTarget.offsetLeft
         this.activeIndex = e.currentTarget.id
-        if (this.activeIndex === '1') {
+        if (this.activeIndex == '1') {
           this.getLibraries()
+        } else {
+          this.initPageData()
         }
       },
       goto(url) {

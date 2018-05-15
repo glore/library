@@ -173,6 +173,20 @@
         })
       }
     }
+
+//    onTabItemTap() {
+//      console.log(this.libraries)
+//      wx.showModal({
+//        title: '提示',
+//        content: '扫出来的书还没有收藏哦！',
+//        showCancel: true,
+//        success: function(res) {
+//          if (res.confirm) {
+//
+//          }
+//        }
+//      })
+//    }
     methods = {
       goto(url) {
         wx.navigateTo({url: url})
