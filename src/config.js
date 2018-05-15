@@ -36,6 +36,8 @@ export const service = {
     books_upload: `${host}/uploads`,
     // 筛选页接口 GET
     tags: `${host}/bookmall/tags`,
+  // 地图筛选
+    maps: `${host}/near/libraries`,
     // 假装有收藏接口 POST
     collect: `${host}/bookmall/list`,
     // 主域
