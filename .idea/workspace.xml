@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/pages/map.wpy" line="85" />
+    <bookmark url="file://$PROJECT_DIR$/src/pages/map.wpy" line="88" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="654f390e-268f-4c34-b38e-e2c47046a37b" name="默认的" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/icon-new.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/icon-share.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/icon-share1.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/map.wpy" afterPath="$PROJECT_DIR$/src/pages/map.wpy" />
     </list>
@@ -56,8 +53,8 @@
       <file leaf-file-name="map.wpy" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/pages/map.wpy">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="661">
-              <caret line="307" column="8" lean-forward="true" selection-start-line="286" selection-start-column="6" selection-end-line="307" selection-end-column="8" />
+            <state relative-caret-position="401">
+              <caret line="207" column="46" lean-forward="true" selection-start-line="207" selection-start-column="46" selection-end-line="207" selection-end-column="46" />
               <folding>
                 <element signature="n#style#0;n#map#0;n#view#0;n#template#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#cover-view#0;n#map#0;n#view#0;n#template#0;n#!!top" expanded="true" />
@@ -78,6 +75,16 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="collect.wpy" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pages/collect.wpy">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1647">
+              <caret line="140" column="22" lean-forward="true" selection-start-line="140" selection-start-column="22" selection-end-line="140" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -89,9 +96,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>mymoveV3</find>
-      <find>that.Show</find>
-      <find>this.library_id</find>
       <find>getDetail</find>
       <find>1</find>
       <find>library_id</find>
@@ -110,15 +114,18 @@
       <find>noMore</find>
       <find>distance1</find>
       <find>distance</find>
-      <find>getSystem</find>
-      <find>mapLibraries</find>
-      <find>getLngLat</find>
       <find>goto</find>
       <find>&lt;image src=&quot;../../images/icon-share1.png&quot; mode=&quot;aspectFit&quot;  style=&quot;width: 52rpx;height: 52rpx; margin-right: 12rpx;margin-top: 6rpx;&quot; class=&quot;flo_l&quot;&gt;&lt;/image&gt;</find>
-      <find>getCenterLocation</find>
       <find>moveToLocation</find>
-      <find>mapFunction</find>
       <find>openSetting</find>
+      <find>getSystem</find>
+      <find>getCenterLocation</find>
+      <find>mapFunction</find>
+      <find>that.latitude</find>
+      <find>latitude</find>
+      <find>getLngLat</find>
+      <find>mapLibraries</find>
+      <find>service.maps</find>
     </findStrings>
     <replaceStrings>
       <replace>https://img3.doubanio.com/mpic/s1771902.jpg</replace>
@@ -201,7 +208,7 @@
   <component name="NodeModulesDirectoryManager">
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
@@ -263,13 +270,6 @@
               <item name="library" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="pages" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="library" type="b2602c69:ProjectViewProjectNode" />
-              <item name="library" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="pages" type="462c0819:PsiDirectoryNode" />
-              <item name="library" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -343,15 +343,15 @@
       <workItem from="1525746587467" duration="128000" />
       <workItem from="1525916471599" duration="15000" />
       <workItem from="1526287977469" duration="2390000" />
-      <workItem from="1526291844202" duration="42359000" />
+      <workItem from="1526291844202" duration="45206000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="573736000" />
+    <option name="totallyTimeSpent" value="576583000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10163244" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -710,14 +710,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/collect.wpy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2661">
-          <caret line="140" column="22" lean-forward="true" selection-start-line="140" selection-start-column="22" selection-end-line="140" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/index.wpy">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2834">
@@ -731,7 +723,7 @@
         <state relative-caret-position="191">
           <caret line="48" column="154" lean-forward="false" selection-start-line="48" selection-start-column="6" selection-end-line="48" selection-end-column="154" />
           <folding>
-            <element signature="n#style#0;n#image#0;n#view#0;n#navigator#0;n#block#0;n#view#4;n#view#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#image#0;n#view#0;n#navigator#0;n#block#0;n#view#4;n#view#0;n#template#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -818,10 +810,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/collect.wpy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1647">
+          <caret line="140" column="22" lean-forward="true" selection-start-line="140" selection-start-column="22" selection-end-line="140" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/map.wpy">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="661">
-          <caret line="307" column="8" lean-forward="true" selection-start-line="286" selection-start-column="6" selection-end-line="307" selection-end-column="8" />
+        <state relative-caret-position="401">
+          <caret line="207" column="46" lean-forward="true" selection-start-line="207" selection-start-column="46" selection-end-line="207" selection-end-column="46" />
           <folding>
             <element signature="n#style#0;n#map#0;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#cover-view#0;n#map#0;n#view#0;n#template#0;n#!!top" expanded="true" />
