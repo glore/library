@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/src/pages/map.wpy" line="85" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="654f390e-268f-4c34-b38e-e2c47046a37b" name="默认的" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/pages/library/searchLibrary.wpy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/images/position.png" afterPath="$PROJECT_DIR$/src/images/position.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/icon-new.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/icon-share.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/icon-share1.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/app.wpy" afterPath="$PROJECT_DIR$/src/app.wpy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/map.wpy" afterPath="$PROJECT_DIR$/src/pages/map.wpy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/user/borrows.wpy" afterPath="$PROJECT_DIR$/src/pages/user/borrows.wpy" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -34,8 +36,8 @@
       <file leaf-file-name="borrow.wpy" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pages/borrow.wpy">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-197">
-              <caret line="317" column="6" lean-forward="false" selection-start-line="317" selection-start-column="6" selection-end-line="319" selection-end-column="8" />
+            <state relative-caret-position="479">
+              <caret line="81" column="231" lean-forward="true" selection-start-line="81" selection-start-column="28" selection-end-line="81" selection-end-column="231" />
               <folding />
             </state>
           </provider>
@@ -44,7 +46,7 @@
       <file leaf-file-name="borrows.wpy" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pages/user/borrows.wpy">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
+            <state relative-caret-position="258">
               <caret line="114" column="36" lean-forward="false" selection-start-line="114" selection-start-column="36" selection-end-line="114" selection-end-column="36" />
               <folding />
             </state>
@@ -54,18 +56,23 @@
       <file leaf-file-name="map.wpy" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/pages/map.wpy">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="635">
-              <caret line="55" column="30" lean-forward="true" selection-start-line="55" selection-start-column="30" selection-end-line="55" selection-end-column="30" />
+            <state relative-caret-position="661">
+              <caret line="307" column="8" lean-forward="true" selection-start-line="286" selection-start-column="6" selection-end-line="307" selection-end-column="8" />
               <folding>
                 <element signature="n#style#0;n#map#0;n#view#0;n#template#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#cover-view#0;n#map#0;n#view#0;n#template#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#cover-image#0;n#cover-view#0;n#map#0;n#view#0;n#template#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#cover-image#1;n#cover-view#0;n#map#0;n#view#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#view#0;n#navigator#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#view#1;n#view#0;n#view#0;n#navigator#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#view#1;n#view#0;n#navigator#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#view#2;n#view#0;n#navigator#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="e#1447#1470#0" expanded="true" />
+                <element signature="n#style#0;n#view#1;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#image#0;n#view#1;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#image#1;n#view#1;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#image#0;n#button#0;n#view#1;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#view#0;n#navigator#0;n#block#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#view#1;n#view#0;n#view#0;n#navigator#0;n#block#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#view#1;n#view#0;n#navigator#0;n#block#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#view#2;n#view#0;n#navigator#0;n#block#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#view#0;n#block#1;n#template#0;n#!!top" expanded="true" />
+                <element signature="e#2201#2224#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -82,10 +89,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>addcollect</find>
-      <find>ShowAnimation</find>
-      <find>lead</find>
-      <find>nickName</find>
       <find>mymoveV3</find>
       <find>that.Show</find>
       <find>this.library_id</find>
@@ -102,16 +105,20 @@
       <find>longitude</find>
       <find>includePoints</find>
       <find>onReachBottom</find>
-      <find>goto</find>
       <find>getLibraries</find>
       <find>wx:for</find>
       <find>noMore</find>
       <find>distance1</find>
-      <find>moveToLocation</find>
-      <find>getCenterLocation</find>
       <find>distance</find>
+      <find>getSystem</find>
       <find>mapLibraries</find>
       <find>getLngLat</find>
+      <find>goto</find>
+      <find>&lt;image src=&quot;../../images/icon-share1.png&quot; mode=&quot;aspectFit&quot;  style=&quot;width: 52rpx;height: 52rpx; margin-right: 12rpx;margin-top: 6rpx;&quot; class=&quot;flo_l&quot;&gt;&lt;/image&gt;</find>
+      <find>getCenterLocation</find>
+      <find>moveToLocation</find>
+      <find>mapFunction</find>
+      <find>openSetting</find>
     </findStrings>
     <replaceStrings>
       <replace>https://img3.doubanio.com/mpic/s1771902.jpg</replace>
@@ -194,7 +201,7 @@
   <component name="NodeModulesDirectoryManager">
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
@@ -273,7 +280,7 @@
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="File.Encoding" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../party" />
     <property name="nodejs_interpreter_path" value="C:/Program Files/nodejs/node" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.detected.package.eslint" value="true" />
@@ -336,15 +343,15 @@
       <workItem from="1525746587467" duration="128000" />
       <workItem from="1525916471599" duration="15000" />
       <workItem from="1526287977469" duration="2390000" />
-      <workItem from="1526291844202" duration="35255000" />
+      <workItem from="1526291844202" duration="42359000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="566632000" />
+    <option name="totallyTimeSpent" value="573736000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10163244" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -737,22 +744,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/user/borrows.wpy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="114" column="36" lean-forward="false" selection-start-line="114" selection-start-column="36" selection-end-line="114" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pages/borrow.wpy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-197">
-          <caret line="317" column="6" lean-forward="false" selection-start-line="317" selection-start-column="6" selection-end-line="319" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/app.wpy">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="338">
@@ -811,20 +802,41 @@
         <state />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/borrow.wpy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="479">
+          <caret line="81" column="231" lean-forward="true" selection-start-line="81" selection-start-column="28" selection-end-line="81" selection-end-column="231" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pages/user/borrows.wpy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="258">
+          <caret line="114" column="36" lean-forward="false" selection-start-line="114" selection-start-column="36" selection-end-line="114" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/map.wpy">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="635">
-          <caret line="55" column="30" lean-forward="true" selection-start-line="55" selection-start-column="30" selection-end-line="55" selection-end-column="30" />
+        <state relative-caret-position="661">
+          <caret line="307" column="8" lean-forward="true" selection-start-line="286" selection-start-column="6" selection-end-line="307" selection-end-column="8" />
           <folding>
             <element signature="n#style#0;n#map#0;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#cover-view#0;n#map#0;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#cover-image#0;n#cover-view#0;n#map#0;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#cover-image#1;n#cover-view#0;n#map#0;n#view#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#view#0;n#navigator#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#view#1;n#view#0;n#view#0;n#navigator#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#view#1;n#view#0;n#navigator#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#view#2;n#view#0;n#navigator#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="e#1447#1470#0" expanded="true" />
+            <element signature="n#style#0;n#view#1;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#image#0;n#view#1;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#image#1;n#view#1;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#image#0;n#button#0;n#view#1;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#view#0;n#navigator#0;n#block#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#view#1;n#view#0;n#view#0;n#navigator#0;n#block#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#view#1;n#view#0;n#navigator#0;n#block#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#view#2;n#view#0;n#navigator#0;n#block#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#view#0;n#block#1;n#template#0;n#!!top" expanded="true" />
+            <element signature="e#2201#2224#0" expanded="true" />
           </folding>
         </state>
       </provider>
