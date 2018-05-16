@@ -30,6 +30,7 @@ export default class extends wepy.app {
 
       // 图书馆管理
       'pages/library/library',
+      'pages/library/searchLibrary',
       'pages/library/borrow',
       'pages/library/usercollect',
       'pages/library/members',

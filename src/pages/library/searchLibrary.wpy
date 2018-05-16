@@ -1,0 +1,458 @@
+<template>
+  <view class="navbar borrow">
+    <view class="page__bd">
+      <view class="weui-tab">
+        <!--<view class="weui-navbar">-->
+          <!--<view wx:for="{{tabs}}" wx:key="*this" id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" @tap="tabClick">-->
+            <!--<view class="weui-navbar__title">{{item}}</view>-->
+          <!--</view>-->
+          <!--<view class="weui-navbar__slider" style="width:{{sliderWidth}}px; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>-->
+        <!--</view>-->
+        <!--<view class="weui-tab__panel"style="padding-bottom: 12rpx">-->
+          <!--<view class="weui-tab__content" hidden="{{activeIndex != 0}}">-->
+            <!--<view class="list" style="padding: 12rpx">-->
+              <!--<button  @tap="goto('/pages/library/create')" type="primary" size="mini" >创建我的图书馆</button>-->
+            <!--</view>-->
+            <!--<view  wx:for="{{mylibs}}" wx:key="id" >-->
+              <!--<view style="" class="flo_l borrowlist" @tap="goto('/pages/library/library?id={{item.id}}')">-->
+                <!--<view class="flo_l lisimage" >-->
+                  <!--<image src="{{itemimage}}" mode="aspectFit"  wx:for="{{item.images}}" wx:key="*this" wx:for-item="itemimage" style="width: 60rpx;height: 60rpx;margin-left: 12rpx;margin-top: 12rpx" class="flo_l"></image>-->
+                <!--</view>-->
+                <!--<view class="clearfloat"></view>-->
+                <!--<view class="font_26 listtext ellipsis_1">-->
+                  <!--{{item.name}}-->
+                <!--</view>-->
+                <!--<view style="position: absolute;right: 0;bottom: -10rpx;" wx:if="{{item.status=='JOIN'}}">-->
+                  <!--<image src="../images/tabbars/icon-authstr.png" style="width: 120rpx;height: 120rpx;"></image>-->
+                <!--</view>-->
+              <!--</view>-->
+            <!--</view>-->
+          <!--</view>-->
+          <view class="weui-tab__content" >
+            <view class="weui-search-bar" >
+              <view class="weui-search-bar__form">
+                <view class="weui-search-bar__box">
+                  <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+                  <input type="text" class="weui-search-bar__input" placeholder="搜索" value="{{inputVal}}" focus="{{inputShowed}}" @confirm="inputTyping" />
+                  <view class="weui-icon-clear" wx:if="{{inputVal.length > 0}}" bindtap="clearInput">
+                    <icon type="clear" size="14"></icon>
+                  </view>
+                </view>
+                <label class="weui-search-bar__label" hidden="{{inputShowed}}" bindtap="showInput">
+                  <icon class="weui-icon-search" type="search" size="14"></icon>
+                  <view class="weui-search-bar__text">搜索</view>
+                </label>
+              </view>
+              <view class="weui-search-bar__cancel-btn" hidden="{{!inputShowed}}" bindtap="hideInput">取消</view>
+            </view>
+            <view class="weui-cells__title"></view>
+            <view class="page__bd"  wx:for="{{libs}}" wx:key="*this" >
+              <view class="flo_l borrowlist" @tap="goto('/pages/library/library?id={{item.id}}')">
+                <view class="flo_l lisimage" >
+                  <image src="{{itemimage}}" mode="aspectFit"  wx:for="{{item.images}}" wx:key="*this" wx:for-item="itemimage" style="width: 60rpx;height: 60rpx;margin-left: 12rpx;margin-top: 12rpx" class="flo_l"></image>
+                </view>
+                <view class="clearfloat"></view>
+                <view  class="font_26 listtext ellipsis_1">
+                  {{item.name}}
+                </view>
+              </view>
+              <!--<view class="weui-form-preview">-->
+              <!--<view class="weui-form-preview__hd">-->
+              <!--<view class="weui-form-preview__item">-->
+              <!--<view class="weui-form-preview__label">{{item.name}}</view>-->
+              <!--<view class="weui-form-preview__value_in-hd"></view>-->
+              <!--</view>-->
+              <!--</view>-->
+              <!--<view class="weui-form-preview__bd">-->
+              <!--<view class="weui-form-preview__item">-->
+              <!--<view class="weui-form-preview__label">藏书</view>-->
+              <!--<view class="weui-form-preview__value">{{item.library_books_count}}册</view>-->
+              <!--</view>-->
+              <!--<view class="weui-form-preview__item">-->
+              <!--<view class="weui-form-preview__label">会员</view>-->
+              <!--<view class="weui-form-preview__value">{{item.members_count}}位</view>-->
+              <!--</view>-->
+              <!--</view>-->
+              <!--<view class="weui-form-preview__ft">-->
+              <!--<navigator url="/pages/library/library?id={{item.id}}" class="weui-form-preview__btn weui-form-preview__btn_primary" hover-class="weui-form-preview__btn_active">进入图书馆</navigator>-->
+              <!--</view>-->
+              <!--</view>-->
+            </view>
+            <view class="clearfloat"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <block wx:if="{{loading}}">
+      <view class="weui-loadmore">
+        <view class="weui-loading"></view>
+        <view class="weui-loadmore__tips">正在加载</view>
+      </view>
+    </block>
+    <block wx:if="{{noMore}}">
+      <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+        <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+      </view>
+    </block>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { service } from '../../config.js'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
+
+  export default class seacrchlibrary extends wepy.page {
+    mixins = [base, http, user, ShareMessage]
+    config = {
+      navigationBarTitleText: '友福图书馆'
+    }
+    data = {
+      // 后置显示按钮
+      loaded: false,
+      // 我的图书馆
+      mylibs: [],
+      libs: [],
+      tabs: ['我的图书馆', '全部图书馆'],
+      activeIndex: 0,
+      sliderOffset: 0,
+      sliderLeft: 0,
+      sliderWidth: 180,
+      screenWidth: 360,
+      page: 1,
+      noMore: false,
+      loading: false,
+      inputShowed: false,
+      inputVal: ''
+    }
+
+    computed = {
+    }
+
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+    async onLoad(e) {
+      let _this = this
+      wx.getSystemInfo({success: function (rst) {
+        _this.screenWidth = rst.screenWidth
+      }})
+      this.sliderWidth = _this.screenWidth / this.tabs.length
+      this.sliderLeft = 0
+      this.sliderOffset = _this.screenWidth / this.tabs.length * this.activeIndex
+      this.getMessage()
+    }
+    onShow() {
+//      if (this.activeIndex == '1') {
+        this.getLibraries()
+//      } else {
+//        this.initPageData()
+//      }
+      // this.getLibraries()
+      // google tracker
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+
+    onPullDownRefresh() {
+//      if (this.activeIndex == '1') {
+        this.getLibraries()
+//      } else {
+//        this.initPageData()
+//      }
+    }
+    onReachBottom() {
+      setTimeout(() => {
+//        if (this.activeIndex == '1') {
+          this.getLibraries()
+//        } else {
+//          this.initPageData()
+//        }
+//        this.$apply()
+      }, 200)
+    }
+    getMessage() {
+      var isNew = wx.getStorageSync('is_new')
+      if (!isNew) {
+        this.$get({url: service.user}, {
+          success: ({code, data}) => {
+            wepy.setStorageSync('is_new', data.user.is_news)
+            if (data.user.is_news) {
+              wepy.showTabBarRedDot({
+                index: 4
+              })
+            } else {
+              wepy.hideTabBarRedDot({
+                index: 4
+              })
+            }
+          }
+        })
+      } else {
+        wepy.showTabBarRedDot({
+          index: 4
+        })
+      }
+    }
+    // 初始化页面数据
+    initPageData() {
+      var self = this
+      self.loading = false
+      // 图书馆详情
+      this.$get({url: service.my_libraries}, {
+        success: ({code, data}) => {
+          this.mylibs = data
+          self.config.navigationBarTitleText = data.name
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loaded = false }
+      })
+    }
+    getLibraries(keyword) {
+      let _this = this
+      _this.loading = true
+      let url = service.libraries
+      if (keyword) {
+        url = service.libraries + '?keyword=' + keyword
+      }
+      this.$get({
+        url: url,
+        data: {
+          page: this.page
+        }
+      }, {
+        success: ({code, data}) => {
+          _this.noMore = false
+          _this.loading = true
+          if (data.data.length == 0 && data.data.last_page == 1) {
+            _this.loading = false
+            _this.noMore = true
+            _this.libs = []
+            return
+          }
+          if (data.current_page > data.last_page) {
+            _this.noMore = true
+            _this.loading = true
+            return
+          }
+          data = data.data
+          if (this.isArray(data) && data.length === 0) {
+            _this.noMore = true
+            _this.libs = []
+            return
+          }
+          if (_this.libs.length === 0 || _this.page === 1) {
+            _this.libs = data
+          } else {
+            data.map(function (item, index) {
+              _this.libs.push(item)
+            })
+          }
+          _this.noMore = true
+          _this.page += 1
+
+//          _this.libs = data.data
+        },
+        fail: ({code, data}) => {},
+        complete: () => { this.loaded = false }
+      })
+    }
+
+    methods = {
+      showInput () {
+        this.inputShowed = true
+      },
+      hideInput () {
+        this.inputVal = ''
+        this.inputShowed = false
+      },
+      clearInput () {
+        this.inputVal = ''
+      },
+      inputTyping (e) {
+        this.inputVal = e.detail.value
+        console.log(this.inputVal)
+        this.page = 1
+        this.getLibraries(this.inputVal)
+      },
+      tabClick (e) {
+        this.sliderOffset = e.currentTarget.offsetLeft
+        this.activeIndex = e.currentTarget.id
+//        if (this.activeIndex == '1') {
+          this.getLibraries()
+//        } else {
+//          this.initPageData()
+//        }
+      },
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
+      joinTip() {
+        wx.showModal({
+          title: '待审核',
+          content: '请等待管理员审核！'
+        })
+      },
+      joinLibrary() {
+        this.$post({
+          url: service.libraries + '/' + this.mylib.id + '/join'
+        }, {
+          success: ({code, data}) => {
+            wx.reLaunch({url: '/pages/borrow'})
+          },
+          fail: ({code, data}) => {},
+          complete: () => { this.loaded = false }
+        })
+      },
+
+      scanBook() {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+
+            if (res.result) {
+              this.$post({
+                url: service.book_store,
+                data: {
+                  'isbn': res.result
+                }
+              }, {
+                success: ({code, data}) => {
+                  wx.reLaunch({url: '/pages/library/book_edit?id=' + data.id})
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loaded = false }
+              })
+            }
+          }
+        })
+      },
+      scanReturn() {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+            wx.navigateTo({url: '/pages/library/borrow?isbn=' + res.result})
+          }
+        })
+      },
+      scanBorrow(libraryId) {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+
+            if (res.result) {
+              this.$get({
+                url: service.host + '/libraries/' + libraryId + '/book/isbn/' + res.result
+              }, {
+                success: ({code, data}) => {
+                  wx.navigateTo({url: '/pages/library/book?id=' + data.book_id + '&library_id=' + data.library_id})
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loaded = false }
+              })
+            }
+          }
+        })
+      }
+    }
+  }
+
+</script>
+
+<style lang="less">
+  @import "../../styles/weui/base/fn.wxss";
+  @import "../../styles/custom/fn.less";
+  page{
+    background: white;
+  }
+  .borrow{
+    .page__bd{
+      height: 100%;
+    }
+    .page__bd{
+      padding-bottom: 0;
+    }
+    .weui-tab__content{
+      padding-top: 0px;
+      text-align: center;
+    }
+    text-align: center;
+    background: #fff;
+    .library-title{
+      .h2();
+      text-align: left;
+      color: #666;
+      padding: 20rpx 40rpx 10rpx;
+    }
+    .library-wrapper{
+      padding: 20rpx 0;
+    }
+    .library-item{
+      position: relative;
+      &:before {
+        .setLeftLine(@weuiCellBorderColor);
+      }
+      &:first-child {
+        &:before {
+          display: none;
+        }
+      }
+    }
+    .item-title{
+      .h3();
+      line-height: 1;
+    }
+    .mini-btn{
+      //  margin: 1em auto;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+  }
+  .list{
+    margin: 22rpx;
+    /*background: red;*/
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+  }
+  .inline-block {display: inline-block}
+  .flo_l {float: left}
+  .flo_r {float: right}
+  .font_26 {font-size: 26rpx}
+  .font_28 {font-size: 28rpx}
+  .bold{font-weight: bold}
+  .clearfloat {clear:both}
+  .white {background: white}
+  .ellipsis_2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .ellipsis_1 {
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
+  }
+
+  .imagebox{
+    width: 33%;
+  }
+  .borrowlist{
+    width: 30%;
+    box-shadow: 1rpx 1rpx 18rpx #d3d3d3;
+    margin-left: 19rpx;
+    margin-top: 18rpx;
+    border-radius: 6rpx;
+    position: relative
+  }
+  .lisimage {
+    margin-bottom: 12rpx;
+    min-height: 220rpx;
+  }
+  .listtext {
+    padding: 12rpx 10rpx 16rpx 10rpx;
+    border-top: 1rpx solid #d3d3d3;
+  }
+</style>
