@@ -105,7 +105,6 @@
     }
     onShow() {
       this.initPageData('RESERVE')
-      // google analytics
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
 

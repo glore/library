@@ -1,29 +1,28 @@
 <template>
   <view class="map">
-    <map id="map" longitude="{{myLong}}" latitude="{{myLat}}" scale="14" markers="{{markers}}"  @markertap="markertap" @regionchange="regionchange" show-location style="width: 100%; height: 1060rpx;">
-      <cover-view class='btn' bindtap='codeg' style="background: white;width: 200rpx;position: absolute;right: 0;bottom: 12rpx;padding: 12rpx;">
-        <cover-image src='/images/position.png'  @tap="moveToLocation" class='ten_l flo_l' style="width: 68rpx;height: 68rpx;margin-right: 22rpx;"></cover-image>
-        <cover-image src='/images/search.png'  class='code flo_l' style="width: 68rpx;height: 68rpx;"></cover-image>
+    <map id="map" longitude="{{myLong}}" latitude="{{myLat}}" scale="14" markers="{{markers}}"  @markertap="markertap" @regionchange="regionchange" show-location style="width: 100%; height: 900rpx;">
+      <cover-view class='btn' style="background: white;width: 200rpx;position: absolute;right: 0;bottom: 12rpx;padding: 12rpx;">
+        <cover-image src='/images/position.png'  @tap="moveToLocation" class='ten_l flo_l' style="width: 62rpx;height: 62rpx;margin-right: 22rpx;"></cover-image>
+        <cover-image src='/images/search.png' @tap="goto('/pages/library/searchLibrary')" class='code flo_l' style="width: 68rpx;height: 68rpx;"></cover-image>
       </cover-view>
     </map>
   </view>
   <!--<view style="height: 60rpx"></view>-->
-  <view style="padding:32rpx 22rpx; background: white;" class="font_32">
-    <view>
-      <view class="inline-block">
-        阳光书坊阅览室
+  <navigator url="/pages/library/library?id={{distance_library.id}}"  hover-class="weui-cell_active">
+    <view style="padding:32rpx 22rpx; background: white;" class="font_32">
+      <view>
+        <view class="inline-block">
+          {{distance_library.name}}
+        </view>
+        <view class="flo_r" style="color: #35bbe6">{{distance1}}km</view></br>
       </view>
-      <view class="flo_r" style="color: #35bbe6">300m</view></br>
+      <view class="inline-block ellipsis_2 font_28" style="width: 92%;margin-top: 16rpx;color: #999999">
+        {{distance_library.intro}}
+      </view>
+      <view class="flo_r bold" style="font-size: 46rpx; color: #35bbe6;margin-top: -62rpx;">></view>
     </view>
-    <view class="inline-block ellipsis_2 font_28" style="width: 92%;margin-top: 16rpx;color: #999999">
-      为基督徒的弟兄们提供免费的图书节约与共享服务@！
-    </view>
-    <view class="flo_r bold" style="font-size: 46rpx; color: #35bbe6" >></view>
-  </view>
-  <!--<button type="primary" @tap="getCenterLocation">获取位置</button>-->
-  <!--<button type="primary" @tap="moveToLocation">移动位置</button>-->
-  <!--<button type="primary" @tap="translateMarker">移动标注</button>-->
-  <!--<button type="primary" @tap="includePoints">缩放视野展示所有经纬度</button>-->
+  </navigator>
+
 </template>
 
 <script>
@@ -42,59 +41,19 @@
     }
     data = {
 //      markers标记点
-      markers: [{
-        iconPath: '/images/icon-position.png',
-        id: 1,
-        latitude: 22.530254,
-        longitude: 113.93841,
-        width: 30,
-        height: 30,
-        title: '【软银科技】啊\n',
-        callout: {
-          content: '【软银科】',
-          color: '#2c8df6',
-          fontSize: 20,
-          borderRadius: 6,
-          bgColor: '#fff',
-          display: 'BYCLICK',
-          boxShadow: '2px 2px 10px #aaa'
-        }
-      },
-      {
-        iconPath: '/images/icon-position.png',
-        id: 2,
-        latitude: 22.53254,
-        longitude: 113.93001,
-        width: 30,
-        height: 30,
-        callout: {
-          content: '【软银科技】',
-          color: '#2c8df6',
-          fontSize: 20,
-          borderRadius: 6,
-          bgColor: '#fff',
-          display: 'BYCLICK',
-          boxShadow: '2px 2px 10px #aaa'
-        }
-      }
-      ],
-      circles: [{
-        latitude: '40.007153',
-        longitude: '116.491081',
-        color: '#FF0000DD',
-        fillColor: '#7cb5ec88',
-        radius: 400,
-        strokeWidth: 2
-      }],
+      markers: [],
       myLong: '',
       myLat: '',
+      distance1: '',
+      libraries: '',
+      distance_library: {}
     }
     onShow() {
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
-      this.getCenterLocation()
     }
     onLoad() {
       this.mapCtx = wx.createMapContext('map')
+      this.getCenterLocation()
     }
 
     getCenterLocation() {
@@ -102,36 +61,72 @@
       wx.getLocation({
         type: 'gcj02',
         success: function(res) {
-//          var latitude = res.latitude
-//          var longitude = res.longitude
           that.myLong = res.longitude
           that.myLat = res.latitude
-          console.log(that.myLong)
-          console.log(that.myLat)
+          that.$get({
+            url: service.maps,
+            data: {
+              location_latitude: that.myLat,
+              location_longitude: that.myLong
+            }
+          }, {
+            success: ({code, data}) => {
+              that.distance1 = data.distance1
+              that.distance_library = data.distance_library
+              that.libraries = data.libraries
+              that.libraries.forEach((item, index, arr) => {
+                that.markers.push(
+                  {
+                    iconPath: '/images/icon-position.png',
+                    id: item.id,
+                    latitude: item.location_latitude,
+                    longitude: item.location_longitude,
+                    width: 30,
+                    height: 30,
+                    callout: {
+                      content: item.name,
+                      color: '#2c8df6',
+                      fontSize: 14,
+                      borderRadius: 6,
+                      bgColor: '#fff',
+                      padding: 6,
+                      display: 'BYCLICK',
+                      boxShadow: '2px 2px 10px #aaa'
+                    }
+                  }
+                )
+              })
+              console.log(that.markers)
+              that.$apply()
+              that.noMoreList = false
+            },
+            fail: ({code, data}) => {},
+            complete: () => { this.loading = false}
+          })
           that.$apply()
         }
       })
     }
 
     getLngLat() {
-      var that = this
-      this.mapCtx = wx.createMapContext('map')
-      this.mapCtx.getCenterLocation({
+      let that = this
+      that.mapCtx = wx.createMapContext('map')
+      that.mapCtx.getCenterLocation({
         success: function (res) {
-//          that.setData({
-            that.longitude= res.longitude,
-            that.latitude= res.latitude,
+            that.longitude = res.longitude
+            that.latitude = res.latitude
             that.markers.push(
-              {id: 0,
+              {
+                id: 0,
                 iconPath: '/images/icon-label.png',
                 longitude: res.longitude,
                 latitude: res.latitude,
                 width: 30,
-                height: 30}
+                height: 30
+              }
             )
-          console.log( that.longitude)
-          console.log( that.latitude)
-           that.$apply()
+          console.log(that.markers)
+          that.$apply()
         }
       })
     }
@@ -173,17 +168,18 @@
         }
       }, {
         success: ({code, data}) => {
-          this.noMoreList = false
+          that.distance1 = data.distance1
+          that.distance_library = data.distance_library
+          that.$apply()
         },
-        fail: ({code, data}) => {
-          // 失败了什么也不做
-        },
-        complete: () => {
-          this.loading = false
-        }
+        fail: ({code, data}) => {},
+        complete: () => {this.loading = false}
       })
     }
     methods = {
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
       moveToLocation () {
         this.mapCtx.moveToLocation()
       },
@@ -201,39 +197,27 @@
           }
         })
       },
-      includePoints() {
-        this.mapCtx.includePoints({
-          padding: [10],
-          points: [{
-            latitude: 23.10229,
-            longitude: 113.3345211
-          }, {
-            latitude: 23.20229,
-            longitude: 113.4345211
-          }, {
-            latitude: 23.12229,
-            longitude: 113.3945211
-          }, {
-            latitude: 23.00229,
-            longitude: 113.3345211
-          }]
-        })
-      },
       regionchange(e) {
         console.log(e.type)
-
-//        if (e.type == 'end') {
-          this.getLngLat()
-//          this.distance()
+        let that = this
+        if (e.type == 'end') {
           this.mapLibraries()
-//        }else {
+          this.getLngLat()
+        }else {
+          this.mapCtx.getCenterLocation({
+            success: function (res) {
+              that.longitude= res.longitude
+              that.latitude= res.latitude
+              that.$apply()
+            }
+          })
           this.markers.forEach((item, index) => {
             if (item.id == 0) {
               console.log(index)
               this.markers.splice(index, 1)
             }
           })
-//        }
+        }
       },
       markertap(e) {
         console.log(e.markerId)
