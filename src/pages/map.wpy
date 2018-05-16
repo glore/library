@@ -121,8 +121,8 @@
       that.$get({
         url: service.maps,
         data: {
-          location_latitude: that.latitude,
-          location_longitude: that.longitude,
+          location_latitude: that.myLat,
+          location_longitude: that.myLong,
           my_location_longitude:that.myLong ,
           my_location_latitude:that.myLat
         }
@@ -207,7 +207,7 @@
           let data = {
             llocation_latitude: that.latitude,
             location_longitude: that.longitude,
-            my_location_longitude:that.myLong ,
+            my_location_longitude:that.myLong,
             my_location_latitude:that.myLat
           }
           that.$get({

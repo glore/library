@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="654f390e-268f-4c34-b38e-e2c47046a37b" name="默认的" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pages/map.wpy" afterPath="$PROJECT_DIR$/src/pages/map.wpy" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -53,8 +52,8 @@
       <file leaf-file-name="map.wpy" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/pages/map.wpy">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="401">
-              <caret line="207" column="46" lean-forward="true" selection-start-line="207" selection-start-column="46" selection-end-line="207" selection-end-column="46" />
+            <state relative-caret-position="661">
+              <caret line="144" column="37" lean-forward="true" selection-start-line="144" selection-start-column="37" selection-end-line="144" selection-end-column="37" />
               <folding>
                 <element signature="n#style#0;n#map#0;n#view#0;n#template#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#cover-view#0;n#map#0;n#view#0;n#template#0;n#!!top" expanded="true" />
@@ -120,12 +119,12 @@
       <find>openSetting</find>
       <find>getSystem</find>
       <find>getCenterLocation</find>
-      <find>mapFunction</find>
       <find>that.latitude</find>
       <find>latitude</find>
       <find>getLngLat</find>
       <find>mapLibraries</find>
       <find>service.maps</find>
+      <find>mapFunction</find>
     </findStrings>
     <replaceStrings>
       <replace>https://img3.doubanio.com/mpic/s1771902.jpg</replace>
@@ -343,12 +342,12 @@
       <workItem from="1525746587467" duration="128000" />
       <workItem from="1525916471599" duration="15000" />
       <workItem from="1526287977469" duration="2390000" />
-      <workItem from="1526291844202" duration="45206000" />
+      <workItem from="1526291844202" duration="45554000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="576583000" />
+    <option name="totallyTimeSpent" value="576931000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -820,8 +819,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pages/map.wpy">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="207" column="46" lean-forward="true" selection-start-line="207" selection-start-column="46" selection-end-line="207" selection-end-column="46" />
+        <state relative-caret-position="661">
+          <caret line="144" column="37" lean-forward="true" selection-start-line="144" selection-start-column="37" selection-end-line="144" selection-end-column="37" />
           <folding>
             <element signature="n#style#0;n#map#0;n#view#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#cover-view#0;n#map#0;n#view#0;n#template#0;n#!!top" expanded="true" />
