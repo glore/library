@@ -193,16 +193,6 @@
         success: function (res) {
           that.longitude = res.longitude
           that.latitude = res.latitude
-          that.markers.push(
-            {
-              id: 0,
-              iconPath: '/images/icon-label.png',
-              longitude: res.longitude,
-              latitude: res.latitude,
-              width: 30,
-              height: 30
-            }
-          )
           that.$apply()
           let data = {
             location_latitude: that.latitude,
@@ -217,6 +207,63 @@
             success: ({code, data}) => {
               that.distance1 = data.distance1
               that.distance_library = data.distance_library
+              let markers_new = []
+              that.libraries.forEach((item, index, arr) => {
+                if (arr[index].id == that.distance_library.id) {
+                  markers_new.push(
+                    {
+                      iconPath: '/images/icon-position_red.png',
+                      id: item.id,
+                      latitude: item.location_latitude,
+                      longitude: item.location_longitude,
+                      width: 30,
+                      height: 30,
+                      callout: {
+                        content: item.name,
+                        color: '#2c8df6',
+                        fontSize: 14,
+                        borderRadius: 6,
+                        bgColor: '#fff',
+                        padding: 6,
+                        display: 'BYCLICK',
+                        boxShadow: '2px 2px 10px #aaa'
+                      }
+                    }
+                  )
+                } else {
+                  markers_new.push(
+                    {
+                      iconPath: '/images/icon-position.png',
+                      id: item.id,
+                      latitude: item.location_latitude,
+                      longitude: item.location_longitude,
+                      width: 30,
+                      height: 30,
+                      callout: {
+                        content: item.name,
+                        color: '#2c8df6',
+                        fontSize: 14,
+                        borderRadius: 6,
+                        bgColor: '#fff',
+                        padding: 6,
+                        display: 'BYCLICK',
+                        boxShadow: '2px 2px 10px #aaa'
+                      }
+                    }
+                  )
+                }
+              })
+              that.markers = markers_new
+              that.markers.push(
+                {
+                  id: 0,
+                  iconPath: '/images/icon-label.png',
+                  longitude: res.longitude,
+                  latitude: res.latitude,
+                  width: 30,
+                  height: 30
+                }
+              )
               that.$apply()
             },
             fail: ({code, data}) => {
@@ -311,9 +358,37 @@
       },
       markertap(e) {
         console.log(e.markerId)
-      },
-      controltap(e) {
-        console.log(e.controlId)
+        let that = this
+        let data = {
+          my_location_longitude:that.myLong,
+          my_location_latitude:that.myLat
+        }
+        that.$get({
+          url: service.libraries + '/' + e.markerId + '/infor',
+          data: data
+        }, {
+          success: ({code, data}) => {
+            that.distance1 = data.distance1
+            that.distance_library = data.distance_library
+            that.$apply()
+          },
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+          }
+        })
+        that.markers.forEach((item, index, arr) => {
+          if (arr[index].id == e.markerId && arr[index].id !== 0) {
+           return arr[index].iconPath = '/images/icon-position_red.png'
+          }
+          if (arr[index].id !== e.markerId && arr[index].id !== 0) {
+            return arr[index].iconPath = '/images/icon-position.png'
+          }
+          if(arr[index].id == 0) {
+            return that.markers.splice(index, 1)
+          }
+        })
+//        that.markers = markers_new
       }
     }
   }
