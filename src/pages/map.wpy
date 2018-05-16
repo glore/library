@@ -368,8 +368,8 @@
           data: data
         }, {
           success: ({code, data}) => {
-            that.distance1 = data.distance1
-            that.distance_library = data.distance_library
+            that.distance1 = data.distance
+            that.distance_library = data.library
             that.$apply()
           },
           fail: ({code, data}) => {
