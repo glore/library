@@ -54,6 +54,8 @@
     data = {
 //      markers标记点
       markers: [],
+      longitude : 0,
+      latitude : 0,
       myLong: '',
       myLat: '',
       distance1: '',
@@ -71,13 +73,14 @@
       }
     }
     onShow() {
-      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
-    }
-    onLoad() {
       this.mapCtx = wx.createMapContext('map')
       this.getCenterLocation()
       this.getSystem()
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
+//    onLoad() {
+//
+//    }
 
     getSystem() {
       let that = this
@@ -118,16 +121,19 @@
       that.$get({
         url: service.maps,
         data: {
-          location_latitude: that.myLat,
-          location_longitude: that.myLong
+          location_latitude: that.latitude,
+          location_longitude: that.longitude,
+          my_location_longitude:that.myLong ,
+          my_location_latitude:that.myLat
         }
       }, {
         success: ({code, data}) => {
           that.distance1 = data.distance1
           that.distance_library = data.distance_library
           that.libraries = data.libraries
+          let markers_new = []
           that.libraries.forEach((item, index, arr) => {
-            that.markers.push(
+             markers_new.push(
               {
                 iconPath: '/images/icon-position.png',
                 id: item.id,
@@ -148,7 +154,7 @@
               }
             )
           })
-          console.log(that.markers)
+          that.markers = markers_new
           that.$apply()
           that.noMoreList = false
         },
@@ -197,8 +203,27 @@
               height: 30
             }
           )
-          console.log(that.markers)
           that.$apply()
+          let data = {
+            llocation_latitude: that.latitude,
+            location_longitude: that.longitude,
+            my_location_longitude:that.myLong ,
+            my_location_latitude:that.myLat
+          }
+          that.$get({
+            url: service.maps,
+            data: data
+          }, {
+            success: ({code, data}) => {
+              that.distance1 = data.distance1
+              that.distance_library = data.distance_library
+              that.$apply()
+            },
+            fail: ({code, data}) => {
+            },
+            complete: () => {
+            }
+          })
         }
       })
     }
@@ -227,27 +252,6 @@
               index: 4
             })
           }
-        }
-      })
-    }
-
-    mapLibraries() {
-      let that = this
-      this.$get({
-        url: service.maps,
-        data: {
-          location_latitude: that.latitude,
-          location_longitude: that.longitude
-        }
-      }, {
-        success: ({code, data}) => {
-          that.distance1 = data.distance1
-          that.distance_library = data.distance_library
-          that.$apply()
-        },
-        fail: ({code, data}) => {
-        },
-        complete: () => {
         }
       })
     }
@@ -288,7 +292,6 @@
         console.log(e.type)
         let that = this
         if (e.type == 'end') {
-          this.mapLibraries()
           this.getLngLat()
         } else {
           this.mapCtx.getCenterLocation({
