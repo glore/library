@@ -18,7 +18,7 @@
     <view class="weui-cells weui-cells_after-title book-address">
       <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
         <view class="weui-cell__hd">
-          <view class="weui-label reset-label-left">名称</view>
+          <view class="weui-label reset-label-left text-center">名称</view>
         </view>
         <view class="weui-cell__bd h3  color-red">
           <input  @input="typing('name')" value="{{name}}" placeholder="请输入你的图书馆名称" />
@@ -28,23 +28,34 @@
     <view class="weui-cells weui-cells_after-title book-address">
       <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
         <view class="weui-cell__hd">
-          <view class="weui-label reset-label-left">每人可借阅数</view>
+          <view class="weui-label reset-label-left text-center">每人可借阅数</view>
         </view>
         <view class="weui-cell__bd h3  color-red">
           <input type = "number" @input="typing('count')" value="{{count}}" placeholder="请输入可借阅数" />
         </view>
       </view>
     </view>
+    <view class="weui-cells weui-cells_after-title book-address">
+      <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
+        <view class="weui-cell__hd">
+          <view class="weui-label reset-label-left text-center">地址</view>
+        </view>
+        <view class="weui-cell__bd h3  color-red">
+          <input type = "number" @tap="choose" value="{{address}}" class="font_28" placeholder="点击选择地址"  disabled/>
+        </view>
+      </view>
+    </view>
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
         <view class="weui-cell__hd">
-          <view class="weui-label reset-label-left">简介</view>
+          <view class="weui-label reset-label-left text-center">简介</view>
         </view>
         <view class="weui-cell__bd h3  color-red">
             <input @input="typing('intro')" value="{{intro}}" placeholder="图书馆简单说明" />
         </view>
       </view>
     </view>
+
     <view class="weui-cells__title">图书馆类型</view>
     <view class="weui-cells weui-cells_after-title">
         <radio-group @change="radioChange">
@@ -92,7 +103,7 @@
       name: '',
       intro: '',
       count: 3,
-      type: 'FAMILY',
+      type: '',
       radioItems: [
         {name: '书店图书馆', value: 'STORE', checked: false},
         {name: '机构图书馆', value: 'ORG', checked: false}
@@ -101,6 +112,9 @@
       ShowUpload: false,
       BookImage: '',
       EditImage: '',
+      address: '',
+      latitude: '',
+      longitude: '',
       // 图书分类
       sort: null,
       files: [],
@@ -115,6 +129,8 @@
       this.initPageData()
       if (this.id) {
         this.radioItems.unshift({name: '个人家庭图书馆', value: 'FAMILY', checked: true})
+      } else {
+        this.choose()
       }
     }
 
@@ -139,6 +155,8 @@
             this.name = data.name
             this.intro = data.intro
             this.count = data.count
+            this.address = data.address
+            this.type = data.type
             this.EditImage = data.logo
             for (let i = 0; i < that.radioItems.length; i++) {
               that.radioItems[i].checked = false
@@ -184,6 +202,86 @@
         }
       })
     }
+    openSetting() {
+      let that = this
+      wx.openSetting({
+        success: (res) => {
+          wepy.getLocation({
+            altitude: true,
+            type: 'gcj02',
+            success: function (res) {
+              that.latitude = res.latitude
+              that.longitude = res.longitude
+              that.$apply()
+              wepy.request({
+                url: 'https://apis.map.qq.com/ws/geocoder/v1/',
+                data: {
+                  key: 'DQ3BZ-SWT3U-HUQV7-BBO3U-OU7WS-53FBV',
+                  location: that.latitude + ',' + that.longitude
+                },
+                header: {
+                  'content-type': 'application/json' // 默认值
+                },
+                success: function(res) {
+                  let result = res.data.result
+                  that.address = result.formatted_addresses.recommend
+                  that.$apply()
+                }
+              })
+            },
+            fail: function () {
+            },
+            complete: function () {
+            }
+          })
+        }
+      })
+    }
+    choose() {
+      let that = this
+      wepy.getLocation({
+        altitude: true,
+        type: 'gcj02',
+        success: function (res) {
+          that.latitude = res.latitude
+          that.longitude = res.longitude
+          that.$apply()
+          console.log(res)
+          wepy.request({
+            url: 'https://apis.map.qq.com/ws/geocoder/v1/',
+            data: {
+              key: 'DQ3BZ-SWT3U-HUQV7-BBO3U-OU7WS-53FBV',
+              location: that.latitude + ',' + that.longitude
+            },
+            header: {
+              'content-type': 'application/json' // 默认值
+            },
+            success: function(res) {
+              console.log(res)
+              let result = res.data.result
+              that.address = result.formatted_addresses.recommend
+              that.$apply()
+              console.log(that.address)
+            }
+          })
+        },
+        fail: function () {
+          wx.showModal({
+            title: '提示',
+            confirmText: '去授权',
+            content: '不授权将无法发起活动哦！',
+            success: (res) => {
+              if (res.confirm) {
+                that.openSetting()
+              }
+            }
+          })
+        },
+        complete: function () {
+          // complete
+        }
+      })
+    }
     methods = {
       radioChange (e) {
         console.log('radio发生change事件，携带value值为：', e.detail.value)
@@ -191,6 +289,23 @@
           v.checked = v.value === e.detail.value
           this.type = e.detail.value
           this.$apply()
+        })
+      },
+      choose() {
+        let that = this
+        wepy.chooseLocation({
+          success: function (res) {
+            that.address = res.name
+            that.latitude = res.latitude
+            that.longitude = res.longitude
+            that.$apply()
+          },
+          fail: function () {
+            // fail
+          },
+          complete: function () {
+            // complete
+          }
         })
       },
       chooseimage() {
@@ -211,6 +326,7 @@
       },
       save() {
         // 防抖
+        let that = this
         if (this.loading) return
         if (!this.getString(this.name)) {
           return this.$alert('温馨提示', '请输入图书馆名称')
@@ -221,12 +337,21 @@
         if (!this.getNumber(this.count) || this.count == 0) {
           return this.$alert('温馨提示', '请输入图书馆每人借阅数')
         }
+        if (!this.getString(this.address)) {
+          return this.$alert('温馨提示', '请选择地址')
+        }
+        if (!this.getString(this.type)) {
+          return this.$alert('温馨提示', '请选择图书馆类型')
+        }
         const data = {
           name: this.getString(this.name),
           intro: this.getString(this.intro),
           type: this.getString(this.type),
           logo: this.getString(this.EditImage),
-          count: this.count
+          count: this.count,
+          address: this.address,
+          location_longitude: this.longitude,
+          location_latitude: this.latitude
         }
         // 开防抖
         this.loading = true
