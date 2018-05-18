@@ -17,8 +17,8 @@
     </button>
   </view>
   <block wx:if="{{myLong}}">
-    <navigator url="/pages/library/library?id={{distance_library.id}}"    hover-class="weui-cell_active">
-      <view style="padding:32rpx 22rpx; background: white;" class="font_32">
+    <!--<navigator url="/pages/library/library?id={{distance_library.id}}"    hover-class="weui-cell_active">-->
+      <view style="padding:32rpx 22rpx; background: white;" class="font_32" @tap="goto({{distance_library.url}})">
         <view>
           <view class="inline-block">
             {{distance_library.name}}
@@ -30,7 +30,7 @@
         </view>
         <view class="flo_r bold" style="font-size: 46rpx; color: #35bbe6;margin-top: -62rpx;">></view>
       </view>
-    </navigator>
+    <!--</navigator>-->
   </block>
   <block wx:else>
     <view class="font_32 text-center" style="background: white;padding: 12rpx;">{{text}}</view>
@@ -136,6 +136,13 @@
         success: ({code, data}) => {
           that.distance1 = data.distance1
           that.distance_library = data.distance_library
+//          that.distance_library.forEach((item) => {
+            if (that.distance_library.type == 'SHARE') {
+              that.distance_library.url = '/pages/library/shareLibrary?id=' + that.distance_library.id
+            } else {
+              that.distance_library.url = '/pages/library/library?id=' + that.distance_library.id
+            }
+//          })
           that.libraries = data.libraries
           let markers_new = []
           that.libraries.forEach((item, index, arr) => {
