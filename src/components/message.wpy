@@ -1,0 +1,74 @@
+<template>
+  <view class='scroll_view_border' @tap="goto('/pages/library/create')">
+    <view class="srcoll_view" bindtap="textclick">
+      <image src="/images/new.png" mode="aspectFit"  style="width: 72rpx;height: 72rpx;margin-left: -12rpx;" ></image>
+      <!--{{title}}-->
+      为营造更好的读书气氛，欢迎各位书友 <span style="color: #74caff;">创建共享图书馆!</span>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+//  import { service } from '../config.js'
+  import http from '../mixins/http'
+  import base from '../mixins/base'
+
+  export default class Message extends wepy.component {
+    mixins = [base, http]
+    props = {
+      list: {
+        type: Object,
+        default: []
+      },
+      title: {
+        type: String,
+        default: null
+      },
+      type: {
+        type: String,
+        default: 'list'
+      }
+    }
+
+    data = {
+    }
+
+    computed = {
+    }
+    methods = {
+      goto(url) {
+        wx.navigateTo({url: url})
+      }
+    }
+  }
+</script>
+
+<style type="less">
+@import "../styles/custom/fn.less";
+.srcoll_view{
+  position: absolute;
+  top:0rpx;
+  height: 100rpx;
+  font-size: 30rpx;
+  white-space: nowrap;
+  line-height: 100rpx;
+  color: #ff1917;
+  color: #ffcd2c;
+  font-weight: bold;
+  animation:myfirst 12s linear infinite;
+}
+@keyframes myfirst
+{
+  0%   {margin-left:750rpx;}
+  100% {margin-left:-750rpx;}
+}
+.scroll_view_border{
+  position: relative;
+  width: 100%;
+  background:-webkit-gradient(linear, 0 0, 0 bottom, from(#049BFF), to(rgba(255, 255, 255, 0.87)));
+  background: #FBF4DB;
+  height: 100rpx;
+  overflow: hidden;
+}
+</style>

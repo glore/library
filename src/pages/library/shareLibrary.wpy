@@ -22,7 +22,7 @@
         </button>
       </form>
       <button  @tap="joinLibrary('join')"  wx:if="{{mylib.member && mylib.member.status == 'JOIN'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="warn" size="mini">待审核...</button>
-      <view  @tap="joinLibrary('admin')" class="font_28"  wx:if="{{mylib.member && mylib.member.status == 'ADMIN'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx;color: #049BFF;" >联系取书</view>
+      <!--<view  @tap="joinLibrary('admin')" class="font_28"  wx:if="{{mylib.member && mylib.member.status == 'ADMIN'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx;color: #049BFF;" >联系取书</view>-->
     </view>
     <view class="clearfloat"></view>
     <view class="library-title">
@@ -32,6 +32,7 @@
     <view class="library-title" wx:if="{{mylib.address !== null}}" style="margin-top: 20rpx;font-weight: inherit;font-size: 26rpx;" @tap="goadderss({{mylib.location_latitude}},{{mylib.location_longitude}})">
       地址：{{mylib.address}}
       <image src="../../images/tabbars/address.png"  mode="aspectFit" class="imgicon" style="margin-bottom: 8rpx;width: 60rpx;height: 60rpx"></image>
+      <!--<image src="../../images/icon/icon-modification.png" style="width: 32rpx;height: 32rpx;margin-bottom: -4rpx;" wx:if="{{member_type == 'ADMIN'}}" @tap="goto('/pages/library/create?id={{mylib.id}}')"></image>-->
     </view>
     <view class="weui-flex library-wrapper">
       <view @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')" wx:if="{{member_type == 'ADMIN'}}" class="weui-flex__item list-item">
@@ -143,7 +144,7 @@
       <view class="font_26" style="position: absolute;left: 60rpx;bottom: 62rpx;">1.先去<span style="color: #4ba7ff"  @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')">新增分类</span>
       </view>
     </view>
-    <view style="margin: auto;margin-bottom: -32rpx;position: fixed;right: 38rpx;bottom: 228rpx;">
+    <view style="margin: auto;margin-bottom: -32rpx;position: fixed;let: 38rpx;bottom: 150rpx;">
       <image src='../../images/message.png'  mode="aspectFit"  style="transform: rotateY(180deg) rotateZ(16deg);width: 340rpx;height: 218rpx;"></image>
       <view class="font_26" style="position: absolute;left: 72rpx;bottom: 136rpx;transform: rotateZ(-10deg);">2.扫码录入图书</view>
     </view>
@@ -152,45 +153,53 @@
   <block wx:else>
     <ClassifyList :list.sync="list" :library_id.sync="library_id"></ClassifyList>
   </block>
-  <view class="scan"  wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}">
-    <view class="scan_home {{rotate ? 'rotate' : ''}}" @tap="rotate" style="z-index: 12;">
+  <!--<view class="scan"  wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}">-->
+    <!--<view class="scan_home {{rotate ? 'rotate' : ''}}" @tap="rotate" style="z-index: 12;">-->
+      <!--<form bindsubmit="formSubmit" report-submit>-->
+        <!--<button formType="submit" class="btn" data-type="click">-->
+          <!--<image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-scan.png" style="width: 60rpx;height: 60rpx"></image>-->
+        <!--</button>-->
+      <!--</form>-->
+    <!--</view>-->
+    <!--<view class="scan_home scan_active {{changerotate ? 'changerotate1' : ''}} {{shrink ? 'changeshrink1' : ''}}" @tap="scanBook({{mylib.id}})">-->
+      <!--<image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>-->
+      <!--<text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;">录书</text>-->
+    <!--</view>-->
+    <!--<view class="scan_home scan_active {{changerotate ? 'changerotate2' : ''}} {{shrink ? 'changeshrink2' : ''}}" @tap="scanReturn({{mylib.id}})">-->
+      <!--<image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>-->
+      <!--<text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;">还书</text>-->
+    <!--</view>-->
+    <!--<view class="scan_home scan_active {{changerotate ? 'changerotate3' : ''}} {{shrink ? 'changeshrink3' : ''}}"  @tap="scanBorrow({{mylib.id}})">-->
+      <!--<image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>-->
+      <!--<text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;">借书</text>-->
+    <!--</view>-->
+  <!--</view>-->
+  <!--<view class="scan"  wx:if="{{mylib.member && mylib.member.status=='MEMBER'}}">-->
+    <!--<view class="scan_home scan_active {{changerotate ? 'changerotate3' : ''}} {{shrink ? 'changeshrink3' : ''}}"  @tap="scanBorrow({{mylib.id}})">-->
+      <!--<image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>-->
+      <!--<text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;margin-bottom: 4rpx">借书</text>-->
+    <!--</view>-->
+  <!--</view>-->
+  <view style="height: 180rpx;background: white"></view>
+  <view class="text-center nav" wx:if="{{mylib.is_admin == 1}}">
+    <view class="nav__items font_32 inline-block">
       <form bindsubmit="formSubmit" report-submit>
-        <button formType="submit" class="btn" data-type="click">
-          <image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-scan.png" style="width: 60rpx;height: 60rpx"></image>
+        <button formType="submit" class="btn flo_l" data-type="click" @tap="scanBook({{mylib.id}})">
+          <view class="nav__item inline-block text-center"> <span class="nav__item-text"> 录书 </span> </view>
+        </button>
+      </form>
+      <form bindsubmit="formSubmit" report-submit>
+        <button formType="submit" class="btn flo_l" data-type="click" @tap="scanReturn({{mylib.id}})">
+          <view class="nav__item inline-block text-center"> <span class="nav__item-text"> 还书 </span> </view>
+        </button>
+      </form>
+      <form bindsubmit="formSubmit" report-submit>
+        <button formType="submit" class="btn flo_l" data-type="click" @tap="scanBorrow({{mylib.id}})">
+          <view class="nav__item inline-block text-center"> <span class="nav__item-text"> 借书 </span> </view>
         </button>
       </form>
     </view>
-    <view class="scan_home scan_active {{changerotate ? 'changerotate1' : ''}} {{shrink ? 'changeshrink1' : ''}}" @tap="scanBook({{mylib.id}})">
-      <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>
-      <text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;">录书</text>
-    </view>
-    <view class="scan_home scan_active {{changerotate ? 'changerotate2' : ''}} {{shrink ? 'changeshrink2' : ''}}" @tap="scanReturn({{mylib.id}})">
-      <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>
-      <text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;">还书</text>
-    </view>
-    <view class="scan_home scan_active {{changerotate ? 'changerotate3' : ''}} {{shrink ? 'changeshrink3' : ''}}"  @tap="scanBorrow({{mylib.id}})">
-      <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>
-      <text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;">借书</text>
-    </view>
   </view>
-  <view class="scan"  wx:if="{{mylib.member && mylib.member.status=='MEMBER'}}">
-    <view class="scan_home scan_active {{changerotate ? 'changerotate3' : ''}} {{shrink ? 'changeshrink3' : ''}}"  @tap="scanBorrow({{mylib.id}})">
-      <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>
-      <text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;margin-bottom: 4rpx">借书</text>
-    </view>
-  </view>
-  <!--<view class="nav">-->
-    <!--<input type="checkbox" class="nav__cb" id="menu-cb"/>-->
-    <!--<div class="nav__content">-->
-      <!--<ul class="nav__items">-->
-        <!--<li class="nav__item"> <span class="nav__item-text"> 录书 </span> </li>-->
-        <!--<li class="nav__item"> <span class="nav__item-text"> 还书 </span> </li>-->
-        <!--<li class="nav__item"> <span class="nav__item-text"> 借书 </span> </li>-->
-        <!--&lt;!&ndash; <li class="nav__item"> <span class="nav__item-text">  </span> </li> &ndash;&gt;-->
-      <!--</ul>-->
-    <!--</div>-->
-    <!--<label class="nav__btn" for="menu-cb"></label>-->
-  <!--</view>-->
   <modal hidden="{{hiddenmodalput}}" title="联系管理员取书" confirm-text="拨打电话" cancel-text="取消" bindcancel="cancel" bindconfirm="confirm({{mylib.link_mobile}})">
     <input type='text'placeholder="请输入内容" value="管理员：{{mylib.link_name}}"/>
     <input type='text'placeholder="请输入内容" value="电话号码：{{mylib.link_mobile}}"/>
@@ -207,7 +216,7 @@
   import ShareMessage from '../../mixins/ShareMessage'
   import ClassifyList from '../../components/classifyList'
 
-  export default class userSubscribe extends wepy.page {
+  export default class shareLibrary extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '友福图书馆'
@@ -215,6 +224,7 @@
     components = {
       ClassifyList: ClassifyList
     }
+
     data = {
       loaded: false,
       // 我的图书馆
@@ -651,6 +661,7 @@
                 },
                 complete: () => { this.loaded = false }
               })
+//              加入收藏
               that.initPageData()
             },
             fail: ({code, data}) => {
@@ -704,6 +715,7 @@
   }
 
 </script>
+
 
 <style lang="less">
 @import "../../styles/weui/base/fn.wxss";

@@ -18,7 +18,7 @@
                         <button  @tap="goto('/pages/library/create')" type="primary" size="mini" >创建我的图书馆</button>
                       </view>
                           <view  wx:for="{{mylibs}}" wx:key="id" >
-                            <view style="" class="flo_l borrowlist" @tap="goto('/pages/library/library?id={{item.id}}')">
+                            <view style="" class="flo_l borrowlist" @tap="goto({{item.url}})">
                               <view class="flo_l lisimage" >
                                 <image src="{{itemimage}}" mode="aspectFit"  wx:for="{{item.images}}" wx:key="*this" wx:for-item="itemimage" style="width: 60rpx;height: 60rpx;margin-left: 12rpx;margin-top: 12rpx" class="flo_l"></image>
                               </view>
@@ -77,7 +77,7 @@
                       </view>
                       <view class="weui-cells__title"></view>
                       <view class="page__bd"  wx:for="{{libs}}" wx:key="*this" >
-                        <view class="flo_l borrowlist" @tap="goto('/pages/library/library?id={{item.id}}')">
+                        <view class="flo_l borrowlist" @tap="goto({{item.url}})">
                           <view class="flo_l lisimage" >
                             <image src="{{itemimage}}" mode="aspectFit"  wx:for="{{item.images}}" wx:key="*this" wx:for-item="itemimage" style="width: 60rpx;height: 60rpx;margin-left: 12rpx;margin-top: 12rpx" class="flo_l"></image>
                           </view>
@@ -227,12 +227,20 @@
     }
     // 初始化页面数据
     initPageData() {
-      var self = this
+      let self = this
       self.loading = false
       // 图书馆详情
       this.$get({url: service.my_libraries}, {
         success: ({code, data}) => {
-          this.mylibs = data
+          self.mylibs = data
+          self.mylibs.forEach((item) => {
+            if (item.type == 'SHARE') {
+              item.url = '/pages/library/shareLibrary?id=' + item.id
+            } else {
+              item.url = '/pages/library/library?id=' + item.id
+            }
+          })
+          self.$apply()
           self.config.navigationBarTitleText = data.name
         },
         fail: ({code, data}) => {},
@@ -274,9 +282,23 @@
           }
           if (_this.libs.length === 0 || _this.page === 1) {
             _this.libs = data
+            _this.libs.forEach((item) => {
+              if (item.type == 'SHARE') {
+                item.url = '/pages/library/shareLibrary?id=' + item.id
+              } else {
+                item.url = '/pages/library/library?id=' + item.id
+              }
+            })
           } else {
             data.map(function (item, index) {
               _this.libs.push(item)
+              _this.libs.forEach((item) => {
+                if (item.type == 'SHARE') {
+                  item.url = '/pages/library/shareLibrary?id=' + item.id
+                } else {
+                  item.url = '/pages/library/library?id=' + item.id
+                }
+              })
             })
           }
           _this.noMore = true

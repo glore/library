@@ -57,6 +57,7 @@
       <!--</view>-->
       <!--<view class="clearfloat"></view>-->
     <!--</view>-->
+
     <block wx:if="{{loading}}">
       <view class="weui-loadmore">
         <view class="weui-loading"></view>
@@ -79,6 +80,7 @@
 //  import ShareMessage from '../mixins/ShareMessage'
   import { service } from '../config.js'
   import ClassifyList from '../components/classifyList'
+  import message from '../components/message'
 
   export default class pageCollect extends wepy.page {
     mixins = [base, http, user]
@@ -98,6 +100,12 @@
       library_id: '',
       from_openid: ''
     }
+
+    components = {
+      ClassifyList: ClassifyList,
+      Message: message
+    }
+
     computed = {
       nickName() {
         return (user && user.wechat && user.wechat.nickname) ? user.wechat.nickname : '未授权用户'
@@ -309,9 +317,6 @@
       }
     }
 
-    components = {
-      ClassifyList: ClassifyList
-    }
   }
 </script>
 
