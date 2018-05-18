@@ -117,7 +117,7 @@
       navigationBarTitleText: '图书详情'
     }
     data = {
-      img_banner: '/images/swiper.png',
+      img_banner: '',
       icon_star: '/images/icon/icon-star@2x.png',
       icon_star_active: '/images/icon/icon-star-active@2x.png',
       icon_shelf: '/images/tabbars/icon-shelf@2x.png',
