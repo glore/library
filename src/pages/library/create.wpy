@@ -2,7 +2,10 @@
 <template>
   <view class="book-sort">
 
-    <view class="weui-cells__title">每个人都有一个属于自己的图书馆</view>
+    <view class="weui-cells__title">
+      <!--<image src="/images/icon-title.png" mode="aspectFit"  style="w" ></image>-->
+      每个人都有一个属于自己的图书馆
+    </view>
     <view class="flo_l" wx:if="{{ShowUpload}}" style="margin: 32rpx 12rpx 0 20rpx" @tap="chooseimage">
       <image src="{{EditImage}}" mode="aspectFit" style="box-shadow: 1rpx 1rpx 12rpx #d3d3d3"/>
     </view>
@@ -11,53 +14,53 @@
       <text class="font_26">上传logo</text>
     </view>
     <view>
-      <image src="../../images/upload.png" mode="aspectFit" @tap="chooseimage"/>
+      <!--<image src="../../images/upload.png" mode="aspectFit" @tap="chooseimage"/>-->
     </view>
     <!--<view class="font_26 flo_r" style="width: 60%;padding: 18rpx;background: white;margin-top: 30%">上传属于你自己的图书馆LOGO</view>-->
     <view class="clearfloat"></view>
-    <view class="weui-cells weui-cells_after-title book-address">
+    <view class="weui-cells weui-cells_after-title book-address font_28">
       <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
         <view class="weui-cell__hd">
           <view class="weui-label reset-label-left text-center">名称</view>
         </view>
-        <view class="weui-cell__bd h3  color-red">
+        <view class="weui-cell__bd  color-red">
           <input  @input="typing('name')" value="{{name}}" placeholder="请输入你的图书馆名称" />
         </view>
       </view>
     </view>
-    <view class="weui-cells weui-cells_after-title book-address">
+    <view class="weui-cells weui-cells_after-title book-address font_28">
       <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
         <view class="weui-cell__hd">
           <view class="weui-label reset-label-left text-center">每人可借阅数</view>
         </view>
-        <view class="weui-cell__bd h3  color-red">
+        <view class="weui-cell__bd   color-red">
           <input type = "number" @input="typing('count')" value="{{count}}" placeholder="请输入可借阅数" />
         </view>
       </view>
     </view>
-    <view class="weui-cells weui-cells_after-title book-address">
+    <view class="weui-cells weui-cells_after-title book-address font_28">
       <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
         <view class="weui-cell__hd">
           <view class="weui-label reset-label-left text-center">地址</view>
         </view>
-        <view class="weui-cell__bd h3  color-red">
+        <view class="weui-cell__bd   color-red">
           <input type = "number" @tap="choose" value="{{address}}" class="font_28" placeholder="点击选择地址"  disabled/>
         </view>
       </view>
     </view>
-    <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cells weui-cells_after-title font_28">
       <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
         <view class="weui-cell__hd">
           <view class="weui-label reset-label-left text-center">简介</view>
         </view>
-        <view class="weui-cell__bd h3  color-red">
+        <view class="weui-cell__bd   color-red">
             <input @input="typing('intro')" value="{{intro}}" placeholder="图书馆简单说明" />
         </view>
       </view>
     </view>
 
     <view class="weui-cells__title">图书馆类型</view>
-    <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cells weui-cells_after-title" style="position: none;  box-shadow: 1rpx 1rpx 12rpx #dedede;">
         <radio-group @change="radioChange">
             <label class="weui-cell weui-check__label" wx:for="{{radioItems}}" wx:key="value">
                 <radio class="weui-check" value="{{item.value}}" checked="{{item.checked}}"/>
@@ -105,6 +108,7 @@
       count: 3,
       type: '',
       radioItems: [
+        {name: '共享图书馆', value: 'SHARE', checked: false},
         {name: '书店图书馆', value: 'STORE', checked: false},
         {name: '机构图书馆', value: 'ORG', checked: false}
       ],
@@ -358,7 +362,7 @@
 
         // 保存图书信息
         if (this.id) {
-          let that = this
+//          let that = this
           this.$put({url: service.host + '/libraries/' + this.id, data: data}, {
             success: ({code, data}) => {
               wx.showModal({
@@ -366,7 +370,11 @@
                 content: '保存成功',
                 success: function(res) {
                   if (res.confirm) {
-                    wx.navigateTo({url: '/pages/library/library?id=' + that.id})
+                    if (that.type == 'SHARE') {
+                      wx.navigateTo({url: '/pages/library/shareLibrary?id=' + that.id})
+                    } else {
+                      wx.navigateTo({url: '/pages/library/library?id=' + that.id})
+                    }
                   } else if (res.cancel) {
                   }
                 }
@@ -384,7 +392,11 @@
                 content: '创建成功',
                 success: function(res) {
                   if (res.confirm) {
-                    wx.redirectTo({url: '/pages/library/library?id=' + data.id})
+                    if (that.type == 'SHARE') {
+                      wx.navigateTo({url: '/pages/library/shareLibrary?id=' + data.id})
+                    } else {
+                      wx.navigateTo({url: '/pages/library/library?id=' + data.id})
+                    }
                   } else if (res.cancel) {
                   }
                 }
@@ -444,6 +456,9 @@
 
 <style lang="less">
 @import "../../styles/custom/fn.less";
+page{
+  background: white;
+}
 image {
   width: 200rpx;
   height: 200rpx;
@@ -500,12 +515,17 @@ image {
   width: 200rpx;
   height: 280rpx;
   margin: 20rpx;
-  border: 2rpx solid #d3d3d3;
+  /*border: 2rpx solid #d3d3d3;*/
   text-align: center;
+  box-shadow: 1rpx 1rpx 18rpx #dedede;
 }
 .hide_image image{
   width: 100rpx;
   height: 100rpx;
   margin-top: 100rpx;
 }
+  .weui-cells{
+    /*position: none;  box-shadow: 1rpx 1rpx 12rpx #dedede;*/
+  }
+
 </style>

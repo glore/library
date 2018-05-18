@@ -258,9 +258,12 @@
               if (res.confirm) {
                 that.$post({url: service.libraries + '/' + item.library_id + '/books/' + book.book_id + '/reserve'}, {
                   success: ({code, data}) => {
-                    wx.showModal({
-                      title: '预约借书成功',
-                      content: '请找管理员取书！'
+//                    wx.showModal({
+//                      title: '预约借书成功',
+//                      content: '请找管理员取书！'
+//                    })
+                    wx.redirectTo({
+                      url: '/pages/user/borrows'
                     })
                     that.library_id = item.library_id
                     that.$apply()

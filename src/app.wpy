@@ -30,6 +30,7 @@ export default class extends wepy.app {
 
       // 图书馆管理
       'pages/library/library',
+      'pages/library/shareLibrary',
       'pages/library/searchLibrary',
       'pages/library/borrow',
       'pages/library/usercollect',
@@ -59,7 +60,7 @@ export default class extends wepy.app {
     window: {
       navigationBarTitleText: '友福图书馆',
       navigationBarTextStyle: 'white',
-      navigationBarBackgroundColor: '#049BFF',
+      navigationBarBackgroundColor: '#26AAE1',
       backgroundColor: '#eaeaea',
       backgroundTextStyle: 'light',
       enablePullDownRefresh: true

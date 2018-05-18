@@ -1,5 +1,6 @@
 <template>
   <view class="map" >
+    <Message :title.sync="title" ></Message>
     <map id="map" longitude="{{myLong}}" latitude="{{myLat}}" scale="14" markers="{{markers}}"  @markertap="markertap" @regionchange="regionchange" show-location style="width: 100%; height:{{height}}">
       <cover-view class='btn' style="background: white;width: 200rpx;position: absolute;right: 0;bottom: 12rpx;padding: 12rpx;">
         <cover-image src='/images/position.png'  @tap="moveToLocation" class='ten_l flo_l' style="width: 62rpx;height: 62rpx;margin-right: 22rpx;"></cover-image>
@@ -44,18 +45,20 @@
   import user from '../mixins/user'
   import ShareMessage from '../mixins/ShareMessage'
   import { service } from '../config.js'
+  import message from '../components/message'
 
   export default class pageQr extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
-      navigationBarTitleText: '',
+      navigationBarTitleText: '图书馆地图',
       enablePullDownRefresh: false
     }
     data = {
 //      markers标记点
       markers: [],
-      longitude : 0,
-      latitude : 0,
+      title:'为营造更好的读书气氛，欢迎各位书友创建共享图书馆！',
+      longitude: 0,
+      latitude: 0,
       myLong: '',
       myLat: '',
       distance1: '',
@@ -63,6 +66,9 @@
       distance_library: {},
       text: '',
       height: ''
+    }
+    components = {
+      Message: message
     }
     watch = {
       text() {
@@ -86,7 +92,7 @@
       let that = this
       wx.getSystemInfo({
         success: function(res) {
-          console.log(that.height = res.screenHeight + 200 + 'rpx')
+          that.height = res.screenHeight + 100 + 'rpx'
           that.$apply()
         }
       })
@@ -123,8 +129,8 @@
         data: {
           location_latitude: that.myLat,
           location_longitude: that.myLong,
-          my_location_longitude:that.myLong ,
-          my_location_latitude:that.myLat
+          my_location_longitude: that.myLong,
+          my_location_latitude: that.myLat
         }
       }, {
         success: ({code, data}) => {
@@ -133,7 +139,7 @@
           that.libraries = data.libraries
           let markers_new = []
           that.libraries.forEach((item, index, arr) => {
-             markers_new.push(
+            markers_new.push(
               {
                 iconPath: '/images/icon-position.png',
                 id: item.id,
@@ -197,8 +203,8 @@
           let data = {
             location_latitude: that.latitude,
             location_longitude: that.longitude,
-            my_location_longitude:that.myLong,
-            my_location_latitude:that.myLat
+            my_location_longitude: that.myLong,
+            my_location_latitude: that.myLat
           }
           that.$get({
             url: service.maps,
