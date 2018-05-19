@@ -23,6 +23,7 @@
           <view class="inline-block">
             {{distance_library.name}}
           </view>
+
           <view class="flo_r" style="color: #35bbe6">{{distance1}}km</view></br>
         </view>
         <view class="inline-block ellipsis_2 font_28" style="width: 92%;margin-top: 16rpx;color: #999999">
@@ -143,6 +144,8 @@
               that.distance_library.url = '/pages/library/library?id=' + that.distance_library.id
             }
 //          })
+          that.$apply()
+          console.log(that.distance_library)
           that.libraries = data.libraries
           let markers_new = []
           that.libraries.forEach((item, index, arr) => {
@@ -317,6 +320,7 @@
     }
     methods = {
       goto(url) {
+      console.log(url)
         wx.navigateTo({url: url})
       },
       moveToLocation() {
