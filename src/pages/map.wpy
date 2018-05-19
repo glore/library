@@ -57,7 +57,7 @@
     data = {
 //      markers标记点
       markers: [],
-      title:'为营造更好的读书气氛，欢迎各位书友创建共享图书馆！',
+      title: '为营造更好的读书气氛，欢迎各位书友创建共享图书馆！',
       longitude: 0,
       latitude: 0,
       myLong: '',
@@ -66,7 +66,8 @@
       libraries: '',
       distance_library: {},
       text: '',
-      height: ''
+      height: '',
+      url: ''
     }
     components = {
       Message: message
@@ -137,19 +138,19 @@
         success: ({code, data}) => {
           that.distance1 = data.distance1
           that.distance_library = data.distance_library
-//          that.distance_library.forEach((item) => {
-            if (that.distance_library.type == 'SHARE') {
-              that.distance_library.url = '/pages/library/shareLibrary?id=' + that.distance_library.id
-            } else {
-              that.distance_library.url = '/pages/library/library?id=' + that.distance_library.id
-            }
-//          })
-          that.$apply()
+
+          if (that.distance_library.type == 'SHARE') {
+            that.distance_library.url = '/pages/library/shareLibrary?id=' + that.distance_library.id
+            that.$apply()
+          } else {
+            that.distance_library.url = '/pages/library/library?id=' + that.distance_library.id
+            that.$apply()
+          }
           console.log(that.distance_library)
           that.libraries = data.libraries
-          let markers_new = []
+          let markersNew = []
           that.libraries.forEach((item, index, arr) => {
-            markers_new.push(
+            markersNew.push(
               {
                 iconPath: '/images/icon-position.png',
                 id: item.id,
@@ -170,7 +171,7 @@
               }
             )
           })
-          that.markers = markers_new
+          that.markers = markersNew
           that.$apply()
           that.noMoreList = false
         },
@@ -223,10 +224,17 @@
             success: ({code, data}) => {
               that.distance1 = data.distance1
               that.distance_library = data.distance_library
-              let markers_new = []
+              if (that.distance_library.type == 'SHARE') {
+                that.distance_library.url = '/pages/library/shareLibrary?id=' + that.distance_library.id
+                that.$apply()
+              } else {
+                that.distance_library.url = '/pages/library/library?id=' + that.distance_library.id
+                that.$apply()
+              }
+              let markersNew = []
               that.libraries.forEach((item, index, arr) => {
                 if (arr[index].id == that.distance_library.id) {
-                  markers_new.push(
+                  markersNew.push(
                     {
                       iconPath: '/images/icon-position_red.png',
                       id: item.id,
@@ -247,7 +255,7 @@
                     }
                   )
                 } else {
-                  markers_new.push(
+                  markersNew.push(
                     {
                       iconPath: '/images/icon-position.png',
                       id: item.id,
@@ -269,7 +277,7 @@
                   )
                 }
               })
-              that.markers = markers_new
+              that.markers = markersNew
               that.markers.push(
                 {
                   id: 0,
@@ -320,7 +328,6 @@
     }
     methods = {
       goto(url) {
-      console.log(url)
         wx.navigateTo({url: url})
       },
       moveToLocation() {
@@ -377,8 +384,8 @@
         console.log(e.markerId)
         let that = this
         let data = {
-          my_location_longitude:that.myLong,
-          my_location_latitude:that.myLat
+          my_location_longitude: that.myLong,
+          my_location_latitude: that.myLat
         }
         that.$get({
           url: service.libraries + '/' + e.markerId + '/infor',
@@ -387,6 +394,13 @@
           success: ({code, data}) => {
             that.distance1 = data.distance
             that.distance_library = data.library
+            if (that.distance_library.type == 'SHARE') {
+              that.distance_library.url = '/pages/library/shareLibrary?id=' + that.distance_library.id
+              that.$apply()
+            } else {
+              that.distance_library.url = '/pages/library/library?id=' + that.distance_library.id
+              that.$apply()
+            }
             that.$apply()
           },
           fail: ({code, data}) => {
@@ -396,12 +410,12 @@
         })
         that.markers.forEach((item, index, arr) => {
           if (arr[index].id == e.markerId && arr[index].id !== 0) {
-           return arr[index].iconPath = '/images/icon-position_red.png'
+            return arr[index].iconPath = '/images/icon-position_red.png'
           }
           if (arr[index].id !== e.markerId && arr[index].id !== 0) {
             return arr[index].iconPath = '/images/icon-position.png'
           }
-          if(arr[index].id == 0) {
+          if (arr[index].id == 0) {
             return that.markers.splice(index, 1)
           }
         })
