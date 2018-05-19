@@ -144,10 +144,10 @@
       <view class="font_26" style="position: absolute;left: 60rpx;bottom: 62rpx;">1.先去<span style="color: #4ba7ff"  @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')">新增分类</span>
       </view>
     </view>
-    <view style="margin: auto;margin-bottom: -32rpx;position: fixed;let: 38rpx;bottom: 150rpx;">
-      <image src='../../images/message.png'  mode="aspectFit"  style="transform: rotateY(180deg) rotateZ(16deg);width: 340rpx;height: 218rpx;"></image>
-      <view class="font_26" style="position: absolute;left: 72rpx;bottom: 136rpx;transform: rotateZ(-10deg);">2.扫码录入图书</view>
-    </view>
+    <!--<view style="margin: auto;margin-bottom: -32rpx;position: fixed;let: 38rpx;bottom: 150rpx;">-->
+      <!--<image src='../../images/message.png'  mode="aspectFit"  style="transform: rotateY(180deg) rotateZ(16deg);width: 340rpx;height: 218rpx;"></image>-->
+      <!--<view class="font_26" style="position: absolute;left: 72rpx;bottom: 136rpx;transform: rotateZ(-10deg);">2.扫码录入图书</view>-->
+    <!--</view>-->
   </block>
 
   <block wx:else>
@@ -200,10 +200,10 @@
       </form>
     </view>
   </view>
-  <modal hidden="{{hiddenmodalput}}" title="联系管理员取书" confirm-text="拨打电话" cancel-text="取消" bindcancel="cancel" bindconfirm="confirm({{mylib.link_mobile}})">
-    <input type='text'placeholder="请输入内容" value="管理员：{{mylib.link_name}}"/>
-    <input type='text'placeholder="请输入内容" value="电话号码：{{mylib.link_mobile}}"/>
-  </modal>
+  <!--<modal hidden="{{hiddenmodalput}}" title="联系管理员取书" confirm-text="拨打电话" cancel-text="取消" bindcancel="cancel" bindconfirm="confirm({{mylib.link_mobile}})">-->
+    <!--<input type='text'placeholder="请输入内容" value="管理员：{{mylib.link_name}}"/>-->
+    <!--<input type='text'placeholder="请输入内容" value="电话号码：{{mylib.link_mobile}}"/>-->
+  <!--</modal>-->
 </template>
 
 
