@@ -23,6 +23,7 @@
           <view class="inline-block">
             {{distance_library.name}}
           </view>
+
           <view class="flo_r" style="color: #35bbe6">{{distance1}}km</view></br>
         </view>
         <view class="inline-block ellipsis_2 font_28" style="width: 92%;margin-top: 16rpx;color: #999999">
@@ -137,6 +138,7 @@
         success: ({code, data}) => {
           that.distance1 = data.distance1
           that.distance_library = data.distance_library
+
           if (that.distance_library.type == 'SHARE') {
             that.distance_library.url = '/pages/library/shareLibrary?id=' + that.distance_library.id
             that.$apply()
@@ -326,7 +328,6 @@
     }
     methods = {
       goto(url) {
-        console.log(url)
         wx.navigateTo({url: url})
       },
       moveToLocation() {
