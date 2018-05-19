@@ -191,7 +191,7 @@
     <!--</div>-->
     <!--<label class="nav__btn" for="menu-cb"></label>-->
   <!--</view>-->
-  <modal hidden="{{hiddenmodalput}}" title="联系管理员取书" confirm-text="拨打电话" cancel-text="取消" bindcancel="cancel" bindconfirm="confirm({{mylib.link_mobile}})">
+  <modal wx:if="{{!hiddenmodalput}}" title="联系管理员取书" confirm-text="拨打电话" cancel-text="取消" bindcancel="cancel" bindconfirm="confirm({{mylib.link_mobile}})">
     <input type='text'placeholder="请输入内容" value="管理员：{{mylib.link_name}}"/>
     <input type='text'placeholder="请输入内容" value="电话号码：{{mylib.link_mobile}}"/>
   </modal>
