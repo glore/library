@@ -11,7 +11,7 @@
         <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-home.png"></image> 主页
       </button>
       <button  type="warn" size="mini" plain open-type="share"  style="padding:2rpx 12rpx;line-height: 42rpx">
-        分享<image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-share_red.png"></image>
+        分享 <image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-share_red.png"></image>
       </button>
     </view>
     <view class="clearfloat"></view>
