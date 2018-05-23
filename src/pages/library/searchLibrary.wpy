@@ -147,7 +147,7 @@
     }
     onShow() {
 //      if (this.activeIndex == '1') {
-        this.getLibraries()
+      this.getLibraries()
 //      } else {
 //        this.initPageData()
 //      }
@@ -158,7 +158,7 @@
 
     onPullDownRefresh() {
 //      if (this.activeIndex == '1') {
-        this.getLibraries()
+      this.getLibraries()
 //      } else {
 //        this.initPageData()
 //      }
@@ -166,7 +166,7 @@
     onReachBottom() {
       setTimeout(() => {
 //        if (this.activeIndex == '1') {
-          this.getLibraries()
+        this.getLibraries()
 //        } else {
 //          this.initPageData()
 //        }
@@ -281,7 +281,7 @@
         this.sliderOffset = e.currentTarget.offsetLeft
         this.activeIndex = e.currentTarget.id
 //        if (this.activeIndex == '1') {
-          this.getLibraries()
+        this.getLibraries()
 //        } else {
 //          this.initPageData()
 //        }

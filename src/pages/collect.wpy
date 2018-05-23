@@ -46,6 +46,7 @@
     </view>
     <!--<view @tap="goto('/pages/library/usercollect?library_id=14')">ceshi1</view>-->
     <ClassifyList :list.sync="list" :library_id.sync="library_id"></ClassifyList>
+    <!--<view @tap="openApp">跳转小程序</view>-->
     <!--<view class="BookList" wx:for="{{list}}" wx:key="*this"  @tap="navTo({{mylibrary.id}}, {{item.id}})">-->
       <!--<view class="flo_l">-->
         <!--<image src="{{item.image}}" mode="aspectFit" />-->
@@ -237,6 +238,21 @@
 //      })
 //    }
     methods = {
+      openApp() {
+        wx.navigateToMiniProgram({
+          appId: 'wxa43b4cb4f447e846',
+          path: 'pages/partyList',
+          extraData: {
+            name: 'kobe'
+          },
+          envVersion: 'develop',
+          success(res) {
+            console.log(res)
+            console.log('尝试打开')
+            // 打开成功
+          }
+        })
+      },
 //      navTo(library_id, _id) {
 //       debugger
 //        wx.navigateTo({url: '/pages/book/detail?library_id=' + library_id + '&id=' + _id})
@@ -316,7 +332,6 @@
         })
       }
     }
-
   }
 </script>
 

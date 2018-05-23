@@ -180,7 +180,7 @@
     methods = {
       goto(url) {
         wx.navigateTo({url: url})
-      },
+      }
     }
 
     components = {
