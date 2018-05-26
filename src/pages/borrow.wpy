@@ -15,7 +15,7 @@
                       </view>
                       <view class="weui-cells__title"></view-->
                       <view class="list" style="padding: 12rpx">
-                        <button  @tap="goto('/pages/library/create')" type="primary" size="mini" >创建我的图书馆</button>
+                        <button  @tap="goto('/pages/library/create')" class="weui-btn btn-blue_l" type="primary" size="mini" >创建我的图书馆</button>
                       </view>
                           <view  wx:for="{{mylibs}}" wx:key="id" >
                             <view style="" class="flo_l borrowlist" @tap="goto({{item.url}})">

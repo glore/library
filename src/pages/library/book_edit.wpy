@@ -104,7 +104,7 @@
         <view class="color-999">1. 图书馆藏书册数必需填写</view>
         <view class="color-999">2. 图书标题和作者需要填写</view>
       </view>
-    <view style="height: 86rpx"></view>
+    <view style="height: 114rpx"></view>
     <block wx:if="{{id}}">
       <view style="position: fixed;bottom: 0;left: 0;width: 100%">
         <button @tap="save" type="primary" style="float: left;width: 50%;border-radius: 0">保存</button>
@@ -112,8 +112,8 @@
       </view>
     </block>
     <block wx:else>
-      <view style="position: fixed;bottom: 0;left: 0;width: 100%">
-        <button @tap="save" type="primary" style="float: left;width: 100%;border-radius: 0">保存</button>
+      <view style="position: fixed;bottom: 22rpx;width: 100%">
+        <button @tap="save" type="primary" class="weui-btn btn-blue_l text-center" style="width: 94%" >保存</button>
       </view>
     </block>
       </view>

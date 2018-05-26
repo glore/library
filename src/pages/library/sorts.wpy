@@ -2,15 +2,15 @@
 <template>
   <view class="book-sorts">
     <view class="weui-cells__title" style="height: 48rpx">
-      {{library.name}}分类列表
-      <button class="weui-btn" @tap="add({{library.id}})" type="primary" size="mini" style="float:right">添加分类</button>
+      <span class="font_32 bold color_6">{{library.name}}分类列表</span>
+      <button class="weui-btn btn-blue_l" @tap="add({{library.id}})" type="primary" size="mini" style="float:right">添加分类</button>
     </view>
     <view class="weui-cells__title"></view>
     <view class="weui-cells weui-cells_after-title">
       <block wx:for="{{sorts}}" wx:key="index">
         <navigator url="/pages/library/sort?id={{item.id}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
           <view class="weui-cell__bd">{{item.name}}</view>
-          <view class="weui-cell__ft weui-cell__ft_in-access">{{item.intro}}</view>
+          <view class="weui-cell__ft weui-cell__ft_in-access"></view>
         </navigator>
       </block>
     </view>
@@ -88,6 +88,13 @@
 
 <style lang="less">
 @import "../../styles/custom/fn.less";
-
+.weui-cell{
+  position: inherit;
+  box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+  margin-top: 12rpx;
+}
+.weui-cells__title{
+  margin-bottom: 44rpx;
+}
 
 </style>

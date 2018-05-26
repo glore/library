@@ -56,7 +56,7 @@
              </view>
            <!--<view>-->
              <!--<button class="weui-btn mini-btn" @tap="toAdd({{book}}, {{item}})" type="primary" size="mini" style="float:right;margin-left: 12rpx;">借阅 {{item.lent_num}}/{{item.num}}</button>-->
-           <button class="weui-btn mini-btn" @tap="goto('/pages/book/detail?id={{item.book_id}}&library_id={{item.library_id}}')" type="primary" size="mini" style="float:right;margin-left: 12rpx;">借阅 {{item.lent_num}}/{{item.num}}</button>
+           <button class="weui-btn mini-btn btn-blue_l" @tap="goto('/pages/book/detail?id={{item.book_id}}&library_id={{item.library_id}}')" type="primary" size="mini" style="float:right;margin-left: 12rpx;">借阅 {{item.lent_num}}/{{item.num}}</button>
 
            <!--</view>-->
            <!--<view>-->
@@ -94,9 +94,9 @@
         <image class="" src="../../images/icon/icon-comment.png" />
       </view>
     </view>
-    <view style="height: 100rpx;"></view>
+    <view style="height: 120rpx;"></view>
     <view style="position: fixed; left: 0;bottom: 0;width: 100%;" wx:if="{{book_library !== null}}">
-      <button class="weui-btn " @tap="toAdd({{book_library}}, {{book_library}})" type="primary" style="width: 100%;">借阅 {{book_library.lent_num}}/{{book_library.num}}</button>
+      <button class="weui-btn btn-blue_l" @tap="toAdd({{book_library}}, {{book_library}})" type="primary" style="margin: 22rpx;">借阅 {{book_library.lent_num}}/{{book_library.num}}</button>
     </view>
   </view>
 </template>
@@ -366,7 +366,7 @@
     color:white;
     position:fixed;
     right:42rpx;
-    bottom:120rpx;
+    bottom:140rpx;
     box-shadow: -1rpx 6rpx 16rpx #a3a3a3;
 
   }

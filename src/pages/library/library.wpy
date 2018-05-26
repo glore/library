@@ -6,23 +6,34 @@
     <view  class="flo_l" style="padding-top: 12rpx;padding-left: 42rpx" wx:else>
       <image class="library-image flo_l" mode="aspectFit" src="{{mylib.logo}}"></image>
     </view>
-    <view class="flo_r" style="margin:26rpx">
-      <button  type="default" size="mini"  @tap="gotoTab('/pages/index')"  style="padding:2rpx 12rpx;line-height: 42rpx;margin-right: 22rpx">
-        <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-home.png"></image> 主页
+    <!--<waterAnimation></waterAnimation>-->
+    <view class="" style="margin:26rpx;z-index: 1000;position:relative;">
+      <!--<button  type="default" size="mini"  @tap="gotoTab('/pages/index')"  style="padding:2rpx 12rpx;line-height: 42rpx;margin-right: 22rpx">-->
+        <!--<image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-home.png"></image>-->
+      <!--</button>-->
+      <button  size="mini" @tap="gotoTab('/pages/map')" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 140rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
+        <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/home.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
       </button>
-      <button  type="warn" size="mini" plain open-type="share"  style="padding:2rpx 12rpx;line-height: 42rpx">
-        分享 <image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-share_red.png"></image>
+      <view class="smile" style="position: fixed;z-index: 1000;right: 24.5vw; top: -25rpx;"></view>
+      <button  size="mini" open-type="share" @tap="share" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 12rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
+        <image  class="imgicon" mode="aspectFit" src="../../images/icon/share_red.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
       </button>
+      <view class="smile" style="position: fixed;z-index: 1000;right: 7vw; top: -25rpx;"></view>
+      <!--<button  size="mini" open-type="share" class="btn" style="padding:2rpx 12rpx 2rpx 0;line-height: 42rpx;border-radius: 50%;box-shadow: 1rpx 1rpx 12rpx red;position: fixed;right: -12rpx;top: 40rpx;">-->
+        <!--<image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-share_red.png" style="width: 78rpx;height: 78rpx;float: left;"></image>-->
+      <!--</button>-->
     </view>
     <view class="clearfloat"></view>
     <view class="flo_r" style="margin-right:26rpx;">
       <form bindsubmit="formSubmit" report-submit>
         <button formType="submit" class="btn" data-type="click">
-          <button  @tap="joinLibrary('member')"  wx:if="{{!mylib.member}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">申请加入</button>
+          <button  @tap="joinLibrary('member')"  wx:if="{{!mylib.member}}" class="weui-btn btn-blue_l" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx"  size="mini">申请加入</button>
         </button>
       </form>
       <button  @tap="joinLibrary('join')"  wx:if="{{mylib.member && mylib.member.status == 'JOIN'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="warn" size="mini">待审核...</button>
-      <view  @tap="joinLibrary('admin')" class="font_28"  wx:if="{{mylib.member && mylib.member.status == 'ADMIN'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx;color: #049BFF;" >联系取书</view>
+      <!--<view  @tap="joinLibrary('admin')" class="font_28"  wx:if="{{mylib.member && mylib.member.status == 'ADMIN'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx;color: #049BFF;" >联系取书</view>-->
+      <view class="font_28 manual"  @tap="joinLibrary('admin')"   wx:if="{{mylib.member && mylib.member.status == 'ADMIN'}}">联系取书</view>
+
     </view>
     <view class="clearfloat"></view>
     <view class="library-title">
@@ -30,8 +41,10 @@
       <image src="../../images/icon/icon-modification.png" style="width: 32rpx;height: 32rpx;margin-bottom: -4rpx;" wx:if="{{member_type == 'ADMIN'}}" @tap="goto('/pages/library/create?id={{mylib.id}}')"></image>
     </view>
     <view class="library-title" wx:if="{{mylib.address !== null}}" style="margin-top: 20rpx;font-weight: inherit;font-size: 26rpx;" @tap="goadderss({{mylib.location_latitude}},{{mylib.location_longitude}})">
-      地址：{{mylib.address}}
-      <image src="../../images/tabbars/address.png"  mode="aspectFit" class="imgicon" style="margin-bottom: 8rpx;width: 60rpx;height: 60rpx"></image>
+      <span class="font_28 bold">地址：</span>{{mylib.address}}
+      <span style="color: #23b2e6">
+        <image src="../../images/tabbars/address.png"  mode="aspectFit" class="imgicon" style="margin-bottom: 8rpx;width: 60rpx;height: 60rpx"></image>
+      </span>
     </view>
     <view class="weui-flex library-wrapper">
       <view @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')" wx:if="{{member_type == 'ADMIN'}}" class="weui-flex__item list-item">
@@ -153,12 +166,18 @@
     <ClassifyList :list.sync="list" :library_id.sync="library_id"></ClassifyList>
   </block>
   <view class="scan"  wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}">
-    <view class="scan_home {{rotate ? 'rotate' : ''}}" @tap="rotate" style="z-index: 12;">
-      <form bindsubmit="formSubmit" report-submit>
-        <button formType="submit" class="btn" data-type="click">
-          <image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-scan.png" style="width: 60rpx;height: 60rpx"></image>
-        </button>
-      </form>
+    <view class="container">
+      <view class="dot">
+        <view class="scan_home {{rotate ? 'rotate' : ''}}" @tap="rotate" style="z-index: 12;">
+          <form bindsubmit="formSubmit" report-submit>
+            <button formType="submit" class="btn" data-type="click">
+              <image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-scan.png" style="width: 60rpx;height: 60rpx"></image>
+            </button>
+          </form>
+        </view>
+      </view>
+      <view class="pulse"></view>
+      <view class="pulse1"></view>
     </view>
     <view class="scan_home scan_active {{changerotate ? 'changerotate1' : ''}} {{shrink ? 'changeshrink1' : ''}}" @tap="scanBook({{mylib.id}})">
       <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>
@@ -174,9 +193,15 @@
     </view>
   </view>
   <view class="scan"  wx:if="{{mylib.member && mylib.member.status=='MEMBER'}}">
-    <view class="scan_home scan_active {{changerotate ? 'changerotate3' : ''}} {{shrink ? 'changeshrink3' : ''}}"  @tap="scanBorrow({{mylib.id}})">
-      <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>
-      <text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;margin-bottom: 4rpx">借书</text>
+    <view class="container">
+      <view class="dot">
+        <view class="scan_home scan_active {{changerotate ? 'changerotate3' : ''}} {{shrink ? 'changeshrink3' : ''}}"  @tap="scanBorrow({{mylib.id}})">
+          <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>
+          <text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;margin-bottom: 4rpx">借书</text>
+        </view>
+      </view>
+      <view class="pulse"></view>
+      <view class="pulse1"></view>
     </view>
   </view>
   <!--<view class="nav">-->
@@ -206,6 +231,7 @@
   import user from '../../mixins/user'
   import ShareMessage from '../../mixins/ShareMessage'
   import ClassifyList from '../../components/classifyList'
+  import waterAnimation from '../../components/water_animation'
 
   export default class userSubscribe extends wepy.page {
     mixins = [base, http, user, ShareMessage]
@@ -213,7 +239,8 @@
       navigationBarTitleText: '友福图书馆'
     }
     components = {
-      ClassifyList: ClassifyList
+      ClassifyList: ClassifyList,
+      waterAnimation: waterAnimation
     }
     data = {
       loaded: false,

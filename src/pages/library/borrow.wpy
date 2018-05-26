@@ -39,7 +39,7 @@
 
     <Screen class="fixed-bottom">
       <view style="display: flex;">
-        <button @tap="borrowReturn()" disabled="{{!isCheck || !isDo}}" class="weui-btn btn-block btn-flex-full" type="primary">
+        <button @tap="borrowReturn()" disabled="{{!isCheck || !isDo}}" class="weui-btn btn-block btn-flex-full btn-blue_l" type="primary">
           <text wx:if="{{!isCheck}}">请先选择会员</text>
           <text wx:if="{{isCheck && isDo =='return'}}">确认还书</text>
           <text wx:if="{{isCheck && isDo =='borrow'}}">确认借书</text>

@@ -6,12 +6,13 @@
     <view  class="flo_l" style="padding-top: 12rpx;padding-left: 42rpx" wx:else>
       <image class="library-image flo_l" mode="aspectFit" src="{{mylib.logo}}"></image>
     </view>
-    <view class="flo_r" style="margin:26rpx">
-      <button  type="default" size="mini"  @tap="gotoTab('/pages/index')"  style="padding:2rpx 12rpx;line-height: 42rpx;margin-right: 22rpx">
-        <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-home.png"></image> 主页
+    <view class="" style="margin:26rpx;z-index: 1000;position:relative;">
+      <button  size="mini" @tap="gotoTab('/pages/map')" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 140rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
+        <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/home.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
       </button>
-      <button  type="warn" size="mini" plain open-type="share"  style="padding:2rpx 12rpx;line-height: 42rpx">
-        分享<image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-share_red.png"></image>
+      <view class="smile" style="position: fixed;z-index: 1000;right: 24.5vw; top: -25rpx;"></view>
+      <button  size="mini" open-type="share" @tap="share" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 12rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
+        <image  class="imgicon" mode="aspectFit" src="../../images/icon/share_red.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
       </button>
     </view>
     <view class="clearfloat"></view>
@@ -30,9 +31,10 @@
       <image src="../../images/icon/icon-modification.png" style="width: 32rpx;height: 32rpx;margin-bottom: -4rpx;" wx:if="{{member_type == 'ADMIN'}}" @tap="goto('/pages/library/create?id={{mylib.id}}')"></image>
     </view>
     <view class="library-title" wx:if="{{mylib.address !== null}}" style="margin-top: 20rpx;font-weight: inherit;font-size: 26rpx;" @tap="goadderss({{mylib.location_latitude}},{{mylib.location_longitude}})">
-      地址：{{mylib.address}}
-      <image src="../../images/tabbars/address.png"  mode="aspectFit" class="imgicon" style="margin-bottom: 8rpx;width: 60rpx;height: 60rpx"></image>
-      <!--<image src="../../images/icon/icon-modification.png" style="width: 32rpx;height: 32rpx;margin-bottom: -4rpx;" wx:if="{{member_type == 'ADMIN'}}" @tap="goto('/pages/library/create?id={{mylib.id}}')"></image>-->
+      <span class="font_28 bold">地址：</span>{{mylib.address}}
+      <span style="color: #23b2e6">
+        <image src="../../images/tabbars/address.png"  mode="aspectFit" class="imgicon" style="margin-bottom: 8rpx;width: 60rpx;height: 60rpx"></image>
+      </span>
     </view>
     <view class="weui-flex library-wrapper">
       <view @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')" wx:if="{{member_type == 'ADMIN'}}" class="weui-flex__item list-item">

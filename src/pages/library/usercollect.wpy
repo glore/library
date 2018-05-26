@@ -5,18 +5,20 @@
         <view class="weui-cell">
           <view class="weui-cell__bd userinfo clearfix">
             <image class="userinfo-avatar" src="{{user.wechat.avatar }}" background-size="cover"/>
-            <view class="flo_r" style="margin:26rpx">
-              <button  type="default" size="mini"  @tap="gotoTab('/pages/index')"  style="padding:2rpx 12rpx;line-height: 42rpx;margin-right: 22rpx">
-                <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-home.png" style="margin-top: -4rpx"></image>主页
+            <view class="" style="margin:26rpx">
+              <button  size="mini" @tap="gotoTab('/pages/map')" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 140rpx;top: -62rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
+                <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/home.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
               </button>
-              <button  type="warn" size="mini" plain open-type="share"  style="padding:2rpx 12rpx;line-height: 42rpx">
-                分享<image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-share_red.png" style="margin-top: -4rpx"></image>
+              <!--<view class="smile" style="position: fixed;z-index: 1000;right: 24.5vw; top: -25rpx;"></view>-->
+              <button  size="mini" open-type="share" @tap="share" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 12rpx;top: -62rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
+                <image  class="imgicon" mode="aspectFit" src="../../images/icon/share_red.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
               </button>
+              <!--<view class="smile" style="position: fixed;z-index: 1000;right: 7vw; top: -25rpx;"></view>-->
             </view>
             <view class="clearfloat"></view>
             <view class="flo_r" style="margin-top:-26rpx;">
-              <button  @tap="joinLibrary({{user.id}})"  wx:if="{{showfollow}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">+ 关注</button>
-              <button  @tap="joinLibrary({{user.id}})"  wx:else style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">取消关注</button>
+              <button  @tap="joinLibrary({{user.id}})"  wx:if="{{showfollow}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini" class="btn-blue_l">+ 关注</button>
+              <button  @tap="joinLibrary({{user.id}})"  wx:else style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini" class="btn-blue_r">取消关注</button>
             </view>
             <view class="userinfo-info" >
               <view class="userinfo-nickname">{{ mylibrary.intro }}</view>
@@ -414,5 +416,25 @@
     text-align: center;
     background: white;
     border-bottom: 16rpx solid #e2e2e2;
+  }
+  .smile{
+    margin:40rpx auto;
+    width: 20rpx;
+    height: 20rpx;
+    font-size: 80rpx;
+    animation: action 3s linear infinite;
+    background: #0b95e6;
+    border-radius: 50%;
+  }
+
+  @keyframes action {
+    from {
+      transform: rotate(0deg) translate(32rpx,40rpx) rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg) translate(32rpx,40rpx) rotate(-360deg);
+    }
+
   }
 </style>

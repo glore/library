@@ -38,6 +38,8 @@ export const service = {
     tags: `${host}/bookmall/tags`,
   // 地图筛选
     maps: `${host}/near/libraries`,
+  // 地图筛选
+    updatemap: `${host}/map/libraries/local`,
     // 假装有收藏接口 POST
     collect: `${host}/bookmall/list`,
     // 主域

@@ -5,13 +5,21 @@
         <view class="weui-cell">
           <view class="weui-cell__bd userinfo clearfix">
             <image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"/>
-            <view class="flo_r" style="margin:26rpx">
-              <button  type="default" size="mini"  @tap="gotoTab('/pages/index')"  style="padding:2rpx 12rpx;line-height: 42rpx;margin-right: 22rpx">
-                <image  class="imgicon" mode="aspectFit" src="../images/tabbars/icon-home.png" style="margin-top: -4rpx"></image>主页
+            <view class="" style="margin:26rpx">
+              <!--<button  type="default" size="mini"  @tap="gotoTab('/pages/index')"  style="padding:2rpx 12rpx;line-height: 42rpx;margin-right: 22rpx">-->
+                <!--<image  class="imgicon" mode="aspectFit" src="../images/tabbars/icon-home.png" style="margin-top: -4rpx"></image>主页-->
+              <!--</button>-->
+              <!--<button  type="warn" size="mini" plain open-type="share"  style="padding:2rpx 12rpx;line-height: 42rpx">-->
+                <!--分享<image  class="imgicon" mode="aspectFit" src="../images/icon/icon-share_red.png" style="margin-top: -4rpx"></image>-->
+              <!--</button>-->
+              <button  size="mini" @tap="gotoTab('/pages/map')" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 140rpx;top: -54rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
+                <image  class="imgicon" mode="aspectFit" src="../images/tabbars/home.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
               </button>
-              <button  type="warn" size="mini" plain open-type="share"  style="padding:2rpx 12rpx;line-height: 42rpx">
-                分享<image  class="imgicon" mode="aspectFit" src="../images/icon/icon-share_red.png" style="margin-top: -4rpx"></image>
+              <view class="smile" style="position: fixed;z-index: 1000;right: 24.5vw; top: -25rpx;"></view>
+              <button  size="mini" open-type="share" @tap="share" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 12rpx;top: -54rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
+                <image  class="imgicon" mode="aspectFit" src="../images/icon/share_red.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
               </button>
+              <view class="smile" style="position: fixed;z-index: 1000;right: 7vw; top: -25rpx;"></view>
             </view>
             <view class="userinfo-info" >
               <view class="userinfo-nickname">{{ mylibrary.name }}</view>
@@ -58,7 +66,12 @@
       <!--</view>-->
       <!--<view class="clearfloat"></view>-->
     <!--</view>-->
-
+    <!--<view class="smile"></view>-->
+    <!--<view class="container">-->
+      <!--<view class="dot"></view>-->
+      <!--<view class="pulse"></view>-->
+      <!--<view class="pulse1"></view>-->
+    <!--</view>-->
     <block wx:if="{{loading}}">
       <view class="weui-loadmore">
         <view class="weui-loading"></view>
@@ -425,6 +438,149 @@
     padding: 20rpx 20rpx;
     text-align: center;
     background: white;
-    border-bottom: 16rpx solid #e2e2e2;
+    border-bottom: 16rpx solid #f1f1f1;
+  }
+  @keyframes warn {
+    0% {
+      transform: scale(0.3);
+      -webkit-transform: scale(0.3);
+      opacity: 0.0;
+    }
+
+    25% {
+      transform: scale(0.3);
+      -webkit-transform: scale(0.3);
+      opacity: 0.1;
+    }
+
+    50% {
+      transform: scale(0.4);
+      -webkit-transform: scale(0.4);
+      opacity: 0.3;
+    }
+
+    75% {
+      transform: scale(0.6);
+      -webkit-transform: scale(0.6);
+      opacity: 0.5;
+    }
+
+    100% {
+      transform: scale(0.7);
+      -webkit-transform: scale(0.7);
+      opacity: 0.0;
+    }
+  }
+
+  @keyframes warn1 {
+    0% {
+      transform: scale(0.3);
+      -webkit-transform: scale(0.3);
+      opacity: 0.0;
+    }
+
+    25% {
+      transform: scale(0.3);
+      -webkit-transform: scale(0.3);
+      opacity: 0.1;
+    }
+
+    50% {
+      transform: scale(0.3);
+      -webkit-transform: scale(0.3);
+      opacity: 0.3;
+    }
+
+    75% {
+      transform: scale(0.4);
+      -webkit-transform: scale(0.4);
+      opacity: 0.5;
+    }
+
+    100% {
+      transform: scale(0.5);
+      -webkit-transform: scale(0.5);
+      opacity: 0.0;
+    }
+  }
+
+  .container {
+    position: relative;
+    width: 80rpx;
+    height: 80rpx;
+  }
+  .dot {
+    position: absolute;
+    width: 60rpx;
+    height: 60rpx;
+    left: 93rpx;
+    top: 93rpx;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border: 4rpx solid red;
+    border-radius: 50%;
+    z-index: 2;
+  }
+  /* 产生动画（向外扩散变大）的圆圈  */
+  .pulse {
+    position: absolute;
+    width: 220rpx;
+    height: 220rpx;
+    left: 4rpx;
+    top: 4rpx;
+    border: 6px solid red;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    z-index: 1;
+    opacity: 0;
+    -webkit-animation: warn 2s linear;
+    /*-moz-animation: warn 2s ease-out;*/
+    /*animation: warn 2s ease-out;*/
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    box-shadow: 1rpx 1rpx 60rpx red;
+  }
+
+  .pulse1 {
+    position: absolute;
+    width: 220rpx;
+    height: 220rpx;
+    left: 4rpx;
+    top: 4rpx;
+    border: 12rpx solid red;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    z-index: 1;
+    opacity: 0;
+    -webkit-animation: warn1 2s linear;
+    /*-moz-animation: warn1 2s ease-out;*/
+    /*animation: warn1 2s ease-out;*/
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    box-shadow: 1px 1px 60rpx red;
+  }
+  .smile{
+    margin:40rpx auto;
+    width: 20rpx;
+    height: 20rpx;
+    font-size: 80rpx;
+    animation: action 3s linear infinite;
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#7bcae6), to(#179fe6));
+    border-radius: 50%;
+  }
+
+  @keyframes action {
+    from {
+      transform: rotate(0deg) translate(40rpx,40rpx) rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg) translate(40rpx,40rpx) rotate(-360deg);
+    }
+
   }
 </style>

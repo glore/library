@@ -60,20 +60,20 @@ export default class extends wepy.app {
     window: {
       navigationBarTitleText: '友福图书馆',
       navigationBarTextStyle: 'white',
-      navigationBarBackgroundColor: '#26AAE1',
+      navigationBarBackgroundColor: '#0b95e6',
       backgroundColor: '#eaeaea',
       backgroundTextStyle: 'light',
       enablePullDownRefresh: true
     },
     tabBar: {
       color: '#707070',
-      selectedColor: '#049BFF',
+      selectedColor: '#0b95e6',
       backgroundColor: '#fff',
       borderStyle: 'black',
       list: [{
         pagePath: 'pages/map',
-        selectedIconPath: './images/tabbars/icon-home-active.png',
-        iconPath: './images/tabbars/icon-home.png',
+        selectedIconPath: './images/tabbars/icon-map-active.png',
+        iconPath: './images/tabbars/icon-map.png',
         text: '首页'
       }, {
         pagePath: 'pages/collect',
@@ -82,8 +82,8 @@ export default class extends wepy.app {
         text: '藏书'
       }, {
         pagePath: 'pages/qr',
-        selectedIconPath: './images/tabbars/icon-qr-active.png',
-        iconPath: './images/tabbars/icon-qr.png',
+        selectedIconPath: './images/tabbars/icon-qrv.png',
+        iconPath: './images/tabbars/icon-qrv.png',
         text: '扫码'
       /* }, {
         pagePath: 'pages/party',

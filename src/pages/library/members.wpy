@@ -22,29 +22,36 @@
               <view class="weui-media-box__title" >姓名：{{item.user.name}}</view>
               <block wx:if="{{library.is_admin == '1'}}">
                 <!--<view class="weui-media-box__desc"  >电话: {{item.user.mobile}}</view>-->
-                <view class="weui-media-box__desc" wx:if="{{item.status=='JOIN'}}" style="color:red">状态：待审核</view>
-                <view class="weui-media-box__desc" wx:if="{{item.status=='MEMBER'}}" style="color:green">状态：会员</view>
-                <view class="weui-media-box__desc" wx:if="{{item.status=='ADMIN'}}"  style="color:blue">状态：管理员</view>
+                <!--<view class="weui-media-box__desc" wx:if="{{item.status=='JOIN'}}" style="color:red">状态：待审核</view>-->
+                <!--<view class="weui-media-box__desc" wx:if="{{item.status=='MEMBER'}}" style="color:green">状态：会员</view>-->
+                <!--<view class="weui-media-box__desc" wx:if="{{item.status=='ADMIN'}}"  style="color:blue">状态：管理员</view>-->
               </block>
             </view>
             <view style="position: absolute; right: 12rpx; top: 12rpx;" @tap="makePhoneCall('{{item.user.mobile}}')">
               <image src="../../images/tabbars/icon-phone.png" style="width: 60rpx;height: 60rpx"></image>
             </view>
             <view class="weui-media-box__info" wx:if="{{library.is_admin == '1'}}">
-              <button class="weui-btn mini-btn" size="mini" style="margin-right: 10px;" wx:if="{{item.status=='ADMIN'}}" @tap = "memberUpdate({{item.id}}, 'member')" type="primary">移除管理权</button>
+              <button class="weui-btn mini-btn btn-blue_r" size="mini" style="margin-right: 10px;" wx:if="{{item.status=='ADMIN'}}" @tap = "memberUpdate({{item.id}}, 'member')" type="primary">移除管理权</button>
               <block  wx:if="{{item.status=='JOIN'}}">
-                <button  class="weui-btn mini-btn" @tap="memberUpdate({{item.id}}, 'member')" size="mini" style="margin-right: 10px;" type="primary">同意加入</button>
-                <button class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'reject')" size="mini" style="margin-right: 10px;" type="danger">移出图书馆</button>
+                <button  class="weui-btn mini-btn btn-blue_l" @tap="memberUpdate({{item.id}}, 'member')" size="mini" style="margin-right: 10px;" type="primary">同意加入</button>
+                <button class="weui-btn mini-btn btn-blue_r" @tap = "memberUpdate({{item.id}}, 'reject')" size="mini" style="margin-right: 10px;" type="danger">移出图书馆</button>
               </block>
               <block  wx:if="{{item.status=='MEMBER'}}">
-                <button class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'admin')" size="mini" style="margin-right: 10px;" type="danger">升为管理员</button>
-                <button class="weui-btn mini-btn" @tap = "memberUpdate({{item.id}}, 'reject')" size="mini" style="margin-right: 10px;" type="danger">移出图书馆</button>
+                <button class="weui-btn mini-btn btn-blue_l" @tap = "memberUpdate({{item.id}}, 'admin')" size="mini" style="margin-right: 10px;" type="danger">升为管理员</button>
+                <button class="weui-btn mini-btn btn-blue_r" @tap = "memberUpdate({{item.id}}, 'reject')" size="mini" style="margin-right: 10px;" type="danger">移出图书馆</button>
               </block>
             </view>
           </view>
         </view>
       </view>
     </view>
+    <block wx:if="{{message}}">
+      <view class="weui-loadmore_box">
+        <view class="weui-loadmore weui-loadmore_line">
+          <view class="weui-loadmore__tips weui-loadmore__tips_in-line">到底了</view>
+        </view>
+      </view>
+    </block>
   </view>
 </template>
 
@@ -72,7 +79,8 @@
       sliderLeft: 0,
       sliderWidth: 180,
       screenWidth: 360,
-      library_num: 0
+      library_num: 0,
+      message: true
     }
 
     computed = {
@@ -110,6 +118,7 @@
 
     // 获取图书信息
     getMembers(Index) {
+      let that = this
       let url = ''
       let statusIndex = ''
       if (Index == 0) {
@@ -129,9 +138,15 @@
         }
       }, {
         success: ({code, data}) => {
-          this.members = data.members
-          this.library = data.library
-          this.library_num = this.members.length
+          that.members = data.members
+          that.library = data.library
+          that.library_num = this.members.length
+//          if (that.members.length) {
+//            that.message = false
+//          }else {
+//            that.message = true
+//          }
+          that.$apply()
         },
         fail: ({code, data}) => {}
       })
@@ -262,4 +277,13 @@
 .library_admin{
   left: 90%;
 }
+.weui-loadmore_line{
+  position: inherit;
+
+}
+.weui-loadmore_box{
+  background: white;
+  padding: 20rpx 0rpx 2rpx 0rpx;
+}
+
 </style>

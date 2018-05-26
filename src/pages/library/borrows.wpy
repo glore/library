@@ -25,11 +25,11 @@
             <view class="weui-media-box__desc"  style="color:green" wx:if="{{item.status=='RETURN'}}">还书时间：{{item.updated_at}}</view>
             <block wx:if="{{library.is_admin == '1'}}">
               <view class="weui-media-box__desc"  style="color:red" wx:if="{{item.status=='RESERVE'}}" style="margin-top: 12rpx;">
-                <button type="primary" size="mini"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">借书管理</button>
-                <button type="danger" size="mini"  @tap="cancel({{item.library_id}}, {{item.id}})" style="margin-left: 12rpx;">取消预约</button>
+                <button type="primary" size="mini" class="btn-blue_l"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">借书管理</button>
+                <button type="danger" size="mini" class="btn-blue_r"  @tap="cancel({{item.library_id}}, {{item.id}})" style="margin-left: 12rpx;">取消预约</button>
               </view>
               <view class="weui-media-box__desc"  style="color:blue" wx:if="{{item.status=='BORROW'}}">
-                <button type="danger" size="mini"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">还书管理</button>
+                <button type="danger" size="mini" class="btn-blue_r"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">还书管理</button>
               </view>
             </block>
             <view style="position: absolute; right: 12rpx; top: 12rpx;" @tap="makePhoneCall('{{item.user.mobile}}')">
@@ -51,10 +51,10 @@
             <view class="weui-media-box__desc"  style="color:green" wx:if="{{item.status=='RETURN'}}">还书时间：{{item.updated_at}}</view>
             <block wx:if="{{library.is_admin == '1'}}" @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">
               <view class="weui-media-box__desc"  style="color:red" wx:if="{{item.status=='RESERVE'}}">
-                <button type="primary" size="mini"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">借书管理</button>
+                <button type="primary" size="mini" class="btn-blue_l"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">借书管理</button>
               </view>
               <view class="weui-media-box__desc"  style="color:blue" wx:if="{{item.status=='BORROW'}}">
-                <button type="danger" size="mini"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">还书管理</button>
+                <button  size="mini" class="btn-blue_r"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">还书管理</button>
               </view>
             </block>
             <view style="position: absolute; right: 12rpx; top: 12rpx;" @tap="makePhoneCall('{{item.user.mobile}}')">
@@ -76,10 +76,10 @@
             <view class="weui-media-box__desc"  style="color:green" wx:if="{{item.status=='RETURN'}}">还书时间：{{item.updated_at}}</view>
             <block wx:if="{{library.is_admin == '1'}}"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">
               <view class="weui-media-box__desc"  style="color:red" wx:if="{{item.status=='RESERVE'}}">
-                <button type="primary" size="mini"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">借书管理</button>
+                <button type="primary" size="mini" class="btn-blue_l" @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">借书管理</button>
               </view>
               <view class="weui-media-box__desc"  style="color:blue" wx:if="{{item.status=='BORROW'}}">
-                <button type="danger" size="mini"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">还书管理</button>
+                <button type="danger" size="mini" class="btn-blue_r"  @tap="goto('/pages/library/borrow?id={{item.id}}&library_id={{item.library_id}}')">还书管理</button>
               </view>
             </block>
             <view style="position: absolute; right: 12rpx; top: 12rpx;" @tap="makePhoneCall('{{item.user.mobile}}')">
@@ -88,6 +88,13 @@
           </view>
         </view>
       </view>
+      <block wx:if="{{message}}">
+        <view class="weui-loadmore_box">
+          <view class="weui-loadmore weui-loadmore_line">
+            <view class="weui-loadmore__tips weui-loadmore__tips_in-line">到底了</view>
+          </view>
+        </view>
+      </block>
       <!--view class="weui-panel__ft">
          <navigator class="weui-cell weui-cell_access weui-cell_link" url="/pages/book/comments?id={{book.id}}">
              <view class="weui-cell__bd">查看评论</view>
@@ -122,7 +129,8 @@
       sliderLeft: 0,
       sliderWidth: 180,
       screenWidth: 360,
-      library_num: 0
+      library_num: 0,
+      message: true
     }
 
     computed = {
@@ -330,6 +338,17 @@
   .library_admin{
     left: 90%;
   }
+  .weui-media-box__desc{
+    margin: 12rpx 0;
+  }
+  .weui-loadmore_line{
+    position: inherit;
 
+  }
+  .weui-loadmore_box{
+    background: white;
+    padding: 20rpx 0rpx 2rpx 0rpx;
+    border-top: 1rpx solid #e8e8e8;
+  }
 }
 </style>

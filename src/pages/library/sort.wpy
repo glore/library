@@ -2,7 +2,9 @@
 <template>
   <view class="book-sort">
 
-    <view class="weui-cells__title">分类编辑</view>
+    <view class="weui-cells__title">
+      <span class="font_32 bold color_6">分类编辑</span>
+    </view>
     <view class="weui-cells weui-cells_after-title book-address">
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
@@ -24,8 +26,8 @@
       </view>
     </view>
     <view style="position: fixed;bottom: 0;left: 0;width: 100%">
-      <button @tap="save" class="weui-btn btn-primary" type="primary">保存</button>
-      <button wx:if="{{id}}" @tap="destroy" class="weui-btn btn-danger" type="danger" >删除</button>
+      <button @tap="save" class="weui-btn btn-primary btn-blue_l" type="primary">保存</button>
+      <button wx:if="{{id}}" @tap="destroy" class="weui-btn btn-danger btn-blue_r" type="danger" >删除</button>
     </view>
   </view>
 </template>
@@ -227,6 +229,14 @@
 
   .reset-input{
     padding: 6px 15px;
+  }
+  .weui-cell{
+    position: inherit;
+    box-shadow: 1rpx 1rpx 8rpx #d3d3d3;
+    margin-top: 12rpx;
+  }
+  .weui-cells__title{
+    margin-bottom: 44rpx;
   }
 }
 </style>

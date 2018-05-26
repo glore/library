@@ -1,26 +1,27 @@
 <template>
   <block wx:if="{{follower}}">
-      <view wx:for="{{list}}" wx:key="*this"  style="padding: 20rpx;border-bottom: 1rpx solid #d3d3d3" >
+      <view wx:for="{{list}}" wx:key="*this" class="List" >
         <view class="flo_l" @tap="goto('/pages/library/usercollect?library_id={{item.id}}')">
           <image src="{{item.wechat.avatar}}" mode="aspectFit" style="width: 100rpx;height: 100rpx;border-radius: 50%"></image>
         </view>
         <view class="font_28 flo_l bold" style="line-height: 68rpx;margin-left: 22rpx;width: 55%" @tap="goto('/pages/library/usercollect?library_id={{item.id}}')">{{item.name}}</view>
         <view class="flo_r" style="margin-top: 32rpx">
-          <button  @tap="joinLibrary({{item.id}})"  wx:if="{{!item.is_following}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">+ 关注</button>
-          <button  @tap="joinLibrary({{item.id}})"  wx:else style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">取消关注</button>
+          <button  @tap="joinLibrary({{item.id}})"  wx:if="{{!item.is_following}}" class="btn-blue_l" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">+ 关注</button>
+          <button  @tap="joinLibrary({{item.id}})"  wx:else style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" class="btn-blue_r" type="primary" size="mini">取消关注</button>
         </view>
         <view class="clearfloat"></view>
       </view>
   </block>
+
   <block wx:else>
-    <view wx:for="{{list}}" wx:key="*this"  style="padding: 20rpx;border-bottom: 1rpx solid #d3d3d3">
+    <view wx:for="{{list}}" wx:key="*this"  class="List" >
       <view class="flo_l"  @tap="goto('/pages/library/usercollect?library_id={{item.id}}')">
         <image src="{{item.wechat.avatar}}" mode="aspectFit" style="width: 100rpx;height: 100rpx;border-radius: 50%"></image>
       </view>
       <view class="font_28 flo_l bold" style="line-height: 68rpx;margin-left: 22rpx;width: 55%"  @tap="goto('/pages/library/usercollect?library_id={{item.id}}')">{{item.name}}</view>
       <view class="flo_r" style="margin-top: 32rpx">
-        <button  @tap="joinLibrary({{item.id}})"  wx:if="{{!item.is_following}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">+ 关注</button>
-        <button  @tap="joinLibrary({{item.id}})"  wx:else style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">取消关注</button>
+        <button  @tap="joinLibrary({{item.id}})"  wx:if="{{!item.is_following}}" class="btn-blue_l" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">+ 关注</button>
+        <button  @tap="joinLibrary({{item.id}})"  wx:else style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" class="btn-blue_r" type="primary" size="mini">取消关注</button>
       </view>
       <view class="clearfloat"></view>
     </view>
@@ -83,11 +84,17 @@
         this.followerlist(this.user_id)
         this.showfollow = true
         this.$apply()
+        wx.setNavigationBarTitle({
+          title: '我的粉丝'
+        })
       } else {
 //        关注
         this.showfollow = false
         this.followinglist(this.user_id)
         this.$apply()
+        wx.setNavigationBarTitle({
+          title: '我的关注'
+        })
       }
       console.log(e)
       console.log(this.title)
@@ -215,6 +222,12 @@
     text-overflow : ellipsis;
     white-space : nowrap;
     overflow : hidden;
+  }
+  .List{
+    padding: 20rpx;
+    /*margin-top: 12rpx;*/
+    /*border-bottom: 1rpx solid #d3d3d3;*/
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
   }
 
 </style>

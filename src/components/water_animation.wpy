@@ -1,0 +1,218 @@
+<template>
+  <view class="" style="position: fixed;right: 120rpx;top: 0;" class="{{active1 ? 'water_share_action' : ''}}"  @tap="home">
+    <image  class="" mode="aspectFit" src="../images/water.png" style="width: 80rpx;height: 68rpx"></image>
+  </view>
+  <view class="" style="position: fixed;right: 22rpx;top: 62rpx;" class="{{active ? 'water_share_action' : ''}}" @tap="share">
+    <image   mode="aspectFit" src="../images/water.png" style="width: 80rpx;height: 68rpx"></image>
+  </view>
+  <!--<view class="water_box" wx:if="{{water}}">-->
+    <!--<view class="water_center"></view>-->
+    <!--<view class="water_home"></view>-->
+    <!--<view class="water_share"></view>-->
+  <!--</view>-->
+  <!--<view class="water_boxV" >-->
+    <!--<view class="water_center"></view>-->
+    <!--<view class="water_home"></view>-->
+    <!--<view class="water_share"></view>-->
+  <!--</view>-->
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import base from '../mixins/base.js'
+
+  export default class waterAnimation extends wepy.component {
+    mixins = [base]
+    props = {
+//      list: {
+//        type: Object,
+//        default: []
+//      }
+    }
+
+    data = {
+      active: false,
+      active1: false,
+      water: false
+    }
+
+    methods = {
+      share() {
+        this.active = true
+        setTimeout(() => {
+          this.active = false
+          this.water = true
+          this.$apply()
+        }, 1200)
+        setTimeout(() => {
+          this.water = false
+          this.$apply()
+        }, 3200)
+        this.$apply()
+      },
+      home() {
+        this.active1 = true
+        setTimeout(() => {
+          this.active1 = false
+          this.water = true
+          this.$apply()
+        }, 1200)
+        this.$apply()
+      }
+    }
+  }
+</script>
+
+<style type="less">
+  @keyframes water {
+    0% {
+      transform: scale(0.3);
+      -webkit-transform: scale(0.3);
+      opacity: 0.0;
+    }
+
+    25% {
+      transform: scale(0.3);
+      -webkit-transform: scale(0.3);
+      opacity: 0.1;
+    }
+
+    50% {
+      transform: scale(0.4);
+      -webkit-transform: scale(0.4);
+      opacity: 0.3;
+    }
+
+    75% {
+      transform: scale(0.6);
+      -webkit-transform: scale(0.6);
+      opacity: 0.5;
+    }
+
+    100% {
+      transform: scale(0.7);
+      -webkit-transform: scale(0.7);
+      opacity: 0.0;
+    }
+  }
+
+  @keyframes water1 {
+    0% {
+      transform: scale(0.3);
+      -webkit-transform: scale(0.3);
+      opacity: 0.0;
+    }
+
+    25% {
+      transform: scale(0.3);
+      -webkit-transform: scale(0.3);
+      opacity: 0.1;
+    }
+
+    50% {
+      transform: scale(0.3);
+      -webkit-transform: scale(0.3);
+      opacity: 0.3;
+    }
+
+    75% {
+      transform: scale(0.4);
+      -webkit-transform: scale(0.4);
+      opacity: 0.5;
+    }
+
+    100% {
+      transform: scale(0.5);
+      -webkit-transform: scale(0.5);
+      opacity: 0.0;
+    }
+  }
+
+  .water_box {
+    position: fixed;
+    right: 110rpx;
+    top: 50vh;
+    width: 80rpx;
+    height: 80rpx;
+  }
+  .water_boxV {
+    position: fixed;
+    right: 220rpx;
+    top: 50vh;
+    width: 80rpx;
+    height: 80rpx;
+  }
+  .water_center {
+    position: absolute;
+    width: 60rpx;
+    height: 30rpx;
+    left: 92rpx;
+    top: 54rpx;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border: 4rpx solid #43a4e6;
+    border-radius: 50%;
+    z-index: 2;
+  }
+  .water_home {
+    position: absolute;
+    width: 220rpx;
+    height: 110rpx;
+    left: 4rpx;
+    top: 4rpx;
+    border: 6px solid #0b95e6;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    z-index: 1;
+    opacity: 0;
+    -webkit-animation: water 2s linear;
+    /*-moz-animation: warn 2s ease-out;*/
+    /*animation: warn 2s ease-out;*/
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    box-shadow: 1rpx 1rpx 60rpx #0b95e6;
+  }
+
+  .water_share {
+    position: absolute;
+    width: 220rpx;
+    height: 110rpx;
+    left: 4rpx;
+    top: 4rpx;
+    border: 12rpx solid #0b95e6;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    z-index: 1;
+    opacity: 0;
+    -webkit-animation: water1 2s linear;
+    /*-moz-animation: warn1 2s ease-out;*/
+    /*animation: warn1 2s ease-out;*/
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    box-shadow: 1px 1px 60rpx #0b95e6;
+  }
+  .water_share_action{
+    position: fixed;
+    -webkit-animation: active 1.2s ease-out infinite;
+  }
+  @keyframes active {
+    0% {
+      transform: scale(1);
+      -webkit-transform: scale(1);
+      opacity: 1;
+      top: 62rpx;
+    }
+
+
+    100% {
+      transform: scale(0.2);
+      -webkit-transform: scale(0.2);
+      opacity: 0;
+      top: 50vh;
+    }
+  }
+</style>

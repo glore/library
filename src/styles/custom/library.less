@@ -186,3 +186,160 @@ image {
     padding: 8rpx 22rpx;
   }
 }
+//水滴
+@keyframes warn {
+  0% {
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0.0;
+  }
+
+  25% {
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0.1;
+  }
+
+  50% {
+    transform: scale(0.4);
+    -webkit-transform: scale(0.4);
+    opacity: 0.3;
+  }
+
+  75% {
+    transform: scale(0.6);
+    -webkit-transform: scale(0.6);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(0.7);
+    -webkit-transform: scale(0.7);
+    opacity: 0.0;
+  }
+}
+
+@keyframes warn1 {
+  0% {
+    transform: scale(0.2);
+    -webkit-transform: scale(0.2);
+    opacity: 0.0;
+  }
+
+  25% {
+    transform: scale(0.3);
+    -webkit-transform: scale(0.3);
+    opacity: 0.1;
+  }
+
+  50% {
+    transform: scale(0.4);
+    -webkit-transform: scale(0.4);
+    opacity: 0.3;
+  }
+
+  75% {
+    transform: scale(0.5);
+    -webkit-transform: scale(0.5);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(0.6);
+    -webkit-transform: scale(0.6);
+    opacity: 0.0;
+  }
+}
+
+.container {
+  position: relative;
+  right: 130rpx;
+  bottom: 146rpx;
+  width: 80rpx;
+  height: 80rpx;
+}
+.dot {
+  position: absolute;
+  width: 60rpx;
+  height: 60rpx;
+  left: 124rpx;
+  top: 124rpx;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border: 4rpx solid red;
+  border-radius: 50%;
+  z-index: 2;
+}
+/* 产生动画（向外扩散变大）的圆圈  */
+.pulse {
+  position: absolute;
+  width: 280rpx;
+  height: 280rpx;
+  left: 4rpx;
+  top: 4rpx;
+  border: 6px solid red;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  z-index: 1;
+  opacity: 0;
+  -webkit-animation: warn 2s linear;
+  -moz-animation: warn 2s ease-out;
+  animation: warn 2s ease-out;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  box-shadow: 1rpx 1rpx 60rpx red;
+}
+
+.pulse1 {
+  position: absolute;
+  width: 280rpx;
+  height: 280rpx;
+  left: 4rpx;
+  top: 4rpx;
+  border: 12rpx solid red;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  z-index: 1;
+  opacity: 0;
+  -webkit-animation: warn1 2s linear;
+  -moz-animation: warn1 2s ease-out;
+  animation: warn1 2s ease-out;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  box-shadow: 1px 1px 60rpx red;
+}
+//圆点360
+.smile{
+  margin:40rpx auto;
+  width: 20rpx;
+  height: 20rpx;
+  font-size: 80rpx;
+  animation: action 3s linear infinite;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#7bcae6), to(#179fe6));
+  border-radius: 50%;
+}
+
+@keyframes action {
+  from {
+    transform: rotate(0deg) translate(40rpx,40rpx) rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg) translate(40rpx,40rpx) rotate(-360deg);
+  }
+
+}
+.manual{
+  color: #666666;
+  //position: absolute;
+  //right: 40rpx;
+  //bottom: 22rpx;
+  border-radius: 32rpx;
+  box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+  padding: 6rpx 14rpx ;
+  background: #f6f6f6;
+}

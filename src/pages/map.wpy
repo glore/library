@@ -81,6 +81,7 @@
       }
     }
     onShow() {
+      this.updataMap()
       this.mapCtx = wx.createMapContext('map')
       this.getCenterLocation()
       this.getSystem()
@@ -89,7 +90,31 @@
 //    onLoad() {
 //
 //    }
+    updataMap() {
+      let token = wx.getStorageSync('token')
+      let myLong = wx.getStorageSync('myLong')
+      let myLat = wx.getStorageSync('myLat')
+      if (token) {
+        console.log(token)
+        let that = this
+        that.$put({
+          url: service.updatemap,
+          data: {
+            location_latitude: myLat,
+            location_longitude: myLong
+          }
+        }, {
+          success: ({code, data}) => {
 
+          },
+          fail: ({code, data}) => {},
+          complete: () => {
+            this.loading = false
+          }
+        })
+      }
+
+    }
     getSystem() {
       let that = this
       wx.getSystemInfo({
@@ -107,6 +132,8 @@
         success: function(res) {
           that.myLong = res.longitude
           that.myLat = res.latitude
+          wx.setStorageSync('myLong', res.longitude)
+          wx.setStorageSync('myLat', res.latitude)
           that.mapFunction()
           that.$apply()
         },
@@ -410,13 +437,13 @@
         })
         that.markers.forEach((item, index, arr) => {
           if (arr[index].id == e.markerId && arr[index].id !== 0) {
-            arr[index].iconPath = '/images/icon-position_red.png'
+             arr[index].iconPath = '/images/icon-position_red.png'
           }
           if (arr[index].id !== e.markerId && arr[index].id !== 0) {
             arr[index].iconPath = '/images/icon-position.png'
           }
           if (arr[index].id == 0) {
-            that.markers.splice(index, 1)
+             that.markers.splice(index, 1)
           }
         })
 //        that.markers = markers_new
