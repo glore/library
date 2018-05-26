@@ -60,14 +60,14 @@ export default class extends wepy.app {
     window: {
       navigationBarTitleText: '友福图书馆',
       navigationBarTextStyle: 'white',
-      navigationBarBackgroundColor: '#0b95e6',
+      navigationBarBackgroundColor: '#36a2e6',
       backgroundColor: '#eaeaea',
       backgroundTextStyle: 'light',
       enablePullDownRefresh: true
     },
     tabBar: {
       color: '#707070',
-      selectedColor: '#0b95e6',
+      selectedColor: '#36a2e6',
       backgroundColor: '#fff',
       borderStyle: 'black',
       list: [{
