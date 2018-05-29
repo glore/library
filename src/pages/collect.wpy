@@ -66,6 +66,8 @@
       <!--</view>-->
       <!--<view class="clearfloat"></view>-->
     <!--</view>-->
+
+    <button class="weui-btn btn-blue" @tap="goto('/pages/book/unpage?url={{url}}')">打开公众号</button>
     <button class="weui-btn btn-blue" @tap="openApp">打开绑定的小程序</button>
     <!--<view class="smile"></view>-->
     <!--<view class="container">-->
@@ -114,7 +116,7 @@
       formId: [],
       library_id: '',
       from_openid: '',
-//      url: 'https://mp.weixin.qq.com/s/WcoATyV6-NsYjCmZsZakwg'
+      url: 'https://mp.ufutx.net/s?__biz=MzA4MzA2MTMzMA==&mid=2652598666&idx=1&sn=fbc02350c7ca64d881b4c23e4b596dfb'
     }
 
     components = {
