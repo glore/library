@@ -66,6 +66,7 @@
       <!--</view>-->
       <!--<view class="clearfloat"></view>-->
     <!--</view>-->
+    <button class="weui-btn btn-blue" @tap="openApp">打开绑定的小程序</button>
     <!--<view class="smile"></view>-->
     <!--<view class="container">-->
       <!--<view class="dot"></view>-->
@@ -112,7 +113,8 @@
       noMore: false,
       formId: [],
       library_id: '',
-      from_openid: ''
+      from_openid: '',
+//      url: 'https://mp.weixin.qq.com/s/WcoATyV6-NsYjCmZsZakwg'
     }
 
     components = {
@@ -252,18 +254,31 @@
 //    }
     methods = {
       openApp() {
-        wx.navigateToMiniProgram({
-          appId: 'wxa43b4cb4f447e846',
-          path: 'pages/partyList',
-          extraData: {
-            name: 'kobe'
-          },
-          envVersion: 'develop',
-          success(res) {
-            console.log(res)
-            console.log('尝试打开')
-            // 打开成功
+        let that = this
+        that.$get({
+          url: service.account,
+          data: {
+            openid: wx.getStorageSync('openid')
           }
+        }, {
+          success: ({code, data}) => {
+            console.log(data)
+            wx.navigateToMiniProgram({
+              appId: 'wxa43b4cb4f447e846',
+              path: 'pages/partyList',
+              extraData: {
+                uid: data
+              },
+              envVersion: 'develop',
+              success(res) {
+                console.log(res)
+                console.log('尝试打开')
+                // 打开成功
+              }
+            })
+          },
+          fail: (res) => {},
+          complete: () => { this.loaded = false }
         })
       },
 //      navTo(library_id, _id) {

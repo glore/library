@@ -95,7 +95,7 @@
       let myLong = wx.getStorageSync('myLong')
       let myLat = wx.getStorageSync('myLat')
       if (token) {
-        console.log(token)
+//        console.log(token)
         let that = this
         that.$put({
           url: service.updatemap,

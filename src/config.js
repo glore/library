@@ -42,6 +42,14 @@ export const service = {
     updatemap: `${host}/map/libraries/local`,
     // 假装有收藏接口 POST
     collect: `${host}/bookmall/list`,
+    //解密
+    infor: `${host}/wechat/infor`,
+  //动态登录
+    account: `${host}/account/uid`,
+    //skip
+    skip: `${host}/skip/user`,
+    //register_infor
+    register_infor: `${host}/register/infor`,
     // 主域
     host
 }

@@ -1,6 +1,8 @@
 <script>
 import wepy from 'wepy'
 import 'wepy-async-function'
+import http from './mixins/http.js'
+import {service} from './config.js'
 var ga = require('./ga.js')
 var GoogleAnalytics = ga.GoogleAnalytics
 var HitBuilders = ga.HitBuilders
@@ -27,6 +29,7 @@ export default class extends wepy.app {
       'pages/book/comments',
       'pages/book/list',
       'pages/book/detail',
+      'pages/book/unpage',
 
       // 图书馆管理
       'pages/library/library',
@@ -108,22 +111,139 @@ export default class extends wepy.app {
     },
     debug: true
   }
-
   globalData = {
     user: null,
     cart: null,
     tracker: null
   }
-
   constructor () {
     super()
     this.use('requestfix')
   }
-
-  onLaunch() {
+  onLaunch(options) {
+    console.log(options)
+    if (options.scene == 1037 || options.scene == 1038){
+      let uid = options.referrerInfo.extraData.uid
+//      console.log(JSON.stringify(uid))
+      wx.setStorageSync('uid', uid)
+      wepy.login({
+        success: (res) => {
+          let code = res.code
+          let data = {
+            wechat_code : code
+          }
+          wx.request({
+            url: service.register_infor,
+            header: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            },
+            method: "get",
+            data: data,
+            success: function( res ) {
+              let  is_register = res.data.data.is_register
+              if (is_register == 1) {
+                wepy.login({
+                  success: (res) => {
+                    let codeV = res.code
+                    wx.request({
+                      url: service.skip + '/infor',
+                      header: {"Content-Type": "application/x-www-form-urlencoded"},
+                      method: "get",
+                      data: {
+                        wechat_code: codeV,
+                        uid: uid
+                      },
+                      success: function( res ) {
+                        console.log('success')
+                        console.log(res)
+                      }
+                    })
+                  },
+                  fail: (res) => {
+                    console.log('wepy.login.fail:', res)
+                  }
+                })
+              } else {
+                wepy.getUserInfo({
+                  success: (res) => {
+                    let iv = res.iv
+                    let encryptedData = res.encryptedData
+                    wepy.login({
+                      success: (res) => {
+                        let codeV = res.code
+                        wx.request({
+                          url: service.skip,
+                          header: {"Content-Type": "application/x-www-form-urlencoded"},
+                          method: "get",
+                          data: {
+                            wechat_code: codeV,
+                            uid: uid,
+                            iv: iv,
+                            encryptedData: encryptedData
+                          },
+                          success: function( res ) {
+                            console.log('success')
+                            console.log(res)
+                          }
+                        })
+                      },
+                      fail: (res) => {
+                        console.log('wepy.login.fail:', res)
+                      }
+                    })
+                  },
+                  fail: (res) => { }
+                })
+              }
+            }
+          })
+        },
+        fail: (res) => {
+          console.log('wepy.login.fail:', res)
+        }
+      })
+    }
   }
-
   onShow(options) {
+    let that = this
+    if (options.scene == 1044) {
+      wx.getShareInfo({
+        shareTicket: options.shareTicket,
+        success: function(res) {
+          let encryptedData = res.encryptedData
+          let iv = res.iv
+          let code = ''
+          wepy.login({
+            success: (res) => {
+              code = res.code
+              let data = {
+                code: code,
+                iv: iv,
+                encryptedData: encryptedData
+              }
+              console.log(service.infor)
+              console.log(this)
+              wx.request({
+                url: service.infor,
+                header: {
+                  "Content-Type": "application/x-www-form-urlencoded"
+                },
+                method: "POST",
+                data: data,
+                success: function( res ) {
+                  let  data = res.data.data
+                  console.log(data)
+//                  debugger
+                }
+              })
+            },
+            fail: (res) => {
+              console.log('wepy.login.fail:', res)
+            }
+          })
+        }
+      })
+    }
   }
   onShareAppMessage(title = '友福图书馆') {
     return {
@@ -140,7 +260,6 @@ export default class extends wepy.app {
       }
     }
   }
-
   /* ============= 工具方法（app没法用mixins，就再写一遍了） ============= */
   isObject(item) {
     return typeof item === 'object' && !this.isArray(item)
@@ -151,7 +270,6 @@ export default class extends wepy.app {
   isUndefined(item) {
     return typeof item === 'undefined'
   }
-
   // Google analytics
   getTracker(name, text) {
     if (!this.globalData.tracker) {
@@ -166,7 +284,6 @@ export default class extends wepy.app {
     t.send(new HitBuilders.ScreenViewBuilder().build())
   }
   /* ========================= 更新缓存信息 ======================== */
-
   $updateGlobalData(name, obj) {
     // 校验: globalData
     if (!this.globalData) return
@@ -188,7 +305,6 @@ export default class extends wepy.app {
   }
 }
 </script>
-
 <style lang="less">
 @import "./styles/weui/index.less";
 @import "./styles/custom/index.less";

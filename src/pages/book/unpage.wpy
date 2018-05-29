@@ -1,0 +1,151 @@
+<template>
+  <view class="page-user">
+    <web-view src="{{url}}"></web-view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import ShareMessage from '../../mixins/ShareMessage'
+  import { service } from '../../config.js'
+
+  export default class url extends wepy.page {
+    mixins = [base, http, user, ShareMessage]
+    config = {
+      navigationBarTitleText: '我的',
+      enablePullDownRefresh: true
+    }
+    data = {
+      libraries: {},
+      user: {},
+      nickName: '加载中...',
+      url: ''
+
+    }
+
+    computed = {
+      nickName() {
+        return (user && user.wechat && user.wechat.nickname) ? user.wechat.nickname : '未授权用户'
+      }
+    }
+
+    onShow() {
+      // 初始化页面数据
+      this.initPageData()
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+
+    onLoad(e) {
+      console.log(e)
+      this.url = e.url
+      this.$apply()
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      this.$get({url: service.user}, {
+        success: ({code, data}) => {
+          this.user = data.user
+          this.libraries = data.libraries
+          this.libraries.forEach((item) => {
+            if (item.type == 'SHARE') {
+              item.url = '/pages/library/shareLibrary?id=' + item.id
+            } else {
+              item.url = '/pages/library/library?id=' + item.id
+            }
+          })
+          wx.setStorageSync('openid', data.user.wechat.openid)
+          wx.setStorageSync('is_new', data.user.is_news)
+          if (data.user.is_news) {
+            wepy.showTabBarRedDot({
+              index: 4
+            })
+          } else {
+            wepy.hideTabBarRedDot({
+              index: 4
+            })
+          }
+        }
+      })
+    }
+
+    methods = {
+      goto(url) {
+        wx.navigateTo({url: unpage})
+      }
+    }
+
+    components = {
+    }
+  }
+</script>
+
+<style lang="less">
+  @import "../../styles/custom/fn.less";
+  @import "../../styles/custom/reset.less";
+page{
+  background: #f9f9f9;
+}
+.weui-cells {
+  position: inherit;
+  box-shadow: 1rpx 1rpx 12rpx #dedede;
+}
+.page-user{
+  @userinfoHeight: 100rpx;
+  @userinfoSpace: 8rpx;
+
+  .userinfo{
+    padding: 20rpx 0;
+  }
+  .page__bd_spacing{
+    padding: 22rpx;
+  }
+
+  .userinfo-avatar {
+    float: left;
+    width: @userinfoHeight;
+    height: @userinfoHeight;
+    border-radius: 50%;
+  }
+
+  // space + space
+  .userinfo-info {
+    float: left;
+    line-height: 1;
+    padding: @userinfoSpace 0;
+    margin-left: 3 * @userinfoSpace;
+  }
+
+  // text + space + text
+  .userinfo-nickname {
+    color: @uiColorGreen;
+    font-size: (@userinfoHeight - 4 * @userinfoSpace) * (16 / 30);
+    margin-bottom: 2 * @userinfoSpace;
+  }
+  .userinfo-status {
+    color: #999;
+    font-size: (@userinfoHeight - 4 * @userinfoSpace) * (14 / 30);
+
+  }
+  .lead {
+    width: 16rpx;
+    height: 16rpx;
+    background: red;
+    margin-top: -24rpx;
+    border-radius: 50%;
+    position: absolute;
+    right: 16rpx;
+    top: 40rpx;
+  }
+}
+</style>

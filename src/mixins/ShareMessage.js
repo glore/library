@@ -1,8 +1,10 @@
 import wepy from 'wepy';
+import { service } from '../config.js'
 
 export default class ShareMessage extends wepy.mixin {
   data = {
-    from_openid: ''
+    from_openid: '',
+    openGid: ''
   };
   onLoad(e) {
     let that = this
@@ -49,42 +51,47 @@ export default class ShareMessage extends wepy.mixin {
         // 设置转发image，不设默认当前截图
         imageUrl: '',
         success: function(res) {
+          let shareTickets = res.shareTickets;
+          if (shareTickets.length == 0) {
+            return false
+          }
+          wx.getShareInfo({
+            shareTicket: shareTickets[0],
+            success: function(res){
+              let encryptedData = res.encryptedData
+              let iv = res.iv
+              let code = ''
+              wepy.login({
+                success: (res) => {
+                  code = res.code
+                  let data = {
+                    code: code,
+                    iv: iv,
+                    encryptedData: encryptedData
+                  }
+                  that.$post({url: service.infor, data}, {
+                    success: ({code, data}) => {
+                      that.openGid = data.openGId
+                      that.$apply()
+                      debugger
+                    },
+                    fail: ({code, data}) => {},
+                    complete: () => { this.loading = false }
+                  })
+                },
+                fail: (res) => {
+                  console.log('wepy.login.fail:', res)
+                }
+              })
+            }
+          })
           wx.showToast({
             title: '转发成功',
             icon: 'success',
             duration: 1500
+
           })
-          var shareTickets = res.shareTickets;
-          if (shareTickets.length == 0) {
-            return false;
-          }
-          // wx.getShareInfo({
-          //   shareTicket: shareTickets[0],
-          //   withCredentials: true,
-          //   success: function(res){
-          //     console.log(res)
-          //     var encryptedData = res.encryptedData;
-          //     var iv = res.iv;
-          //     debugger
-          //     httpclient.req(
-          //       'http://localhost:8090/wxappservice/api/v1/wx/decodeUserInfo',
-          //       {
-          //         apiName: 'WX_DECODE_USERINFO',
-          //         encryptedData: this.data.encryptedData,
-          //         iv: this.data.iv,
-          //         sessionId: wx.getStorageSync('thirdSessionId')
-          //       },
-          //       'GET',
-          //       function(result){
-          //         //解密后的数据
-          //         console.log(result.data)
-          //       },
-          //       function(result){
-          //         console.log(result)
-          //       }
-          //     );
-          //   }
-          // })
+
         },
         fail: function(res) {
           // 转发失败
