@@ -116,7 +116,8 @@
       formId: [],
       library_id: '',
       from_openid: '',
-      url: 'https://mp.ufutx.net/s?__biz=MzA4MzA2MTMzMA==&mid=2652598666&idx=1&sn=fbc02350c7ca64d881b4c23e4b596dfb'
+      mod_textUrl: 'https://mp.ufutx.net/s?__biz=MzA4MzA2MTMzMA==&mid=2652598666&idx=1&sn=fbc02350c7ca64d881b4c23e4b596dfb',
+      url: ''
     }
 
     components = {
@@ -136,6 +137,8 @@
       // 初始化页面数据
       this.initPageData()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+      this.url = encodeURIComponent(this.mod_textUrl)
+      this.$apply()
     }
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)

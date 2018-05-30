@@ -23,7 +23,6 @@
       user: {},
       nickName: '加载中...',
       url: ''
-
     }
 
     computed = {
@@ -43,7 +42,7 @@
 
     onLoad(e) {
       console.log(e)
-      this.url = e.url
+      this.url = decodeURIComponent(e.url)
       this.$apply()
     }
 
