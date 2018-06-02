@@ -387,25 +387,25 @@
         })
       },
       regionchange(e) {
-        console.log(e.type)
-        let that = this
-        if (e.type == 'end') {
-          this.getLngLat()
-        } else {
-          this.mapCtx.getCenterLocation({
-            success: function (res) {
-              that.longitude = res.longitude
-              that.latitude = res.latitude
-              that.$apply()
-            }
-          })
-          this.markers.forEach((item, index) => {
-            if (item.id == 0) {
-              console.log(index)
-              this.markers.splice(index, 1)
-            }
-          })
-        }
+        // console.log(e.type)
+        // let that = this
+        // if (e.type == 'end') {
+        //   this.getLngLat()
+        // } else {
+        //   this.mapCtx.getCenterLocation({
+        //     success: function (res) {
+        //       that.longitude = res.longitude
+        //       that.latitude = res.latitude
+        //       that.$apply()
+        //     }
+        //   })
+        //   this.markers.forEach((item, index) => {
+        //     if (item.id == 0) {
+        //       console.log(index)
+        //       this.markers.splice(index, 1)
+        //     }
+        //   })
+        // }
       },
       markertap(e) {
         console.log(e.markerId)
