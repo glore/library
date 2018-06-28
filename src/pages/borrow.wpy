@@ -8,7 +8,7 @@
                     </view>
                     <view class="weui-navbar__slider" style="width:{{sliderWidth}}px; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
                 </view>
-                <view class="weui-tab__panel"style="padding-bottom: 12rpx">
+                <view class="weui-tab__panel" style="padding-bottom: 12rpx">
                     <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
                       <!--view class="library-title">我的图书馆
                         <button class="weui-btn mini-btn" @tap="goto('/pages/library/create')" type="primary" size="mini" style="float:right">新建图书馆</button>

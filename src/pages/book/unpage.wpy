@@ -80,7 +80,7 @@
 
     methods = {
       goto(url) {
-        wx.navigateTo({url: unpage})
+        wx.navigateTo({url: url})
       }
     }
 

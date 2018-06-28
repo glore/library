@@ -1,313 +1,324 @@
 <script>
-import wepy from 'wepy'
-import 'wepy-async-function'
-import http from './mixins/http.js'
-import {service} from './config.js'
-var ga = require('./ga.js')
-var GoogleAnalytics = ga.GoogleAnalytics
-var HitBuilders = ga.HitBuilders
+  import wepy from 'wepy'
+  import 'wepy-async-function'
+//  import http from './mixins/http.js'
+  import {service} from './config.js'
 
-export default class extends wepy.app {
-  config = {
-    pages: [
-      // tab-bar
-      'pages/map',
-      'pages/index',
-      'pages/collect',
-      'pages/qr',
-      'pages/borrow',
-      // 'pages/party',
-      'pages/user',
+  var ga = require('./ga.js')
+  var GoogleAnalytics = ga.GoogleAnalytics
+  var HitBuilders = ga.HitBuilders
 
-      // 首页
-      'pages/main/search',
-      'pages/main/list',
-      'pages/main/detail',
+  export default class extends wepy.app {
+    config = {
+      pages: [
+        // tab-bar
+        'pages/map',
+        'pages/index',
+        'pages/collect',
+        'pages/qr',
+        'pages/borrow',
+        // 'pages/party',
+        'pages/user',
 
-      // 图书
-      'pages/book/comment',
-      'pages/book/comments',
-      'pages/book/list',
-      'pages/book/detail',
-      'pages/book/unpage',
+        // 首页
+        'pages/main/search',
+        'pages/main/list',
+        'pages/main/detail',
 
-      // 图书馆管理
-      'pages/library/library',
-      'pages/library/shareLibrary',
-      'pages/library/searchLibrary',
-      'pages/library/borrow',
-      'pages/library/usercollect',
-      'pages/library/members',
-      'pages/library/borrows',
-      'pages/library/book',
-      'pages/library/book_edit',
-      'pages/library/sorts',
-      'pages/library/sorts_list',
-      'pages/library/sort',
-      'pages/library/create',
+        // 图书
+        'pages/book/comment',
+        'pages/book/comments',
+        'pages/book/list',
+        'pages/book/detail',
+        'pages/book/unpage',
 
-      'pages/borrow/subscribe',
-      'pages/borrow/result',
+        // 图书馆管理
+        'pages/library/library',
+        'pages/library/shareLibrary',
+        'pages/library/searchLibrary',
+        'pages/library/borrow',
+        'pages/library/usercollect',
+        'pages/library/members',
+        'pages/library/borrows',
+        'pages/library/book',
+        'pages/library/book_edit',
+        'pages/library/sorts',
+        'pages/library/sorts_list',
+        'pages/library/sort',
+        'pages/library/create',
 
-      // 我的
-      'pages/user/register',
-      'pages/user/registerV2',
-      'pages/user/follower',
-      'pages/user/booklist',
-      'pages/user/borrow',
-      'pages/user/borrows',
-      'pages/user/return',
-      'pages/user/collect',
-      'pages/user/subscribe'
-    ],
-    window: {
-      navigationBarTitleText: '友福图书馆',
-      navigationBarTextStyle: 'white',
-      navigationBarBackgroundColor: '#36a2e6',
-      backgroundColor: '#eaeaea',
-      backgroundTextStyle: 'light',
-      enablePullDownRefresh: true
-    },
-    tabBar: {
-      color: '#707070',
-      selectedColor: '#36a2e6',
-      backgroundColor: '#fff',
-      borderStyle: 'black',
-      list: [{
-        pagePath: 'pages/map',
-        selectedIconPath: './images/tabbars/icon-map-active.png',
-        iconPath: './images/tabbars/icon-map.png',
-        text: '首页'
-      }, {
-        pagePath: 'pages/collect',
-        selectedIconPath: './images/tabbars/icon-book-active.png',
-        iconPath: './images/tabbars/icon-book.png',
-        text: '藏书'
-      }, {
-        pagePath: 'pages/qr',
-        selectedIconPath: './images/tabbars/icon-qrv.png',
-        iconPath: './images/tabbars/icon-qrv.png',
-        text: '扫码'
-      /* }, {
-        pagePath: 'pages/party',
-        selectedIconPath: './images/tabbars/icon-shelf-active@2x.png',
-        iconPath: './images/tabbars/icon-shelf@2x.png',
-        text: '聚会' */
-      }, {
-        pagePath: 'pages/borrow',
-        selectedIconPath: './images/tabbars/icon-book2-active.png',
-        iconPath: './images/tabbars/icon-book2.png',
-        text: '书房'
-      }, {
-        pagePath: 'pages/user',
-        selectedIconPath: './images/tabbars/icon-my-active.png',
-        iconPath: './images/tabbars/icon-my.png',
-        text: '我的'
-      }]
-    },
-    networkTimeout: {
-      request: 5000,
-      downloadFile: 10000
-    },
-    debug: true
-  }
-  globalData = {
-    user: null,
-    cart: null,
-    tracker: null
-  }
-  constructor () {
-    super()
-    this.use('requestfix')
-  }
-  onLaunch(options) {
-    console.log(options)
-    if (options.scene == 1037 || options.scene == 1038){
-      let uid = options.referrerInfo.extraData.uid
-//      console.log(JSON.stringify(uid))
-      wx.setStorageSync('uid', uid)
-      wepy.login({
-        success: (res) => {
-          let code = res.code
-          let data = {
-            wechat_code : code
-          }
-          wx.request({
-            url: service.register_infor,
-            header: {
-              "Content-Type": "application/x-www-form-urlencoded"
-            },
-            method: "get",
-            data: data,
-            success: function( res ) {
-              let  is_register = res.data.data.is_register
-              if (is_register == 1) {
-                wepy.login({
-                  success: (res) => {
-                    let codeV = res.code
-                    wx.request({
-                      url: service.skip + '/infor',
-                      header: {"Content-Type": "application/x-www-form-urlencoded"},
-                      method: "get",
-                      data: {
-                        wechat_code: codeV,
-                        uid: uid
-                      },
-                      success: function( res ) {
-                        let token = res.data.data.access_token
-                        wx.setStorageSync('token', token)
-                        console.log('success')
-                        console.log(res)
-                      }
-                    })
-                  },
-                  fail: (res) => {
-                    console.log('wepy.login.fail:', res)
-                  }
-                })
-              } else {
-                wepy.getUserInfo({
-                  success: (res) => {
-                    let iv = res.iv
-                    let encryptedData = res.encryptedData
-                    wepy.login({
-                      success: (res) => {
-                        let codeV = res.code
-                        wx.request({
-                          url: service.skip,
-                          header: {"Content-Type": "application/x-www-form-urlencoded"},
-                          method: "get",
-                          data: {
-                            wechat_code: codeV,
-                            uid: uid,
-                            iv: iv,
-                            encryptedData: encryptedData
-                          },
-                          success: function( res ) {
-                            let token = res.data.data.access_token
-                            wx.setStorageSync('token', token)
-                            console.log('success')
-                            console.log(res)
-                          }
-                        })
-                      },
-                      fail: (res) => {
-                        console.log('wepy.login.fail:', res)
-                      }
-                    })
-                  },
-                  fail: (res) => { }
-                })
-              }
-            }
-          })
-        },
-        fail: (res) => {
-          console.log('wepy.login.fail:', res)
-        }
-      })
-    }
-  }
-  onShow(options) {
-    let that = this
-    if (options.scene == 1044) {
-      wx.getShareInfo({
-        shareTicket: options.shareTicket,
-        success: function(res) {
-          let encryptedData = res.encryptedData
-          let iv = res.iv
-          let code = ''
-          wepy.login({
-            success: (res) => {
-              code = res.code
-              let data = {
-                code: code,
-                iv: iv,
-                encryptedData: encryptedData
-              }
-              console.log(service.infor)
-              console.log(this)
-              wx.request({
-                url: service.infor,
-                header: {
-                  "Content-Type": "application/x-www-form-urlencoded"
-                },
-                method: "POST",
-                data: data,
-                success: function( res ) {
-                  let  data = res.data.data
-                  console.log(data)
-//                  debugger
-                }
-              })
-            },
-            fail: (res) => {
-              console.log('wepy.login.fail:', res)
-            }
-          })
-        }
-      })
-    }
-  }
-  onShareAppMessage(title = '友福图书馆') {
-    return {
-      title: title,
-//      path: '/pages/index',
-      // imageUrl: '',
-      success: function(res) {
-        // 转发成功
-        console.log(res.errMsg)
+        'pages/borrow/subscribe',
+        'pages/borrow/result',
+
+        // 我的
+        'pages/user/register',
+        'pages/user/registerV2',
+        'pages/user/follower',
+        'pages/user/booklist',
+        'pages/user/borrow',
+        'pages/user/borrows',
+        'pages/user/return',
+        'pages/user/collect',
+        'pages/user/subscribe'
+      ],
+      window: {
+        navigationBarTitleText: '友福图书馆',
+        navigationBarTextStyle: 'white',
+        navigationBarBackgroundColor: '#36a2e6',
+        backgroundColor: '#eaeaea',
+        backgroundTextStyle: 'light',
+        enablePullDownRefresh: true
       },
-      fail: function(res) {
-        // 转发失败
-        console.log(res.errMsg)
+      tabBar: {
+        color: '#707070',
+        selectedColor: '#36a2e6',
+        backgroundColor: '#fff',
+        borderStyle: 'black',
+        list: [{
+          pagePath: 'pages/map',
+          selectedIconPath: './images/tabbars/icon-map-active.png',
+          iconPath: './images/tabbars/icon-map.png',
+          text: '首页'
+        }, {
+          pagePath: 'pages/collect',
+          selectedIconPath: './images/tabbars/icon-book-active.png',
+          iconPath: './images/tabbars/icon-book.png',
+          text: '藏书'
+        }, {
+          pagePath: 'pages/qr',
+          selectedIconPath: './images/tabbars/icon-qrv.png',
+          iconPath: './images/tabbars/icon-qrv.png',
+          text: '扫码'
+          /* }, {
+            pagePath: 'pages/party',
+            selectedIconPath: './images/tabbars/icon-shelf-active@2x.png',
+            iconPath: './images/tabbars/icon-shelf@2x.png',
+            text: '聚会' */
+        }, {
+          pagePath: 'pages/borrow',
+          selectedIconPath: './images/tabbars/icon-book2-active.png',
+          iconPath: './images/tabbars/icon-book2.png',
+          text: '书房'
+        }, {
+          pagePath: 'pages/user',
+          selectedIconPath: './images/tabbars/icon-my-active.png',
+          iconPath: './images/tabbars/icon-my.png',
+          text: '我的'
+        }]
+      },
+      networkTimeout: {
+        request: 5000,
+        downloadFile: 10000
+      },
+      debug: true
+    }
+    globalData = {
+      user: null,
+      cart: null,
+      tracker: null
+    }
+
+    constructor() {
+      super()
+      this.use('requestfix')
+    }
+
+    onLaunch(options) {
+      console.log(options)
+      if (options.scene == 1037 || options.scene == 1038) {
+        let uid = options.referrerInfo.extraData.uid
+//      console.log(JSON.stringify(uid))
+        wx.setStorageSync('uid', uid)
+        wepy.login({
+          success: (res) => {
+            let code = res.code
+            let data = {
+              wechat_code: code
+            }
+            wx.request({
+              url: service.register_infor,
+              header: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              },
+              method: 'get',
+              data: data,
+              success: function (res) {
+                let isRegister = res.data.data.is_register
+                if (isRegister == 1) {
+                  wepy.login({
+                    success: (res) => {
+                      let codeV = res.code
+                      wx.request({
+                        url: service.skip + '/infor',
+                        header: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        method: 'get',
+                        data: {
+                          wechat_code: codeV,
+                          uid: uid
+                        },
+                        success: function (res) {
+                          let token = res.data.data.access_token
+                          wx.setStorageSync('token', token)
+                          console.log('success')
+                          console.log(res)
+                        }
+                      })
+                    },
+                    fail: (res) => {
+                      console.log('wepy.login.fail:', res)
+                    }
+                  })
+                } else {
+                  wepy.getUserInfo({
+                    success: (res) => {
+                      let iv = res.iv
+                      let encryptedData = res.encryptedData
+                      wepy.login({
+                        success: (res) => {
+                          let codeV = res.code
+                          wx.request({
+                            url: service.skip,
+                            header: {'Content-Type': 'application/x-www-form-urlencoded'},
+                            method: 'get',
+                            data: {
+                              wechat_code: codeV,
+                              uid: uid,
+                              iv: iv,
+                              encryptedData: encryptedData
+                            },
+                            success: function (res) {
+                              let token = res.data.data.access_token
+                              wx.setStorageSync('token', token)
+                              console.log('success')
+                              console.log(res)
+                            }
+                          })
+                        },
+                        fail: (res) => {
+                          console.log('wepy.login.fail:', res)
+                        }
+                      })
+                    },
+                    fail: (res) => {
+                    }
+                  })
+                }
+              }
+            })
+          },
+          fail: (res) => {
+            console.log('wepy.login.fail:', res)
+          }
+        })
       }
     }
-  }
-  /* ============= 工具方法（app没法用mixins，就再写一遍了） ============= */
-  isObject(item) {
-    return typeof item === 'object' && !this.isArray(item)
-  }
-  isArray(item) {
-    return Object.prototype.toString.apply(item) === '[object Array]'
-  }
-  isUndefined(item) {
-    return typeof item === 'undefined'
-  }
-  // Google analytics
-  getTracker(name, text) {
-    if (!this.globalData.tracker) {
-      // 初始化GoogleAnalytics Tracker
-      this.globalData.tracker = GoogleAnalytics.getInstance(this)
-      .setAppName('友福图书馆')
-      .setAppVersion('v0.4')
-      .newTracker('UA-109097480-1')
+
+    onShow(options) {
+//      let that = this
+      if (options.scene == 1044) {
+        wx.getShareInfo({
+          shareTicket: options.shareTicket,
+          success: function (res) {
+            let encryptedData = res.encryptedData
+            let iv = res.iv
+            let code = ''
+            wepy.login({
+              success: (res) => {
+                code = res.code
+                let data = {
+                  code: code,
+                  iv: iv,
+                  encryptedData: encryptedData
+                }
+                console.log(service.infor)
+                console.log(this)
+                wx.request({
+                  url: service.infor,
+                  header: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                  },
+                  method: 'POST',
+                  data: data,
+                  success: function (res) {
+                    let data = res.data.data
+                    console.log(data)
+//                  debugger
+                  }
+                })
+              },
+              fail: (res) => {
+                console.log('wepy.login.fail:', res)
+              }
+            })
+          }
+        })
+      }
     }
-    var t = this.globalData.tracker
-    t.setScreenName(text)
-    t.send(new HitBuilders.ScreenViewBuilder().build())
-  }
-  /* ========================= 更新缓存信息 ======================== */
-  $updateGlobalData(name, obj) {
-    // 校验: globalData
-    if (!this.globalData) return
-    // 校验: 操作字段
-    if (typeof name !== 'string' || name === '') return {}
-    // 取已有信息
-    const info = this.globalData[name] || {}
-    // 更新缓存
-    if (obj && this.isObject(obj)) {
-      // Object合并第一层
-      this.globalData[name] = Object.assign({}, info, obj)
-    } else if (!this.isUndefined(obj)) {
-      // 其他非undefined数据直接覆盖
-      this.globalData[name] = obj
+
+    onShareAppMessage(title = '友福图书馆') {
+      return {
+        title: title,
+//      path: '/pages/index',
+        // imageUrl: '',
+        success: function (res) {
+          // 转发成功
+          console.log(res.errMsg)
+        },
+        fail: function (res) {
+          // 转发失败
+          console.log(res.errMsg)
+        }
+      }
     }
-    this.$apply && this.$apply()
-    console.info(`[${obj ? 'UPDATE' : 'GET'} GlobalData ${name}]:`, this.globalData[name])
-    return this.globalData[name]
+
+    /* ============= 工具方法（app没法用mixins，就再写一遍了） ============= */
+    isObject(item) {
+      return typeof item === 'object' && !this.isArray(item)
+    }
+
+    isArray(item) {
+      return Object.prototype.toString.apply(item) === '[object Array]'
+    }
+
+    isUndefined(item) {
+      return typeof item === 'undefined'
+    }
+
+    // Google analytics
+    getTracker(name, text) {
+      if (!this.globalData.tracker) {
+        // 初始化GoogleAnalytics Tracker
+        this.globalData.tracker = GoogleAnalytics.getInstance(this)
+          .setAppName('友福图书馆')
+          .setAppVersion('v0.4')
+          .newTracker('UA-109097480-1')
+      }
+      var t = this.globalData.tracker
+      t.setScreenName(text)
+      t.send(new HitBuilders.ScreenViewBuilder().build())
+    }
+
+    /* ========================= 更新缓存信息 ======================== */
+    $updateGlobalData(name, obj) {
+      // 校验: globalData
+      if (!this.globalData) return
+      // 校验: 操作字段
+      if (typeof name !== 'string' || name === '') return {}
+      // 取已有信息
+      const info = this.globalData[name] || {}
+      // 更新缓存
+      if (obj && this.isObject(obj)) {
+        // Object合并第一层
+        this.globalData[name] = Object.assign({}, info, obj)
+      } else if (!this.isUndefined(obj)) {
+        // 其他非undefined数据直接覆盖
+        this.globalData[name] = obj
+      }
+      this.$apply && this.$apply()
+      console.info(`[${obj ? 'UPDATE' : 'GET'} GlobalData ${name}]:`, this.globalData[name])
+      return this.globalData[name]
+    }
   }
-}
 </script>
 <style lang="less">
 @import "./styles/weui/index.less";

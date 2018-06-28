@@ -263,14 +263,15 @@
         that.$get({
           url: service.account,
           data: {
-            openid: wx.getStorageSync('openid')
+            openid: wx.getStorageSync('openid'),
+            party_id: 174
           }
         }, {
           success: ({code, data}) => {
             console.log(data)
             wx.navigateToMiniProgram({
               appId: 'wxa43b4cb4f447e846',
-              path: 'pages/partyList',
+              path: 'pages/party/start_party',
               extraData: {
                 uid: data
               },

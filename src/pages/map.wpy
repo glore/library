@@ -16,7 +16,7 @@
       <image src="/images/icon-share.png" mode="aspectFit"  style="width: 60rpx;height: 60rpx;" class="flo_r"></image>
     </button>
   </view>
-  <block wx:if="{{myLong}}">
+  <block wx:if="{{myLong && distance_library}}">
     <!--<navigator url="/pages/library/library?id={{distance_library.id}}"    hover-class="weui-cell_active">-->
       <view style="padding:32rpx 22rpx; background: white;" class="font_32" @tap="goto({{distance_library.url}})">
         <view>
@@ -87,9 +87,21 @@
       this.getSystem()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
-//    onLoad() {
-//
-//    }
+
+    onLoad() {
+      // wx.setNavigationBarColor({
+      //   frontColor: '#ffffff',
+      //   backgroundColor: '#e26432',
+      //   animation: {
+      //     duration: 400,
+      //     timingFunc: 'easeIn'
+      //   }
+      // })
+      // wx.setNavigationBarTitle({
+      //   title: 'Ta的信息'
+      // })
+
+    }
     updataMap() {
       let token = wx.getStorageSync('token')
       let myLong = wx.getStorageSync('myLong')
@@ -113,7 +125,6 @@
           }
         })
       }
-
     }
     getSystem() {
       let that = this
@@ -165,7 +176,13 @@
         success: ({code, data}) => {
           that.distance1 = data.distance1
           that.distance_library = data.distance_library
-
+          if (data.distance_library == null) {
+            return wx.showToast({
+              title: '距离太远了！',
+              image: '../images/icon/icon-error.png',
+              duration: 1500
+            })
+          }
           if (that.distance_library.type == 'SHARE') {
             that.distance_library.url = '/pages/library/shareLibrary?id=' + that.distance_library.id
             that.$apply()
@@ -251,6 +268,13 @@
             success: ({code, data}) => {
               that.distance1 = data.distance1
               that.distance_library = data.distance_library
+              if (data.distance_library == null) {
+                return wx.showToast({
+                  title: '距离太远了！',
+                  image: '../images/icon/icon-error.png',
+                  duration: 1500
+                })
+              }
               if (that.distance_library.type == 'SHARE') {
                 that.distance_library.url = '/pages/library/shareLibrary?id=' + that.distance_library.id
                 that.$apply()
@@ -387,25 +411,26 @@
         })
       },
       regionchange(e) {
-        // console.log(e.type)
-        // let that = this
-        // if (e.type == 'end') {
-        //   this.getLngLat()
-        // } else {
-        //   this.mapCtx.getCenterLocation({
-        //     success: function (res) {
-        //       that.longitude = res.longitude
-        //       that.latitude = res.latitude
-        //       that.$apply()
-        //     }
-        //   })
-        //   this.markers.forEach((item, index) => {
-        //     if (item.id == 0) {
-        //       console.log(index)
-        //       this.markers.splice(index, 1)
-        //     }
-        //   })
-        // }
+        console.log(e.type)
+//        let that = this
+        if (e.type == 'end') {
+          this.getLngLat()
+        } else {
+          console.log('move')
+          // this.mapCtx.getCenterLocation({
+          //   success: function (res) {
+          //     that.longitude = res.longitude
+          //     that.latitude = res.latitude
+          //     that.$apply()
+          //   }
+          // })
+          // this.markers.forEach((item, index) => {
+          //   if (item.id == 0) {
+          //     console.log(index)
+          //     this.markers.splice(index, 1)
+          //   }
+          // })
+        }
       },
       markertap(e) {
         console.log(e.markerId)
@@ -421,6 +446,13 @@
           success: ({code, data}) => {
             that.distance1 = data.distance
             that.distance_library = data.library
+            // if (that.distance_library == null) {
+            //   return wx.showToast({
+            //     title: '距离太远了！',
+            //     image: '../images/icon/icon-error.png',
+            //     duration: 1500
+            //   })
+            // }
             if (that.distance_library.type == 'SHARE') {
               that.distance_library.url = '/pages/library/shareLibrary?id=' + that.distance_library.id
               that.$apply()
@@ -437,13 +469,13 @@
         })
         that.markers.forEach((item, index, arr) => {
           if (arr[index].id == e.markerId && arr[index].id !== 0) {
-             arr[index].iconPath = '/images/icon-position_red.png'
+            arr[index].iconPath = '/images/icon-position_red.png'
           }
           if (arr[index].id !== e.markerId && arr[index].id !== 0) {
             arr[index].iconPath = '/images/icon-position.png'
           }
           if (arr[index].id == 0) {
-             that.markers.splice(index, 1)
+            that.markers.splice(index, 1)
           }
         })
 //        that.markers = markers_new
