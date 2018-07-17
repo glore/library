@@ -183,7 +183,8 @@
     <!--</view>-->
   <!--</view>-->
   <view style="height: 180rpx;background: white"></view>
-  <view class="text-center nav" wx:if="{{mylib.is_admin == 1}}">
+  <!--<view class="text-center nav" wx:if="{{mylib.is_admin == 1}}">--><!--去掉管理员才能录书的控制-->
+  <view class="text-center nav">
     <view class="nav__items font_32 inline-block">
       <form bindsubmit="formSubmit" report-submit>
         <button formType="submit" class="btn flo_l" data-type="click" @tap="scanBook({{mylib.id}})">
