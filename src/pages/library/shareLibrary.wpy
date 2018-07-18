@@ -454,8 +454,8 @@
               this.$post({
                 url: service.libraries + '/' + libraryId + '/books',
                 data: {
-                  'isbn': that.EditIsbn
-//                  'isbn': 'E0036000'
+                  'isbn': that.EditIsbn,
+                  'owner': wx.getStorageSync('openid')
                 }
               }, {
                 success: ({code, data}) => {
