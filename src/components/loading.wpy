@@ -1,0 +1,62 @@
+<template>
+  <view class="column-center loading-wrap" wx:if="{{!init}}">
+    <image class="loading-icon" src="/images/svg/audio.svg"></image>
+    <!--<image class="loading-icon" src="/images/svg/audio1.svg"></image>-->
+    <text class="muted mt20 lg">加载中</text>
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Loading extends wepy.component {
+    props = {
+      init: String
+    };
+  }
+</script>
+
+<style>
+  .loading-icon {
+    width:120rpx;
+    height:120rpx;
+  }
+  text.lg {
+  font-size: 30rpx;
+  }
+  text.muted, input.muted, view.muted {  color: #A3A3A3;
+  }
+  text, view {  font-size: 28rpx;  color: #262626;  }
+  .mt20 {
+  margin-top: 20rpx;
+  }
+  .column, .column-center, .column-around, .column-between, .container {
+    display:-webkit-box;
+    display:-webkit-flex;
+    display:flex;
+    -webkit-box-pack:center;
+    -webkit-justify-content:center;
+    justify-content:center;
+    -webkit-box-orient:vertical;
+    -webkit-box-direction:normal;
+    -webkit-flex-direction:column;
+    flex-direction:column;
+  }
+  .column-center {
+    -webkit-box-align:center;
+    -webkit-align-items:center;
+    align-items:center;
+  }
+  .loading-wrap {
+    height: 100vh;
+    z-index: 99999;
+  }
+  .text, view {
+    font-size:28rpx;
+    color:#262626;
+  }
+
+
+
+
+</style>

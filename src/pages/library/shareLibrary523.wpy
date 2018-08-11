@@ -1,0 +1,775 @@
+<template>
+  <Loading :init.sync="list"/>
+  <view class="user-library">
+    <view  class="flo_l" style="padding-top: 12rpx;padding-left: 42rpx" wx:if="{{member_type == 'ADMIN'}}" @tap="goto('/pages/library/create?id={{mylib.id}}')">
+      <image class="library-image flo_l" mode="aspectFit" src="{{mylib.logo}}"></image>
+    </view>
+    <view  class="flo_l" style="padding-top: 12rpx;padding-left: 42rpx" wx:else>
+      <image class="library-image flo_l" mode="aspectFit" src="{{mylib.logo}}"></image>
+    </view>
+    <view class="" style="margin:26rpx;z-index: 1000;position:relative;">
+      <button  size="mini" @tap="gotoTab('/pages/map')" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 140rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
+        <image  class="imgicon" mode="aspectFit" src="../../images/tabbars/home.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
+      </button>
+      <view class="smile" style="position: fixed;z-index: 1000;right: 24.5vw; top: -25rpx;"></view>
+      <button  size="mini" open-type="share" @tap="share" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 12rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
+        <image  class="imgicon" mode="aspectFit" src="../../images/icon/share_red.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
+      </button>
+    </view>
+    <view class="clearfloat"></view>
+    <view class="flo_r" style="margin-right:26rpx;">
+      <form bindsubmit="formSubmit" report-submit>
+        <button formType="submit" class="btn" data-type="click">
+          <button  @tap="joinLibrary('member')"  wx:if="{{!mylib.member}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">申请加入</button>
+        </button>
+      </form>
+      <button  @tap="joinLibrary('join')"  wx:if="{{mylib.member && mylib.member.status == 'JOIN'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="warn" size="mini">待审核...</button>
+      <!--<view  @tap="joinLibrary('admin')" class="font_28"  wx:if="{{mylib.member && mylib.member.status == 'ADMIN'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx;color: #049BFF;" >联系取书</view>-->
+    </view>
+    <view class="clearfloat"></view>
+    <view class="library-title">
+      {{mylib.name}}
+      <image src="../../images/icon/icon-modification.png" style="width: 32rpx;height: 32rpx;margin-bottom: -4rpx;" wx:if="{{member_type == 'ADMIN'}}" @tap="goto('/pages/library/create?id={{mylib.id}}')"></image>
+    </view>
+    <view class="library-title" wx:if="{{mylib.address !== null}}" style="margin-top: 20rpx;font-weight: inherit;font-size: 26rpx;" @tap="goadderss({{mylib.location_latitude}},{{mylib.location_longitude}})">
+      <span class="font_28 bold">地址：</span>{{mylib.address}}
+      <span style="color: #23b2e6">
+        <image src="../../images/tabbars/address.png"  mode="aspectFit" class="imgicon" style="margin-bottom: 8rpx;width: 60rpx;height: 60rpx"></image>
+      </span>
+    </view>
+    <view class="weui-flex library-wrapper">
+      <view @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')" wx:if="{{member_type == 'ADMIN'}}" class="weui-flex__item list-item">
+        <view class="color-666 item-title"><span class="num">{{mylib.sorts_count}}</span>类</view>
+        <view class="color-bbb h5">馆藏分类</view>
+      </view>
+      <view @tap="goto('/pages/library/sorts_list?library_id={{mylib.id}}')" wx:else class="weui-flex__item list-item">
+        <view class="color-666 item-title"><span class="num">{{mylib.sorts_count}}</span>类</view>
+        <view class="color-bbb h5">馆藏分类</view>
+      </view>
+      <view @tap="goto('/pages/book/list?library_id={{mylib.id}}&member_type={{member_type}}')" class="weui-flex__item list-item">
+        <view class="color-666 item-title"><span class="num">{{mylib.library_books_count}}</span>册</view>
+        <view class="color-bbb h5">馆藏册数</view>
+      </view>
+      <view @tap="goto('/pages/library/members?library_id={{mylib.id}}')" class="weui-flex__item list-item" style="position: relative">
+        <view class="color-666 item-title"><span class="num">{{mylib.members_count}}</span>位</view>
+        <view class="color-bbb h5">会员数量</view>
+        <view class="lead" wx:if="{{mylib.join_member_num > 0 && member_type == 'ADMIN'}}">{{mylib.join_member_num}}</view>
+      </view>
+      <view @tap="goto('/pages/library/borrows?library_id={{mylib.id}}')" class="weui-flex__item list-item" style="position: relative">
+        <view class="color-666 item-title" ><span class="num">{{mylib.borrows_count}}</span>册</view>
+        <view class="color-bbb h5">借阅册数</view>
+        <view class="lead" wx:if="{{mylib.reserve_book_num > 0 && member_type == 'ADMIN'}}"> {{mylib.reserve_book_num}}</view>
+      </view>
+    </view>
+    <view class="placeholder_26"></view>
+    <view class="clearfloat"></view>
+
+    <!--<view class="mylib_btn">-->
+      <!--<button wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}" @tap="scanReturn({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">扫码还书</button>-->
+      <!--<button wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}" @tap="scanBook({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">扫码录书</button>-->
+      <!--<button wx:if="{{mylib.member && mylib.member.status=='MEMBER'}}" @tap="scanBorrow({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">扫码借书</button>-->
+      <!--<button wx:if="{{!mylib.member}}" @tap="joinLibrary({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">申请加入</button>-->
+      <!--<button wx:if="{{mylib.member && mylib.member.status=='JOIN'}}" @tap="joinTip"  class="weui-btn mini-btn" type="primary" size="mini">待审核</button>-->
+    <!--</view>-->
+  </view>
+  <view wx:if="{{Show}}" class="BookList {{CollectAnimation ? 'BookList_animation' : ''}}" style="background: none">
+    <form bindsubmit="formSubmit" report-submit>
+      <button formType="submit" class="btn" data-type="click">
+        <button class=" flo_r" type="primary" size="mini" @tap="addcollect({{mylib.id}})" style="margin-right: 20rpx">一键录入</button>
+        <view class="clearfloat"></view>
+      </button>
+    </form>
+  </view>
+  <view class="BookList {{EditAnimation ? 'BookList_animation' : ''}}" wx:if="{{ShowEdit}}">
+    <view class="flo_l " wx:if="{{ShowUpload}}" style="margin-top: 32rpx;margin-right: 12rpx;">
+      <image src="{{BookImage}}" mode="aspectFit" bindtap="chooseimage"/>
+    </view>
+    <view class="flo_l hide_image" wx:else bindtap="chooseimage">
+      <image src="../../images/icon/icon-upload.png" mode="aspectFit" />
+      <text class="font_26">上传封面</text>
+    </view>
+    <view class="flo_l" style="width: 65%">
+      <view class="font_28"><view class="flo_l">书名： </view><input type="text" placeholder="请填写书的名字"  class="upload-text" style="width: 80%;padding-left: 12rpx;" bindinput="inputChange"/></view>
+      <view class="font_28" style="margin-top: 20rpx"><view class="flo_l">作者： </view><input type="text" placeholder="请填写作者"  class="upload-text" style="width: 80%;padding-left: 12rpx" bindinput="inputChange_author"/></view>
+      <!--<view  class="list" style="width: 78%">-->
+        <!--<picker  value="{{sorts_id}}" range="{{sortslist.name}}"  bindchange="sorts_Change" >-->
+          <!--<view class="picker">-->
+            <!--<view class="font_28">分类：<text style="border-bottom: 1rpx solid #d3d3d3">{{sortslist.name[sorts_id]}}</text></view>-->
+          <!--</view>-->
+        <!--</picker>-->
+      <!--</view>-->
+      <view class="font_26 ellipsis_3" >简介 : <textarea type="text" auto-height  placeholder="请填写书的简介" class="upload-text" style="min-height: 180rpx;padding: 12rpx;width: 92%" bindinput="textareaChange"/></view>
+    </view>
+    <view class=" flo_r">
+      <button  type="primary" size="mini" @tap="addbookV()" style="margin:22rpx">保 存</button>
+      <button class="flo_r" type="warn" size="mini" @tap="DeleteEdit()" style="margin: 22rpx">取消</button>
+    </view>
+    <view class="clearfloat"></view>
+  </view>
+  <view wx:if="{{Show}}" wx:for="{{libraries}}" wx:for-index="idx" wx:key="*this" class="BookList {{CollectAnimation ? 'BookList_animation' : ''}}">
+    <view class="flo_l" style="margin-right: 6rpx">
+      <image src="{{item.image}}" mode="aspectFit" />
+    </view>
+    <view class="flo_l" style="width: 65%"  >
+      <view class="font_28 ellipsis_1 bold">{{item.title}}</view>
+      <view class="font_26 ellipsis_2" style=''>简介：{{item.summary}}</view>
+      <view class="font_26" style="width: 78%">作者：{{item.author}}</view>
+      <view  class="list" style="width: 78%">
+        <bolck wx:if="{{mylib.sorts_count == '0'}}">
+          <view class="picker">
+            <view class="font_26">分类：
+              <text style="border-bottom: 1rpx solid #d3d3d3; color: #4ba7ff"   @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')">新增分类</text>
+            </view>
+          </view>
+        </bolck>
+        <block wx:else>
+          <picker  value="{{item.sortslist.index}}" range="{{item.sortslist.name}}" id="{{item.id}}" data-current="{{idx}}" bindchange="sorts_typeChange" >
+            <view class="picker">
+              <view class="font_26">分类：
+                <text style="border-bottom: 1rpx solid #d3d3d3; color: #4ba7ff" wx:if="{{item.sortslist.ShowSorts}}">{{item.sortslist.name[item.sortslist.index]}}</text>
+                <text style="border-bottom: 1rpx solid #d3d3d3; color: #4ba7ff"  wx:else>{{library_sort_list[item.library_sort_index].name}}</text>
+              </view>
+            </view>
+          </picker>
+        </block>
+      </view>
+      <view class="flo_r" style="margin-top: -50rpx">
+        <button  type="warn" size="mini" plain class="flo_r" @tap="deletecollect({{item.id}}, {{idx}})"  style="padding:2rpx 12rpx;line-height: 42rpx;margin-bottom: 22rpx;margin-right: 8rpx">
+          删除
+        </button>
+      </view>
+      </view>
+    <view class="clearfloat"></view>
+  </view>
+  <block wx:if="{{mylib.sorts_count == '0' && member_type == 'ADMIN' && !show && !ShowEdit}}">
+    <view style="margin: auto;margin-top: -32rpx;position: relative">
+      <image src='../../images/message.png'  mode="aspectFit"  style="transform: rotateX(180deg);width: 280rpx;height: 214rpx "></image>
+      <view class="font_26" style="position: absolute;left: 60rpx;bottom: 62rpx;">1.先去<span style="color: #4ba7ff"  @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')">新增分类</span>
+      </view>
+    </view>
+    <!--<view style="margin: auto;margin-bottom: -32rpx;position: fixed;let: 38rpx;bottom: 150rpx;">-->
+      <!--<image src='../../images/message.png'  mode="aspectFit"  style="transform: rotateY(180deg) rotateZ(16deg);width: 340rpx;height: 218rpx;"></image>-->
+      <!--<view class="font_26" style="position: absolute;left: 72rpx;bottom: 136rpx;transform: rotateZ(-10deg);">2.扫码录入图书</view>-->
+    <!--</view>-->
+  </block>
+
+  <block wx:else>
+    <ClassifyListV2 :list.sync="list" :library_id.sync="library_id" :member_type.sync="member_type" :recommendlist.sync="recommend_library_books"></ClassifyList>
+  </block>
+  <!--<view class="scan"  wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}">-->
+    <!--<view class="scan_home {{rotate ? 'rotate' : ''}}" @tap="rotate" style="z-index: 12;">-->
+      <!--<form bindsubmit="formSubmit" report-submit>-->
+        <!--<button formType="submit" class="btn" data-type="click">-->
+          <!--<image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-scan.png" style="width: 60rpx;height: 60rpx"></image>-->
+        <!--</button>-->
+      <!--</form>-->
+    <!--</view>-->
+    <!--<view class="scan_home scan_active {{changerotate ? 'changerotate1' : ''}} {{shrink ? 'changeshrink1' : ''}}" @tap="scanBook({{mylib.id}})">-->
+      <!--<image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>-->
+      <!--<text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;">录书</text>-->
+    <!--</view>-->
+    <!--<view class="scan_home scan_active {{changerotate ? 'changerotate2' : ''}} {{shrink ? 'changeshrink2' : ''}}" @tap="scanReturn({{mylib.id}})">-->
+      <!--<image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>-->
+      <!--<text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;">还书</text>-->
+    <!--</view>-->
+    <!--<view class="scan_home scan_active {{changerotate ? 'changerotate3' : ''}} {{shrink ? 'changeshrink3' : ''}}"  @tap="scanBorrow({{mylib.id}})">-->
+      <!--<image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>-->
+      <!--<text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;">借书</text>-->
+    <!--</view>-->
+  <!--</view>-->
+  <!--<view class="scan"  wx:if="{{mylib.member && mylib.member.status=='MEMBER'}}">-->
+    <!--<view class="scan_home scan_active {{changerotate ? 'changerotate3' : ''}} {{shrink ? 'changeshrink3' : ''}}"  @tap="scanBorrow({{mylib.id}})">-->
+      <!--<image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-qr.png" style="margin-top: -12px"></image>-->
+      <!--<text style="font-size: 22rpx;position: absolute;left: 26rpx;bottom: 0rpx;margin-bottom: 4rpx">借书</text>-->
+    <!--</view>-->
+  <!--</view>-->
+  <view style="height: 180rpx;background: white"></view>
+  <!--<view class="text-center nav" wx:if="{{mylib.is_admin == 1}}">--><!--去掉管理员才能录书的控制-->
+  <view class="text-center nav">
+    <view class="nav__items font_32 inline-block">
+      <form bindsubmit="formSubmit" report-submit>
+        <button formType="submit" class="btn flo_l" data-type="click" @tap="scanBook({{mylib.id}})">
+          <view class="nav__item inline-block text-center"> <span class="nav__item-text"> 录书 </span> </view>
+        </button>
+      </form>
+      <form bindsubmit="formSubmit" report-submit>
+        <button formType="submit" class="btn flo_l" data-type="click" @tap="scanReturn({{mylib.id}})">
+          <view class="nav__item inline-block text-center"> <span class="nav__item-text"> 还书 </span> </view>
+        </button>
+      </form>
+      <form bindsubmit="formSubmit" report-submit>
+        <button formType="submit" class="btn flo_l" data-type="click" @tap="scanBorrow({{mylib.id}})">
+          <view class="nav__item inline-block text-center"> <span class="nav__item-text"> 借书 </span> </view>
+        </button>
+      </form>
+    </view>
+  </view>
+  <!--<modal hidden="{{hiddenmodalput}}" title="联系管理员取书" confirm-text="拨打电话" cancel-text="取消" bindcancel="cancel" bindconfirm="confirm({{mylib.link_mobile}})">-->
+    <!--<input type='text'placeholder="请输入内容" value="管理员：{{mylib.link_name}}"/>-->
+    <!--<input type='text'placeholder="请输入内容" value="电话号码：{{mylib.link_mobile}}"/>-->
+  <!--</modal>-->
+</template>
+
+
+<script>
+  import wepy from 'wepy'
+  import { service } from '../../config.js'
+  import http from '../../mixins/http'
+  import base from '../../mixins/base'
+  import user from '../../mixins/user'
+  import Loading from '../../components/loading'
+  import ShareMessage from '../../mixins/ShareMessage'
+  import ClassifyListV2 from '../../components/classifyListV2'
+
+  export default class shareLibrary extends wepy.page {
+    mixins = [base, http, user, ShareMessage]
+    config = {
+      navigationBarTitleText: '友福图书馆'
+    }
+    components = {
+      ClassifyListV2: ClassifyListV2,
+      Loading: Loading
+    }
+
+    data = {
+      loaded: false,
+      // 我的图书馆
+      mylib: {},
+      name: '友福图书馆',
+      libraries: [],
+//      动画
+      Show: false,
+      rotate: false,
+      changerotate: false,
+      shrink: false,
+      CollectAnimation: false,
+      showanimation: true,
+      EditAnimation: false,
+      sortslist: [],
+      sorts_id: 0,
+      sortsindex: 0,
+//      BookId: [],
+      EditImage: '',
+      EditTitle: '',
+      EditIsbn: '',
+      EditSummary: '',
+      EditAuthor: '',
+      ShowEdit: false,
+      librarydata: [],
+      BookImage: '../images/icon/icon-upload.png',
+      ShowUpload: false,
+      ShowSorts: false,
+      library_sort_id: '',
+      library_sort_list: [],
+      library_sort_index: 0,
+      list: [],
+      library_id: '',
+      member_type: '',
+      page: 1,
+      formId: [],
+      recommend_library_books: [],
+      hiddenmodalput: true
+    }
+
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.mylib.name)
+    }
+    onLoad(query) {
+      this.mylib.id = query && +query.id
+    }
+    onShow() {
+      this.initPageData()
+      this.initPageDataV2()
+      // google tracker
+//      console.log(this.mylib.id)
+      this.$parent.getTracker(this.$root.$name, this.mylib.name)
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+      this.initPageDataV2()
+    }
+    onReachBottom() {
+      setTimeout(() => {
+        this.initPageDataV2()
+        this.$apply()
+      }, 200)
+    }
+    // 初始化页面数据
+    initPageData() {
+      this.$get({url: service.libraries + '/' + this.mylib.id}, {
+        success: ({code, data}) => {
+          this.mylib = data
+          this.library_id = data.id
+          this.member_type = data.member ? data.member.status : ''
+          let name = data.sorts.map(function (item) {
+            return item.name
+          })
+          this.sortslist = {name: name, index: 0, ShowSorts: false}
+          wx.setNavigationBarTitle({
+            title: data.name // 页面标题为路由参数
+          })
+        },
+        fail: ({code, data}) => {},
+        complete: () => { }
+      })
+    }
+    initPageDataV2() {
+      let data = {page: this.page}
+      this.$get({url: service.libraries + `/${this.mylib.id}/v2`, data}, {
+        success: ({code, data}) => {
+          this.recommend_library_books = data.recommend_library_books
+          data = data.library_books
+          if (data.current_page > data.last_page) {
+            this.noMoreList = true
+            this.noMore = true
+            return
+          }
+          data = data.data
+          if (this.isArray(data) && data.length === 0) {
+            debugger
+            this.noMore = true
+            return
+          }
+          if (this.list.length === 0 || this.page === 1) {
+            this.list = data.map(function (item) {
+              return item
+            })
+          } else {
+            console.log(data)
+            console.log(this.list)
+            data.map((item, index)=>{
+              this.list.push(item)
+            })
+          }
+          this.noMore = true
+          this.page += 1
+          this.$apply()
+        },
+        fail: ({code, data}) => {},
+        complete: () => { }
+      })
+    }
+    uploadFiles(filePaths, successUp, failUp, i, length) {
+      let that = this
+      let token = wx.getStorageSync('token')
+      wx.uploadFile({
+        url: service.books_upload,
+        filePath: filePaths,
+        method: 'POST',
+        name: 'fileData',
+        header: {
+          'Authorization': 'Bearer ' + token,
+          'content-type': 'multipart/form-data',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        success: (resp) => {
+          that.EditImage = JSON.parse(resp.data).data
+          that.$apply()
+        },
+        fail: (res) => {
+          failUp++
+        },
+        complete: () => {
+          i++
+          if (i === length) {
+          } else {
+            that.uploadFiles(filePaths, successUp, failUp, i, length)
+          }
+        }
+      })
+    }
+    RemoveEdit() {
+      this.EditImage = ''
+      this.EditAuthor = ''
+      this.EditTitle = ''
+      this.EditSummary = ''
+      this.EditIsbn = ''
+      this.ShowUpload = false
+    }
+    methods = {
+      goadderss(latitude, longitude) {
+        let that = this
+        wepy.openLocation({
+          latitude: Number(latitude),
+          longitude: Number(longitude),
+          name: that.mylib.address
+        })
+      },
+      cancel () {
+        this.hiddenmodalput = true
+        this.$apply()
+      },
+      confirm(mobile) {
+        this.hiddenmodalput = true
+        this.$apply()
+        wx.makePhoneCall({
+          phoneNumber: mobile
+        })
+      },
+      formSubmit(e) {
+        this.formId.push(e.detail.formId)
+        console.log(this.formId)
+      },
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
+      gotoTab(url) {
+        wx.switchTab({url: url})
+      },
+      joinTip() {
+        wx.showModal({
+          title: '待审核',
+          content: '请等待管理员审核！'
+        })
+      },
+      joinLibrary(status) {
+        if (status == 'admin') {
+          this.hiddenmodalput = false
+          this.$apply()
+        } else if (status == 'join') {
+          wx.showToast({
+            title: '管理员审核中...',
+            image: '../../images/icon/icon-error.png',
+            duration: 1500
+          })
+        } else {
+          let self = this
+          this.$post({
+            url: service.libraries + '/' + self.mylib.id + '/join',
+            data: {
+              'formId': self.formId
+            }
+          }, {
+            success: ({code, data}) => {
+              wx.showToast({
+                title: '申请成功',
+                icon: 'none',
+                duration: 1500
+              })
+              this.initPageData()
+//              wx.redirectTo({url: '/pages/library/library?id=' + self.mylib.id})
+            },
+            fail: ({code, data}) => {},
+            complete: () => { this.loaded = false }
+          })
+        }
+      },
+      chooseimage() {
+        var that = this
+        wx.chooseImage({
+          count: 1,
+          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+          success: function (res) {
+            // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+            that.files = res.tempFilePaths
+            that.ShowUpload = true
+            that.BookImage = res.tempFilePaths[0]
+            that.$apply()
+            that.uploadFiles(that.BookImage, 0, 0, 0, that.files.length)
+          }
+        })
+      },
+      rotate() {
+        if (this.showanimation) {
+          this.changerotate = true
+          setTimeout(() => {
+            this.$apply()
+          }, 500)
+          this.shrink = false
+          this.showanimation = false
+        } else {
+          setTimeout(() => {
+            this.$apply()
+          }, 500)
+          this.shrink = true
+          this.showanimation = true
+        }
+      },
+//      扫码录书
+      scanBook(libraryId) {
+        let that = this
+        that.EditAnimation = false
+        that.CollectAnimation = false
+        that.RemoveEdit()
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+            if (res.result) {
+              that.EditIsbn = res.result
+              this.$post({
+                url: service.libraries + '/' + libraryId + '/books',
+                data: {
+                  'isbn': that.EditIsbn,
+                  'owner': wx.getStorageSync('openid')
+                }
+              }, {
+                success: ({code, data}) => {
+                  that.ShowAnimation = false
+                  if (data.library_book.sort_id) {
+                    that.library_sort_id = data.library_book.sort_id == '0' ? data.sorts[0].id : data.library_book.sort_id
+                  } else {
+                    that.library_sort_id = data.sorts[0].id
+                  }
+                  that.$apply()
+                  that.library_sort_list = data.sorts
+                  if (that.library_sort_id == '0') {
+                    that.ShowSorts = true
+                  }
+                  that.library_sort_list.forEach(function (item, index, arr) {
+                    if (that.library_sort_id == arr[index].id) {
+                      that.library_sort_index = index
+                    }
+                  })
+                  data.sortslist = this.sortslist
+                  data.library_sort_index = that.library_sort_index
+                  that.libraries.unshift(data)
+                  that.Show = true
+                  that.ShowEdit = false
+                  let sortsarr = {
+                    id: data.id, sort_id: that.library_sort_id
+                  }
+                  that.librarydata.push(sortsarr)
+                  that.$apply()
+//                  debugger
+                },
+                fail: ({code, data}) => {
+                  wx.showToast({
+                    title: '未能识别此书...',
+                    image: '../../images/icon/icon-error.png',
+                    duration: 1500
+                  })
+                  that.ShowEdit = true
+                  if (that.libraries.length == 0) {
+                    this.Show = false
+                  }
+                },
+                complete: () => { this.loaded = false }
+              })
+            }
+          }
+        })
+      },
+      scanReturn(libraryId) {
+        wx.scanCode({
+          success: (res) => {
+            wx.navigateTo({url: '/pages/library/borrow?isbn=' + res.result + '&library_id=' + libraryId})
+          }
+        })
+      },
+      sorts_typeChange(e) {
+        let that = this
+        that.ShowSorts = true
+        let _id = ''
+        let id = Number(e.currentTarget.id)
+        that.sortsindex = e.detail.value
+        const curindex = e.target.dataset.current
+        that.libraries[curindex].sortslist.index = e.detail.value
+        that.libraries[curindex].sortslist.ShowSorts = true
+        that.$apply()
+        this.mylib.sorts.forEach(function (item, index, arr) {
+          if (that.sortslist.name[that.sortsindex] == arr[index].name) {
+            _id = arr[index].id
+          }
+        })
+        let sortsarr = {
+          id: id, sort_id: _id
+        }
+        that.librarydata.forEach(function (item, index, arr) {
+          if (id == arr[index].id) {
+            that.librarydata.splice(index, 1)
+          }
+        })
+        that.librarydata.push(sortsarr)
+//        debugger
+      },
+      sorts_Change(e) {
+        this.sorts_id = e.detail.value
+      },
+      deletecollect(_id, index) {
+        this.libraries.splice(index, 1)
+        this.librarydata.splice(index, 1)
+      },
+      addcollect(_id) {
+        let that = this
+        that.CollectAnimation = true
+        let data = {
+          books: that.librarydata,
+          formId: that.formId
+        }
+        this.$post({
+          url: service.libraries + '/' + _id + '/books/store',
+          data: data
+        }, {
+          success: ({code, data}) => {
+            setTimeout(() => {
+              wx.showToast({
+                title: '录入成功',
+                icon: 'none',
+                duration: 1500
+              })
+              that.Show = false
+              that.libraries = []
+              that.librarydata = []
+            }, 800)
+            that.initPageData()
+          },
+          fail: (res) => {
+            wx.showToast({
+              title: '出错了...',
+              image: '../../images/icon/icon-error.png',
+              duration: 1500
+            })
+            that.libraries = []
+            that.Show = false
+          },
+          complete: () => { this.loaded = false }
+        })
+      },
+      addbookV() {
+        let that = this
+//        let _id = 0
+//        that.mylib.sorts.forEach(function (item, index, arr) {
+//          if (that.sortslist.name[that.sorts_id] == arr[index].name) {
+//            _id = arr[index].id
+//          }
+//        })
+        if (!that.EditImage) {
+          wx.showToast({
+            title: '请先上传图片',
+            image: '../../images/icon/icon-error.png',
+            duration: 1500
+          })
+        } else if (!that.EditAuthor) {
+          wx.showToast({
+            title: '请填写作者',
+            image: '../../images/icon/icon-error.png',
+            duration: 1500
+          })
+        } else if (!that.EditTitle) {
+          wx.showToast({
+            title: '请填写书的名字',
+            image: '../../images/icon/icon-error.png',
+            duration: 1500
+          })
+        } else if (!that.EditSummary) {
+          wx.showToast({
+            title: '请填写书的简介',
+            image: '../images/icon/icon-error.png',
+            duration: 1500
+          })
+        } else {
+          this.$post({
+            url: service.books,
+            data: {
+              'image': that.EditImage,
+              'author': that.EditAuthor,
+              'title': that.EditTitle,
+              'summary': that.EditSummary,
+//              'sorts_id': that.sorts_id,
+              'isbn': that.EditIsbn
+//              'isbn': 'E0036000'
+            }
+          }, {
+            success: ({code, data}) => {
+              that.EditAnimation = true
+              setTimeout(() => {
+                that.ShowEdit = false
+              }, 800)
+              console.log(data.id)
+              let books = [{
+                id: data.id, sort_id: 0
+              }]
+              this.$post({
+                url: service.libraries + '/' + that.library_id + '/books/store',
+                data: {
+                  books: books
+                }
+              }, {
+                success: ({code, data}) => {
+                  setTimeout(() => {
+                    wx.showToast({
+                      title: '录入成功',
+                      icon: 'none',
+                      duration: 1500
+                    })
+                    that.Show = false
+                    that.libraries = []
+                    that.librarydata = []
+                  }, 800)
+                  that.initPageData()
+                },
+                fail: (res) => {
+                  wx.showToast({
+                    title: '出错了...',
+                    image: '../../images/icon/icon-error.png',
+                    duration: 1500
+                  })
+                  that.libraries = []
+                  that.Show = false
+                },
+                complete: () => { this.loaded = false }
+              })
+//              加入收藏
+              that.initPageData()
+            },
+            fail: ({code, data}) => {
+              wx.showToast({
+                title: '出错了...',
+                image: '../images/icon/icon-error.png',
+                duration: 1500
+              })
+            },
+            complete: () => { this.loaded = false }
+          })
+        }
+      },
+      DeleteEdit() {
+        this.ShowEdit = false
+        this.RemoveEdit()
+      },
+      inputChange(e) {
+        this.EditTitle = e.detail.value
+      },
+      inputChange_author(e) {
+        this.EditAuthor = e.detail.value
+      },
+      textareaChange(e) {
+        this.EditSummary = e.detail.value
+      },
+      scanBorrow(libraryId) {
+        wx.scanCode({
+          success: (res) => {
+            console.log('[dev]', 'scancode', res)
+
+            if (res.result) {
+              this.$post({
+                url: service.book_store,
+                data: {
+                  'isbn': res.result
+//                  'isbn': 'E0036099100'
+                }
+              }, {
+                success: ({code, data}) => {
+                  wx.navigateTo({url: '/pages/book/detail?id=' + data.id + '&library_id=' + libraryId})
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loaded = false }
+              })
+            }
+          }
+        })
+      }
+    }
+  }
+
+</script>
+
+
+<style lang="less">
+@import "../../styles/weui/base/fn.wxss";
+@import "../../styles/custom/fn.less";
+@import "../../styles/custom/animation.less";
+@import "../../styles/custom/library.less";
+</style>

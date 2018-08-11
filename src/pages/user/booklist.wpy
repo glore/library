@@ -50,9 +50,6 @@
         this.updateBookList(this.page)
         this.$apply()
       }, 800)
-      if (this.page) {
-      } else {
-      }
     }
     data = {
       loading: true,
