@@ -363,7 +363,6 @@
       let url = 'http://apis.map.qq.com/ws/distance/v1/'
       this.$get({url: url, data}, {
         success: ({code, data}) => {
-          debugger
           wx.setStorageSync('is_new', data.user.is_news)
           if (data.user.is_news) {
             wepy.showTabBarRedDot({

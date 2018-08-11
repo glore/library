@@ -154,7 +154,7 @@
   </block>
 
   <block wx:else>
-    <ClassifyListV2 :list.sync="list" :library_id.sync="library_id" :member_type.sync="member_type" :recommendlist.sync="recommend_library_books"></ClassifyList>
+    <ClassifyListV2 :list.sync="list" :library_id.sync="library_id" :member_type.sync="member_type" :recommendlist.sync="recommend_library_books"></ClassifyListV2>
   </block>
   <!--<view class="scan"  wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}">-->
     <!--<view class="scan_home {{rotate ? 'rotate' : ''}}" @tap="rotate" style="z-index: 12;">-->
@@ -328,7 +328,6 @@
           }
           data = data.data
           if (this.isArray(data) && data.length === 0) {
-            debugger
             this.noMore = true
             return
           }
@@ -339,7 +338,7 @@
           } else {
             console.log(data)
             console.log(this.list)
-            data.map((item, index)=>{
+            data.map((item, index) => {
               this.list.push(item)
             })
           }

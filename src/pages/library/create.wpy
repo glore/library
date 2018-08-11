@@ -316,9 +316,9 @@
       bindPickerChange: function(e) {
         console.log('picker发送选择改变，携带值为', e.detail.value)
         this.timeIndex = e.detail.value
-        if(e.detail.value == 0) {
+        if (e.detail.value == 0) {
           this.borrow_time = 'week'
-        }else{
+        } else {
           this.borrow_time = 'month'
         }
       },

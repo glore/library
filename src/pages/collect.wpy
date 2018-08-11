@@ -67,8 +67,8 @@
       <!--<view class="clearfloat"></view>-->
     <!--</view>-->
 
-    <button class="weui-btn btn-blue" @tap="goto('/pages/book/unpage?url={{url}}')">打开公众号</button>
-    <button class="weui-btn btn-blue" @tap="openApp">打开绑定的小程序</button>
+    <!--<button class="weui-btn btn-blue" @tap="goto('/pages/book/unpage?url={{url}}')">打开公众号</button>-->
+    <!--<button class="weui-btn btn-blue" @tap="openApp">打开绑定的小程序</button>-->
     <!--<view class="smile"></view>-->
     <!--<view class="container">-->
       <!--<view class="dot"></view>-->

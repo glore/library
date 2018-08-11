@@ -140,16 +140,16 @@
         console.log(id)
         console.log(this.libraryId)
         console.log('switch1 发生 change 事件，携带值为', e.detail.value)
-        let is_recommend = 0
-        if(e.detail.value) {
-          is_recommend = 1
-        }else {
-          is_recommend = 0
+        let isRecommend = 0
+        if (e.detail.value) {
+          isRecommend = 1
+        } else {
+          isRecommend = 0
         }
         this.$put({
           url: service.libraries + `/${this.libraryId}/books/${id}/recommend`,
           data: {
-            is_recommend: is_recommend
+            is_recommend: isRecommend
           }
         }, {
           success: ({code, data}) => {
