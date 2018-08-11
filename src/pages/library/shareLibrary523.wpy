@@ -1,5 +1,5 @@
 <template>
-  <Loading :init.sync="list"/>
+  <Loading :init.sync="init"/>
   <view class="user-library">
     <view  class="flo_l" style="padding-top: 12rpx;padding-left: 42rpx" wx:if="{{member_type == 'ADMIN'}}" @tap="goto('/pages/library/create?id={{mylib.id}}')">
       <image class="library-image flo_l" mode="aspectFit" src="{{mylib.logo}}"></image>
@@ -268,7 +268,8 @@
       page: 1,
       formId: [],
       recommend_library_books: [],
-      hiddenmodalput: true
+      hiddenmodalput: true,
+      init: false
     }
 
     onShareAppMessage(res) {
@@ -347,7 +348,7 @@
           this.$apply()
         },
         fail: ({code, data}) => {},
-        complete: () => { }
+        complete: () => { this.init = true }
       })
     }
     uploadFiles(filePaths, successUp, failUp, i, length) {
