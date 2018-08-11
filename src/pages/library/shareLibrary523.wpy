@@ -343,12 +343,13 @@
               this.list.push(item)
             })
           }
+          this.init = true
           this.noMore = true
           this.page += 1
           this.$apply()
         },
         fail: ({code, data}) => {},
-        complete: () => { this.init = true }
+        complete: () => { }
       })
     }
     uploadFiles(filePaths, successUp, failUp, i, length) {
