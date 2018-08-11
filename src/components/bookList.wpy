@@ -143,11 +143,13 @@
         let is_recommend = 0
         if(e.detail.value) {
           is_recommend = 1
-        }else {}
+        }else {
+          is_recommend = 0
+        }
         this.$put({
           url: service.libraries + `/${this.libraryId}/books/${id}/recommend`,
           data: {
-            is_recommend: 1
+            is_recommend: is_recommend
           }
         }, {
           success: ({code, data}) => {
