@@ -78,21 +78,10 @@
             <input @input="typing('publisher')" class="weui-input" value="{{publisher}}" placeholder="出版社"/>
         </view>
       </view>
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
-          <view class="weui-label reset-label-left">出版日期</view>
-        </view>
-        <view class="weui-cell__bd h3  color-red">
-          <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
-            <view class="picker">
-              <input class="weui-input" value="{{array[timeindex]}}" placeholder="请选择还书时长"/>
-            </view>
-          </picker>
-        </view>
-      </view>
+
       <view class="weui-cell weui-cell_input" style="border-bottom: 1rpx solid #e2e2e2">
         <view class="weui-cell__hd">
-          <view class="weui-label reset-label-left">还书时长</view>
+          <view class="weui-label reset-label-left">出版日期</view>
         </view>
         <view class="weui-cell__bd h3  color-red">
           <input @input="typing('pubdate')" class="weui-input" value="{{pubdate}}" placeholder="出版日期"/>

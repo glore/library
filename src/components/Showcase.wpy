@@ -1,7 +1,7 @@
 <template>
   <view style="background: white;margin-bottom: 22rpx;" class="font_32">
     <view  class="weui-address" style="padding: 22rpx;" >
-      <view style="margin-bottom: -60rpx;" class="text-left black_6">图书展示</view>
+      <view style="margin-bottom: -60rpx;" class="text-left black_6">图片展示</view>
       <!--<view style="width: 90%; margin: auto">-->
         <!--<view class="text-center"  wx:for="{{list}}" wx:key="*this">-->
           <!--<image src="{{item}}" mode="aspectFit" class="merchant_active flo_l"/>-->
