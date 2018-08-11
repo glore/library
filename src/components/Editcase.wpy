@@ -1,0 +1,175 @@
+<template>
+  <view style="background: white;margin-bottom: 22rpx;" class="font_32">
+    <view style="background: white;" class="font_28">
+      <view  class="weui-address" style="padding: 0 22rpx 22rpx 22rpx;" >
+        <view class="flo_l" style="width: 100%">
+          <view style="margin: 12rpx;" class="text-left black_6">图片展示</view>
+          <view class="text-left storeBoxv" >
+            <view class="logo text-center flo_l" style="margin: 42rpx 22rpx; width: 120rpx;height: 120rpx;" @tap="chooseimage">
+              <view class="bold" style="font-size: 48rpx;margin-top: 20rpx">+</view>
+            </view>
+            <scroll-view scroll-x="true" class="flo_r" >
+               <view class="uploadWrap" scroll-x="true" >
+                <view class="upload_Item" wx:for="{{list}}" wx:key="*this">
+                 <image class="upload_Item_img" mode="aspectFit" src="{{item}}" bindtap="changeMainImgFn2" @tap="preview({{item}})"></image>   
+                <view class="upload_Btn flo_l red text-center">
+                  <image src="../images/icon/delete.png" mode="aspectFit"
+                         style="vertical-align: middle;width:24px; height: 24px;" @tap.stop="daleteImage({{index}})"></image>
+                </view>
+              <!--   <view class="upload_mask {{upload_ImgSelId2==item.id? 'show':' ' }}">主图</view>-->
+                </view>
+               </view>
+            </scroll-view>
+            <view class="clearfloat"></view>
+          </view>
+        </view>
+        <view class="clearfloat"></view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+//  import { service } from '../config.js'
+  import http from '../mixins/http'
+  import base from '../mixins/base'
+  import uploadImages from '../mixins/upload_images'
+//  import ShareMessage from '../mixins/ShareMessage'
+  export default class MerchantBox extends wepy.component {
+    mixins = [base, http, uploadImages]
+    props = {
+      list: {
+        type: Object,
+        default: [],
+        twoWay: true
+      }
+    };
+    data= {
+
+    }
+//    watch = {
+//      list() {
+//        console.log(this.list)
+//      }
+//    }
+    onLoad () {
+      console.log(this.list)
+    }
+    methods = {
+      daleteImage(index) {
+        console.log(index)
+        this.list.splice(index, 1)
+        console.log(this.list)
+      },
+      preview(item) {
+        let that = this
+        wx.previewImage({
+          current: item,
+          urls: that.list
+        })
+      },
+      goto(url) {
+        wx.navigateTo({url: url})
+      }
+    }
+  }
+</script>
+
+<style type="less">
+  .inline-block {display: inline-block}
+  .flo_l {float: left}
+  .flo_r {float: right}
+  .font_26 {font-size: 26rpx}
+  .font_28 {font-size: 28rpx}
+  .bold{font-weight: bold}
+  .clearfloat {clear:both}
+  .white {background: white}
+  .ellipsis_2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .ellipsis_1 {
+    text-overflow : ellipsis;
+    white-space : nowrap;
+    overflow : hidden;
+  }
+  .box{
+    background: white;
+    border-bottom: 1rpx solid #d3d3d3;
+    padding: 22rpx;
+  }
+  .active{
+    width: 68rpx;
+    height: 68rpx;
+    border: 4rpx solid #dedede;
+    box-shadow:1rpx 1rpx 12rpx #d4d4d4;
+    border-radius: 50%;
+    margin-right: 6rpx;
+  }
+
+  .uploadWrap {
+    height: 160rpx;
+    width: 60%;
+    display: flex;
+    display: -webkit-box;
+    flex-direction: column;
+    margin-top: -72rpx;
+  }
+  .merchant_active{
+    /*width: 30%;*/
+    /*height: 120rpx;*/
+    border: 4rpx solid #dedede;
+    box-shadow:1rpx 1rpx 12rpx #d4d4d4;
+    border: 4rpx solid white;
+    margin-right: 12rpx;
+    /*border-radius: 50%;*/
+  }
+  .upload_Item{
+    width: 160rpx;
+    height: 120rpx;
+    margin-right: 22rpx;
+    position: relative;
+    flex: 1;}
+  .upload_Item_img{
+    width: 140rpx;
+    height: 140rpx;
+  }
+  .upload_Btn{
+    position: absolute;
+    left: -22rpx;
+    bottom: 56rpx;
+    /*box-shadow: 1rpx 1rpx 8rpx red;*/
+    /*border: 1rpx solid red;*/
+    /*border-radius: 50%;*/
+    width: 36rpx;
+    height: 36rpx;
+  }
+  .storeBoxv{
+    border: 1rpx solid #d3d3d3;
+    padding:12rpx;
+  }
+  .storeBoxv scroll-view{
+    /*border: 1rpx solid #d3d3d3;*/
+    padding:12rpx;
+    width: 70%;
+    height: 160rpx;
+  }
+  .images{
+    width: 80rpx;
+    height: 80rpx;
+    border: 2rpx dashed #d3d3d3;
+    box-shadow: 1rpx 1rpx 12rpx #d3d3d3;
+  }
+  .logo {
+    width:80rpx;
+    height:80rpx;
+    border:2rpx dashed #d3d3d3;
+    box-shadow:1rpx 1rpx 12rpx #d3d3d3;
+  }
+
+
+</style>

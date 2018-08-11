@@ -4,10 +4,10 @@
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
           <view class="weui-label reset-label-left text-center" @tap="chooseimage">
-            <image class="imgicon"  wx:if="{{ShowUpload}}" src="{{BookImage}}" mode="aspectFit"/>
-            <image class="imgicon"  wx:else src="{{image}}" mode="aspectFit" style="width: 180rpx;height: 180rpx;"/>
+            <!--<image class="imgicon"  wx:if="{{ShowUpload}}" src="{{BookImage}}" mode="aspectFit"/>-->
+            <image class="imgicon"  src="{{Image}}" mode="aspectFit"/>
+            <!--<image class="imgicon"  wx:else src="{{BookImage}}" mode="aspectFit" style="width: 180rpx;height: 180rpx;"/>-->
           </view>
-
           <!--<view class="flo_l" wx:if="{{ShowUpload}}" style="margin-top: 32rpx">-->
             <!--<image src="{{BookImage}}" mode="aspectFit" bindtap="chooseimage"/>-->
           <!--</view>-->
@@ -83,7 +83,19 @@
           <view class="weui-label reset-label-left">出版日期</view>
         </view>
         <view class="weui-cell__bd h3  color-red">
-            <input @input="typing('pubdate')" class="weui-input" value="{{pubdate}}" placeholder="出版日期"/>
+          <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+            <view class="picker">
+              <input class="weui-input" value="{{array[timeindex]}}" placeholder="请选择还书时长"/>
+            </view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" style="border-bottom: 1rpx solid #e2e2e2">
+        <view class="weui-cell__hd">
+          <view class="weui-label reset-label-left">还书时长</view>
+        </view>
+        <view class="weui-cell__bd h3  color-red">
+          <input @input="typing('pubdate')" class="weui-input" value="{{pubdate}}" placeholder="出版日期"/>
         </view>
       </view>
 	    <view class="weui-cells__title">简介</view>
@@ -99,6 +111,7 @@
           </view>
         </view>
       </view>
+    <Editcase :list.sync="detail_pic" />
       <view class="weui-cells__tips">
         <view class="color-666">说明</view>
         <view class="color-999">1. 图书馆藏书册数必需填写</view>
@@ -127,6 +140,7 @@
   import base from '../../mixins/base'
   import user from '../../mixins/user'
   import ShareMessage from '../../mixins/ShareMessage'
+  import Editcase from '../../components/Editcase'
   import uploadimage from '../../mixins/upload_image'
 
   export default class borrowSubscribe extends wepy.page {
@@ -135,8 +149,12 @@
       navigationBarTitleText: '图书编辑',
       enablePullDownRefresh: false
     }
+    components = {
+      Editcase: Editcase
+    }
     data = {
       id: 0,
+      array: ['美国', '中国', '巴西', '日本'],
       library_id: 0,
       title: '',
       origin_title: '',
@@ -147,7 +165,7 @@
       publisher: '',
       price: '',
       isbn: '',
-      image: '../../images/icon/icon-upload.png',
+      Image: '../../images/icon/icon-upload.png',
       pubdate: '',
       pages: '',
       num: '',
@@ -158,7 +176,8 @@
       list: [],
       sorts: [],
       sortIndex: 0,
-      sort: null
+      sort: null,
+      detail_pic: []
     }
 
     computed = {
@@ -198,11 +217,12 @@
           this.publisher = data.publisher
           this.price = data.price
           this.isbn = data.isbn
-          this.image = data.image
+          this.Image = data.image
           this.pubdate = data.pubdate
           this.pages = data.pages
           this.num = data.library_book.num
           this.sort = data.sort
+          this.detail_pic = data.detail_pic
           // 分类列表
           this.sorts = data.sorts
           this.sorts.forEach((item, index, arr) => {
@@ -217,6 +237,12 @@
     }
 
     methods = {
+      bindPickerChange: function(e) {
+        console.log('picker发送选择改变，携带值为', e.detail.value)
+        this.setData({
+          index: e.detail.value
+        })
+      },
       sortChange(e) {
         this.class_id = this.sorts[e.detail.value].id
         this.sortIndex = e.detail.value
@@ -237,7 +263,6 @@
         if (!this.getString(this.num)) {
           return this.$alert('温馨提示', '请设置馆藏册数')
         }
-
         const data = {
           title: this.getString(this.title),
           origin_title: this.getString(this.origin_title),
@@ -248,9 +273,10 @@
           publisher: this.getString(this.publisher),
           price: this.getString(this.price),
           isbn: this.getString(this.isbn),
-          image: this.getString(this.Image) ? this.getString(this.Image) : this.getString(this.image),
+          image: this.getString(this.Image),
           pubdate: this.getString(this.pubdate),
           pages: this.getString(this.pages),
+          detail_pic: this.detail_pic,
           num: this.getString(this.num)
         }
 //        debugger

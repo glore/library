@@ -52,6 +52,20 @@
         </view>
       </view>
     </view>
+    <view class="weui-cells weui-cells_after-title book-address font_28">
+      <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
+        <view class="weui-cell__hd">
+          <view class="weui-label reset-label-left text-center">还书时长</view>
+        </view>
+        <view class="weui-cell__bd h3  color-red">
+          <picker bindchange="bindPickerChange" value="{{timeIndex}}" range="{{array}}">
+            <view class="picker">
+              <input class="weui-input" value="{{array[timeIndex]}}" disabled placeholder="请选择还书时长"/>
+            </view>
+          </picker>
+        </view>
+      </view>
+    </view>
     <view class="weui-cells weui-cells_after-title font_28">
       <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
         <view class="weui-cell__hd">
@@ -110,6 +124,9 @@
       enablePullDownRefresh: false
     }
     data = {
+      array: ['七天', '一个月'],
+      timeIndex: 1,
+      borrow_time: 'month',
       id: 0,
       name: '',
       intro: '',
@@ -169,6 +186,7 @@
             this.count = data.count
             this.address = data.address
             this.type = data.type
+            this.timeIndex = data.borrow_time == 'week' ? 0 : 1
             this.EditImage = data.logo
             for (let i = 0; i < that.radioItems.length; i++) {
               that.radioItems[i].checked = false
@@ -295,6 +313,15 @@
       })
     }
     methods = {
+      bindPickerChange: function(e) {
+        console.log('picker发送选择改变，携带值为', e.detail.value)
+        this.timeIndex = e.detail.value
+        if(e.detail.value == 0) {
+          this.borrow_time = 'week'
+        }else{
+          this.borrow_time = 'month'
+        }
+      },
       radioChange (e) {
         console.log('radio发生change事件，携带value值为：', e.detail.value)
         this.radioItems.forEach(v => {
@@ -361,6 +388,7 @@
           type: this.getString(this.type),
           logo: this.getString(this.EditImage),
           count: this.count,
+          borrow_time: this.borrow_time,
           address: this.address,
           location_longitude: this.longitude,
           location_latitude: this.latitude
@@ -379,9 +407,9 @@
                 success: function(res) {
                   if (res.confirm) {
                     if (that.type == 'SHARE') {
-                      wx.navigateTo({url: '/pages/library/shareLibrary?id=' + that.id})
+                      wx.redirectTo({url: '/pages/library/shareLibrary?id=' + that.id})
                     } else {
-                      wx.navigateTo({url: '/pages/library/library?id=' + that.id})
+                      wx.redirectTo({url: '/pages/library/library?id=' + that.id})
                     }
                   } else if (res.cancel) {
                   }

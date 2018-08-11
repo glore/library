@@ -4,7 +4,7 @@
     <block wx:if="{{list.length > 0}}">
       <block wx:for="{{list}}" wx:key="index">
         <!--navigator url="/pages/book/detail?id={{item.id}}&title={{item.title}}&status={{item.status}}" class="booklist-item clearfix"-->
-        <navigator url="" class="booklist-item clearfix">
+        <view url="" class="booklist-item clearfix">
           <view class="booklist-cover-wrapper" @tap="goto('/pages/book/detail?id={{item.id}}&title={{item.title}}&status={{item.status}}&library_id={{libraryId}}')">
             <image src="{{item.image}}" mode="widthFix" style="width:100%;" />
           </view>
@@ -41,7 +41,7 @@
                   <text class="booklist-text color-blue" wx:if="{{item.publisher}}">{{item.publisher}}</text>
                 </block>
                 <block wx:else>
-                  <span wx:if="{{item.is_admin == '1'}}">推荐：<switch type="switch" checked="{{item.switchActive}}" color="#36a2e6" @change.stop="switchChange({{item.id}})"  style="width: 120rpx"/></span>
+                  <span wx:if="{{item.is_admin == '0'}}">推荐：<switch type="switch" checked="{{item.switchActive}}" color="#36a2e6" @change.stop="switchChange({{item.id}})"  style="width: 120rpx"/></span>
                 </block>
                 <block wx:if="{{item.status == '1'}}">
                   <image src="{{icon_eye_active}}" class="imgicon" mode="aspectFit"/>
@@ -58,7 +58,7 @@
               </view>
             </view>
           </view>
-        </navigator>
+        </view>
       </block>
       <block wx:if="{{loading}}">
         <view class="weui-loadmore">
@@ -140,6 +140,10 @@
         console.log(id)
         console.log(this.libraryId)
         console.log('switch1 发生 change 事件，携带值为', e.detail.value)
+        let is_recommend = 0
+        if(e.detail.value) {
+          is_recommend = 1
+        }else {}
         this.$put({
           url: service.libraries + `/${this.libraryId}/books/${id}/recommend`,
           data: {

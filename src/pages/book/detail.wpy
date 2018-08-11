@@ -1,5 +1,5 @@
 <template>
-  <view class="main-detail">
+  <view class="main-detail color-666">
     <view class="weui-panel">
       <block wx:if="{{banners && banners.length}}">
         <view class="detail-cover">
@@ -9,15 +9,15 @@
         <image src="{{book.image|| img_banner}}" class="detail-cover" mode="aspectFit"/>
       </block>
       <view class="weui-media-box weui-media-box_text weui-cells_in-small-appmsg">
-        <view class="h3 color-333">{{book.name}}</view>
-        <view class="detail-info">
-          <view>书名：{{book.title}}</view>
-          <view>作者：{{book.author}}</view>
-          <view>出版社：{{book.publisher}}</view>
-          <view>出版时间：{{book.pubdate}}</view>
-          <view>分类：{{book.sort.name}}</view>
-          <view>ISBN编码：{{book.isbn}}</view>
-          <view class="font_32">所属书房：{{book_library.library.name}}</view>
+        <view class="h4 color-333">{{book.name}}</view>
+        <view class="detail-info color-666 font_32">
+          <view class="font_28 color-666">书名：{{book.title}}</view>
+          <view class="font_28 color-666">作者：{{book.author}}</view>
+          <view class="font_28 color-666 ">出版社：{{book.publisher}}</view>
+          <view class="font_28 color-666">出版时间：{{book.pubdate}}</view>
+          <view class="font_28 color-666">分类：{{book.sort.name}}</view>
+          <view class="font_28 color-666">ISBN编码：{{book.isbn}}</view>
+          <view class="font_28 color-666">所属书房：{{book_library.library.name}}</view>
           <!--<view class="icon-edit">-->
             <!--<image class="" src="../../images/icon/icon-edit.png" />-->
           <!--</view>-->
@@ -30,16 +30,19 @@
 
     <view class="weui-panel">
       <view class="weui-media-box weui-media-box_text">
-          <view class="detail-desc-title">简介：</view>
+          <view class=" font_32 color-666">简介：</view>
           <view class="detail-desc">
             <block wx:for="{{description}}" wx:key="index" wx:for-item="desc">
-              <view class="detail-text" wx:if="{{desc.type === 'text'}}">{{book.summary}}</view>
+              <view class="detail-text font_28 color-666" wx:if="{{desc.type === 'text'}}">{{book.summary}}</view>
               <image wx:elif="{{desc.type === 'image'}}" class="detail-image"
                src="{{desc.value || img_banner}}" mode="widthFix"/>
             </block>
           </view>
       </view>
     </view>
+    <block wx:if="{{detail_pic.length != 0}}">
+      <Showcase :list.sync="detail_pic" ></Showcase>
+    </block>
     <view wx:if="{{book.book_libraries.length>0}}" class="weui-panel weui-panel_access">
       <view class="weui-panel__hd">
         其他馆藏
@@ -110,6 +113,7 @@
   import user from '../../mixins/user'
   import Screen from '../../components/screen'
   import ShareMessage from '../../mixins/ShareMessage'
+  import Showcase from '../../components/Showcase'
 
   export default class mainDetail extends wepy.page {
     mixins = [base, http, user, ShareMessage]
@@ -126,6 +130,7 @@
       id: 0,
       library_id: 0,
       title: '',
+      detail_pic: [],
       book_library: []
     }
 
@@ -186,6 +191,7 @@
         success: ({code, data}) => {
           this.book = data
           this.book_library = data.book_library
+          this.detail_pic = data.detail_pic
 //          this.library_id = data.library_book.library_id
 //          debugger
         }
@@ -289,7 +295,8 @@
       }
     }
     components = {
-      Screen
+      Screen,
+      Showcase
     }
   }
 </script>

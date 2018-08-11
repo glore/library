@@ -1,0 +1,139 @@
+<template>
+  <view style="background: white;margin-bottom: 22rpx;" class="font_32">
+    <view  class="weui-address" style="padding: 22rpx;" >
+      <view style="margin-bottom: -60rpx;" class="text-left black_6">图书展示</view>
+      <!--<view style="width: 90%; margin: auto">-->
+        <!--<view class="text-center"  wx:for="{{list}}" wx:key="*this">-->
+          <!--<image src="{{item}}" mode="aspectFit" class="merchant_active flo_l"/>-->
+        <!--</view>-->
+      <!--</view>-->
+      <!--<scroll-view class="scroll-view_H" scroll-x="true" >-->
+        <!--<view class="uploadWrap" scroll-x="true">-->
+          <!--<view wx:for="{{list}}" wx:key="*this" class="upload_Item">-->
+            <!--<image src="{{item}}" mode="aspectFit" class="merchant_active flo_l upload_Item_img"/>-->
+          <!--</view>-->
+        <!--</view>-->
+      <!--</scroll-view>-->
+      <scroll-view scroll-x="true">
+         <view class="uploadWrap" scroll-x="true" >
+          <view class="upload_Item" wx:for="{{list}}" wx:key="*this">
+           <image class="upload_Item_img" mode="aspectFit" src="{{item}}" bindtap="changeMainImgFn2" @tap="preview({{item}})"></image>
+           <icon type="clear" size="16" class="upload_Btn flo_l" color="#f64400"></icon>
+        <!--   <view class="upload_mask {{upload_ImgSelId2==item.id? 'show':' ' }}">主图</view>-->
+          </view>
+         </view>
+      </scroll-view>
+      <!--<view class="weui-cell__ft weui-cell__ft_in-access" style="margin-top: 60rpx;"></view>-->
+      <view class="clearfloat"></view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+//  import { service } from '../config.js'
+  import http from '../mixins/http'
+  import base from '../mixins/base'
+//  import ShareMessage from '../mixins/ShareMessage'
+  export default class MerchantBox extends wepy.component {
+    mixins = [base, http]
+    props = {
+      list: {
+        type: Object,
+        default: []
+      }
+    };
+    data= {
+      indicatorDots: false,
+      autoplay: false,
+      interval: 5000,
+      duration: 1000
+    }
+    onLoad () {
+      console.log(this.list)
+    }
+    methods = {
+      preview(item) {
+        let that = this
+        wx.previewImage({
+          current: item,
+          urls: that.list
+        })
+      },
+      openMap() {
+        let that = this
+        wx.openLocation({
+          latitude: that.address.mylat,
+          longitude: that.address.myLong,
+          scale: 28
+        })
+      },
+      goto(url) {
+        wx.navigateTo({url: url})
+      }
+    }
+  }
+</script>
+
+<style type="less">
+  .inline-block {display: inline-block}
+  .flo_l {float: left}
+  .flo_r {float: right}
+  .font_26 {font-size: 26rpx}
+  .font_28 {font-size: 28rpx}
+  .bold{font-weight: bold}
+  .clearfloat {clear:both}
+  .white {background: white}
+  .ellipsis_2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .ellipsis_1 {
+    text-overflow : ellipsis;
+    white-space : nowrap;
+    overflow : hidden;
+  }
+  .box{
+    background: white;
+    border-bottom: 1rpx solid #d3d3d3;
+    padding: 22rpx;
+  }
+  .active{
+    width: 68rpx;
+    height: 68rpx;
+    border: 4rpx solid #dedede;
+    box-shadow:1rpx 1rpx 12rpx #d4d4d4;
+    border-radius: 50%;
+    margin-right: 6rpx;
+  }
+
+  .uploadWrap {
+    height: 160rpx;
+    width: 100%;
+    display: flex;
+    display: -webkit-box;
+    flex-direction: column;
+  }
+  .merchant_active{
+    /*width: 30%;*/
+    /*height: 120rpx;*/
+    border: 4rpx solid #dedede;
+    box-shadow:1rpx 1rpx 12rpx #d4d4d4;
+    border: 4rpx solid white;
+    margin-right: 12rpx;
+    /*border-radius: 50%;*/
+  }
+  .upload_Item{
+    width: 160rpx;
+    height: 120rpx;
+    margin-right: 22rpx;
+    flex: 1;}
+  .upload_Item_img{
+    width: 160rpx;
+    height: 110rpx;
+  }
+
+</style>

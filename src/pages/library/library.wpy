@@ -1,6 +1,6 @@
 <template>
   <view class="user-library">
-    <view  class="flo_l" style="padding-top: 12rpx;padding-left: 42rpx" wx:if="{{member_type == 'ADMIN'}}" @tap="goto('/pages/library/create?id={{mylib.id}}')">
+    <view  class="flo_l" style="padding-top: 12rpx;padding-left: 42rpx" wx:if="{{member_type == 'ADMIN'}}" @tap="gotoredirect('/pages/library/create?id={{mylib.id}}')">
       <image class="library-image flo_l" mode="aspectFit" src="{{mylib.logo}}"></image>
     </view>
     <view  class="flo_l" style="padding-top: 12rpx;padding-left: 42rpx" wx:else>
@@ -380,6 +380,9 @@
       },
       goto(url) {
         wx.navigateTo({url: url})
+      },
+      gotoredirect(url) {
+        wx.redirectTo({url: url})
       },
       gotoTab(url) {
         wx.switchTab({url: url})
