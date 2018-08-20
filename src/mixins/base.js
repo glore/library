@@ -12,7 +12,26 @@ export default class baseMixin extends wepy.mixin {
   hasOwn(obj, type) {
     return Object.prototype.hasOwnProperty.call(obj, type);
   }
-
+  $showToast(title){
+    wx.showToast({
+      title: title,
+      icon: 'none',
+      duration: 1200
+    })
+  }
+  $Toast_success(title){
+    wx.showToast({
+      title: title,
+      icon: 'success',
+      duration: 1200
+    })
+  }
+  $showLoading(title){
+    wx.showLoading({
+      title: title,
+      mask: true
+    })
+  }
   /**
    * [isXXX 基础方法]
    * @param  {[type]}  item [description]

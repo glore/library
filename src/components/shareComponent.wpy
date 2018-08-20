@@ -1,0 +1,201 @@
+<template>
+  <view class="" style="margin:26rpx;z-index: 1000;position:relative;">
+    <!--<button  type="default" size="mini"  @tap="gotoTab('/pages/index')"  style="padding:2rpx 12rpx;line-height: 42rpx;margin-right: 22rpx">-->
+    <!--<image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-home.png"></image>-->
+    <!--</button>-->
+    <button  size="mini" @tap="gotoTab('/pages/map')" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 140rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
+      <image  class="imgicon" mode="aspectFit" src="../images/tabbars/home.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
+    </button>
+    <view class="smile" style="position: fixed;z-index: 1000;right: 24.5vw; top: -25rpx;"></view>
+    <button  size="mini"  @tap="share" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 12rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
+      <image  class="imgicon" mode="aspectFit" src="../images/icon/share_red.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
+    </button>
+    <view class="smile" style="position: fixed;z-index: 1000;right: 7vw; top: -25rpx;"></view>
+    <!--<button  size="mini" open-type="share" class="btn" style="padding:2rpx 12rpx 2rpx 0;line-height: 42rpx;border-radius: 50%;box-shadow: 1rpx 1rpx 12rpx red;position: fixed;right: -12rpx;top: 40rpx;">-->
+    <!--<image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-share_red.png" style="width: 78rpx;height: 78rpx;float: left;"></image>-->
+    <!--</button>-->
+  </view>
+
+
+
+  <modal class="modal" hidden="{{hide}}"  confirm-text="取消"  no-cancel no-confirm @confirm="listenerCancel1">
+    <view style="width: 50%" class="text-center flo_l">
+      <button class="btn text-center font_28 color-666" open-type="share" style="line-height: 1.6;padding: 6rpx">
+        <image class="share-image" mode="aspectFit" src="http://images.ufutx.com/201808/20/0c33d683fc63ca4aab594d079bda93aa.png"></image>
+        <view>分享到群/朋友</view>
+      </button>
+    </view>
+    <view style="width: 50%" class="text-center flo_r color-666">
+      <button class="btn text-center font_28 color-666"  style="line-height: 1.6;padding: 6rpx" @tap="showPic">
+        <image class="share-image" mode="aspectFit" src="http://images.ufutx.com/201808/20/5caa7a73890718c805c610a44cb34fe2.png"></image>
+        <view>分享到朋友圈</view>
+      </button>
+    </view>
+    <view class="clearfloat"></view>
+  </modal>
+  <modal  hidden="{{showOpenSet}}"
+          no-confirm
+          title="提示"
+          no-cancel>
+    <view class="text-center">需要你授权才能保存到相册哦！</view>
+    <view style="position: absolute;left: 10%;bottom: 0;background: #FAFAFC; z-index: 999999;">
+      <button class="btn" style="width: 100%;height: 82rpx;padding:0 86rpx;" @tap="hideOpenSet">
+        取消
+      </button>
+    </view>
+    <view style="position: absolute;left: 46%;bottom: 0;background: #FAFAFC; z-index: 999999;">
+      <button class="btn green" style="width: 100%;height: 82rpx;padding:0 86rpx;" open-type="openSetting" @opensetting="openSetting_image">
+        打开设置
+      </button>
+    </view>
+  </modal>
+  <modal  hidden="{{showImage}}"
+          confirm-text="保存"
+          cancel-text="取消"
+          bindconfirm="saveImage('save')"
+          bindcancel="listenerCancel">
+    <image style="position: relative;left: -3%;top:0%;box-shadow: 1rpx 1rpx 12rpx #d3d3d3;" mode="aspectFit"
+           src="{{shareImage}}"
+           class="shaerImage"></image>
+  </modal>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import base from '../mixins/base'
+
+
+  export default class shareComponent extends wepy.component {
+    props = {
+      shareImage: {
+        type: String,
+        default: null
+      }
+    }
+    data = {
+      hide: true,
+      showImage: true,
+      showOpenSet: true
+    }
+    onLoad() {
+      console.log(this.shareImage)
+    }
+    computed = {
+    }
+
+    methods = {
+      showPic() {
+        this.showImage = false
+        this.$apply()
+      },
+      listenerCancel1() {
+        this.hide = true
+        this.$apply()
+      },
+      listenerCancel () {
+        this.showImage = true
+        this.$apply()
+      },
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
+      gotoredirect(url) {
+        wx.redirectTo({url: url})
+      },
+      gotoTab(url) {
+        wx.switchTab({url: url})
+      },
+      share() {
+        this.hide = false
+        this.$apply()
+      },
+      hideOpenSet () {
+        this.showOpenSet = true
+        this.showMap = true
+        this.$apply()
+      },
+      // 授权访问image
+      openSetting_image (e) {
+        let that = this
+        this.$apply()
+        if (e.detail.authSetting['scope.writePhotosAlbum']) {
+          that.showOpenSet = true
+//          that.shareImage = true
+          that.$apply()
+          wepy.downloadFile({
+            url: that.shareImage,
+            success: (res) => {
+              that.$showToast('保存中...')
+              wepy.saveImageToPhotosAlbum({
+                filePath: res.tempFilePath,
+                success: (res) => {
+                  wx.showModal({
+                    title: '保存成功',
+                    content: '赶紧分享给你的朋友吧！'
+                  })
+                },
+                fail: () => {
+                  console.log('取消了')
+                }
+              })
+            },
+            fail: () => {
+              console.log('fail')
+            }
+          })
+        }
+      },
+      saveImage (type) {
+        var that = this
+        console.log(that.shareImage)
+        wepy.downloadFile({
+          url: that.shareImage,
+          success: (res) => {
+            console.log(res)
+            wepy.saveImageToPhotosAlbum({
+              filePath: res.tempFilePath,
+              success: (res) => {
+                that.showImage = true
+                that.$apply()
+                wx.showModal({
+                  title: '已保存在相册了！',
+                  content: '赶紧分享给你的朋友吧！'
+                })
+              },
+              fail: () => {
+                wx.getSetting({
+                  success (res) {
+                    if (!res.authSetting['scope.writePhotosAlbum']) {
+                      that.showImage = true
+                      that.showOpenSet = false
+                      that.$apply()
+                    }
+                  }
+                })
+              }
+            })
+          },
+          fail: () => {
+            console.log('fail')
+          }
+        })
+      }
+    }
+  }
+</script>
+
+<style type="less">
+
+  @import "../styles/weui/base/fn.wxss";
+  @import "../styles/custom/fn.less";
+  @import "../styles/custom/animation.less";
+  @import "../styles/custom/library.less";
+  .share-image{
+    width: 76rpx;
+    height: 76rpx;
+  }
+  .shaerImage{
+    width: 600rpx;
+    height: 800rpx;
+  }
+</style>

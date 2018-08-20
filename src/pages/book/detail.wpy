@@ -1,6 +1,7 @@
 <template>
   <view class="main-detail color-666">
     <view class="weui-panel">
+      <shareComponent :shareImage.sync="shareImage"></shareComponent>
       <block wx:if="{{banners && banners.length}}">
         <view class="detail-cover">
         </view>
@@ -114,6 +115,7 @@
   import Screen from '../../components/screen'
   import ShareMessage from '../../mixins/ShareMessage'
   import Showcase from '../../components/Showcase'
+  import shareComponent from '../../components/shareComponent'
 
   export default class mainDetail extends wepy.page {
     mixins = [base, http, user, ShareMessage]
@@ -131,7 +133,8 @@
       library_id: 0,
       title: '',
       detail_pic: [],
-      book_library: []
+      book_library: [],
+      shareImage: ''
     }
 
     computed = {
@@ -192,8 +195,8 @@
           this.book = data
           this.book_library = data.book_library
           this.detail_pic = data.detail_pic
-//          this.library_id = data.library_book.library_id
-//          debugger
+          this.shareImage = data.book_library.share_pic
+          this.$apply()
         }
       })
 
@@ -296,7 +299,8 @@
     }
     components = {
       Screen,
-      Showcase
+      Showcase,
+      shareComponent
     }
   }
 </script>
