@@ -51,7 +51,7 @@
           <view class="weui-label reset-label-left">价格</view>
         </view>
         <view class="weui-cell__bd h3  color-red">
-            <input @input="typing('price')" class="weui-input" value="{{price}}" placeholder="价格"/>
+            <input @input="typing('price')" type="digit" class="weui-input" value="{{price}}" placeholder="价格"/>
         </view>
       </view>
       <view class="weui-cell weui-cell_input">

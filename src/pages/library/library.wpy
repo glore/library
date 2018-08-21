@@ -23,6 +23,7 @@
         <!--<image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-share_red.png" style="width: 78rpx;height: 78rpx;float: left;"></image>-->
       <!--</button>-->
     </view>
+    <!--<shareComponent></shareComponent>-->
     <view class="clearfloat"></view>
     <view class="flo_r" style="margin-right:26rpx;">
       <form bindsubmit="formSubmit" report-submit>
@@ -232,6 +233,7 @@
   import ShareMessage from '../../mixins/ShareMessage'
   import ClassifyList from '../../components/classifyList'
   import waterAnimation from '../../components/water_animation'
+  import shareComponent from '../../components/shareComponent'
 
   export default class userSubscribe extends wepy.page {
     mixins = [base, http, user, ShareMessage]
@@ -240,7 +242,8 @@
     }
     components = {
       ClassifyList: ClassifyList,
-      waterAnimation: waterAnimation
+      waterAnimation: waterAnimation,
+      shareComponent: shareComponent
     }
     data = {
       loaded: false,
