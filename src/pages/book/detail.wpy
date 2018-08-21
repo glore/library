@@ -14,9 +14,9 @@
         <view class="detail-info color-666 font_32">
           <view class="font_28 color-666">书名：{{book.title}}</view>
           <view class="font_28 color-666">作者：{{book.author}}</view>
-          <view class="font_28 color-666 ">出版社：{{book.publisher}}</view>
-          <view class="font_28 color-666">出版时间：{{book.pubdate}}</view>
-          <view class="font_28 color-666">分类：{{book.sort.name}}</view>
+          <view class="font_28 color-666" wx:if="{{book.publisher}}">出版社：{{book.publisher}}</view>
+          <view class="font_28 color-666" wx:if="{{book.pubdate}}">出版时间：{{book.pubdate}}</view>
+          <view class="font_28 color-666" wx:if="{{book.sort}}">分类：{{book.sort.name}}</view>
           <view class="font_28 color-666">ISBN编码：{{book.isbn}}</view>
           <view class="font_28 color-666">所属书房：{{book_library.library.name}}</view>
           <!--<view class="icon-edit">-->
@@ -167,6 +167,7 @@
     }
     onShow() {
       this.initPageData()
+      this.getSharePic()
       // google analytics
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
@@ -183,7 +184,6 @@
 
     // 获取图书信息
     getDetail() {
-      // 获取图书详情
       let data = {}
       if (this.library_id) {
         data = {
@@ -195,7 +195,6 @@
           this.book = data
           this.book_library = data.book_library
           this.detail_pic = data.detail_pic
-          this.shareImage = data.book_library.share_pic
           this.$apply()
         }
       })
@@ -217,6 +216,16 @@
 
       // 停止下拉状态
       wx.stopPullDownRefresh()
+    }
+
+    // 获取分享图片
+    getSharePic() {
+      this.$get({url: service.libraries + `/${this.library_id}/books/${this.book.id}/share`}, {
+        success: ({code, data}) => {
+          this.shareImage = data.pic
+          this.$apply()
+        }
+      })
     }
 
     methods = {

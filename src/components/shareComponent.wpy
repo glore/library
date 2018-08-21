@@ -85,8 +85,15 @@
 
     methods = {
       showPic() {
-        this.showImage = false
-        this.$apply()
+        if (this.shareImage) {
+          this.showImage = false
+          this.$apply()
+        } else {
+          wx.showModal({
+            title: '提示',
+            content: '海报生成失败，请重试！'
+          })
+        }
       },
       listenerCancel1() {
         this.hide = true
