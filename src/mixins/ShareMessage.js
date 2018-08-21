@@ -33,14 +33,20 @@ export default class ShareMessage extends wepy.mixin {
       let pages = getCurrentPages()    //获取加载的页面
       let currentPage = pages[pages.length-1]    //获取当前页面的对象
       let link = currentPage.route    //当前页面url
+      let library_id = currentPage.options.library_id ? currentPage.options.library_id : ''
       let options = currentPage.options.id
       let id = options ? '?id=' + options : ''
+      if (library_id) {
+        id = options ? '?id=' + options + '&library_id=' + library_id : ''
+      }
       let url = ''
       if(options) {
         url = link + id + '&from_openid=' + that.from_openid
       }else {
         url = link + '?from_openid=' + that.from_openid
       }
+      console.log(url)
+      console.log(currentPage.options)
       // debugger
       if (res.from === 'menu') {
         console.log(res.target)
@@ -73,7 +79,6 @@ export default class ShareMessage extends wepy.mixin {
                     success: ({code, data}) => {
                       that.openGid = data.openGId
                       that.$apply()
-                      debugger
                     },
                     fail: ({code, data}) => {},
                     complete: () => { this.loading = false }
