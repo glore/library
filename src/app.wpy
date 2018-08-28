@@ -126,92 +126,92 @@
 
     onLaunch(options) {
       console.log(options)
-      if (options.scene == 1037 || options.scene == 1038) {
-        let uid = options.referrerInfo.extraData.uid
-//      console.log(JSON.stringify(uid))
-        wx.setStorageSync('uid', uid)
-        wepy.login({
-          success: (res) => {
-            let code = res.code
-            let data = {
-              wechat_code: code
-            }
-            wx.request({
-              url: service.register_infor,
-              header: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-              },
-              method: 'get',
-              data: data,
-              success: function (res) {
-                let isRegister = res.data.data.is_register
-                if (isRegister == 1) {
-                  wepy.login({
-                    success: (res) => {
-                      let codeV = res.code
-                      wx.request({
-                        url: service.skip + '/infor',
-                        header: {'Content-Type': 'application/x-www-form-urlencoded'},
-                        method: 'get',
-                        data: {
-                          wechat_code: codeV,
-                          uid: uid
-                        },
-                        success: function (res) {
-                          let token = res.data.data.access_token
-                          wx.setStorageSync('token', token)
-                          console.log('success')
-                          console.log(res)
-                        }
-                      })
-                    },
-                    fail: (res) => {
-                      console.log('wepy.login.fail:', res)
-                    }
-                  })
-                } else {
-                  wepy.getUserInfo({
-                    success: (res) => {
-                      let iv = res.iv
-                      let encryptedData = res.encryptedData
-                      wepy.login({
-                        success: (res) => {
-                          let codeV = res.code
-                          wx.request({
-                            url: service.skip,
-                            header: {'Content-Type': 'application/x-www-form-urlencoded'},
-                            method: 'get',
-                            data: {
-                              wechat_code: codeV,
-                              uid: uid,
-                              iv: iv,
-                              encryptedData: encryptedData
-                            },
-                            success: function (res) {
-                              let token = res.data.data.access_token
-                              wx.setStorageSync('token', token)
-                              console.log('success')
-                              console.log(res)
-                            }
-                          })
-                        },
-                        fail: (res) => {
-                          console.log('wepy.login.fail:', res)
-                        }
-                      })
-                    },
-                    fail: (res) => {
-                    }
-                  })
-                }
-              }
-            })
-          },
-          fail: (res) => {
-            console.log('wepy.login.fail:', res)
-          }
-        })
-      }
+//      if (options.scene == 1037 || options.scene == 1038) {
+//        let uid = options.referrerInfo.extraData.uid
+////      console.log(JSON.stringify(uid))
+//        wx.setStorageSync('uid', uid)
+//        wepy.login({
+//          success: (res) => {
+//            let code = res.code
+//            let data = {
+//              wechat_code: code
+//            }
+//            wx.request({
+//              url: service.register_infor,
+//              header: {
+//                'Content-Type': 'application/x-www-form-urlencoded'
+//              },
+//              method: 'get',
+//              data: data,
+//              success: function (res) {
+//                let isRegister = res.data.data.is_register
+//                if (isRegister == 1) {
+//                  wepy.login({
+//                    success: (res) => {
+//                      let codeV = res.code
+//                      wx.request({
+//                        url: service.skip + '/infor',
+//                        header: {'Content-Type': 'application/x-www-form-urlencoded'},
+//                        method: 'get',
+//                        data: {
+//                          wechat_code: codeV,
+//                          uid: uid
+//                        },
+//                        success: function (res) {
+//                          let token = res.data.data.access_token
+//                          wx.setStorageSync('token', token)
+//                          console.log('success')
+//                          console.log(res)
+//                        }
+//                      })
+//                    },
+//                    fail: (res) => {
+//                      console.log('wepy.login.fail:', res)
+//                    }
+//                  })
+//                } else {
+//                  wepy.getUserInfo({
+//                    success: (res) => {
+//                      let iv = res.iv
+//                      let encryptedData = res.encryptedData
+//                      wepy.login({
+//                        success: (res) => {
+//                          let codeV = res.code
+//                          wx.request({
+//                            url: service.skip,
+//                            header: {'Content-Type': 'application/x-www-form-urlencoded'},
+//                            method: 'get',
+//                            data: {
+//                              wechat_code: codeV,
+//                              uid: uid,
+//                              iv: iv,
+//                              encryptedData: encryptedData
+//                            },
+//                            success: function (res) {
+//                              let token = res.data.data.access_token
+//                              wx.setStorageSync('token', token)
+//                              console.log('success')
+//                              console.log(res)
+//                            }
+//                          })
+//                        },
+//                        fail: (res) => {
+//                          console.log('wepy.login.fail:', res)
+//                        }
+//                      })
+//                    },
+//                    fail: (res) => {
+//                    }
+//                  })
+//                }
+//              }
+//            })
+//          },
+//          fail: (res) => {
+//            console.log('wepy.login.fail:', res)
+//          }
+//        })
+//      }
     }
 
     onShow(options) {
