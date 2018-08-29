@@ -177,11 +177,12 @@
           that.distance1 = data.distance1
           that.distance_library = data.distance_library
           if (data.distance_library == null) {
-            return wx.showToast({
-              title: '距离太远了！',
-              image: '../images/icon/icon-error.png',
-              duration: 1500
-            })
+            return
+//            wx.showToast({
+//              title: '距离太远了！',
+//              image: '../images/icon/icon-error.png',
+//              duration: 1500
+//            })
           }
           if (that.distance_library.type == 'SHARE') {
             that.distance_library.url = '/pages/library/shareLibrary?id=' + that.distance_library.id
@@ -269,11 +270,12 @@
               that.distance1 = data.distance1
               that.distance_library = data.distance_library
               if (data.distance_library == null) {
-                return wx.showToast({
-                  title: '距离太远了！',
-                  image: '../images/icon/icon-error.png',
-                  duration: 1500
-                })
+                return
+//                wx.showToast({
+//                  title: '距离太远了！',
+//                  image: '../images/icon/icon-error.png',
+//                  duration: 1500
+//                })
               }
               if (that.distance_library.type == 'SHARE') {
                 that.distance_library.url = '/pages/library/shareLibrary?id=' + that.distance_library.id
