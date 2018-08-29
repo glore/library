@@ -8,10 +8,13 @@
     <view class="weui-cells__title"></view>
     <view class="weui-cells weui-cells_after-title">
       <block wx:for="{{sorts}}" wx:key="index">
-        <navigator url="/pages/library/sort?id={{item.id}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+        <view @tap="goto('/pages/user/booklist?library_id={{library.id}}&id={{item.id}}&title={{item.name}}')" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
           <view class="weui-cell__bd">{{item.name}}</view>
+          <view class="icon-edit" @tap.stop="goto('/pages/library/sort?id={{item.id}}')">
+            <image class="" src="../../images/icon/icon-edit.png" />
+          </view>
           <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-        </navigator>
+        </view>
       </block>
     </view>
   </view>
@@ -74,6 +77,10 @@
     }
 
     methods = {
+      goto(url) {
+        console.log(url)
+        wx.navigateTo({url: url})
+      },
       add(libraryId) {
         wx.navigateTo({url: '/pages/library/sort?library_id=' + libraryId})
       },
@@ -95,6 +102,17 @@
 }
 .weui-cells__title{
   margin-bottom: 44rpx;
+}
+.icon-edit {
+  float: right;
+  /*margin: -52rpx 8rpx 6rpx 0rpx;*/
+  border-radius: 8rpx;
+  /*box-shadow: -1rpx 6rpx 12rpx #b7b7b7;*/
+  padding: 0rpx 8rpx;
+}
+.icon-edit image{
+  width: 72rpx;
+  height: 68rpx;
 }
 
 </style>

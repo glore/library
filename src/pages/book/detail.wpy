@@ -1,7 +1,7 @@
 <template>
   <view class="main-detail color-666">
     <view class="weui-panel">
-      <shareComponent :shareImage.sync="shareImage"></shareComponent>
+      <shareComponent :shareImage.sync="shareImage" :library_id.sync="library_id"></shareComponent>
       <block wx:if="{{banners && banners.length}}">
         <view class="detail-cover">
         </view>
@@ -19,9 +19,12 @@
           <view class="font_28 color-666" wx:if="{{book.sort}}">分类：{{book.sort.name}}</view>
           <view class="font_28 color-666">ISBN编码：{{book.isbn}}</view>
           <view class="font_28 color-666">所属书房：{{book_library.library.name}}</view>
-          <!--<view class="icon-edit">-->
-            <!--<image class="" src="../../images/icon/icon-edit.png" />-->
-          <!--</view>-->
+          <view wx:if="{{library_id == 523}}">
+            <span wx:if="{{book.is_admin == '1'}}">推荐：<switch type="switch" checked="{{book.is_recommend == '1'}}" color="#36a2e6" @change.stop="switchChange()"  style="width: 120rpx"/></span>
+          </view>
+          <view class="icon-edit" @tap.stop="goto('/pages/library/book_edit?id={{book.id}}&library_id={{library_id}}')" wx:if="{{book.is_admin == '1'}}">
+            <image class="" src="../../images/icon/icon-edit.png" />
+          </view>
         </view>
         <view class="detail-tags">
           <text wx:for="{{book.tags}}" wx:key="index" wx:for-item="tag" class="tag">{{tag}}</text>
@@ -229,6 +232,26 @@
     }
 
     methods = {
+      switchChange (id, e) {
+        let isRecommend = 0
+        if (e.detail.value) {
+          isRecommend = 1
+        } else {
+          isRecommend = 0
+        }
+        this.$put({
+          url: service.libraries + `/${this.library_id}/books/${this.book.id}/recommend`,
+          data: {
+            is_recommend: isRecommend
+          }
+        }, {
+          success: ({code, data}) => {
+            console.log(`ok`)
+          },
+          fail: ({code, data}) => {
+          }
+        })
+      },
       link(_id, bookid, member) {
 //        if (member && member.status == 'ADMIN') {
 //          wx.navigateTo({url: '/pages/library/book?library_id=' + _id + '&id=' + bookid})
@@ -316,12 +339,16 @@
 
 <style lang="less">
 @import "../../styles/custom/fn.less";
-
+page{
+  font-: italic small-caps 500 inherit fantasy;
+}
 .main-detail{
 
   .detail-cover{
     display: block;
     margin: 40rpx auto 0;
+    width: 275rpx;
+    height: 425rpx;
   }
   .detail-tags{
     .h4();

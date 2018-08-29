@@ -1,0 +1,73 @@
+<template>
+
+  <swiper indicator-dots="{{indicatorDots}}"
+          autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" vertical="true" circular="true">
+    <block wx:for="{{list}}" wx:key="key">
+      <swiper-item>
+        <text class="itme_text ellipsis_1">{{item.user_name}}借了一本《{{item.book_name}}》</text>
+      </swiper-item>
+    </block>
+  </swiper>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { service } from '../config.js'
+  import http from '../mixins/http'
+  import base from '../mixins/base'
+
+  export default class rollComponent extends wepy.component {
+    mixins = [base, http]
+    props = {
+      list: {
+        type: Array,
+        default: []
+      }
+    }
+
+    data = {
+      imgUrls: [
+        '营业时间：9：00 - 22：00',
+        '服务电话：400-8998-8898',
+        '配送条件：1元起送  配送费6元'
+      ],
+      indicatorDots: false,
+      autoplay: true,
+      interval: 3000,
+      duration: 1000
+
+    }
+    onLoad() {
+      console.log(this.list)
+    }
+
+    methods = {
+      kk(){
+        console.log(this.list)
+      }
+    }
+  }
+</script>
+
+<style type="less">
+  @import "../styles/custom/fn.less";
+
+
+  swiper {
+    width: 68%;
+    height: 68rpx;
+    /*position: absolute;*/
+    /*left: 96rpx;*/
+    /*top: 278rpx;*/
+    pointer-events: none;
+    cursor: default;
+  }
+
+  .itme_text {
+    width: 100%;
+    font-size: 26 rpx;
+    color: red;
+    display: inline-block;
+    z-index: 999;
+  }
+</style>
