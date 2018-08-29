@@ -320,7 +320,6 @@
     GetshareImage() {
       this.$get({url: service.libraries + `/${this.mylib.id}/share`}, {
         success: ({code, data}) => {
-          debugger
           this.shareImage = data
         },
         fail: ({code, data}) => {},
