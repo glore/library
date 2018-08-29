@@ -235,7 +235,6 @@
   import rollComponent from '../../components/rollComponent'
   import shareComponent from '../../components/shareComponent'
 
-
   export default class shareLibrary extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
