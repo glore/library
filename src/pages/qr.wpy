@@ -85,6 +85,8 @@
       navigationBarTitleText: '扫码',
       enablePullDownRefresh: false
     }
+    components = {
+    }
     data = {
       libraries: [],
       Show: false,

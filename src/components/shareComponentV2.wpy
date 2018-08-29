@@ -1,23 +1,31 @@
 <template>
-  <view class="" style="margin:26rpx;z-index: 1000;position:relative;">
-    <!--<button  type="default" size="mini"  @tap="gotoTab('/pages/index')"  style="padding:2rpx 12rpx;line-height: 42rpx;margin-right: 22rpx">-->
-    <!--<image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-home.png"></image>-->
-    <!--</button>-->
-    <button  size="mini" @tap="goto('/pages/map')" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 140rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
-      <image  class="imgicon" mode="aspectFit" src="../images/tabbars/home.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
-    </button>
-    <view class="smile" style="position: fixed;z-index: 1000;right: 24.5vw; top: -25rpx;"></view>
-    <button  size="mini"  @tap="share" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 12rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
-      <image  class="imgicon" mode="aspectFit" src="../images/icon/share_red.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
-    </button>
-    <view class="smile" style="position: fixed;z-index: 1000;right: 7vw; top: -25rpx;"></view>
-    <!--<button  size="mini" open-type="share" class="btn" style="padding:2rpx 12rpx 2rpx 0;line-height: 42rpx;border-radius: 50%;box-shadow: 1rpx 1rpx 12rpx red;position: fixed;right: -12rpx;top: 40rpx;">-->
-    <!--<image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-share_red.png" style="width: 78rpx;height: 78rpx;float: left;"></image>-->
-    <!--</button>-->
+  <view class="scan">
+    <view class="container">
+      <view class="dot">
+        <view class="scan_home {{rotate ? 'rotate' : ''}}" @tap="rotates" style="z-index: 12;">
+          <!--<form bindsubmit="formSubmit" report-submit>-->
+            <!--<button formType="submit" class="btn" data-type="click">-->
+              <image  class="imgicon" mode="aspectFit" src="../images/setting.png" style="width: 60rpx;height: 60rpx"></image>
+            <!--</button>-->
+          <!--</form>-->
+        </view>
+      </view>
+      <view class="pulse"></view>
+      <view class="pulse1"></view>
+    </view>
+    <view class="scan_home scan_homeV2 scan_active  {{changerotate ? 'changerotate1' : ''}} {{shrink ? 'changeshrink1' : ''}}">
+      <image  class="imgicon" mode="aspectFit" src="../images/home.png" style="margin-top: -12px"></image>
+      <text style="font-size: 22rpx;position: absolute;left: 20rpx;bottom: 10rpx;">主页</text>
+    </view>
+    <view class="scan_home scan_homeV2 scan_active {{changerotate ? 'changerotate2' : ''}} {{shrink ? 'changeshrink2' : ''}}" >
+      <image  class="imgicon" mode="aspectFit" src="../images/icon-share.png" style="margin-top: -12px"></image>
+      <text style="font-size: 22rpx;position: absolute;left: 20rpx;bottom: 10rpx;">分享</text>
+    </view>
+    <view class="scan_home scan_homeV2 scan_active {{changerotate ? 'changerotate3' : ''}} {{shrink ? 'changeshrink3' : ''}}">
+      <image  class="imgicon" mode="aspectFit" src="../images/icon-position.png" style="margin-top: -12px"></image>
+      <text style="font-size: 22rpx;position: absolute;left: 20rpx;bottom: 10rpx;">地址</text>
+    </view>
   </view>
-
-
-
   <modal class="modal" hidden="{{hide}}"  confirm-text="取消"  no-cancel no-confirm @confirm="listenerCancel1">
     <view style="width: 50%" class="text-center flo_l" @tap="hideModel">
       <button class="btn text-center font_28 color-666" open-type="share" style="line-height: 1.6;padding: 6rpx">
@@ -76,6 +84,14 @@
       }
     }
     data = {
+      rotate: false,
+      changerotate: false,
+      shrink: false,
+      CollectAnimation: false,
+      showanimation: true,
+      EditAnimation: false,
+
+
       hide: true,
       showImage: true,
       showOpenSet: true
@@ -87,6 +103,31 @@
     }
 
     methods = {
+      rotates() {
+        if (this.showanimation) {
+          this.changerotate = true
+//          setTimeout(() => {
+//            this.$apply()
+//          }, 500)
+          this.shrink = false
+          this.showanimation = false
+        } else {
+          this.changerotate = false
+//          setTimeout(() => {
+//            this.$apply()
+//          }, 500)
+          this.shrink = true
+          this.showanimation = true
+        }
+      },
+
+
+
+
+
+
+
+
       hideModel() {
         this.hide = true
       },
@@ -126,8 +167,6 @@
         wx.switchTab({url: url})
       },
       share() {
-        console.log(this.shareImage)
-        console.log(this.library_id)
         this.hide = false
         this.$apply()
       },
@@ -206,18 +245,6 @@
   }
 </script>
 
-<style type="less">
-
-  @import "../styles/weui/base/fn.wxss";
-  @import "../styles/custom/fn.less";
-  @import "../styles/custom/animation.less";
-  @import "../styles/custom/library.less";
-  .share-image{
-    width: 76rpx;
-    height: 76rpx;
-  }
-  .shaerImage{
-    width: 600rpx;
-    height: 800rpx;
-  }
+<style type="less" scoped>
+  @import "../styles/custom/animationV2.less";
 </style>

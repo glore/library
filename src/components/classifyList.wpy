@@ -1,5 +1,5 @@
 <template>
-    <view class="classifyList" wx:for="{{list}}" wx:key="{{item.id}}"  @tap="goto('/pages/user/booklist?library_id={{library_id}}&id={{item.id}}')">
+    <view class="classifyList" wx:for="{{list}}" wx:key="{{item.id}}"  @tap="goto('/pages/user/booklist?library_id={{library_id}}&id={{item.id}}&title={{item.name}}')">
       <view class="flo_r" style="padding: 12rpx">
         <image src="{{item.image}}" mode="aspectFit" style="width: 100rpx;height: 140rpx;margin-right: 42rpx"/>
       </view>

@@ -104,9 +104,13 @@ export default class httpMixin extends wepy.mixin {
           var currentPage = pages[pages.length-1]    //获取当前页面的对象
 
           var options = currentPage.options
-
           var url = '/' + currentPage.route
-          // var url = currentPage.route  + '?party_id=' + options.party_id //当前页面url
+          if (options.id) {
+            url = '/' + currentPage.route + `?id=${options.id}`
+          } else if(options.id && options.library_id) {
+            url = '/' + currentPage.route  + '?id=' + options.id + `&library_id=${options.library_id}`
+          }
+          console.log(url)
           wx.setStorageSync('jump', url)
           // debugge
           wx.removeStorageSync('token', null)
@@ -122,8 +126,8 @@ export default class httpMixin extends wepy.mixin {
                   if(data.token){
                     wx.setStorageSync('token', data.token)
                   }
-
                   var route = '/' + getCurrentPages()[0].__route__;
+
 
                   if (route == '/pages/user/register'){
                     return
@@ -133,7 +137,7 @@ export default class httpMixin extends wepy.mixin {
                     // wx.reLaunch({url: '/pages/user/register'})
                     wx.navigateTo({url: '/pages/user/register'})
                   } else {
-                    wx.reLaunch({url: route})
+                    wx.reLaunch({url: wx.getStorageSync('jump')})
                   }
                 }
               })

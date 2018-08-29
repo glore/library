@@ -154,7 +154,6 @@
       publisher: '',
       price: '',
       isbn: '',
-      Image: '../../images/icon/icon-upload.png',
       pubdate: '',
       pages: '',
       num: '',
@@ -176,13 +175,14 @@
       if (options.id) {
         this.id = options.id
         this.libraryId = options.library_id
+        this.initPageData()
       }
     }
 
     onShow(options) {
       // 初始化页面数据
       if (this.id) {
-        this.initPageData()
+
       }
     }
 

@@ -55,6 +55,9 @@
       }
       if (query.is_recommend) {
         this.is_recommend = query.is_recommend
+        wx.setNavigationBarTitle({
+          title: '推荐图书'
+        })
       }
       if (!params == 'object') {
         this.keyword = params

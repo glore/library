@@ -66,6 +66,11 @@
     onLoad (e) {
       this.library_id = e.library_id
       this.id = e.id
+      if(e.title){
+        wx.setNavigationBarTitle({
+          title: e.title
+        })
+      }
     }
     updateBookList () {
       console.log(this.page)

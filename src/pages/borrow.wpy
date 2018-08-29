@@ -26,7 +26,10 @@
                               <view class="font_26 listtext ellipsis_1">
                                 {{item.name}}
                               </view>
-                              <view style="position: absolute;right: 0;bottom: -10rpx;" wx:if="{{item.status=='JOIN'}}">
+                              <view style="position: absolute;right: 0;bottom: -18rpx;width: 72rpx;height: 80rpx" @tap.stop="showModel({{item.name}}, {{item.id}})">
+                                <image src="../images/icon/delete.png" style="width: 48rpx;height: 48rpx;"></image>
+                              </view>
+                              <view style="position: absolute;right: 0;bottom: 15%;" wx:if="{{item.status=='JOIN'}}">
                                 <image src="../images/tabbars/icon-authstr.png" style="width: 120rpx;height: 120rpx;"></image>
                               </view>
                             </view>
@@ -112,6 +115,9 @@
                 </view>
             </view>
         </view>
+      <modal hidden="{{hiddenmodalput}}" title="提示" confirm-text="确认删除" cancel-text="取消" bindcancel="cancel" bindconfirm="daleteBorrow">
+        <p>是否确认删除《{{libraryName}}》吗？</p>
+      </modal>
       <block wx:if="{{loading}}">
         <view class="weui-loadmore">
           <view class="weui-loading"></view>
@@ -144,6 +150,9 @@
       loaded: false,
       // 我的图书馆
       mylibs: [],
+      libraryName: '', // 删除赋值名字
+      hiddenmodalput: true, // 删除弹框
+      deleteId: 0, // 删除id
       libs: [],
       tabs: ['我的图书馆', '全部图书馆'],
       activeIndex: 0,
@@ -312,6 +321,31 @@
     }
 
     methods = {
+      showModel(name,_id) {
+        this.libraryName = name
+        this.deleteId = _id
+        this.hiddenmodalput = false
+        this.$apply()
+      },
+      cancel () {
+        this.hiddenmodalput = true
+        this.$apply()
+      },
+      daleteBorrow() {
+        this.$post({
+          url: service.libraries + '/' + this.deleteId + '/out'
+        }, {
+          success: ({code, data}) => {
+            this.hiddenmodalput = true
+            wx.showToast({
+              title: '删除成功！',
+              duration: 1500
+            })
+          },
+          fail: ({code, data}) => {},
+          complete: () => {  }
+        })
+      },
       showInput () {
         this.inputShowed = true
       },
@@ -506,7 +540,7 @@ page{
     min-height: 220rpx;
   }
   .listtext {
-    padding: 12rpx 10rpx 16rpx 10rpx;
+    padding: 12rpx 38rpx 16rpx 10rpx;
     border-top: 1rpx solid #d3d3d3;
   }
 </style>

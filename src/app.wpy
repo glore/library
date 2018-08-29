@@ -36,6 +36,7 @@
         'pages/library/library',
         'pages/library/shareLibrary',
         'pages/library/shareLibrary523',
+        'pages/library/shareLibrary523V2',
         'pages/library/searchLibrary',
         'pages/library/borrow',
         'pages/library/usercollect',
