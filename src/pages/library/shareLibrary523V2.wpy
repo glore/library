@@ -1,11 +1,13 @@
 <template>
   <Loading :init.sync="init"/>
   <view class="user">
+    <view id="background" class="wall"></view>
+    <view style="width: 100%;height: 300rpx"></view>
     <view class="user-library">
-      <view  class="flo_l" style="padding-top: 12rpx;padding-left: 42rpx" wx:if="{{member_type == 'ADMIN'}}" @tap="goto('/pages/library/create?id={{mylib.id}}')">
+      <view  class="flo_l" style="padding-top: 12rpx;padding-left: 42rpx;margin-top: -26rpx" wx:if="{{member_type == 'ADMIN'}}" @tap="goto('/pages/library/create?id={{mylib.id}}')">
         <image class="library-image flo_l white" mode="aspectFit" src="{{mylib.logo}}"></image>
       </view>
-      <view  class="flo_l" style="padding-top: 12rpx;padding-left: 42rpx" wx:else>
+      <view  class="flo_l" style="padding-top: 12rpx;padding-left: 42rpx;margin-top: -26rpx" wx:else>
         <image class="library-image flo_l white" mode="aspectFit" src="{{mylib.logo}}"></image>
       </view>
       <view class="library-title  flo_l">
@@ -13,9 +15,9 @@
         <image src="../../images/icon/icon-modification.png" style="width: 32rpx;height: 32rpx;margin-bottom: -4rpx;" wx:if="{{member_type == 'ADMIN'}}" @tap="goto('/pages/library/create?id={{mylib.id}}')"></image>
       </view>
       <view class="library-title  flo_l font_26" style="margin-top: -1rpx !important; font-weight: 100 !important;height: 36rpx">
-        馆长：哈利波特夫人
+        馆长： {{mylib.link_name}}
       </view>
-      <shareComponentV2></shareComponentV2>
+      <shareComponentV2 :shareImage.sync="shareImage" :library_id.sync="library_id" :location.sync="location"></shareComponentV2>
       <view class="clearfloat"></view>
       <view class="flo_r" style="margin-right:26rpx;">
         <form bindsubmit="formSubmit" report-submit>
@@ -51,14 +53,14 @@
           <view class="color-bbb h5">会员数量</view>
           <view class="lead" wx:if="{{mylib.join_member_num > 0 && member_type == 'ADMIN'}}">{{mylib.join_member_num}}</view>
         </view>
-        <view @tap="goto('/pages/library/borrows?library_id={{mylib.id}}')" class="weui-flex__item list-item" style="position: relative">
+        <view @tap="goto('/pages/library/borrows?library_id={{mylib.id}}')" class="weui-flex__item list-item" >
           <view class="color-666 item-title" ><span class="num">{{mylib.borrows_count}}</span>册</view>
           <view class="color-bbb h5">借阅册数</view>
           <view class="lead" wx:if="{{mylib.reserve_book_num > 0 && member_type == 'ADMIN'}}"> {{mylib.reserve_book_num}}</view>
         </view>
       </view>
       <!--<view class="placeholder_26"></view>-->
-      <view class="clearfloat"></view>
+
 
       <!--<view class="mylib_btn">-->
       <!--<button wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}" @tap="scanReturn({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">扫码还书</button>-->
@@ -67,9 +69,9 @@
       <!--<button wx:if="{{!mylib.member}}" @tap="joinLibrary({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">申请加入</button>-->
       <!--<button wx:if="{{mylib.member && mylib.member.status=='JOIN'}}" @tap="joinTip"  class="weui-btn mini-btn" type="primary" size="mini">待审核</button>-->
       <!--</view>-->
-      <view style="height: 68rpx; background: #f4f4f4;line-height: 68rpx;">
+      <view style="width: 100%; height: 68rpx; line-height: 68rpx;">
         <view class="flo_l" style="margin-left: 22rpx">图书馆动态：</view>
-        <rollComponent class="flo_l"></rollComponent>
+        <rollComponent class="flo_l" :list.sync="last_borrows"></rollComponent>
       </view>
     </view>
   </view>
@@ -139,9 +141,9 @@
           删除
         </button>
       </view>
-      </view>
-    <view class="clearfloat"></view>
+    </view>
   </view>
+  <view class="clearfloat"></view>
   <block wx:if="{{mylib.sorts_count == '0' && member_type == 'ADMIN' && !show && !ShowEdit}}">
     <view style="margin: auto;margin-top: -32rpx;position: relative">
       <image src='../../images/message.png'  mode="aspectFit"  style="transform: rotateX(180deg);width: 280rpx;height: 214rpx "></image>
@@ -153,9 +155,12 @@
       <view class="font_26" style="position: absolute;left: 72rpx;bottom: 136rpx;transform: rotateZ(-10deg);">2.扫码录入图书</view>
     </view>
   </block>
-
   <block wx:else>
-    <!--<ClassifyListV2 :list.sync="list" :library_id.sync="library_id" :member_type.sync="member_type" :recommendlist.sync="recommend_library_books"></ClassifyListV2>-->
+    <view class="scrollBox text-center" wx:if="{{showBackTopBtn}}"  catchtap="BackTop">
+      <image src='../../images/Stick.png'  mode="aspectFit"  style="width: 40rpx;height: 40rpx;margin-top: 8rpx;"></image>
+      <view style="margin-top: -22rpx;font-size: 24rpx;">置顶</view>
+    </view>
+    <ClassifyListV2 :list.sync="list" :library_id.sync="library_id" :member_type.sync="member_type" :recommendlist.sync="recommend_library_books"></ClassifyListV2>
   </block>
 
   <!--fefefe-->
@@ -225,18 +230,17 @@
   import base from '../../mixins/base'
   import user from '../../mixins/user'
   import Loading from '../../components/loading'
-  import ShareMessage from '../../mixins/ShareMessage'
+//  import ShareMessage from '../../mixins/ShareMessage'
   import ClassifyListV2 from '../../components/classifyListV2'
   import rollComponent from '../../components/rollComponent'
   import shareComponentV2 from '../../components/shareComponentV2'
 
-
   export default class shareLibrary extends wepy.page {
-    mixins = [base, http, user, ShareMessage]
+    mixins = [base, http, user]
     config = {
       navigationBarTitleText: '友福图书馆',
       navigationBarBackgroundColor: '#036dc5',
-      backgroundColor: '#036dc5',
+      backgroundColor: '#036dc5'
     }
     components = {
       ClassifyListV2: ClassifyListV2,
@@ -278,12 +282,24 @@
       library_sort_index: 0,
       list: [],
       library_id: '',
+      shareImage: '',
       member_type: '',
       page: 1,
       formId: [],
       recommend_library_books: [],
       hiddenmodalput: true,
+      last_borrows: [], // 动态
+      location: {}, // 经纬度
+      showBackTopBtn: false, //显示置顶
       init: false
+    }
+    // 滚动监听
+    onPageScroll(res) {
+      let top = res.scrollTop,
+        show = top > 380 ? true : false
+      this.showBackTopBtn = show
+      this.$apply()
+      console.log(top)
     }
 
     onShareAppMessage(res) {
@@ -293,15 +309,13 @@
       this.mylib.id = query && +query.id
     }
     onShow() {
-      this.initPageData()
+      this.getshareImage()
       this.initPageDataV2()
-      // google tracker
-//      console.log(this.mylib.id)
       this.$parent.getTracker(this.$root.$name, this.mylib.name)
     }
 
     onPullDownRefresh() {
-      this.initPageData()
+//      this.initPageData()
       this.initPageDataV2()
     }
     onReachBottom() {
@@ -311,19 +325,11 @@
       }, 200)
     }
     // 初始化页面数据
-    initPageData() {
-      this.$get({url: service.libraries + '/' + this.mylib.id}, {
+    getshareImage() {
+      this.$get({url: service.libraries + `/${this.mylib.id}/share`}, {
         success: ({code, data}) => {
-          this.mylib = data
-          this.library_id = data.id
-          this.member_type = data.member ? data.member.status : ''
-          let name = data.sorts.map(function (item) {
-            return item.name
-          })
-          this.sortslist = {name: name, index: 0, ShowSorts: false}
-          wx.setNavigationBarTitle({
-            title: data.name // 页面标题为路由参数
-          })
+          this.shareImage = data.pic
+          this.$apply()
         },
         fail: ({code, data}) => {},
         complete: () => { }
@@ -333,7 +339,22 @@
       let data = {page: this.page}
       this.$get({url: service.libraries + `/${this.mylib.id}/v2`, data}, {
         success: ({code, data}) => {
+          wx.setNavigationBarTitle({
+            title: data.name // 页面标题为路由参数
+          })
+          this.mylib = data
+          this.library_id = data.id
+          this.member_type = data.member ? data.member.status : ''
+          this.location = {
+            location_latitude : data.location_latitude,
+            location_longitude : data.location_longitude
+          }
+          let name = data.sorts.map(function (item) {
+            return item.name
+          })
+          this.sortslist = {name: name, index: 0, ShowSorts: false}
           this.recommend_library_books = data.recommend_library_books
+          this.last_borrows = data.last_borrows
           data = data.library_books
           if (data.current_page > data.last_page) {
             this.noMoreList = true
@@ -403,6 +424,13 @@
       this.ShowUpload = false
     }
     methods = {
+      BackTop() {
+        this.showBackTopBtn = false
+        wx.pageScrollTo({
+          scrollTop: 0,
+          duration: 400
+        })
+      },
       goadderss(latitude, longitude) {
         let that = this
         wepy.openLocation({
@@ -790,21 +818,66 @@
     /*background: #f4f4f4;*/
   }
   .user{
-    background: url('http://images.ufutx.com/201808/28/a328330142dddafef5b0de32c8a634a2.jpeg');
+    background: url('http://images.ufutx.com/201808/29/9e6f587fe9a4b7f38178139507c2633c.jpeg');
     background-size: cover;
     background-repeat: no-repeat;
     width: 100%;
-    height: 500rpx;
+    min-height: 500rpx;
   }
   .user-library{
     background: none;
   }
   .library-title{
-    background: rgba(255,255,255,1);
+    /*background: rgba(255,255,255,1);*/
     display: inline-block;
     margin: 22rpx 12rpx 0 12rpx !important;
     border-radius: 6rpx;
     height: 42rpx;
     width: 400rpx;
   }
+@-webkit-keyframes STAR-MOVE {
+  from {
+    background-position:0% 0%
+  }
+  to {
+    background-position: 600% 0%
+  }
+}
+@keyframes STAR-MOVE {
+  from {
+    background-position: 0% 0%
+  }
+  to {
+    background-position: 600% 0%
+  }
+}
+.wall{
+  height: 200px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+
+}
+view#background{
+  background:  url('http://images.ufutx.com/201808/29/fb8e7041fb76d585e9d2ae7b90ba33cd.png') repeat-x 5% 0%;
+  background-size: cover;
+  -webkit-animation: STAR-MOVE  680s linear infinite;
+  /* -moz-animation: STAR-MOVE  20s linear infinite;
+          -ms-animation: STAR-MOVE  20s linear infinite;
+          animation: STAR-MOVE  20s linear infinite; */
+}
+.scrollBox{
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: white;
+  border: 4rpx solid #eeeeee;
+  box-shadow: 1rpx 1rpx 18rpx #a1a1a1;
+  position: fixed;
+  bottom: 16%;
+  right: 8%;
+  z-index: 9999;
+}
 </style>

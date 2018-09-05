@@ -13,15 +13,15 @@
       <view class="pulse"></view>
       <view class="pulse1"></view>
     </view>
-    <view class="scan_home scan_homeV2 scan_active  {{changerotate ? 'changerotate1' : ''}} {{shrink ? 'changeshrink1' : ''}}">
+    <view class="scan_home scan_homeV2 scan_active  {{changerotate ? 'changerotate1' : ''}} {{shrink ? 'changeshrink1' : ''}}" @tap="gotoTab('/pages/map')">
       <image  class="imgicon" mode="aspectFit" src="../images/home.png" style="margin-top: -12px"></image>
       <text style="font-size: 22rpx;position: absolute;left: 20rpx;bottom: 10rpx;">主页</text>
     </view>
-    <view class="scan_home scan_homeV2 scan_active {{changerotate ? 'changerotate2' : ''}} {{shrink ? 'changeshrink2' : ''}}" >
+    <view class="scan_home scan_homeV2 scan_active {{changerotate ? 'changerotate2' : ''}} {{shrink ? 'changeshrink2' : ''}}" @tap="share">
       <image  class="imgicon" mode="aspectFit" src="../images/icon-share.png" style="margin-top: -12px"></image>
       <text style="font-size: 22rpx;position: absolute;left: 20rpx;bottom: 10rpx;">分享</text>
     </view>
-    <view class="scan_home scan_homeV2 scan_active {{changerotate ? 'changerotate3' : ''}} {{shrink ? 'changeshrink3' : ''}}">
+    <view class="scan_home scan_homeV2 scan_active {{changerotate ? 'changerotate3' : ''}} {{shrink ? 'changeshrink3' : ''}}" @tap="openLocation">
       <image  class="imgicon" mode="aspectFit" src="../images/icon-position.png" style="margin-top: -12px"></image>
       <text style="font-size: 22rpx;position: absolute;left: 20rpx;bottom: 10rpx;">地址</text>
     </view>
@@ -72,11 +72,15 @@
   import wepy from 'wepy'
   import base from '../mixins/base'
 
-  export default class shareComponent extends wepy.component {
+  export default class shareComponentV2 extends wepy.component {
     props = {
       shareImage: {
         type: String,
         default: null
+      },
+      location: {
+        type: Object,
+        default: {}
       },
       library_id: {
         type: Number,
@@ -85,19 +89,16 @@
     }
     data = {
       rotate: false,
-      changerotate: false,
+      changerotate: true,
       shrink: false,
       CollectAnimation: false,
-      showanimation: true,
+      showanimation: false,
       EditAnimation: false,
-
-
       hide: true,
       showImage: true,
       showOpenSet: true
     }
     onLoad() {
-      console.log(this.shareImage)
     }
     computed = {
     }
@@ -120,18 +121,11 @@
           this.showanimation = true
         }
       },
-
-
-
-
-
-
-
-
       hideModel() {
         this.hide = true
       },
       showPic() {
+        console.log(this.location)
         if (this.shareImage) {
           this.showImage = false
           this.$apply()
@@ -141,6 +135,15 @@
             content: '海报生成失败，请重试！'
           })
         }
+      },
+      openLocation() {
+        let that = this
+        console.log(that.location.location_latitude)
+        wx.openLocation({
+          latitude: Number(that.location.location_latitude),
+          longitude: Number(that.location.location_longitude),
+          scale: 28
+        })
       },
       listenerCancel1() {
         this.hide = true
@@ -167,6 +170,8 @@
         wx.switchTab({url: url})
       },
       share() {
+        console.log(this.shareImage)
+        console.log(this.library_id)
         this.hide = false
         this.$apply()
       },
