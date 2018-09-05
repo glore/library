@@ -1,13 +1,12 @@
 <template>
-
-  <swiper indicator-dots="{{indicatorDots}}"
-          autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" vertical="true" circular="true">
-    <block wx:for="{{list}}" wx:key="key">
-      <swiper-item>
-        <text class="itme_text ellipsis_1">{{item.user_name}}借了一本《{{item.book_name}}》</text>
-      </swiper-item>
-    </block>
-  </swiper>
+    <swiper indicator-dots="{{indicatorDots}}"
+            autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" vertical="true" circular="true">
+      <block wx:for="{{list}}" wx:key="key">
+        <swiper-item>
+          <text class="itme_text ellipsis_1">{{item.user_name}}借了一本《{{item.book_name}}》</text>
+        </swiper-item>
+      </block>
+    </swiper>
 </template>
 
 <script>

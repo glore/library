@@ -193,27 +193,27 @@
   <!--</view>-->
 
 
-  <!--<view style="height: 180rpx;background: white"></view>-->
-  <!--<view class="text-center nav" wx:if="{{mylib.is_admin == 1}}">--><!--去掉管理员才能录书的控制-->
+  <view style="height: 180rpx;background: white"></view>
+  <view class="text-center nav" wx:if="{{mylib.is_admin == 1}}">
   <!--<view class="text-center nav">-->
-    <!--<view class="nav__items font_32 inline-block">-->
-      <!--<form bindsubmit="formSubmit" report-submit>-->
-        <!--<button formType="submit" class="btn flo_l" data-type="click" @tap="scanBook({{mylib.id}})">-->
-          <!--<view class="nav__item inline-block text-center"> <span class="nav__item-text"> 录书 </span> </view>-->
-        <!--</button>-->
-      <!--</form>-->
-      <!--<form bindsubmit="formSubmit" report-submit>-->
-        <!--<button formType="submit" class="btn flo_l" data-type="click" @tap="scanReturn({{mylib.id}})">-->
-          <!--<view class="nav__item inline-block text-center"> <span class="nav__item-text"> 还书 </span> </view>-->
-        <!--</button>-->
-      <!--</form>-->
-      <!--<form bindsubmit="formSubmit" report-submit>-->
-        <!--<button formType="submit" class="btn flo_l" data-type="click" @tap="scanBorrow({{mylib.id}})">-->
-          <!--<view class="nav__item inline-block text-center"> <span class="nav__item-text"> 借书 </span> </view>-->
-        <!--</button>-->
-      <!--</form>-->
-    <!--</view>-->
-  <!--</view>-->
+    <view class="nav__items font_32 inline-block">
+      <form bindsubmit="formSubmit" report-submit>
+        <button formType="submit" class="btn flo_l" data-type="click" @tap="scanBook({{mylib.id}})">
+          <view class="nav__item inline-block text-center"> <span class="nav__item-text"> 录书 </span> </view>
+        </button>
+      </form>
+      <form bindsubmit="formSubmit" report-submit>
+        <button formType="submit" class="btn flo_l" data-type="click" @tap="scanReturn({{mylib.id}})">
+          <view class="nav__item inline-block text-center"> <span class="nav__item-text"> 还书 </span> </view>
+        </button>
+      </form>
+      <form bindsubmit="formSubmit" report-submit>
+        <button formType="submit" class="btn flo_l" data-type="click" @tap="scanBorrow({{mylib.id}})">
+          <view class="nav__item inline-block text-center"> <span class="nav__item-text"> 借书 </span> </view>
+        </button>
+      </form>
+    </view>
+  </view>
 
 
   <modal hidden="{{hiddenmodalput}}" title="联系管理员取书" confirm-text="拨打电话" cancel-text="取消" bindcancel="cancel" bindconfirm="confirm({{mylib.link_mobile}})">
@@ -239,6 +239,7 @@
     mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '友福图书馆',
+      onReachBottomDistance: 200
 //      navigationBarBackgroundColor: '#1473c6',
 //      backgroundColor: '#1473c6',
     }

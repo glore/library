@@ -27,7 +27,7 @@ export default class ShareMessage extends wepy.mixin {
   }
   methods = {
     onShareAppMessage(res) {
-      console.log(res)
+      console.log(this.config.navigationBarTitleText)
       let that = this
       that.from_openid = wx.getStorageSync('openid')
       let pages = getCurrentPages()    //获取加载的页面
