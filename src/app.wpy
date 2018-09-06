@@ -57,10 +57,12 @@
         'pages/user/registerV2',
         'pages/user/follower',
         'pages/user/booklist',
+        'pages/user/myLibrary',
         'pages/user/borrow',
         'pages/user/borrows',
         'pages/user/return',
-        'pages/user/collect',
+        'pages/user/cash',
+        'pages/user/wallet',
         'pages/user/subscribe'
       ],
       window: {

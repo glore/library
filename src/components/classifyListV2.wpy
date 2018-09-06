@@ -16,8 +16,9 @@
       </view>
     </view>
     <!--<view class="clearfloat"></view>-->
-    <view   class="weui-cell weui-cell_access f4 font_32 color_6"  style="padding: 22rpx 22rpx 22rpx 0;position: inherit;border-bottom: 1rpx solid #e7e7e7;margin-left: 32rpx">
+    <view   class="weui-cell weui-cell_access f4 font_32 color_6"  style="padding: 22rpx 22rpx 22rpx 0;width:93%; position: inherit;border-bottom: 1rpx solid #e7e7e7;margin-left: 32rpx">
       <view class="weui-cell__bd bold black_6">
+
         全部图书
       </view>
       <view class="weui-cell__ft weui-cell__ft_in-access" @tap="goto('/pages/book/list?library_id={{library_id}}&member_type={{member_type}}')">查找图书</view>

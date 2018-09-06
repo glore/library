@@ -17,91 +17,46 @@
         </view>
       </view>
     </view>
-    <view class="weui-cells__title font_32 bold">图书借阅</view>
+    <!--<view class="weui-cells__title font_32 bold">图书借阅</view>-->
+    <view class="weui-cells weui-cells_after-title" style="margin-top: 22rpx;">
+      <navigator url="/pages/user/myLibrary" class="weui-cell weui-cell_access disable" hover-class="weui-cell_active">
+        <view class="weui-cell__hd">
+        <image src="../../../images/library.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+        </view>
+        <view class="weui-cell__bd">我的图书馆</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access">...</view>
+      </navigator>
+    </view>
     <view class="weui-cells weui-cells_after-title">
       <navigator url="/pages/user/borrows" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
-          <!--<image src="{{icon}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
+          <image src="../../../images/read.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
         </view>
         <view class="weui-cell__bd">我的借阅</view>
         <view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>
       </navigator>
-
-      <!--navigator url="" class="weui-cell weui-cell_access disable" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <image src="{{icon}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
-        </view>
-        <view class="weui-cell__bd">我的书评</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">开发中...</view>
-      </navigator-->
-
-
-      <!--navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <image src="{{icon}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
-        </view>
-        <view class="weui-cell__bd">我的收藏</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">开发中...</view>
-      </navigator-->
     </view>
-
-    <view class="weui-cells__title  font_32 bold">我的图书馆</view>
-    <view class="weui-cells weui-cells_after-title">
-    <block wx:for="{{libraries}}" wx:key="key" >
-      <!--<navigator url="/pages/library/library?id={{item.id}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active" style="position: relative">-->
-      <view  class="weui-cell weui-cell_access" hover-class="weui-cell_active" @tap="goto({{item.url}})">
+    <!--<view class="weui-cells weui-cells_after-title">-->
+      <!--<navigator url="/pages/user/cash" class="weui-cell weui-cell_access disable" hover-class="weui-cell_active">-->
         <!--<view class="weui-cell__hd">-->
-          <!--<image src="{{icon}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
+          <!--<image src="../../../images/cash.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
         <!--</view>-->
-        <view class="weui-cell__bd">[{{item.type}}]{{item.name}}</view>
-        <!--<view class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0">-->
-        <!--<view style="display: inline-block;vertical-align:middle; font-size: 17px;">详细信息</view>-->
-        <!--<view class="weui-badge weui-badge_dot" style="margin-left: 5px;margin-right: 5px;"></view>-->
-        <!--</view>-->
-        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-        <view class="lead" wx:if="{{item.join_number_count > 0 || item.reserve_book_num > 0}}"></view>
-        <!--<view class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0">-->
-        <!--<view style="display: inline-block;vertical-align:middle; font-size: 17px;">详细信息</view>-->
-        <!--<view class="weui-badge weui-badge_dot" style="margin-left: 5px;margin-right: 5px;"></view>-->
-        <!--</view>-->
-      </view>
+        <!--<view class="weui-cell__bd">我的押金</view>-->
+        <!--<view class="weui-cell__ft weui-cell__ft_in-access">...</view>-->
       <!--</navigator>-->
-    </block>
-    </view>
-
-    <!--view class="weui-cells__title">我的好友</view>
-    <view class="weui-cells weui-cells_after-title">
-      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <image src="{{icon}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
-        </view>
-        <view class="weui-cell__bd">我的馆群</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">开发中...</view>
-      </navigator>
-
-      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <image src="{{icon}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
-        </view>
-        <view class="weui-cell__bd">我的朋友</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">开发中...</view>
-      </navigator>
-    </view>
-
-    <view class="weui-cells__title"></view>
-    <view class="weui-cells weui-cells_after-title">
-      <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <image src="{{icon}}" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
-        </view>
-        <view class="weui-cell__bd">关于我们</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">开发中...</view>
-      </navigator>
-    </view-->
-
+    <!--</view>-->
+    <!--<view class="weui-cells weui-cells_after-title">-->
+      <!--<navigator url="/pages/user/wallet" class="weui-cell weui-cell_access" hover-class="weui-cell_active">-->
+        <!--<view class="weui-cell__hd">-->
+          <!--<image src="../../../images/money.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
+        <!--</view>-->
+        <!--<view class="weui-cell__bd">我的钱包</view>-->
+        <!--<view class="weui-cell__ft weui-cell__ft_in-access">...</view>-->
+      <!--</navigator>-->
+    <!--</view>-->
     <view class="weui-cells__title"></view>
     <view class="page__bd page__bd_spacing" plain="true">
-      <button  class="weui-btn btn-blue_l"  open-type="contact" >建议交流</button>
+      <button  class="weui-btn btn-blue_l font_32" style="width: 62%"  open-type="contact" >建议交流</button>
     </view>
     <view class="weui-cells__title"></view>
   </view>
@@ -125,7 +80,6 @@
       libraries: {},
       user: {},
       nickName: '加载中...'
-
     }
 
     computed = {
@@ -198,7 +152,8 @@ page{
 }
 .weui-cells {
   position: inherit;
-  box-shadow: 1rpx 1rpx 12rpx #dedede;
+  border-bottom: 1rpx solid #dedede;
+  /*box-shadow: 1rpx 1rpx 12rpx #dedede;*/
 }
 .page-user{
   @userinfoHeight: 100rpx;

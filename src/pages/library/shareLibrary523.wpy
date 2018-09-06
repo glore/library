@@ -59,7 +59,7 @@
         <view @tap="goto('/pages/library/borrows?library_id={{mylib.id}}')" class="weui-flex__item list-item" >
           <view class="color-666 item-title" ><span class="num">{{mylib.borrows_count}}</span>册</view>
           <view class="color-bbb h5">借阅册数</view>
-          <view class="lead" wx:if="{{mylib.reserve_book_num > 0 && member_type == 'ADMIN'}}"> {{mylib.reserve_book_num}}</view>
+          <view class="lead" wx:if="{{mylib.reserve_book_num > 0 && member_type == 'MEMBER'}}"> {{mylib.reserve_book_num}}</view>
         </view>
       </view>
       <!--<view class="placeholder_26"></view>-->
@@ -153,10 +153,10 @@
       <view class="font_26" style="position: absolute;left: 60rpx;bottom: 62rpx;">1.先去<span style="color: #4ba7ff"  @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')">新增分类</span>
       </view>
     </view>
-    <view style="margin: auto;margin-bottom: -32rpx;position: fixed;let: 38rpx;bottom: 150rpx;">
-      <image src='../../images/message.png'  mode="aspectFit"  style="transform: rotateY(180deg) rotateZ(16deg);width: 340rpx;height: 218rpx;"></image>
-      <view class="font_26" style="position: absolute;left: 72rpx;bottom: 136rpx;transform: rotateZ(-10deg);">2.扫码录入图书</view>
-    </view>
+    <!--<view style="margin: auto;margin-bottom: -32rpx;position: fixed;let: 38rpx;bottom: 150rpx;">-->
+      <!--<image src='../../images/message.png'  mode="aspectFit"  style="transform: rotateY(180deg) rotateZ(16deg);width: 340rpx;height: 218rpx;"></image>-->
+      <!--<view class="font_26" style="position: absolute;left: 72rpx;bottom: 136rpx;transform: rotateZ(-10deg);">2.扫码录入图书</view>-->
+    <!--</view>-->
   </block>
 
   <block wx:else>
@@ -371,7 +371,7 @@
           this.$apply()
         },
         fail: ({code, data}) => {},
-        complete: () => { }
+        complete: () => { this.init = true}
       })
     }
     uploadFiles(filePaths, successUp, failUp, i, length) {
