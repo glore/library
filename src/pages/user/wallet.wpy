@@ -1,0 +1,181 @@
+
+<template>
+  <view class="user-cash text-center">
+    <image src="http://images.ufutx.com/201809/06/29be4a2c41434c15419d0dab0b246ed5.png"  mode="aspectFit"></image>
+    <view class="font_28">我的余额</view>
+    <view class="bold">99.00元</view>
+    <!--<view class="font_26 record">充值记录</view>-->
+    <view class="returned" @tap="returned">提 现</view>
+    <view class="page__bd page__bd_spacing text-center" plain="true" >
+      <button  class="weui-btn btn-blue_l font_32"   @tap="popUp">充值</button>
+    </view>
+  </view>
+  <!--弹框-->
+  <modal class="modal" hidden="{{popUpModel}}" title="充值金额"  confirm-text="确认支付" bindcancel="listenerCancel" @confirm="pay">
+    <!--<view style="padding: 12rpx 32rpx;border-bottom: 1rpx solid #d3d3d3;">-->
+      <!--<span class="bold">订单详情：</span>-->
+      <!--<span class="flo_r">替他人支付<span class="orange bold">{{infor.name}}</span></span>-->
+      <!--<view class="clearfloat"></view>-->
+    <!--</view>-->
+    <input placeholder="请输入充值金额(元)"  bindinput="getMoney" class="text-center" type="digit"/>
+  </modal>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { service } from '../../config.js'
+  import base from '../../mixins/base'
+  import http from '../../mixins/http'
+  import ShareMessage from '../../mixins/ShareMessage'
+
+  export default class wallet extends wepy.page {
+    mixins = [base, http, ShareMessage]
+    config = {
+      navigationBarTitleText: '我的钱包',
+      enablePullDownRefresh: false
+    }
+    components = {
+    }
+    data = {
+      popUpModel: true, //弹框
+      money: 0, // 充值金额
+
+    }
+
+    onShow() {
+      // 初始化页面数据
+      this.initPageData()
+    }
+
+    onPullDownRefresh() {
+      this.initPageData()
+    }
+
+    // 初始化页面数据
+    initPageData() {
+    }
+
+    methods = {
+      toIndex() {
+        wx.switchTab({url: '/pages/index'})
+      },
+      // 取消充值
+      listenerCancel() {
+        this.popUpModel = true
+      },
+      // 充值弹框
+      popUp() {
+        this.popUpModel = false
+      },
+      // input绑定money
+      getMoney(e) {
+        this.money = e.detail.value
+        console.log(this.money)
+      },
+      // 退押金
+      returned() {
+        wx.showModal({
+          title: '提示',
+          content: '提现将收取0.06%的微信平台手续费，是否继续？',
+          success: function(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      },
+      // 微信支付
+      pay() {
+        let that = this,
+          data = {
+            money: that.money
+          }
+          that.popUpModel = true
+        return false
+        this.$post({url: service.charge, data}, {
+          success: ({code, data}) => {
+            that.popUpModel = true
+            that.trade_no = data.trade_no
+            that.$apply()
+            let wxconfig = data.order_pay.wx_pay.config
+//            wx.config(JSON.parse(response.data.data.order.wx_pay.js));
+            wx.requestPayment({
+              timeStamp: wxconfig.timestamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+              nonceStr: wxconfig.nonceStr, // 支付签名随机串，不长于 32 位
+              package: wxconfig.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+              signType: wxconfig.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+              paySign: wxconfig.paySign, // 支付签名
+              success: function (res) {
+                that.$post({url: service.orderpay + '/' + that.trade_no}, {
+                  success: ({code, data}) => {
+                    wx.showToast({
+                      title: '支付成功',
+                      duration: 2000
+                    })
+                  },
+                  fail: ({code, data}) => {
+                  },
+                  complete: () => {
+//                      this.loaded = false
+                  }
+                })
+              },
+              fail: function (res) {
+                wx.showToast({
+                  title: '已取消支付',
+                  icon: 'none',
+                  duration: 2000
+                })
+              }
+            })
+          },
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+            this.loaded = false
+          }
+        })
+      }
+    }
+  }
+</script>
+
+<style lang="less" scoped>
+@import "../../styles/custom/fn.less";
+
+.user-cash{
+  image{
+    width: 400rpx;
+    height: 200rpx;
+    margin-top: 26%;
+  }
+  button{
+    width: 62%;margin-top: 6%;
+  }
+  .record{
+    text-align: right;
+    margin-right: 3%;
+  }
+  .returned{
+    width: 100%;
+    height: 100rpx;
+    background: #ff6502;
+    line-height: 100rpx;
+    color: #ffffff;
+    /*font-weight: bold;*/
+    font-size: 36rpx;
+    border-radius: 6rpx;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+  }
+}
+  .modal{
+    input{
+      margin: 22rpx;
+      border-bottom: 1rpx solid #dedede;
+    }
+  }
+</style>
