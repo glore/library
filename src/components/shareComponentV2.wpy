@@ -70,7 +70,7 @@
 
 <script>
   import wepy from 'wepy'
-  import base from '../mixins/base'
+//  import base from '../mixins/base'
 
   export default class shareComponentV2 extends wepy.component {
     props = {
@@ -154,13 +154,13 @@
         this.$apply()
       },
       goto(url) {
-        if(this.library_id == 523){
-          return  wx.navigateTo({url : `/pages/library/shareLibrary523?id=${this.library_id}`})
+        if (this.library_id == 523) {
+          return wx.navigateTo({url: `/pages/library/shareLibrary523?id=${this.library_id}`})
         }
         if (this.library_id == 0) {
           wx.redirectTo({url: url})
         } else {
-          wx.navigateTo({url : `/pages/library/library?id=${this.library_id}`})
+          wx.navigateTo({url: `/pages/library/library?id=${this.library_id}`})
         }
       },
       gotoredirect(url) {

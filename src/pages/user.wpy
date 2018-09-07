@@ -21,10 +21,13 @@
     <view class="weui-cells weui-cells_after-title" style="margin-top: 22rpx;">
       <navigator url="/pages/user/myLibrary" class="weui-cell weui-cell_access disable" hover-class="weui-cell_active">
         <view class="weui-cell__hd">
-        <image src="../../../images/library.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+          <image src="../../../images/library.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
         </view>
         <view class="weui-cell__bd">我的图书馆</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access">...</view>
+        <view class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0">
+          <!--<view style="display: inline-block;vertical-align:middle; font-size: 17px;">详细信息</view>-->
+          <view class="weui-badge weui-badge_dot" style="margin-left: 5px;margin-right: 5px;"></view>
+        </view>
       </navigator>
     </view>
     <view class="weui-cells weui-cells_after-title">
@@ -36,24 +39,24 @@
         <view class="weui-cell__ft weui-cell__ft_in-access">{{user.borrows_count}}本</view>
       </navigator>
     </view>
-    <!--<view class="weui-cells weui-cells_after-title">-->
-      <!--<navigator url="/pages/user/cash" class="weui-cell weui-cell_access disable" hover-class="weui-cell_active">-->
-        <!--<view class="weui-cell__hd">-->
-          <!--<image src="../../../images/cash.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
-        <!--</view>-->
-        <!--<view class="weui-cell__bd">我的押金</view>-->
-        <!--<view class="weui-cell__ft weui-cell__ft_in-access">...</view>-->
-      <!--</navigator>-->
-    <!--</view>-->
-    <!--<view class="weui-cells weui-cells_after-title">-->
-      <!--<navigator url="/pages/user/wallet" class="weui-cell weui-cell_access" hover-class="weui-cell_active">-->
-        <!--<view class="weui-cell__hd">-->
-          <!--<image src="../../../images/money.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>-->
-        <!--</view>-->
-        <!--<view class="weui-cell__bd">我的钱包</view>-->
-        <!--<view class="weui-cell__ft weui-cell__ft_in-access">...</view>-->
-      <!--</navigator>-->
-    <!--</view>-->
+    <view class="weui-cells weui-cells_after-title">
+    <navigator url="/pages/user/cash" class="weui-cell weui-cell_access disable" hover-class="weui-cell_active">
+    <view class="weui-cell__hd">
+    <image src="../../../images/cash.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+    </view>
+    <view class="weui-cell__bd">我的押金</view>
+    <view class="weui-cell__ft weui-cell__ft_in-access">...</view>
+    </navigator>
+    </view>
+    <view class="weui-cells weui-cells_after-title">
+    <navigator url="/pages/user/wallet" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+    <view class="weui-cell__hd">
+    <image src="../../../images/money.png" style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"></image>
+    </view>
+    <view class="weui-cell__bd">我的钱包</view>
+    <view class="weui-cell__ft weui-cell__ft_in-access">...</view>
+    </navigator>
+    </view>
     <view class="weui-cells__title"></view>
     <view class="page__bd page__bd_spacing" plain="true">
       <button  class="weui-btn btn-blue_l font_32" style="width: 62%"  open-type="contact" >建议交流</button>
@@ -147,60 +150,77 @@
 <style lang="less">
   @import "../styles/custom/fn.less";
   @import "../styles/custom/reset.less";
-page{
-  background: #f9f9f9;
-}
-.weui-cells {
-  position: inherit;
-  border-bottom: 1rpx solid #dedede;
-  /*box-shadow: 1rpx 1rpx 12rpx #dedede;*/
-}
-.page-user{
-  @userinfoHeight: 100rpx;
-  @userinfoSpace: 8rpx;
+  page{
+    background: #f9f9f9;
+  }
+  // 提示红点
+  .weui-badge {
+    display: inline-block;
+    padding: .15em .4em;
+    min-width: 8px;
+    border-radius: 18px;
+    background-color: #F43530;
+    color: #FFFFFF;
+    line-height: 1.2;
+    text-align: center;
+    font-size: 12px;
+    vertical-align: middle;
+  }
+  .weui-badge_dot {
+    padding: .4em;
+    min-width: 0;
+  }
+  .weui-cells {
+    position: inherit;
+    border-bottom: 1rpx solid #dedede;
+    /*box-shadow: 1rpx 1rpx 12rpx #dedede;*/
+  }
+  .page-user{
+    @userinfoHeight: 100rpx;
+    @userinfoSpace: 8rpx;
 
-  .userinfo{
-    padding: 20rpx 0;
-  }
-  .page__bd_spacing{
-    padding: 22rpx;
-  }
+    .userinfo{
+      padding: 20rpx 0;
+    }
+    .page__bd_spacing{
+      padding: 22rpx;
+    }
 
-  .userinfo-avatar {
-    float: left;
-    width: @userinfoHeight;
-    height: @userinfoHeight;
-    border-radius: 50%;
-  }
+    .userinfo-avatar {
+      float: left;
+      width: @userinfoHeight;
+      height: @userinfoHeight;
+      border-radius: 50%;
+    }
 
-  // space + space
-  .userinfo-info {
-    float: left;
-    line-height: 1;
-    padding: @userinfoSpace 0;
-    margin-left: 3 * @userinfoSpace;
-  }
+    // space + space
+    .userinfo-info {
+      float: left;
+      line-height: 1;
+      padding: @userinfoSpace 0;
+      margin-left: 3 * @userinfoSpace;
+    }
 
-  // text + space + text
-  .userinfo-nickname {
-    color: @uiColorGreen;
-    font-size: (@userinfoHeight - 4 * @userinfoSpace) * (16 / 30);
-    margin-bottom: 2 * @userinfoSpace;
-  }
-  .userinfo-status {
-    color: #999;
-    font-size: (@userinfoHeight - 4 * @userinfoSpace) * (14 / 30);
+    // text + space + text
+    .userinfo-nickname {
+      color: @uiColorGreen;
+      font-size: (@userinfoHeight - 4 * @userinfoSpace) * (16 / 30);
+      margin-bottom: 2 * @userinfoSpace;
+    }
+    .userinfo-status {
+      color: #999;
+      font-size: (@userinfoHeight - 4 * @userinfoSpace) * (14 / 30);
 
+    }
+    .lead {
+      width: 16rpx;
+      height: 16rpx;
+      background: red;
+      margin-top: -24rpx;
+      border-radius: 50%;
+      position: absolute;
+      right: 16rpx;
+      top: 40rpx;
+    }
   }
-  .lead {
-    width: 16rpx;
-    height: 16rpx;
-    background: red;
-    margin-top: -24rpx;
-    border-radius: 50%;
-    position: absolute;
-    right: 16rpx;
-    top: 40rpx;
-  }
-}
 </style>

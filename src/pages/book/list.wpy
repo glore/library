@@ -200,7 +200,6 @@
   .width-8p{
     width: 80% !important;
   }
-
   .main-list-title {
     padding: 1em @weuiCellGapH;
     color: @weuiTextColorGray;

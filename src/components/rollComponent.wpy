@@ -11,7 +11,7 @@
 
 <script>
   import wepy from 'wepy'
-  import { service } from '../config.js'
+//  import { service } from '../config.js'
   import http from '../mixins/http'
   import base from '../mixins/base'
 
@@ -41,7 +41,7 @@
     }
 
     methods = {
-      kk(){
+      kk() {
         console.log(this.list)
       }
     }

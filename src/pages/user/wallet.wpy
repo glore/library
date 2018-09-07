@@ -37,8 +37,8 @@
     components = {
     }
     data = {
-      popUpModel: true, //弹框
-      money: 0, // 充值金额
+      popUpModel: true, // 弹框
+      money: 0 // 充值金额
 
     }
 
@@ -92,8 +92,7 @@
           data = {
             money: that.money
           }
-          that.popUpModel = true
-        return false
+        that.popUpModel = true
         this.$post({url: service.charge, data}, {
           success: ({code, data}) => {
             that.popUpModel = true
@@ -170,6 +169,7 @@
     position: fixed;
     left: 0;
     bottom: 0;
+    background:-webkit-gradient(linear, 0% 0%, 0% 100%,from(#71b3cf), to(#35bbe6));
   }
 }
   .modal{

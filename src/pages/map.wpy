@@ -435,7 +435,9 @@
       },
       markertap(e) {
         console.log(e.markerId)
-        if(e.markerId == 0) {return}
+        if (e.markerId == 0) {
+          return
+        }
         let that = this
         let data = {
           my_location_longitude: that.myLong,
