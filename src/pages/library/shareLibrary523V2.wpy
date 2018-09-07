@@ -225,12 +225,12 @@
 
 <script>
   import wepy from 'wepy'
-  import { service } from '../../config.js'
+  import {service} from '../../config.js'
   import http from '../../mixins/http'
   import base from '../../mixins/base'
   import user from '../../mixins/user'
   import Loading from '../../components/loading'
-//  import ShareMessage from '../../mixins/ShareMessage'
+  //  import ShareMessage from '../../mixins/ShareMessage'
   import ClassifyListV2 from '../../components/classifyListV2'
   import rollComponent from '../../components/rollComponent'
   import shareComponentV2 from '../../components/shareComponentV2'
@@ -290,9 +290,10 @@
       hiddenmodalput: true,
       last_borrows: [], // 动态
       location: {}, // 经纬度
-      showBackTopBtn: false, //显示置顶
+      showBackTopBtn: false, // 显示置顶
       init: false
     }
+
     // 滚动监听
     onPageScroll(res) {
       let top = res.scrollTop,
@@ -305,9 +306,11 @@
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.mylib.name)
     }
+
     onLoad(query) {
       this.mylib.id = query && +query.id
     }
+
     onShow() {
       this.getshareImage()
       this.initPageDataV2()
@@ -318,12 +321,14 @@
 //      this.initPageData()
       this.initPageDataV2()
     }
+
     onReachBottom() {
       setTimeout(() => {
         this.initPageDataV2()
         this.$apply()
       }, 200)
     }
+
     // 初始化页面数据
     getshareImage() {
       this.$get({url: service.libraries + `/${this.mylib.id}/share`}, {
@@ -331,10 +336,13 @@
           this.shareImage = data.pic
           this.$apply()
         },
-        fail: ({code, data}) => {},
-        complete: () => { }
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+        }
       })
     }
+
     initPageDataV2() {
       let data = {page: this.page}
       this.$get({url: service.libraries + `/${this.mylib.id}/v2`, data}, {
@@ -346,8 +354,8 @@
           this.library_id = data.id
           this.member_type = data.member ? data.member.status : ''
           this.location = {
-            location_latitude : data.location_latitude,
-            location_longitude : data.location_longitude
+            location_latitude: data.location_latitude,
+            location_longitude: data.location_longitude
           }
           let name = data.sorts.map(function (item) {
             return item.name
@@ -382,10 +390,13 @@
           this.page += 1
           this.$apply()
         },
-        fail: ({code, data}) => {},
-        complete: () => { }
+        fail: ({code, data}) => {
+        },
+        complete: () => {
+        }
       })
     }
+
     uploadFiles(filePaths, successUp, failUp, i, length) {
       let that = this
       let token = wx.getStorageSync('token')
@@ -415,6 +426,7 @@
         }
       })
     }
+
     RemoveEdit() {
       this.EditImage = ''
       this.EditAuthor = ''
@@ -423,6 +435,7 @@
       this.EditIsbn = ''
       this.ShowUpload = false
     }
+
     methods = {
       BackTop() {
         this.showBackTopBtn = false
@@ -439,7 +452,7 @@
           name: that.mylib.address
         })
       },
-      cancel () {
+      cancel() {
         this.hiddenmodalput = true
         this.$apply()
       },
@@ -493,8 +506,11 @@
               this.initPageData()
 //              wx.redirectTo({url: '/pages/library/library?id=' + self.mylib.id})
             },
-            fail: ({code, data}) => {},
-            complete: () => { this.loaded = false }
+            fail: ({code, data}) => {
+            },
+            complete: () => {
+              this.loaded = false
+            }
           })
         }
       },
@@ -588,7 +604,9 @@
                     this.Show = false
                   }
                 },
-                complete: () => { this.loaded = false }
+                complete: () => {
+                  this.loaded = false
+                }
               })
             }
           }
@@ -667,7 +685,9 @@
             that.libraries = []
             that.Show = false
           },
-          complete: () => { this.loaded = false }
+          complete: () => {
+            this.loaded = false
+          }
         })
       },
       addbookV() {
@@ -752,7 +772,9 @@
                   that.libraries = []
                   that.Show = false
                 },
-                complete: () => { this.loaded = false }
+                complete: () => {
+                  this.loaded = false
+                }
               })
 //              加入收藏
               that.initPageData()
@@ -764,7 +786,9 @@
                 duration: 1500
               })
             },
-            complete: () => { this.loaded = false }
+            complete: () => {
+              this.loaded = false
+            }
           })
         }
       },
@@ -797,8 +821,11 @@
                 success: ({code, data}) => {
                   wx.navigateTo({url: '/pages/book/detail?id=' + data.id + '&library_id=' + libraryId})
                 },
-                fail: ({code, data}) => {},
-                complete: () => { this.loaded = false }
+                fail: ({code, data}) => {
+                },
+                complete: () => {
+                  this.loaded = false
+                }
               })
             }
           }
@@ -807,8 +834,6 @@
     }
   }
 </script>
-
-
 <style lang="less" scoped>
 @import "../../styles/weui/base/fn.wxss";
 @import "../../styles/custom/fn.less";

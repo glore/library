@@ -289,8 +289,29 @@
         wx.navigateTo({url: url})
       },
       toAdd(book, item) {
+        let that = this
+        // 未缴纳押金 以及押金不足
+        if (true) {
+          return wx.showModal({
+            title: '提示',
+            content: `您的押金不足！请前往充值！`,
+//            showCancel: false,
+            confirmText: '充值押金',
+            confirmColor: '#cfb64c',
+            success: function (res) {
+              if (res.confirm) {
+                that.$cache('page')
+                wx.navigateTo({
+                  url: '/pages/user/cash'
+                })
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        }
+        // 不需要押金
         if (item.member) {
-          var that = this
           wx.showModal({
             title: '借阅确认',
             content: '是否借阅该本书？',

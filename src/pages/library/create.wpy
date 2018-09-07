@@ -66,6 +66,16 @@
         </view>
       </view>
     </view>
+    <view class="weui-cells weui-cells_after-title book-address font_28">
+      <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
+        <view class="weui-cell__hd">
+          <view class="weui-label reset-label-left text-center">是否需要押金（99元）？</view>
+        </view>
+        <view class="weui-cell__bd h3  color-red">
+          <switch checked bindchange="switch1Change" color="#6db6cf"/>
+        </view>
+      </view>
+    </view>
     <view class="weui-cells weui-cells_after-title font_28">
       <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
         <view class="weui-cell__hd">
@@ -314,6 +324,9 @@
       })
     }
     methods = {
+      switch1Change(e) {
+        console.log('switch1 发生 change 事件，携带值为', e.detail.value)
+      },
       bindPickerChange: function(e) {
         console.log('picker发送选择改变，携带值为', e.detail.value)
         this.timeIndex = e.detail.value

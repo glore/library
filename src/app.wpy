@@ -131,7 +131,7 @@
       console.log(options)
 //      if (options.scene == 1037 || options.scene == 1038) {
 //        let uid = options.referrerInfo.extraData.uid
-////      console.log(JSON.stringify(uid))
+//      console.log(JSON.stringify(uid))
 //        wx.setStorageSync('uid', uid)
 //        wepy.login({
 //          success: (res) => {
@@ -262,19 +262,19 @@
     onShareAppMessage(title = '友福图书馆') {
       let that = this
       that.from_openid = wx.getStorageSync('openid')
-      let pages = getCurrentPages()    //获取加载的页面
-      let currentPage = pages[pages.length-1]    //获取当前页面的对象
-      let link = currentPage.route    //当前页面url
-      let library_id = currentPage.options.library_id ? currentPage.options.library_id : ''
+      let pages = getCurrentPages()    // 获取加载的页面
+      let currentPage = pages[pages.length - 1]    // 获取当前页面的对象
+      let link = currentPage.route    // 当前页面url
+      let libraryId = currentPage.options.library_id ? currentPage.options.library_id : ''
       let options = currentPage.options.id
       let id = options ? '?id=' + options : ''
-      if (library_id) {
-        id = options ? '?id=' + options + '&library_id=' + library_id : ''
+      if (libraryId) {
+        id = options ? '?id=' + options + '&library_id=' + libraryId : ''
       }
       let url = ''
-      if(options) {
+      if (options) {
         url = link + id + '&from_openid=' + that.from_openid
-      }else {
+      } else {
         url = link + '?from_openid=' + that.from_openid
       }
       console.log(url)
@@ -282,13 +282,13 @@
         title: title,
         path: url,
         success: function (res) {
-          let shareTickets = res.shareTickets;
+          let shareTickets = res.shareTickets
           if (shareTickets.length == 0) {
             return false
           }
           wx.getShareInfo({
             shareTicket: shareTickets[0],
-            success: function(res){
+            success: function (res) {
               let encryptedData = res.encryptedData
               let iv = res.iv
               let code = ''
@@ -305,8 +305,11 @@
                       that.openGid = data.openGId
                       that.$apply()
                     },
-                    fail: ({code, data}) => {},
-                    complete: () => { this.loading = false }
+                    fail: ({code, data}) => {
+                    },
+                    complete: () => {
+                      this.loading = false
+                    }
                   })
                 },
                 fail: (res) => {

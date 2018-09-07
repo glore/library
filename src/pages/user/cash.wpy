@@ -1,7 +1,10 @@
 <template>
   <view class="user-cash text-center">
-    <image src="http://images.ufutx.com/201809/06/249c9f611f8529afabf9605167994a0a.png"  mode="aspectFit"></image>
-    <view class="font_28">押金余额</view>
+    <image src="http://images.ufutx.com/201809/06/249c9f611f8529afabf9605167994a0a.png" class="icon" mode="aspectFit"></image>
+    <view class="font_28">
+      押金余额
+      <image src="../../images/hint.png"  mode="aspectFit" style="width: 48rpx;height: 48rpx;margin-bottom: -10rpx;" @tap="showMessage"></image>
+    </view>
     <view class="bold">99.00元</view>
     <!--<view class="font_26 record">充值记录</view>-->
     <view class="page__bd page__bd_spacing text-center" plain="true" >
@@ -22,7 +25,7 @@
 
 <script>
   import wepy from 'wepy'
-  import { service } from '../../config.js'
+  import {service} from '../../config.js'
   import base from '../../mixins/base'
   import http from '../../mixins/http'
   import ShareMessage from '../../mixins/ShareMessage'
@@ -33,11 +36,10 @@
       navigationBarTitleText: '我的押金',
       enablePullDownRefresh: false
     }
-    components = {
-    }
+    components = {}
     data = {
-      popUpModel: true, //弹框
-      money: 0, // 充值金额
+      popUpModel: true, // 弹框
+      money: 0 // 充值金额
 
     }
 
@@ -58,6 +60,21 @@
       toIndex() {
         wx.switchTab({url: '/pages/index'})
       },
+      // 显示信息
+      showMessage() {
+        wx.showModal({
+          title: '押金说明',
+          content: `部分图书馆需要押金才可借阅，押金只是为了保障图书不被损坏！可退！`,
+          showCancel: false,
+          success: function (res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      },
       // 取消充值
       listenerCancel() {
         this.popUpModel = true
@@ -73,17 +90,50 @@
       },
       // 退押金
       returned() {
-        wx.showModal({
-          title: '提示',
-          content: '退回押金后将无法向任何图书馆借书哦！你确定要这么做吗？',
-          success: function(res) {
-            if (res.confirm) {
-              console.log('用户点击确定')
-            } else if (res.cancel) {
-              console.log('用户点击取消')
+        try {
+          wx.showModal({
+            title: '提示',
+            content: `充值成功！是否返回上次预览的页面`,
+            success: function (res) {
+              if (res.confirm) {
+                if (wx.getStorageSync('page')) {
+                  wx.navigateBack({
+                    delta: 1
+                  })
+                }
+                let url = wx.getStorageSync('page')
+                wx.redirectTo({url: url})
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
             }
-          }
-        })
+          })
+        } catch (err) {
+          wx.showModal({
+            title: '提示',
+            content: `你有未归还的图书，请先归还图书后再申请！`,
+            showCancel: false,
+            success: function (res) {
+              if (res.confirm) {
+                console.log('用户点击确定')
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        } finally {
+          wx.showModal({
+            title: '提示',
+            content: '退回押金后将无法向任何图书馆借书哦！你确定要这么做吗？',
+            success: function (res) {
+              if (res.confirm) {
+                console.log('用户点击确定')
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        }
       },
       // 微信支付
       pay() {
@@ -91,8 +141,7 @@
           data = {
             money: that.money
           }
-          that.popUpModel = true
-        return false
+        that.popUpModel = true
         this.$post({url: service.charge, data}, {
           success: ({code, data}) => {
             that.popUpModel = true
@@ -145,7 +194,7 @@
 @import "../../styles/custom/fn.less";
 
 .user-cash{
-  image{
+  .icon{
     width: 120rpx;
     height: 130rpx;
     margin-top: 26%;

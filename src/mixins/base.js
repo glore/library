@@ -140,4 +140,20 @@ export default class baseMixin extends wepy.mixin {
   $goto(url) {
     wx.navigateTo({url: url})
   }
+  // 缓存当前页面
+  $cache(title) {
+    var pages = getCurrentPages()    //获取加载的页面
+
+    var currentPage = pages[pages.length-1]    //获取当前页面的对象
+
+    var options = currentPage.options
+    var url = '/' + currentPage.route
+    if (options.id) {
+      url = '/' + currentPage.route + `?id=${options.id}`
+    } else if(options.id && options.library_id) {
+      url = '/' + currentPage.route  + '?id=' + options.id + `&library_id=${options.library_id}`
+    }
+    console.log(url)
+    wx.setStorageSync(title, url)
+  }
 }

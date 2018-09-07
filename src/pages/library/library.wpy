@@ -217,8 +217,8 @@
 
 
   <modal hidden="{{hiddenmodalput}}" title="联系管理员取书" confirm-text="拨打电话" cancel-text="取消" bindcancel="cancel" bindconfirm="confirm({{mylib.link_mobile}})">
-    <input type='text'placeholder="请输入内容" value="管理员：{{mylib.link_name}}"/>
-    <input type='text'placeholder="请输入内容" value="电话号码：{{mylib.link_mobile}}"/>
+    <input type='text' placeholder="请输入内容" value="管理员：{{mylib.link_name}}"/>
+    <input type='text' placeholder="请输入内容" value="电话号码：{{mylib.link_mobile}}"/>
   </modal>
 </template>
 
@@ -370,8 +370,8 @@
           this.page += 1
           this.$apply()
         },
-        fail: ({code, data}) => {},
-        complete: () => { this.init = true}
+        fail: ({code, data}) => { },
+        complete: () => { this.init = true }
       })
     }
     uploadFiles(filePaths, successUp, failUp, i, length) {
