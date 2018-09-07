@@ -5,12 +5,13 @@
       押金余额
       <image src="../../images/hint.png"  mode="aspectFit" style="width: 48rpx;height: 48rpx;margin-bottom: -10rpx;" @tap="showMessage"></image>
     </view>
-    <view class="bold">99.00元</view>
+    <view class="bold">{{money}}元</view>
     <!--<view class="font_26 record">充值记录</view>-->
     <view class="page__bd page__bd_spacing text-center" plain="true" >
-      <button  class="weui-btn btn-blue_l font_32"   @tap="popUp" wx-if="{{money}}">充值</button>
-      <button  class="weui-btn btn-blue_l font_32 returned"   @tap="returned" wx-else>退回押金</button>
+      <button  class="weui-btn btn-blue_l font_32"   @tap="pay" wx:if="{{!cashPledge}}">充值</button>
+      <!--<button  class="weui-btn btn-blue_l font_32 returned"   @tap="returned" wx:else>退回押金</button>-->
     </view>
+    <button  class="weui-btn btn-blue_l font_32 returned"   @tap="returned">退回押金</button>
   </view>
   <!--弹框-->
   <modal class="modal" hidden="{{popUpModel}}" title="充值金额"  confirm-text="确认支付" bindcancel="listenerCancel" @confirm="pay">
@@ -39,7 +40,9 @@
     components = {}
     data = {
       popUpModel: true, // 弹框
-      money: 0 // 充值金额
+      money: '0.00', // 充值金额
+      trade_no: '', // 订单号将
+      cashPledge: '' // 判断是否充值
 
     }
 
@@ -54,6 +57,21 @@
 
     // 初始化页面数据
     initPageData() {
+      this.$get({url: service.cash}, {
+        success: ({code, data}) => {
+          this.cashPledge = data.cash_pledge
+          if (this.cashPledge) {
+            this.money = '99.00'
+          } else {
+            this.money = '0.00'
+          }
+          this.$apply()
+        },
+        fail: () => {
+        },
+        complete: () => {
+        }
+      })
     }
 
     methods = {
@@ -90,64 +108,79 @@
       },
       // 退押金
       returned() {
-        try {
-          wx.showModal({
-            title: '提示',
-            content: `充值成功！是否返回上次预览的页面`,
-            success: function (res) {
-              if (res.confirm) {
-                if (wx.getStorageSync('page')) {
-                  wx.navigateBack({
-                    delta: 1
-                  })
+        let fn = () => {
+          this.$post({url: service.refund}, {
+            success: ({code, data}) => {
+              let trade_no = data.trade_no
+              this.$get({url: `${service.refundMark}/${trade_no}`}, {
+                success: ({code, data}) => {
+                  console.log('ces1')
                 }
-                let url = wx.getStorageSync('page')
-                wx.redirectTo({url: url})
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
-          })
-        } catch (err) {
-          wx.showModal({
-            title: '提示',
-            content: `你有未归还的图书，请先归还图书后再申请！`,
-            showCancel: false,
-            success: function (res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
-          })
-        } finally {
-          wx.showModal({
-            title: '提示',
-            content: '退回押金后将无法向任何图书馆借书哦！你确定要这么做吗？',
-            success: function (res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
+              })
+            },
+            fail: () => {
+            },
+            complete: () => {
             }
           })
         }
+        wx.showModal({
+          title: '提示',
+          content: '退回押金后将无法向任何图书馆借书哦！你确定要这么做吗？',
+          success: function (res) {
+            if (res.confirm) {
+              fn()
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+//        try {
+//          wx.showModal({
+//            title: '提示',
+//            content: `充值成功！是否返回上次预览的页面`,
+//            success: function (res) {
+//              if (res.confirm) {
+//                if (wx.getStorageSync('page')) {
+//                  wx.navigateBack({
+//                    delta: 1
+//                  })
+//                }
+//                let url = wx.getStorageSync('page')
+//                wx.redirectTo({url: url})
+//              } else if (res.cancel) {
+//                console.log('用户点击取消')
+//              }
+//            }
+//          })
+//        } catch (err) {
+//          wx.showModal({
+//            title: '提示',
+//            content: `你有未归还的图书，请先归还图书后再申请！`,
+//            showCancel: false,
+//            success: function (res) {
+//              if (res.confirm) {
+//                console.log('用户点击确定')
+//              } else if (res.cancel) {
+//                console.log('用户点击取消')
+//              }
+//            }
+//          })
+//        }
       },
       // 微信支付
       pay() {
-        let that = this,
-          data = {
-            money: that.money
-          }
-        that.popUpModel = true
-        this.$post({url: service.charge, data}, {
+        let that = this
+//          data = {
+//            money: that.money
+//          }
+        that.$showLoading('支付中...')
+        this.$post({url: service.recharge}, {
           success: ({code, data}) => {
-            that.popUpModel = true
             that.trade_no = data.trade_no
             that.$apply()
-            let wxconfig = data.order_pay.wx_pay.config
+            wx.hideLoading()
+            let wxconfig = data.wx_pay.config
 //            wx.config(JSON.parse(response.data.data.order.wx_pay.js));
             wx.requestPayment({
               timeStamp: wxconfig.timestamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
@@ -156,7 +189,7 @@
               signType: wxconfig.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
               paySign: wxconfig.paySign, // 支付签名
               success: function (res) {
-                that.$post({url: service.orderpay + '/' + that.trade_no}, {
+                that.$post({url: service.mark + `/${that.trade_no}`}, {
                   success: ({code, data}) => {
                     wx.showToast({
                       title: '支付成功',
@@ -166,7 +199,6 @@
                   fail: ({code, data}) => {
                   },
                   complete: () => {
-//                      this.loaded = false
                   }
                 })
               },

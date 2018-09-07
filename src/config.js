@@ -50,6 +50,16 @@ export const service = {
     skip: `${host}/skip/user`,
     //register_infor
     register_infor: `${host}/register/infor`,
+    //押金
+    cash: `${host}/user/infor`,
+    //充值押金
+    recharge: `${host}/recharge/cash/pledge`,
+    //支付回调
+    mark: `${host}/mark/order/pay`,
+    //退押金支付回调
+    refundMark: `${host}/mark/order/refund`,
+    // 退押金
+    refund: `${host}/refund/cash/pledge`,
     // 主域
     host
 }
