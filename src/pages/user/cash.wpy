@@ -114,7 +114,19 @@
               let trade_no = data.trade_no
               this.$get({url: `${service.refundMark}/${trade_no}`}, {
                 success: ({code, data}) => {
-                  console.log('ces1')
+                  this.initPageData()
+                  wx.showModal({
+                    title: '提示',
+                    content: `押金退回成功！请注意查收`,
+                    showCancel: false,
+                    success: function (res) {
+                      if (res.confirm) {
+                        console.log('用户点击确定')
+                      } else if (res.cancel) {
+                        console.log('用户点击取消')
+                      }
+                    }
+                  })
                 }
               })
             },
@@ -179,7 +191,6 @@
           success: ({code, data}) => {
             that.trade_no = data.trade_no
             that.$apply()
-            wx.hideLoading()
             let wxconfig = data.wx_pay.config
 //            wx.config(JSON.parse(response.data.data.order.wx_pay.js));
             wx.requestPayment({
@@ -191,6 +202,7 @@
               success: function (res) {
                 that.$post({url: service.mark + `/${that.trade_no}`}, {
                   success: ({code, data}) => {
+                    that.initPageData()
                     wx.showToast({
                       title: '支付成功',
                       duration: 2000
@@ -214,7 +226,7 @@
           fail: ({code, data}) => {
           },
           complete: () => {
-            this.loaded = false
+            wx.hideLoading()
           }
         })
       }

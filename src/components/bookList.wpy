@@ -33,9 +33,15 @@
               </view>
             </view>
             <view wx:else class="booklist-tags" >
-              <block wx:for="{{item.tags}}" wx:key="index" wx:for-item="tag">
-                <view class="booklist-tag ellipsis_1" style="max-width: 32%;padding: 6rpx 12rpx">{{tag}}</view>
+              <!--共享者-->
+              <block wx:if="{{item.type == 'SHARE'}}">
+                <view class="booklist-tag ellipsis_1" style="max-width: 32%;padding: 6rpx 12rpx">{{item.name}}</view>
               </block>
+              <!--作者-->
+              <block wx:else>
+                <view class="booklist-tag ellipsis_1" wx:for="{{item.tags}}" wx:key="index" wx:for-item="tag" style="max-width: 32%;padding: 6rpx 12rpx">{{tag}}</view>
+              </block>
+
               <view class="booklist-status">
                 <block wx:if="{{libraryId != 523}}">
                   <text class="booklist-text color-blue" wx:if="{{item.publisher}}">{{item.publisher}}</text>

@@ -179,8 +179,10 @@
           tags: [book.author ? book.author : '无'],
           publisher: book.publisher,
           switchActive: book.is_recommend == '1' ? true : false,
+          name: book.name,
           // 暂时开发所有人都能修改，后续需要判断是否为书籍拥有人
           isOwner: '1',
+          type: book.type,
           is_admin: book.is_admin
         }
       })

@@ -12,6 +12,10 @@
       <view class="weui-media-box weui-media-box_text weui-cells_in-small-appmsg">
         <view class="h4 color-333">{{book.name}}</view>
         <view class="detail-info color-666 font_32">
+          <block wx:if="{{book_library.library.type == 'SHARE'}}">
+            <view class="font_28 color-666">共享者头像：<image src="{{book_library.avatar}}" mode="widthFix" style="width: 120rpx;height: 120rpx; border-radius: 50%;"/></view>
+            <view class="font_28 color-666">共享者：{{book_library.name}}</view>
+          </block>
           <view class="font_28 color-666">书名：{{book.title}}</view>
           <view class="font_28 color-666">作者：{{book.author}}</view>
           <view class="font_28 color-666" wx:if="{{book.publisher}}">出版社：{{book.publisher}}</view>
