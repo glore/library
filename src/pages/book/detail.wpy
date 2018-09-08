@@ -141,6 +141,7 @@
       title: '',
       detail_pic: [],
       book_library: [],
+      user_cash_pledge: '',
       shareImage: ''
     }
 
@@ -201,6 +202,7 @@
         success: ({code, data}) => {
           this.book = data
           this.book_library = data.book_library
+          this.user_cash_pledge = data.user_cash_pledge
           this.detail_pic = data.detail_pic
           this.$apply()
         }
@@ -294,51 +296,52 @@
       },
       toAdd(book, item) {
         let that = this
-        // 未缴纳押金 以及押金不足
-        if (true) {
-          return wx.showModal({
-            title: '提示',
-            content: `您的押金不足！请前往充值！`,
-//            showCancel: false,
-            confirmText: '充值押金',
-            confirmColor: '#cfb64c',
-            success: function (res) {
-              if (res.confirm) {
-                that.$cache('page')
-                wx.navigateTo({
-                  url: '/pages/user/cash'
-                })
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
-          })
-        }
         // 不需要押金
         if (item.member) {
-          wx.showModal({
-            title: '借阅确认',
-            content: '是否借阅该本书？',
-            showCancel: true,
-            success: function(res) {
-              if (res.confirm) {
-                that.$post({url: service.libraries + '/' + item.library_id + '/books/' + book.book_id + '/reserve'}, {
-                  success: ({code, data}) => {
+          // 未缴纳押金 以及押金不足
+          if (book.library.cash_pledge == 1 && this.user_cash_pledge == 0) {
+            return wx.showModal({
+              title: '提示',
+              content: `您尚未充值押金！请前往充值！`,
+//            showCancel: false,
+              confirmText: '充值押金',
+              confirmColor: '#cfb64c',
+              success: function (res) {
+                if (res.confirm) {
+                  that.$cache('page')
+                  wx.navigateTo({
+                    url: '/pages/user/cash'
+                  })
+                } else if (res.cancel) {
+                  console.log('用户点击取消')
+                }
+              }
+            })
+          } else {
+            wx.showModal({
+              title: '借阅确认',
+              content: '是否借阅该本书？',
+              showCancel: true,
+              success: function(res) {
+                if (res.confirm) {
+                  that.$post({url: service.libraries + '/' + item.library_id + '/books/' + book.book_id + '/reserve'}, {
+                    success: ({code, data}) => {
 //                    wx.showModal({
 //                      title: '预约借书成功',
 //                      content: '请找管理员取书！'
 //                    })
-                    wx.redirectTo({
-                      url: '/pages/user/borrows'
-                    })
-                    that.library_id = item.library_id
-                    that.$apply()
-                    that.getDetail()
-                  }
-                })
+                      wx.redirectTo({
+                        url: '/pages/user/borrows'
+                      })
+                      that.library_id = item.library_id
+                      that.$apply()
+                      that.getDetail()
+                    }
+                  })
+                }
               }
-            }
-          })
+            })
+          }
         } else {
           wx.showModal({
             title: '提示',

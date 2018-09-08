@@ -61,6 +61,10 @@ export const service = {
     refundMark: `${host}/mark/order/refund`,
     // 退押金
     refund: `${host}/refund/cash/pledge`,
+    // 提现
+    withdraw: `${host}/account/withdraw`,
+    // 提现回调
+    transfer: `${host}/mark/order/transfer`,
     // 主域
     host
 }

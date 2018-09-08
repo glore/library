@@ -63,6 +63,7 @@
         'pages/user/return',
         'pages/user/cash',
         'pages/user/wallet',
+        'pages/user/walletHistories',
         'pages/user/subscribe'
       ],
       window: {

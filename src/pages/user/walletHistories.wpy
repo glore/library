@@ -1,0 +1,166 @@
+<template>
+  <view class="text-center">
+    <view  wx:for="{{list}}" wx:key="*this" class="font_28 main-list">
+      <view>
+        <view class="flo_l">订单号：{{item.trade_no}}</view>
+        <view class="flo_r">{{item.created_at}}</view>
+        <view class="clearfloat"></view>
+      </view>
+      <view class="font_32 bold color-red" >到账金额{{item.withdraw}}元</view>
+      <view class="font_28 bold text-left">提现金额：{{item.amount}}元</view>
+      <view class="font_28 bold text-left">手续费:{{item.fee}}元</view>
+      <view wx:if="{{item.status == 0}}" style="box-shadow: 1rpx 1rpx 8rpx #E46138;" class="_status color-red">审核中</view>
+      <view wx:else style="color: #3CC51F;border: 1rpx solid #3CC51F" class="_status ">转账成功</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import { service } from '../../config.js'
+  import base from '../../mixins/base'
+  import http from '../../mixins/http'
+  import ShareMessage from '../../mixins/ShareMessage'
+
+  export default class mainList extends wepy.page {
+    mixins = [base, http, ShareMessage]
+    config = {
+      navigationBarTitleText: '提现记录'
+    }
+    data = {
+      noMoreList: false,
+      loading: false,
+      list: [],
+      page: 1,
+    }
+    onShareAppMessage(res) {
+      return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+    onShow() {
+      // google analytics
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+    onLoad(query) {
+//      debugger
+    }
+
+    onReady() {
+      this.initPageData(this.page)
+    }
+
+    onPullDownRefresh() {
+      this.page = 1
+      this.initPageData()
+    }
+
+    onReachBottom() {
+      setTimeout(() => {
+        this.updateBookList(this.page)
+        this.$apply()
+      }, 200)
+    }
+
+    methods = {
+      clearSearch() {
+        // 清空参数
+        this.params = {}
+        // 初始化页面
+        this.initPageData()
+      }
+    }
+
+    computed = {
+      keywords() {
+        const title = this.params && this.params.title
+        const words = this.params && this.params.keyword
+        const keywords = this.getString(words || title).split(/\s+/g)
+        return keywords.filter((item) => item) || []
+      }
+    }
+
+    // 初始化页面数据
+    initPageData() {
+      // 初始化参数
+      this.page = 1
+      this.loading = false
+      this.noMoreList = false
+      this.list = []
+
+      // 请求推荐列表
+      this.updateBookList(this.page)
+    }
+
+    // 更新图书列表
+    updateBookList(page) {
+      if (this.loading || this.noMoreList) return
+      this.loading = true
+      // 推荐列表
+      this.$get({
+        url: `${service.withdraw}/histories?page=${this.page}`,
+      }, {
+        success: ({code, data}) => {
+          this.noMoreList = false
+          if (data.current_page > data.last_page) {
+            this.noMoreList = true
+            return
+          }
+          data = data.data
+          // 请求到空列表后就认为没有更多了
+          if (this.isArray(data) && data.length === 0) {
+            this.noMoreList = true
+            return
+          }
+          if (this.list.length === 0) {
+            this.list = this.getBooks(data)
+          } else {
+            // 添加到列表中
+            this.list = [
+              ...this.list,
+              ...this.getBooks(data)
+            ]
+          }
+          // 成功了就增加一页
+          this.page += 1
+          console.log(this.list)
+        },
+        fail: ({code, data}) => {
+          console.log('[updateBookList fail]', code, data)
+        },
+        complete: () => {
+          this.loading = false
+        }
+      })
+    }
+
+    // 处理图书列表
+    getBooks(data) {
+      return this.getArray(data).map((book, index) => {
+        // 拼接示例数据
+        return book
+      })
+    }
+  }
+</script>
+
+<style lang="less">
+  @import "../../styles/weui/base/fn.wxss";
+
+  .main-list{
+    width: 93%;
+    height: 180rpx;
+    border: 1rpx solid #dedede;
+    border-radius: 6rpx;
+    padding: 12rpx;
+    margin: 12rpx auto;
+    position: relative;
+    ._status{
+      display: inline-block;
+      padding: 12rpx;
+      border-radius: 6rpx ;
+      /*border: 1rpx solid #d3d3d3;*/
+      position: absolute;
+      right: 0;
+      bottom: 0;
+    }
+  }
+</style>

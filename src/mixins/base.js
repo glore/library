@@ -142,6 +142,7 @@ export default class baseMixin extends wepy.mixin {
   }
   // 缓存当前页面
   $cache(title) {
+    debugger
     var pages = getCurrentPages()    //获取加载的页面
 
     var currentPage = pages[pages.length-1]    //获取当前页面的对象
