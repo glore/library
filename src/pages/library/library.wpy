@@ -36,12 +36,12 @@
       <view class="clearfloat"></view>
       <view class="weui-flex library-wrapper">
         <view @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')" wx:if="{{member_type == 'ADMIN'}}" class="weui-flex__item list-item">
-          <view class="color-666 item-title"><span class="num">{{mylib.library_books_count}}</span>本</view>
-          <view class="color-bbb h5">所有藏书</view>
+          <view class="color-666 item-title"><span class="num">{{mylib.sorts_count}}</span>类</view>
+          <view class="color-bbb h5">馆藏分类</view>
         </view>
         <view @tap="goto('/pages/library/sorts_list?library_id={{mylib.id}}')" wx:else class="weui-flex__item list-item">
-          <view class="color-666 item-title"><span class="num">{{mylib.library_books_count}}</span>本</view>
-          <view class="color-bbb h5">所有藏书</view>
+          <view class="color-666 item-title"><span class="num">{{mylib.sorts_count}}</span>类</view>
+          <view class="color-bbb h5">馆藏分类</view>
         </view>
         <!--<view @tap="goto('/pages/book/list?library_id={{mylib.id}}&member_type={{member_type}}')" class="weui-flex__item list-item">-->
         <!--<view class="color-666 item-title"><span class="num">{{mylib.library_books_count}}</span>册</view>-->
