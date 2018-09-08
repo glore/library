@@ -142,7 +142,8 @@
       detail_pic: [],
       book_library: [],
       user_cash_pledge: '',
-      shareImage: ''
+      shareImage: '',
+      bookUserID: 0
     }
 
     computed = {
@@ -163,6 +164,7 @@
 
     onLoad(query) {
       this.book.id = query.id
+      this.bookUserID = query.user_id
       if (query && query.library_id) {
 //        debugger
         this.library_id = query.library_id
@@ -195,7 +197,8 @@
       let data = {}
       if (this.library_id) {
         data = {
-          library_id: this.library_id
+          library_id: this.library_id,
+          book_user_id: this.bookUserID
         }
       }
       this.$get({url: service.books + '/' + this.book.id + '/v2', data}, {
