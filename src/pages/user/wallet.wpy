@@ -3,11 +3,11 @@
   <view class="user-cash text-center">
     <image src="http://images.ufutx.com/201809/06/29be4a2c41434c15419d0dab0b246ed5.png"  mode="aspectFit"></image>
     <view class="font_28">我的余额</view>
-    <view class="bold">99.00元</view>
-    <!--<view class="font_26 record">充值记录</view>-->
-    <view class="returned" @tap="returned">提 现</view>
+    <view class="bold">{{balance}}元</view>
+    <view class="font_26 record" style="color: #4c9ce6" @tap="goto('/pages/user/walletHistories')">提现记录</view>
+    <!--<view class="returned" @tap="popUp">提 现</view>-->
     <view class="page__bd page__bd_spacing text-center" plain="true" >
-      <button  class="weui-btn btn-blue_l font_32"   @tap="popUp">充值</button>
+      <button  class="weui-btn btn-blue_l font_32"   @tap="returned">提 现</button>
     </view>
   </view>
   <!--弹框-->
@@ -38,8 +38,8 @@
     }
     data = {
       popUpModel: true, // 弹框
-      money: 0 // 充值金额
-
+      money: 0, // 充值金额
+      balance: 0 //钱包余额
     }
 
     onShow() {
@@ -53,6 +53,16 @@
 
     // 初始化页面数据
     initPageData() {
+      this.$get({url: `${service.user}/account`}, {
+        success: ({code, data}) => {
+          this.balance = data.balance
+          this.$apply()
+        },
+        fail: () => {
+        },
+        complete: () => {
+        }
+      })
     }
 
     methods = {
@@ -72,14 +82,37 @@
         this.money = e.detail.value
         console.log(this.money)
       },
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
       // 退押金
       returned() {
+        let that = this
         wx.showModal({
           title: '提示',
-          content: '提现将收取0.06%的微信平台手续费，是否继续？',
+          content: '提现将收取0.01%的微信平台手续费（不低于0.01元），是否继续？',
           success: function(res) {
             if (res.confirm) {
-              console.log('用户点击确定')
+              that.$showToast('提现操作中...')
+              that.$post({url: `${service.withdraw}`}, {
+                success: ({code, data}) => {
+                  let {trade_no} = data
+                  that.$post({url: `${service.transfer}/${trade_no}`}, {
+                    success: ({code, data}) => {
+                      that.$Toast_success('提现成功！')
+                      that.initPageData()
+                    },
+                    fail: () => {
+                    },
+                    complete: () => {
+                    }
+                  })
+                },
+                fail: () => {
+                },
+                complete: () => {
+                }
+              })
             } else if (res.cancel) {
               console.log('用户点击取消')
             }

@@ -36,12 +36,12 @@
       <view class="clearfloat"></view>
       <view class="weui-flex library-wrapper">
         <view @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')" wx:if="{{member_type == 'ADMIN'}}" class="weui-flex__item list-item">
-          <view class="color-666 item-title"><span class="num">{{mylib.sorts_count}}</span>类</view>
-          <view class="color-bbb h5">馆藏分类</view>
+          <view class="color-666 item-title"><span class="num">{{mylib.library_books_count}}</span>本</view>
+          <view class="color-bbb h5">所有藏书</view>
         </view>
         <view @tap="goto('/pages/library/sorts_list?library_id={{mylib.id}}')" wx:else class="weui-flex__item list-item">
-          <view class="color-666 item-title"><span class="num">{{mylib.sorts_count}}</span>类</view>
-          <view class="color-bbb h5">馆藏分类</view>
+          <view class="color-666 item-title"><span class="num">{{mylib.library_books_count}}</span>本</view>
+          <view class="color-bbb h5">所有藏书</view>
         </view>
         <!--<view @tap="goto('/pages/book/list?library_id={{mylib.id}}&member_type={{member_type}}')" class="weui-flex__item list-item">-->
         <!--<view class="color-666 item-title"><span class="num">{{mylib.library_books_count}}</span>册</view>-->
@@ -298,6 +298,7 @@
     }
     onLoad(query) {
       this.mylib.id = query && +query.id
+      console.log(this.mylib.id)
     }
     onShow() {
       this.getshareImage()
@@ -531,12 +532,11 @@
               }, {
                 success: ({code, data}) => {
                   that.ShowAnimation = false
-                  if (data.library_book.sort_id) {
-                    that.library_sort_id = data.library_book.sort_id == '0' ? data.sorts[0].id : data.library_book.sort_id
+                  if (data.library_book.sort_id !== '0') {
+                    that.library_sort_id = data.library_book.sort_id == '0' && data.sorts.length > 0 ? data.sorts[0].id : data.library_book.sort_id
                   } else {
                     that.library_sort_id = data.sorts[0].id
                   }
-                  that.$apply()
                   that.library_sort_list = data.sorts
                   if (that.library_sort_id == '0') {
                     that.ShowSorts = true
