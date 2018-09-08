@@ -64,6 +64,8 @@ export const service = {
     withdraw: `${host}/account/withdraw`,
     // 提现回调
     transfer: `${host}/mark/order/transfer`,
+    // 赔偿金
+    damage: `${host}/pay/damage`,
     // 主域
     host
 }

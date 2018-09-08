@@ -327,7 +327,10 @@
               showCancel: true,
               success: function(res) {
                 if (res.confirm) {
-                  that.$post({url: service.libraries + '/' + item.library_id + '/books/' + book.book_id + '/reserve'}, {
+                  let data = {
+                    book_user_id: that.bookUserID
+                  }
+                  that.$post({url: service.libraries + '/' + item.library_id + '/books/' + book.book_id + '/reserve',data}, {
                     success: ({code, data}) => {
 //                    wx.showModal({
 //                      title: '预约借书成功',
