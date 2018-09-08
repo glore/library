@@ -125,7 +125,7 @@
       this.loading = true
       // 推荐列表
       this.$get({
-        url: service.list + '?library_id=' + this.libraryId + '&keyword=' + this.keyword + '&is_recommend=' + this.is_recommend,
+        url: `${service.libraries}/${this.libraryId}/books/v2?library_id=${this.libraryId}&keyword=${this.keyword}&is_recommend=${this.is_recommend}`,
         data: Object.assign({}, this.getObject(this.params), {
           // 默认从1开始为第一页
           page: page
@@ -182,6 +182,8 @@
           name: book.name,
           // 暂时开发所有人都能修改，后续需要判断是否为书籍拥有人
           isOwner: '1',
+          book_id: book.book_id,
+          user_id: book.user_id,
           type: book.type,
           is_admin: book.is_admin
         }

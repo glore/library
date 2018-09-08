@@ -5,11 +5,11 @@
       <block wx:for="{{list}}" wx:key="index">
         <!--navigator url="/pages/book/detail?id={{item.id}}&title={{item.title}}&status={{item.status}}" class="booklist-item clearfix"-->
         <view url="" class="booklist-item clearfix">
-          <view class="booklist-cover-wrapper" @tap="goto('/pages/book/detail?id={{item.id}}&title={{item.title}}&status={{item.status}}&library_id={{libraryId}}')">
+          <view class="booklist-cover-wrapper" @tap="goto('/pages/book/detail?id={{item.book_id}}&title={{item.title}}&status={{item.status}}&library_id={{libraryId}}&user_id={{item.user_id}}')">
             <image src="{{item.image}}" mode="widthFix" style="width:100%;" />
           </view>
           <view class="booklist-content-wrapper" >
-            <view @tap="goto('/pages/book/detail?id={{item.id}}&title={{item.title}}&status={{item.status}}&library_id={{libraryId}}')">
+            <view @tap="goto('/pages/book/detail?id={{item.book_id}}&title={{item.title}}&status={{item.status}}&library_id={{libraryId}}&user_id={{item.user_id}}')">
               <view class="booklist-title" >{{item.title}}</view>
               <view class="booklist-abstract">{{item.content}}</view>
             </view>
