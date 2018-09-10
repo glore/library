@@ -56,7 +56,7 @@
           <view class="color-bbb h5">会员数量</view>
           <view class="lead" wx:if="{{mylib.join_member_num > 0 && member_type == 'ADMIN'}}">{{mylib.join_member_num}}</view>
         </view>
-        <view @tap="goto('/pages/library/borrows?library_id={{mylib.id}}')" class="weui-flex__item list-item" >
+        <view @tap="goto('/pages/library/borrows?library_id={{mylib.id}}')" class="weui-flex__item list-item"style="position: relative" >
           <view class="color-666 item-title" ><span class="num">{{mylib.borrows_count}}</span>册</view>
           <view class="color-bbb h5">借阅册数</view>
           <view class="lead" wx:if="{{mylib.reserve_book_num > 0 && member_type == 'MEMBER'}}"> {{mylib.reserve_book_num}}</view>

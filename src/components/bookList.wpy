@@ -57,7 +57,7 @@
                   <image src="{{icon_eye}}" class="imgicon" mode="aspectFit"/>
                   <text class="booklist-text color-bbb">已借完</text>
                 </block>
-                <view class="icon-edit" @tap.stop="goto('/pages/library/book_edit?id={{item.id}}&library_id={{libraryId}}')" wx:if="{{item.is_admin == '1'}}">
+                <view class="icon-edit" @tap.stop="goto('/pages/library/book_edit?id={{item.book_id}}&library_id={{libraryId}}')" wx:if="{{item.is_admin == '1'}}">
                   <image class="" src="/images/icon/icon-edit.png" />
                   <view style="clear: both"></view>
                 </view>

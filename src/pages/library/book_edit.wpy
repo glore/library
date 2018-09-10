@@ -165,7 +165,8 @@
       sorts: [],
       sortIndex: 0,
       sort: null,
-      detail_pic: []
+      detail_pic: [],
+      user_id: ''
     }
 
     computed = {
@@ -212,6 +213,7 @@
           this.num = data.library_book.num
           this.sort = data.sort
           this.detail_pic = data.detail_pic
+          this.user_id = data.user_id
           // 分类列表
           this.sorts = data.sorts
           this.sorts.forEach((item, index, arr) => {
@@ -266,7 +268,8 @@
           pubdate: this.getString(this.pubdate),
           pages: this.getString(this.pages),
           detail_pic: this.detail_pic,
-          num: this.getString(this.num)
+          num: this.getString(this.num),
+          book_user_id: this.user_id
         }
 //        debugger
         // 开防抖
@@ -357,7 +360,10 @@
           content: '确认删除该图书信息？',
           success: function(res) {
             if (res.confirm) {
-              self.$delete({url: service.libraries + '/' + self.library_id + '/books/' + self.id}, {
+              let data = {
+                book_user_id: self.user_id
+              }
+              self.$delete({url: service.libraries + '/' + self.library_id + '/books/' + self.id, data}, {
                 success: ({code, data}) => {
                   setTimeout(() => {
                     wx.redirectTo({
