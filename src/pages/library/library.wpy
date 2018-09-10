@@ -56,7 +56,7 @@
           <view class="color-bbb h5">会员数量</view>
           <view class="lead" wx:if="{{mylib.join_member_num > 0 && member_type == 'ADMIN'}}">{{mylib.join_member_num}}</view>
         </view>
-        <view @tap="goto('/pages/library/borrows?library_id={{mylib.id}}')" class="weui-flex__item list-item" >
+        <view @tap="goto('/pages/library/borrows?library_id={{mylib.id}}')" class="weui-flex__item list-item" style="position: relative">
           <view class="color-666 item-title" ><span class="num">{{mylib.borrows_count}}</span>册</view>
           <view class="color-bbb h5">借阅册数</view>
           <view class="lead" wx:if="{{mylib.reserve_book_num > 0 && member_type == 'ADMIN'}}"> {{mylib.reserve_book_num}}</view>
@@ -517,6 +517,9 @@
         let that = this
         that.EditAnimation = false
         that.CollectAnimation = false
+        if (that.mylib.sorts.length == 0) {
+          return that.$showToast('请先去创建分类！')
+        }
         that.RemoveEdit()
         wx.scanCode({
           success: (res) => {
@@ -532,6 +535,7 @@
               }, {
                 success: ({code, data}) => {
                   that.ShowAnimation = false
+                  console.log(data.sorts)
                   if (data.library_book.sort_id !== '0') {
                     that.library_sort_id = data.library_book.sort_id == '0' && data.sorts.length > 0 ? data.sorts[0].id : data.library_book.sort_id
                   } else {

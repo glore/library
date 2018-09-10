@@ -445,6 +445,9 @@
         let that = this
         that.EditAnimation = false
         that.CollectAnimation = false
+        if (that.mylib.sorts.length == 0) {
+          return that.$showToast('请先去创建分类！')
+        }
         that.RemoveEdit()
         wx.scanCode({
           success: (res) => {
