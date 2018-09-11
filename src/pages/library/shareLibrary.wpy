@@ -187,17 +187,17 @@
   <view class="text-center nav">
     <view class="nav__items font_32 inline-block">
       <form bindsubmit="formSubmit" report-submit>
-        <button formType="submit" class="btn flo_l" data-type="click" @tap="scanBook({{mylib.id}})">
+        <button formType="submit" class="btn flo_l" data-type="click" @tap="scanBook({{mylib.id}}, {{mylib.book_user_id}})">
           <view class="nav__item inline-block text-center"> <span class="nav__item-text"> 录书 </span> </view>
         </button>
       </form>
       <form bindsubmit="formSubmit" report-submit>
-        <button formType="submit" class="btn flo_l" data-type="click" @tap="scanReturn({{mylib.id}})">
+        <button formType="submit" class="btn flo_l" data-type="click" @tap="scanReturn({{mylib.id}}, {{mylib.book_user_id}})">
           <view class="nav__item inline-block text-center"> <span class="nav__item-text"> 还书 </span> </view>
         </button>
       </form>
       <form bindsubmit="formSubmit" report-submit>
-        <button formType="submit" class="btn flo_l" data-type="click" @tap="scanBorrow({{mylib.id}})">
+        <button formType="submit" class="btn flo_l" data-type="click" @tap="scanBorrow({{mylib.id}}, {{mylib.book_user_id}})">
           <view class="nav__item inline-block text-center"> <span class="nav__item-text"> 借书 </span> </view>
         </button>
       </form>
@@ -441,7 +441,7 @@
         }
       },
 //      扫码录书
-      scanBook(libraryId) {
+      scanBook(libraryId, user_id) {
         let that = this
         that.EditAnimation = false
         that.CollectAnimation = false
@@ -507,10 +507,34 @@
           }
         })
       },
-      scanReturn(libraryId) {
+      // 扫码还书
+      scanReturn(libraryId, user_id) {
         wx.scanCode({
           success: (res) => {
-            wx.navigateTo({url: '/pages/library/borrow?isbn=' + res.result + '&library_id=' + libraryId})
+            wx.navigateTo({url: '/pages/library/borrow?isbn=' + res.result + '&library_id=' + libraryId + '&user_id=' + user_id})
+          }
+        })
+      },
+      // 扫码借书
+      scanBorrow(libraryId, user_id) {
+        wx.scanCode({
+          success: (res) => {
+            if (res.result) {
+              this.$post({
+                url: service.book_store,
+                data: {
+                  'isbn': res.result,
+                  'book_user_id': user_id
+//                  'isbn': 'E0036099100'
+                }
+              }, {
+                success: ({code, data}) => {
+                  wx.navigateTo({url: '/pages/book/detail?id=' + data.id + '&library_id=' + libraryId + '&user_id=' + user_id})
+                },
+                fail: ({code, data}) => {},
+                complete: () => { this.loaded = false }
+              })
+            }
           }
         })
       },
@@ -693,29 +717,6 @@
       },
       textareaChange(e) {
         this.EditSummary = e.detail.value
-      },
-      scanBorrow(libraryId) {
-        wx.scanCode({
-          success: (res) => {
-            console.log('[dev]', 'scancode', res)
-
-            if (res.result) {
-              this.$post({
-                url: service.book_store,
-                data: {
-                  'isbn': res.result
-//                  'isbn': 'E0036099100'
-                }
-              }, {
-                success: ({code, data}) => {
-                  wx.navigateTo({url: '/pages/book/detail?id=' + data.id + '&library_id=' + libraryId})
-                },
-                fail: ({code, data}) => {},
-                complete: () => { this.loaded = false }
-              })
-            }
-          }
-        })
       }
     }
   }
