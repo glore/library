@@ -59,11 +59,11 @@
           <radio value="{{item.name}}" checked="{{item.checked}}" style="margin-left: 86rpx"/>{{item.value}}
         </label>
       </radio-group>
-      <block wx:if="{{active}}">
+      <view wx:if="{{active}}">
         <input type='digit' placeholder="输入赔偿金(元)：" @input="getmoney" class="flo_l"  style="padding: 12rpx; border-bottom: 1rpx solid #d3d3d3;width: 80%;text-align: right;" />
         <view class="flo_l font_32" style="line-height: 84rpx">元</view>
         <view class="clearfloat"></view>
-      </block>
+      </view>
     </modal>
 
   </view>
@@ -189,8 +189,9 @@
     methods = {
       radioChange: function(e) {
         console.log('radio发生change事件，携带value值为：', e.detail.value)
-        this.active =  e.detail.value
+        this.active =  !this.active
         this.$apply()
+        console.log(this.active)
       },
       getmoney: function(e) {
         this.money =  e.detail.value
