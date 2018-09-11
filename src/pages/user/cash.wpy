@@ -9,9 +9,8 @@
     <!--<view class="font_26 record">充值记录</view>-->
     <view class="page__bd page__bd_spacing text-center" plain="true" >
       <button  class="weui-btn btn-blue_l font_32"   @tap="pay" wx:if="{{!cashPledge}}">充值</button>
-      <!--<button  class="weui-btn btn-blue_l font_32 returned"   @tap="returned" wx:else>退回押金</button>-->
+      <button  class="weui-btn btn-blue_l font_32 returned"  wx:else  @tap="returned">退回押金</button>
     </view>
-    <button  class="weui-btn btn-blue_l font_32 returned"   @tap="returned">退回押金</button>
   </view>
   <!--弹框-->
   <modal class="modal" hidden="{{popUpModel}}" title="充值金额"  confirm-text="确认支付" bindcancel="listenerCancel" @confirm="pay">
@@ -59,7 +58,7 @@
     initPageData() {
       this.$get({url: service.cash}, {
         success: ({code, data}) => {
-          this.cashPledge = data.cash_pledge
+          this.cashPledge = Number(data.cash_pledge)
           if (this.cashPledge) {
             this.money = '99.00'
           } else {
