@@ -106,6 +106,7 @@
       active: false,
       pay_url: '',
       trade_no: '',
+      user_id: '',
       borrows: []
     }
 
@@ -140,6 +141,9 @@
       if (query && +query.library_id) {
         this.library_id = query && +query.library_id
       }
+      if (query.user_id) {
+        this.user_id = query.user_id
+      }
     }
 
     onShow() {
@@ -159,13 +163,14 @@
 
     // 获取图书信息
     getDetail() {
-      var url = service.libraries + '/' + this.library_id
+      let url = service.libraries + '/' + this.library_id,
+        data = { book_user_id : this.user_id}
       if (this.isbn) {
         url = url + '/borrow/isbn/' + this.isbn
       } else {
         url = url + '/borrows/' + this.id
       }
-      this.$get({url: url}, {
+      this.$get({url: url, data}, {
         success: ({code, data}) => {
           this.userID = data.user.id
           if (this.isbn) {

@@ -173,6 +173,9 @@
     }
 
     onLoad(options) {
+      if(options.user_id){
+        this.user_id = options.user_id
+      }
       if (options.id) {
         this.id = options.id
         this.libraryId = options.library_id
@@ -194,7 +197,10 @@
     // 初始化页面数据
     initPageData() {
       // 拉取图书详情
-      this.$get({url: service.libraries + '/' + this.libraryId + '/books/' + this.id}, {
+      let data = {
+        book_user_id: this.user_id
+      }
+      this.$get({url: service.libraries + '/' + this.libraryId + '/books/' + this.id, data}, {
         success: ({code, data}) => {
           this.library_id = data.library.id
           this.id = data.id
