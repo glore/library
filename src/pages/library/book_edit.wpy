@@ -219,7 +219,6 @@
           this.num = data.library_book.num
           this.sort = data.sort
           this.detail_pic = data.detail_pic
-          this.user_id = data.user_id
           // 分类列表
           this.sorts = data.sorts
           this.sorts.forEach((item, index, arr) => {
