@@ -164,7 +164,9 @@
 
     onLoad(query) {
       this.book.id = query.id
-      this.bookUserID = query.user_id
+      if(query.user_id) {
+        this.bookUserID = query.user_id
+      }
       if (query && query.library_id) {
 //        debugger
         this.library_id = query.library_id
