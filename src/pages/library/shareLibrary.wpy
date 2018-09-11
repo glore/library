@@ -529,7 +529,7 @@
                 }
               }, {
                 success: ({code, data}) => {
-                  wx.navigateTo({url: '/pages/book/detail?id=' + data.id + '&library_id=' + libraryId + '&user_id=' + user_id})
+                  wx.navigateTo({url: '/pages/book/detail?id=' + data.id + '&library_id=' + libraryId})
                 },
                 fail: ({code, data}) => {},
                 complete: () => { this.loaded = false }
