@@ -72,7 +72,7 @@
           <view class="weui-label reset-label-left text-center">是否需要押金（99元）？</view>
         </view>
         <view class="weui-cell__bd h3  color-red">
-          <switch checked bindchange="switch1Change" color="#6db6cf"/>
+          <switch checked="{{cash_pledge}}" bindchange="switch1Change" color="#6db6cf), to(#0b95e6))"/>
         </view>
       </view>
     </view>
@@ -158,6 +158,7 @@
       // 图书分类
       sort: null,
       files: [],
+      cash_pledge: 0,
       text: '创建'
     }
 
@@ -199,6 +200,7 @@
             this.type = data.type
             this.timeIndex = data.borrow_time == 'week' ? 0 : 1
             this.EditImage = data.logo
+            this.cash_pledge = Number(data.cash_pledge)
             for (let i = 0; i < that.radioItems.length; i++) {
               that.radioItems[i].checked = false
               if (that.radioItems[i].value == data.type) {
@@ -326,6 +328,11 @@
     methods = {
       switch1Change(e) {
         console.log('switch1 发生 change 事件，携带值为', e.detail.value)
+        if (e.detail.value) {
+          this.cash_pledge = 1
+        }else {
+          this.cash_pledge = 0
+        }
       },
       bindPickerChange: function(e) {
         console.log('picker发送选择改变，携带值为', e.detail.value)
@@ -405,7 +412,8 @@
           borrow_time: this.borrow_time,
           address: this.address,
           location_longitude: this.longitude,
-          location_latitude: this.latitude
+          location_latitude: this.latitude,
+          cash_pledge: this.cash_pledge
         }
         // 开防抖
         this.loading = true
