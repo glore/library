@@ -250,8 +250,12 @@
       confirmV2() {
         this.$post({url: service.mark + `/${this.trade_no}`}, {
           success: ({code, data}) => {
-           console.log('成功！')
-            wx.navigateBack({delta: 1})
+            let url = service.libraries + '/' + this.library_id + '/borrows/' + this.borrow_id + '/' + this.borrow_status
+            this.$put({url: url}, {
+              success: ({code, data}) => {
+                wx.navigateBack({delta: 1})
+              }
+            })
           },
           fail: ({code, data}) => {
           },
