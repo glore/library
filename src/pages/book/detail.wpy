@@ -475,5 +475,8 @@ page{
     width: 72rpx;
     height: 68rpx;
   }
+  .detail-info{
+    line-height: 50rpx;
+  }
   }
 </style>

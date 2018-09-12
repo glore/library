@@ -27,7 +27,7 @@
                 <!--<view class="weui-media-box__desc" wx:if="{{item.status=='ADMIN'}}"  style="color:blue">状态：管理员</view>-->
               </block>
             </view>
-            <view style="position: absolute; right: 12rpx; top: 12rpx;" @tap="makePhoneCall('{{item.user.mobile}}')">
+            <view style="position: absolute; right: 12rpx; top: 12rpx;" wx:if="{{library.is_admin == 1}}" @tap="makePhoneCall('{{item.user.mobile}}')">
               <image src="../../images/tabbars/icon-phone.png" style="width: 60rpx;height: 60rpx"></image>
             </view>
             <view class="weui-media-box__info" wx:if="{{library.is_admin == '1'}}">
