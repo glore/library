@@ -17,6 +17,9 @@
       </view>
       <shareComponent  :shareImage.sync="shareImage" :library_id.sync="library_id"></shareComponent>
       <view class="clearfloat"></view>
+      <view class="library-title flo_l ellipsis_1" wx:if="{{mylib.intro !== null}}" style="margin-top: 20rpx;font-weight: inherit;font-size: 26rpx;width: 63%;">
+        <span class="font_28 bold">简介：</span>{{mylib.intro}}
+      </view>
       <view class="flo_r" style="margin-right:26rpx;">
         <form bindsubmit="formSubmit" report-submit>
           <button formType="submit" class="btn" data-type="click">
@@ -24,7 +27,7 @@
           </button>
         </form>
         <button  @tap="joinLibrary('join')"  wx:if="{{mylib.member && mylib.member.status == 'JOIN'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="warn" size="mini">待审核...</button>
-        <view  @tap="joinLibrary('admin')" class="font_28"  wx:if="{{mylib.member && mylib.member.status == 'MEMBER'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx;color: #049BFF;" >联系取书</view>
+        <view  @tap="joinLibrary('admin')" class="font_28"  wx:if="{{mylib.member && mylib.member.status == 'MEMBER'}}" style="padding:8rpx 22rpx;line-height: 40rpx;color: #049BFF;" >联系取书</view>
       </view>
       <view class="clearfloat"></view>
       <view class="library-title flo_l" wx:if="{{mylib.address !== null}}" style="margin-top: 20rpx;font-weight: inherit;font-size: 26rpx;width: 100%;" @tap="goadderss({{mylib.location_latitude}},{{mylib.location_longitude}})">

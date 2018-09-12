@@ -109,8 +109,8 @@
     <view style="height: 114rpx"></view>
     <block wx:if="{{id}}">
       <view style="position: fixed;bottom: 0;left: 0;width: 100%">
-        <button @tap="save" type="primary" style="float: left;width: 50%;border-radius: 0">保存</button>
-        <button @tap="destroy"  type="danger" style="border-radius: 0">删除</button>
+        <button @tap="destroy"  type="danger" style="float: left;width: 50%;border-radius: 0">删除</button>
+        <button @tap="save" type="primary" style="border-radius: 0">保存</button>
       </view>
     </block>
     <block wx:else>
@@ -289,7 +289,7 @@
                 success: function(res) {
                   if (res.confirm) {
                     wx.navigateBack({
-                      delta: 1
+                      delta: 2
                     })
                   } else if (res.cancel) {
                   }
@@ -358,7 +358,7 @@
         }
       },
       destroy() {
-        var self = this
+        let self = this
         console.log(this.library_id)
         wx.showModal({
           title: '提示',
@@ -372,7 +372,7 @@
                 success: ({code, data}) => {
                   setTimeout(() => {
                     wx.redirectTo({
-                      url: '/pages/book/list?library_id=' + self.library_id + '&member_type=ADMIN'
+                      url: '/pages/library/library?id=' + self.library_id
                     })
                   }, 1000)
                   wx.showToast({

@@ -232,7 +232,7 @@
   }
   .weui-cell{
     position: inherit;
-    box-shadow: 1rpx 1rpx 8rpx #d3d3d3;
+    /*box-shadow: 1rpx 1rpx 8rpx #d3d3d3;*/
     margin-top: 12rpx;
   }
   .weui-cells__title{

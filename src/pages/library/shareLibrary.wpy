@@ -17,6 +17,9 @@
       </view>
       <shareComponent  :shareImage.sync="shareImage" :library_id.sync="library_id"></shareComponent>
       <view class="clearfloat"></view>
+      <view class="library-title flo_l ellipsis_1" wx:if="{{mylib.intro !== null}}" style="margin-top: 20rpx;font-weight: inherit;font-size: 26rpx;width: 63%;">
+        <span class="font_28 bold">简介：</span>{{mylib.intro}}
+      </view>
       <view class="flo_r" style="margin-right:26rpx;">
         <form bindsubmit="formSubmit" report-submit>
           <button formType="submit" class="btn" data-type="click">
@@ -24,7 +27,7 @@
           </button>
         </form>
         <button  @tap="joinLibrary('join')"  wx:if="{{mylib.member && mylib.member.status == 'JOIN'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="warn" size="mini">待审核...</button>
-        <view  @tap="joinLibrary('admin')" class="font_28"  wx:if="{{mylib.member && mylib.member.status == 'MEMBER'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx;color: #049BFF;" >联系取书</view>
+        <view  @tap="joinLibrary('admin')" class="font_28"  wx:if="{{mylib.member && mylib.member.status == 'MEMBER'}}" style="padding:8rpx 22rpx;line-height: 40rpx;color: #049BFF;" >联系取书</view>
       </view>
       <view class="clearfloat"></view>
       <view class="library-title flo_l" wx:if="{{mylib.address !== null}}" style="margin-top: 20rpx;font-weight: inherit;font-size: 26rpx;width: 100%;" @tap="goadderss({{mylib.location_latitude}},{{mylib.location_longitude}})">
@@ -43,10 +46,6 @@
           <view class="color-666 item-title"><span class="num">{{mylib.library_books_count}}</span>册</view>
           <view class="color-bbb h5">馆藏册数</view>
         </view>
-        <!--<view @tap="goto('/pages/book/list?library_id={{mylib.id}}&member_type={{member_type}}')" class="weui-flex__item list-item">-->
-        <!--<view class="color-666 item-title"><span class="num">{{mylib.library_books_count}}</span>册</view>-->
-        <!--<view class="color-bbb h5">馆藏册数</view>-->
-        <!--</view>-->
         <view  class="weui-flex__item list-item">
           <view class="color-666 item-title"><span class="num" style="color: red;">{{mylib.click_num}}</span></view>
           <view class="color-bbb h5">人气</view>
@@ -62,16 +61,7 @@
           <view class="lead" wx:if="{{mylib.reserve_book_num > 0 && member_type == 'ADMIN'}}"> {{mylib.reserve_book_num}}</view>
         </view>
       </view>
-      <!--<view class="placeholder_26"></view>-->
       <view class="clearfloat"></view>
-
-      <!--<view class="mylib_btn">-->
-      <!--<button wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}" @tap="scanReturn({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">扫码还书</button>-->
-      <!--<button wx:if="{{mylib.member && mylib.member.status=='ADMIN'}}" @tap="scanBook({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">扫码录书</button>-->
-      <!--<button wx:if="{{mylib.member && mylib.member.status=='MEMBER'}}" @tap="scanBorrow({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">扫码借书</button>-->
-      <!--<button wx:if="{{!mylib.member}}" @tap="joinLibrary({{mylib.id}})"  class="weui-btn mini-btn" type="primary" size="mini">申请加入</button>-->
-      <!--<button wx:if="{{mylib.member && mylib.member.status=='JOIN'}}" @tap="joinTip"  class="weui-btn mini-btn" type="primary" size="mini">待审核</button>-->
-      <!--</view>-->
       <view style="height: 68rpx; background: #f4f4f4;line-height: 68rpx;">
         <view class="flo_l" style="margin-left: 22rpx">图书馆动态：</view>
         <rollComponent class="flo_l" :list.sync="last_borrows"></rollComponent>
@@ -194,7 +184,7 @@
 
 
   <view style="height: 180rpx;background: white"></view>
-  <view class="text-center nav" wx:if="{{mylib.member}}">
+  <view class="text-center nav" wx:if="{{mylib.is_member == 1}}">
     <view class="nav__items font_32 inline-block">
       <form bindsubmit="formSubmit" report-submit>
         <button formType="submit" class="btn flo_l" data-type="click" @tap="scanBook({{mylib.id}})">
