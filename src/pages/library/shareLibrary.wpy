@@ -88,7 +88,7 @@
       <view class="font_28"><view class="flo_l">书名： </view><input type="text" placeholder="请填写书的名字"  class="upload-text" style="width: 80%;padding-left: 12rpx;" bindinput="inputChange"/></view>
       <view class="font_28" style="margin-top: 20rpx"><view class="flo_l">作者： </view><input type="text" placeholder="请填写作者"  class="upload-text" style="width: 80%;padding-left: 12rpx" bindinput="inputChange_author"/></view>
       <!--<view  class="list" style="width: 78%">-->
-      <!--<picker  value="{{sorts_id}}" range="{{sortslist.name}}"  bindchange="sorts_Change" >-->
+      <!--<picker  value="{{sorts_id}}" range="{{s  vbnm,./zsrortslist.name}}"  bindchange="sorts_Change" >-->
       <!--<view class="picker">-->
       <!--<view class="font_28">分类：<text style="border-bottom: 1rpx solid #d3d3d3">{{sortslist.name[sorts_id]}}</text></view>-->
       <!--</view>-->
@@ -515,6 +515,7 @@
           success: (res) => {
             console.log('[dev]', 'scancode', res)
             if (res.result) {
+              that.$showToast('识别中...')
               that.EditIsbn = res.result
               this.$post({
                 url: service.libraries + '/' + libraryId + '/books',
@@ -716,6 +717,7 @@
                     that.libraries = []
                     that.librarydata = []
                   }, 800)
+                  that.page = 1
                   that.initPageData()
                 },
                 fail: (res) => {

@@ -530,6 +530,7 @@
             console.log('[dev]', 'scancode', res)
             if (res.result) {
               that.EditIsbn = res.result
+              that.$showToast('识别中...')
               this.$post({
                 url: service.libraries + '/' + libraryId + '/books',
                 data: {
@@ -731,6 +732,7 @@
                     that.libraries = []
                     that.librarydata = []
                   }, 800)
+                  that.page = 1
                   that.initPageData()
                 },
                 fail: (res) => {

@@ -330,7 +330,7 @@
         console.log('switch1 发生 change 事件，携带值为', e.detail.value)
         if (e.detail.value) {
           this.cash_pledge = 1
-        }else {
+        } else {
           this.cash_pledge = 0
         }
       },
