@@ -88,7 +88,7 @@
       <view class="font_28"><view class="flo_l">书名： </view><input type="text" placeholder="请填写书的名字"  class="upload-text" style="width: 80%;padding-left: 12rpx;" bindinput="inputChange"/></view>
       <view class="font_28" style="margin-top: 20rpx"><view class="flo_l">作者： </view><input type="text" placeholder="请填写作者"  class="upload-text" style="width: 80%;padding-left: 12rpx" bindinput="inputChange_author"/></view>
       <!--<view  class="list" style="width: 78%">-->
-      <!--<picker  value="{{sorts_id}}" range="{{sortslist.name}}"  bindchange="sorts_Change" >-->
+      <!--<picker  value="{{sorts_id}}" range="{{s  vbnm,./zsrortslist.name}}"  bindchange="sorts_Change" >-->
       <!--<view class="picker">-->
       <!--<view class="font_28">分类：<text style="border-bottom: 1rpx solid #d3d3d3">{{sortslist.name[sorts_id]}}</text></view>-->
       <!--</view>-->
@@ -151,6 +151,17 @@
 
   <block wx:else>
     <ClassifyListV2 :list.sync="list" :library_id.sync="library_id" :member_type.sync="member_type" :recommendlist.sync="recommend_library_books"></ClassifyListV2>
+    <block wx:if="{{loadingV2}}">
+      <view class="weui-loadmore">
+        <view class="weui-loading"></view>
+        <view class="weui-loadmore__tips">正在加载</view>
+      </view>
+    </block>
+    <block wx:if="{{noMore}}">
+      <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+        <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+      </view>
+    </block>
   </block>
 
   <!--fefefe-->
@@ -279,7 +290,9 @@
       recommend_library_books: [],
       hiddenmodalput: true,
       last_borrows: [], // 动态
-      init: false
+      init: false,
+      loadingV2: false,
+      noMore: false
     }
 
     onShareAppMessage(res) {
@@ -319,6 +332,8 @@
       })
     }
     initPageData() {
+      this.noMore = true
+      this.loadingV2 = true
       let data = {page: this.page}
       this.$get({url: service.libraries + `/${this.mylib.id}/v2`, data}, {
         success: ({code, data}) => {
@@ -335,11 +350,6 @@
           this.recommend_library_books = data.recommend_library_books
           this.last_borrows = data.last_borrows
           data = data.library_books
-          if (data.current_page > data.last_page) {
-            this.noMoreList = true
-            this.noMore = true
-            return
-          }
           data = data.data
           if (this.isArray(data) && data.length === 0) {
             this.noMore = true
@@ -362,7 +372,10 @@
           this.$apply()
         },
         fail: ({code, data}) => { },
-        complete: () => { this.init = true }
+        complete: () => {
+          this.init = true
+          this.loadingV2 = false
+        }
       })
     }
     uploadFiles(filePaths, successUp, failUp, i, length) {
@@ -515,6 +528,7 @@
           success: (res) => {
             console.log('[dev]', 'scancode', res)
             if (res.result) {
+              that.$showToast('识别中...')
               that.EditIsbn = res.result
               this.$post({
                 url: service.libraries + '/' + libraryId + '/books',
@@ -716,6 +730,7 @@
                     that.libraries = []
                     that.librarydata = []
                   }, 800)
+                  that.page = 1
                   that.initPageData()
                 },
                 fail: (res) => {

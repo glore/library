@@ -3,7 +3,7 @@
     <!--<button  type="default" size="mini"  @tap="gotoTab('/pages/index')"  style="padding:2rpx 12rpx;line-height: 42rpx;margin-right: 22rpx">-->
     <!--<image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-home.png"></image>-->
     <!--</button>-->
-    <button  size="mini" @tap="gotoTab('/pages/map')" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 140rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
+    <button  size="mini" @tap="goto('/pages/map')" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 140rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
       <image  class="imgicon" mode="aspectFit" src="../images/tabbars/home.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
     </button>
     <view class="smile" style="position: fixed;z-index: 1000;right: 24.5vw; top: -25rpx;"></view>
@@ -116,7 +116,7 @@
         if (this.library_id == 0) {
           wx.redirectTo({url: url})
         } else {
-          wx.navigateTo({url: `/pages/library/library?id=${this.library_id}`})
+          wx.redirectTo({url: `/pages/library/library?id=${this.library_id}`})
         }
       },
       gotoredirect(url) {
