@@ -321,7 +321,7 @@
     }
 
     methods = {
-      showModel(name, _id) {
+      showModel(name,_id) {
         this.libraryName = name
         this.deleteId = _id
         this.hiddenmodalput = false
@@ -342,10 +342,8 @@
               duration: 1500
             })
           },
-          fail: ({code, data}) => {
-          },
-          complete: () => {
-          }
+          fail: ({code, data}) => {},
+          complete: () => {  }
         })
       },
       showInput () {

@@ -5,6 +5,7 @@
 // var host = 'https://library.ufutx.com/api'
 var host = 'http://library.hankin.com/api'
 // var host = 'http://library.hankin.ufutx.cn/api'
+
 export const service = {
     // 登录接口
     login: `${host}/login/wechat`,
