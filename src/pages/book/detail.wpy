@@ -26,7 +26,7 @@
           <view>
             <span wx:if="{{book.is_admin == '1'}}"><span class="font_32">推荐：</span><switch type="switch" checked="{{book.book_library.is_recommend == '1'}}" color="#36a2e6" @change.stop="switchChange()"  style="width: 120rpx"/></span>
           </view>
-          <view class="icon-edit" @tap.stop="goto('/pages/library/book_edit?id={{book.id}}&library_id={{library_id}}&user_id={{book.user_id}}')" wx:if="{{book.is_admin == '1'}}">
+          <view class="icon-edit" @tap.stop="goto('/pages/library/book_edit?id={{book.id}}&library_id={{library_id}}&user_id={{book.book_library.user_id}}')" wx:if="{{book.is_admin == '1'}}">
             <image class="" src="../../images/icon/icon-edit.png" />
           </view>
         </view>

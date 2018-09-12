@@ -81,13 +81,14 @@
       }
     }
     onShow() {
-      this.updataMap()
-      this.mapCtx = wx.createMapContext('map')
-      this.getCenterLocation()
       this.getSystem()
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
     }
-
+    onReady () {
+      this.mapCtx = wx.createMapContext('map')
+      this.getCenterLocation()
+      this.updataMap()
+    }
     onLoad() {
       // wx.setNavigationBarColor({
       //   frontColor: '#ffffff',

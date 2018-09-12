@@ -8,7 +8,7 @@
                     </view>
                     <view class="weui-navbar__slider" style="width:{{sliderWidth}}px; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
                 </view>
-                <view class="weui-tab__panel" style="padding-bottom: 12rpx">
+                <view class="weui-tab__panel" style="padding-bottom: 12rpx;">
                     <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
                       <!--view class="library-title">我的图书馆
                         <button class="weui-btn mini-btn" @tap="goto('/pages/library/create')" type="primary" size="mini" style="float:right">新建图书馆</button>
@@ -17,19 +17,20 @@
                       <view class="list" style="padding: 12rpx">
                         <button  @tap="goto('/pages/library/create')" class="weui-btn btn-blue_l" type="primary" size="mini" >创建我的图书馆</button>
                       </view>
-                          <view  wx:for="{{mylibs}}" wx:key="id" >
+                          <view  wx:for="{{mylibs}}" wx:key="id">
                             <view style="" class="flo_l borrowlist" @tap="goto({{item.url}})">
                               <view class="flo_l lisimage" >
                                 <image src="{{itemimage}}" mode="aspectFit"  wx:for="{{item.images}}" wx:key="*this" wx:for-item="itemimage" style="width: 60rpx;height: 60rpx;margin-left: 12rpx;margin-top: 12rpx" class="flo_l"></image>
                               </view>
                               <view class="clearfloat"></view>
+                              <view class="text-center" style="border-top: 1rpx solid #d3d3d3;"></view>
                               <view class="font_26 listtext ellipsis_1">
                                 {{item.name}}
                               </view>
-                              <view style="position: absolute;right: 0;bottom: -18rpx;width: 72rpx;height: 80rpx" @tap.stop="showModel({{item.name}}, {{item.id}})">
+                              <view style="margin-top: 12rpx;" class="flo_r" @tap.stop="showModel({{item.name}}, {{item.id}})">
                                 <image src="../images/icon/delete.png" style="width: 48rpx;height: 48rpx;"></image>
                               </view>
-                              <view style="position: absolute;right: 0;bottom: 15%;" wx:if="{{item.status=='JOIN'}}">
+                              <view style="margin-top: -180rpx;margin-left: 100rpx;position: absolute;" class="flo_r" wx:if="{{item.status=='JOIN'}}">
                                 <image src="../images/tabbars/icon-authstr.png" style="width: 120rpx;height: 120rpx;"></image>
                               </view>
                             </view>
@@ -85,6 +86,7 @@
                             <image src="{{itemimage}}" mode="aspectFit"  wx:for="{{item.images}}" wx:key="*this" wx:for-item="itemimage" style="width: 60rpx;height: 60rpx;margin-left: 12rpx;margin-top: 12rpx" class="flo_l"></image>
                           </view>
                           <view class="clearfloat"></view>
+                          <view class="text-center" style="border-top: 1rpx solid #d3d3d3;"></view>
                           <view  class="font_26 listtext ellipsis_1">
                             {{item.name}}
                           </view>
@@ -533,14 +535,16 @@ page{
   margin-left: 19rpx;
   margin-top: 18rpx;
   border-radius: 6rpx;
-  position: relative
+  /*position: relative*/
 }
   .lisimage {
     margin-bottom: 12rpx;
     min-height: 220rpx;
   }
   .listtext {
-    padding: 12rpx 38rpx 16rpx 10rpx;
-    border-top: 1rpx solid #d3d3d3;
+    margin: 0rpx 10rpx 0rpx 10rpx;
+    width: 60%;
+    padding: 12rpx 0rpx 0rpx 10rpx;
+    display: inline-block;
   }
 </style>
