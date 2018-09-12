@@ -1,6 +1,5 @@
 <template>
   <view class="main-register">
-
     <view class="weui-cells weui-cells_after-title main-address">
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
@@ -28,13 +27,12 @@
           </view>
           <view class="weui-cell__ft">
             <view class="weui-label reset-label-right">
-              <button @tap="verify" class="weui-btn mini-btn" type="default" size="mini">{{btnText}}</button>
+              <button @tap="verify" class="weui-btn mini-btn" type="default" size="mini" >{{btnText}}</button>
             </view>
           </view>
         </view>
       </block>
     </view>
-
     <view class="weui-cells__tips">
       <view class="color-666">说明</view>
       <view class="color-999">首次登录请设置姓名并绑定手机号</view>
@@ -159,7 +157,7 @@
                           i++
                         }
                       })
-                      if (i == 1) {
+                      if (i == 2) {
                         wx.switchTab({url: jump})
                       } else {
                         wx.redirectTo({url: jump})
