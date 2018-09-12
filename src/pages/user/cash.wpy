@@ -137,7 +137,7 @@
         }
         wx.showModal({
           title: '提示',
-          content: '退回押金后将无法向任何图书馆借书哦！你确定要这么做吗？',
+          content: '退回押金后将无法向部分图书馆借书哦！你确定要这么做吗？',
           success: function (res) {
             if (res.confirm) {
               fn()

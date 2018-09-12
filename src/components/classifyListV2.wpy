@@ -1,6 +1,6 @@
 <template>
   <view style="position: relative;background: white;">
-    <view   class="weui-cell weui-cell_access f4 font_32 color_6 "  style="padding: 22rpx 22rpx 22rpx 0;border-bottom: 1rpx solid #e7e7e7;margin-left: 32rpx">
+    <view   class="weui-cell weui-cell_access f4 font_32 color_6 " wx:if="{{recommendlist.length > 0}}"  style="padding: 22rpx 22rpx 22rpx 0;border-bottom: 1rpx solid #e7e7e7;margin-left: 32rpx">
       <view class="weui-cell__bd bold black_6">
         馆长推荐
       </view>

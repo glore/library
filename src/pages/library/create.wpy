@@ -145,7 +145,7 @@
       type: '',
       radioItems: [
         {name: '共享图书馆', value: 'SHARE', checked: false},
-        {name: '书店图书馆', value: 'STORE', checked: false},
+//        {name: '书店图书馆', value: 'STORE', checked: false},
         {name: '机构图书馆', value: 'ORG', checked: false}
       ],
       loading: false,
