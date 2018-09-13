@@ -1,89 +1,97 @@
 <template>
-  <view class="booklist">
-    <view wx:if="{{title}}" class="booklist-name">{{title}}</view>
-    <block wx:if="{{list.length > 0}}">
-      <block wx:for="{{list}}" wx:key="index">
-        <!--navigator url="/pages/book/detail?id={{item.id}}&title={{item.title}}&status={{item.status}}" class="booklist-item clearfix"-->
-        <view url="" class="booklist-item clearfix">
-          <view class="booklist-cover-wrapper" @tap="goto('/pages/book/detail?id={{item.book_id}}&title={{item.title}}&status={{item.status}}&library_id={{libraryId}}&user_id={{item.user_id}}')">
-            <image src="{{item.image}}" mode="widthFix" style="width:100%;" />
-          </view>
-          <view class="booklist-content-wrapper" >
-            <view @tap="goto('/pages/book/detail?id={{item.book_id}}&title={{item.title}}&status={{item.status}}&library_id={{libraryId}}&user_id={{item.user_id}}')">
-              <view class="booklist-title" >{{item.title}}</view>
-              <view class="booklist-abstract">{{item.content}}</view>
-            </view>
-            <view wx:if="{{isCollectList}}" class="booklist-tags">
-              <block wx:if="{{item.status == '1'}}">
-                <image src="{{icon_eye_active}}" class="imgicon" mode="aspectFit"/>
-                <text class="booklist-text color-blue">可借阅</text>
-              </block>
-              <block wx:else>
-                <image src="{{icon_eye}}" class="imgicon" mode="aspectFit"/>
-                <text class="booklist-text color-bbb">已借完</text>
-              </block>
-              <view @tap.stop="toStar({{item}}, {{index}})" class="booklist-status">
-                <block wx:if="{{item.collected == 1}}">
-                  <image class="imgicon" src="{{icon_star_active}}" mode="aspectFit"/>
-                  <text class="booklist-text reset-text-star color-999">已收藏</text>
-                </block><block wx:else>
-                  <image class="imgicon" src="{{icon_star}}" mode="aspectFit"/>
-                  <text class="booklist-text reset-text-star color-blue">收藏</text>
-                </block>
-              </view>
-            </view>
-            <view wx:else class="booklist-tags" >
-              <!--共享者-->
-              <block wx:if="{{item.type == 'SHARE'}}">
-                <view class="booklist-tag ellipsis_1" style="max-width: 32%;padding: 6rpx 12rpx">{{item.name}}</view>
-              </block>
-              <!--作者-->
-              <block wx:else>
-                <view class="booklist-tag ellipsis_1" wx:for="{{item.tags}}" wx:key="index" wx:for-item="tag" style="max-width: 32%;padding: 6rpx 12rpx">{{tag}}</view>
-              </block>
+      <view class="booklist">
+        <view wx:if="{{title}}" class="booklist-name">{{title}}</view>
+        <block wx:if="{{list.length > 0}}">
+          <block wx:for="{{list}}" wx:key="index">
+            <!--navigator url="/pages/book/detail?id={{item.id}}&title={{item.title}}&status={{item.status}}" class="booklist-item clearfix"-->
+            <view url="" class="booklist-item clearfix">
+              <form bindsubmit="formSubmit" report-submit>
+                <button formType="submit" class="btn" data-type="click">
+                  <view class="booklist-cover-wrapper" @tap="goto('/pages/book/detail?id={{item.book_id}}&title={{item.title}}&status={{item.status}}&library_id={{libraryId}}&user_id={{item.user_id}}')">
+                    <image src="{{item.image}}" mode="widthFix" style="width:100%;" />
+                  </view>
+                </button>
+              </form>
+              <view class="booklist-content-wrapper" >
+                <view @tap="goto('/pages/book/detail?id={{item.book_id}}&title={{item.title}}&status={{item.status}}&library_id={{libraryId}}&user_id={{item.user_id}}')">
+                  <form bindsubmit="formSubmit" report-submit>
+                    <button formType="submit" class="btn" data-type="click" style="line-height: inherit">
+                      <view class="booklist-title" >{{item.title}}</view>
+                      <view class="booklist-abstract">{{item.content}}</view>
+                    </button>
+                  </form>
+                </view>
+                <view wx:if="{{isCollectList}}" class="booklist-tags">
+                  <block wx:if="{{item.status == '1'}}">
+                    <image src="{{icon_eye_active}}" class="imgicon" mode="aspectFit"/>
+                    <text class="booklist-text color-blue">可借阅</text>
+                  </block>
+                  <block wx:else>
+                    <image src="{{icon_eye}}" class="imgicon" mode="aspectFit"/>
+                    <text class="booklist-text color-bbb">已借完</text>
+                  </block>
+                  <view @tap.stop="toStar({{item}}, {{index}})" class="booklist-status">
+                    <block wx:if="{{item.collected == 1}}">
+                      <image class="imgicon" src="{{icon_star_active}}" mode="aspectFit"/>
+                      <text class="booklist-text reset-text-star color-999">已收藏</text>
+                    </block><block wx:else>
+                    <image class="imgicon" src="{{icon_star}}" mode="aspectFit"/>
+                    <text class="booklist-text reset-text-star color-blue">收藏</text>
+                  </block>
+                  </view>
+                </view>
+                <view wx:else class="booklist-tags" >
+                  <!--共享者-->
+                  <block wx:if="{{item.type == 'SHARE'}}">
+                    <view class="booklist-tag ellipsis_1" style="max-width: 32%;padding: 6rpx 12rpx">{{item.name}}</view>
+                  </block>
+                  <!--作者-->
+                  <block wx:else>
+                    <view class="booklist-tag ellipsis_1" wx:for="{{item.tags}}" wx:key="index" wx:for-item="tag" style="max-width: 32%;padding: 6rpx 12rpx">{{tag}}</view>
+                  </block>
 
-              <view class="booklist-status">
-                <block wx:if="{{libraryId != 523}}">
-                  <text class="booklist-text color-blue" wx:if="{{item.publisher}}">{{item.publisher}}</text>
-                </block>
-                <block wx:else>
-                  <span wx:if="{{item.is_admin == '1'}}">推荐：<switch type="switch" checked="{{item.switchActive}}" color="#36a2e6" @change.stop="switchChange({{item.id}})"  style="width: 120rpx"/></span>
-                </block>
-                <block wx:if="{{item.status == '1'}}">
-                  <image src="{{icon_eye_active}}" class="imgicon" mode="aspectFit"/>
-                  <text class="booklist-text color-blue">可借阅</text>
-                </block>
-                <block wx:if="{{item.status == '0'}}">
-                  <image src="{{icon_eye}}" class="imgicon" mode="aspectFit"/>
-                  <text class="booklist-text color-bbb">已借完</text>
-                </block>
-                <view class="icon-edit" @tap.stop="goto('/pages/library/book_edit?id={{item.book_id}}&library_id={{libraryId}}&user_id={{item.user_id}}')" wx:if="{{item.is_admin == '1'}}">
-                  <image class="" src="/images/icon/icon-edit.png" />
-                  <view style="clear: both"></view>
+                  <view class="booklist-status">
+                    <block wx:if="{{libraryId != 523}}">
+                      <text class="booklist-text color-blue" wx:if="{{item.publisher}}">{{item.publisher}}</text>
+                    </block>
+                    <block wx:else>
+                      <span wx:if="{{item.is_admin == '1'}}">推荐：<switch type="switch" checked="{{item.switchActive}}" color="#36a2e6" @change.stop="switchChange({{item.id}})"  style="width: 120rpx"/></span>
+                    </block>
+                    <block wx:if="{{item.status == '1'}}">
+                      <image src="{{icon_eye_active}}" class="imgicon" mode="aspectFit"/>
+                      <text class="booklist-text color-blue">可借阅</text>
+                    </block>
+                    <block wx:if="{{item.status == '0'}}">
+                      <image src="{{icon_eye}}" class="imgicon" mode="aspectFit"/>
+                      <text class="booklist-text color-bbb">已借完</text>
+                    </block>
+                    <view class="icon-edit" @tap.stop="goto('/pages/library/book_edit?id={{item.book_id}}&library_id={{libraryId}}&user_id={{item.user_id}}')" wx:if="{{item.is_admin == '1'}}">
+                      <image class="" src="/images/icon/icon-edit.png" />
+                      <view style="clear: both"></view>
+                    </view>
+                  </view>
                 </view>
               </view>
             </view>
+          </block>
+          <block wx:if="{{loading}}">
+            <view class="weui-loadmore">
+              <view class="weui-loading"></view>
+              <view class="weui-loadmore__tips">正在加载</view>
+            </view>
+          </block>
+          <block wx:elif="{{noMore}}">
+            <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+              <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
+            </view>
+          </block>
+        </block>
+        <block wx:else>
+          <view class="weui-loadmore weui-loadmore_line">
+            <view wx:if="{{!loading && length.length<1}}" class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无书籍</view>
           </view>
-        </view>
-      </block>
-      <block wx:if="{{loading}}">
-        <view class="weui-loadmore">
-          <view class="weui-loading"></view>
-          <view class="weui-loadmore__tips">正在加载</view>
-        </view>
-      </block>
-      <block wx:elif="{{noMore}}">
-        <view class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
-          <view class="weui-loadmore__tips weui-loadmore__tips_in-line weui-loadmore__tips_in-dot"></view>
-        </view>
-      </block>
-    </block>
-    <block wx:else>
-      <view class="weui-loadmore weui-loadmore_line">
-        <view wx:if="{{!loading && length.length<1}}" class="weui-loadmore__tips weui-loadmore__tips_in-line">暂无书籍</view>
+        </block>
       </view>
-    </block>
-  </view>
 </template>
 
 <script>
@@ -130,6 +138,7 @@
     }
 
     data = {
+      formID: [],
       icon_eye: '/images/icon/icon-eye@2x.png',
       icon_eye_active: '/images/icon/icon-eye-active@2x.png',
       icon_star: '/images/icon/icon-star@2x.png',
@@ -142,6 +151,13 @@
       }
     }
     methods = {
+      formSubmit(e) {
+        console.log(e.detail.formId)
+        this.formID.push(e.detail.formId)
+        wx.setStorageSync('fromId', this.formID)
+//        this.formId.push(e.detail.formId)
+//        console.log(this.formId)
+      },
       switchChange (id, e) {
         console.log(id)
         console.log(this.libraryId)
