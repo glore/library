@@ -3,13 +3,21 @@
     <!--<button  type="default" size="mini"  @tap="gotoTab('/pages/index')"  style="padding:2rpx 12rpx;line-height: 42rpx;margin-right: 22rpx">-->
     <!--<image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-home.png"></image>-->
     <!--</button>-->
-    <button  size="mini" @tap="goto('/pages/map')" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 140rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
-      <image  class="imgicon" mode="aspectFit" src="../images/tabbars/home.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
-    </button>
+    <form bindsubmit="formSubmit" report-submit>
+      <button formType="submit" class="btn" data-type="click">
+        <button  size="mini" @tap="goto('/pages/map')" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 140rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
+          <image  class="imgicon" mode="aspectFit" src="../images/tabbars/home.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
+        </button>
+      </button>
+    </form>
     <view class="smile" style="position: fixed;z-index: 1000;right: 24.5vw; top: -25rpx;"></view>
-    <button  size="mini"  @tap="share" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 12rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
-      <image  class="imgicon" mode="aspectFit" src="../images/icon/share_red.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
-    </button>
+    <form bindsubmit="formSubmit" report-submit>
+      <button formType="submit" class="btn" data-type="click">
+        <button  size="mini"  @tap="share" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 12rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
+          <image  class="imgicon" mode="aspectFit" src="../images/icon/share_red.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
+        </button>
+      </button>
+    </form>
     <view class="smile" style="position: fixed;z-index: 1000;right: 7vw; top: -25rpx;"></view>
     <!--<button  size="mini" open-type="share" class="btn" style="padding:2rpx 12rpx 2rpx 0;line-height: 42rpx;border-radius: 50%;box-shadow: 1rpx 1rpx 12rpx red;position: fixed;right: -12rpx;top: 40rpx;">-->
     <!--<image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-share_red.png" style="width: 78rpx;height: 78rpx;float: left;"></image>-->
@@ -78,7 +86,8 @@
     data = {
       hide: true,
       showImage: true,
-      showOpenSet: true
+      showOpenSet: true,
+      formID: []
     }
     onLoad() {
       console.log(this.shareImage)
@@ -87,6 +96,13 @@
     }
 
     methods = {
+      formSubmit(e) {
+        console.log(e.detail.formId)
+        this.formID.push(e.detail.formId)
+        wx.setStorageSync('fromId', this.formID)
+//        this.formId.push(e.detail.formId)
+//        console.log(this.formId)
+      },
       hideModel() {
         this.hide = true
       },
