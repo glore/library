@@ -6,15 +6,19 @@
       </view>
       <view class="weui-cell__ft weui-cell__ft_in-access" @tap="goto('/pages/book/list?library_id={{library_id}}&member_type={{member_type}}&is_recommend=1')">更多图书</view>
     </view>
-    <view wx:for="{{recommendlist}}" wx:if="{{index<6 ? item : ''}}" wx:key="{{item.id}}" style="position: relative" @tap="goto('/pages/book/detail?id={{item.book_id}}&library_id={{library_id}}&user_id={{item.user_id}}')">
-      <view style="width: 33%;text-align: center;margin-top: 32rpx;position: relative" class="flo_l">
-        <image src="{{item.image}}" mode="aspectFit" style="width: 180rpx;height: 200rpx;"></image>
-        <view class="font_26 text-center ellipsis_2" style="width: 80%; height: 80rpx;margin: auto">
-          {{item.title}}
+    <form bindsubmit="formSubmit" report-submit>
+      <button formType="submit" class="btn" data-type="click">
+        <view wx:for="{{recommendlist}}" wx:if="{{index<6 ? item : ''}}" wx:key="{{item.id}}" style="position: relative" @tap="goto('/pages/book/detail?id={{item.book_id}}&library_id={{library_id}}&user_id={{item.user_id}}')">
+          <view style="width: 33%;text-align: center;margin-top: 32rpx;position: relative" class="flo_l">
+            <image src="{{item.image}}" mode="aspectFit" style="width: 180rpx;height: 200rpx;"></image>
+            <view class="font_26 text-center ellipsis_2" style="width: 80%; height: 80rpx;margin: auto">
+              {{item.title}}
+            </view>
+            <view style="width: 180rpx;height: 180rpx; background: rgba(0,0,0,0.5);border-radius: 50%;position: absolute;left: 13%;top: 2%;color: #fff;line-height: 180rpx" wx:if="{{item.borrow_out == 1}}">已借出</view>
+          </view>
         </view>
-        <view style="width: 180rpx;height: 180rpx; background: rgba(0,0,0,0.5);border-radius: 50%;position: absolute;left: 13%;top: 2%;color: #fff;line-height: 180rpx" wx:if="{{item.borrow_out == 1}}">已借出</view>
-      </view>
-    </view>
+      </button>
+    </form>
     <!--<view class="clearfloat"></view>-->
     <view   class="weui-cell weui-cell_access f4 font_32 color_6"  style="padding: 22rpx 22rpx 22rpx 0;width:93%; position: inherit;border-bottom: 1rpx solid #e7e7e7;margin-left: 32rpx">
       <view class="weui-cell__bd bold black_6">
@@ -23,15 +27,19 @@
       </view>
       <view class="weui-cell__ft weui-cell__ft_in-access" @tap="goto('/pages/book/list?library_id={{library_id}}&member_type={{member_type}}')">查找图书</view>
     </view>
-    <view wx:for="{{list}}"  wx:key="{{item.id}}" @tap="goto('/pages/book/detail?id={{item.book_id}}&library_id={{library_id}}&user_id={{item.user_id}}')">
-      <view style="width: 33%;text-align: center;margin-top: 32rpx; position: relative" class="flo_l">
-        <image src="{{item.image}}" mode="aspectFit" style="width: 180rpx;height: 200rpx;"></image>
-        <view class="font_26 text-center ellipsis_2" style="width: 80%; height: 80rpx;margin: auto">
-          {{item.title}}
+    <form bindsubmit="formSubmit" report-submit>
+      <button formType="submit" class="btn" data-type="click">
+        <view wx:for="{{list}}"  wx:key="{{item.id}}" @tap="goto('/pages/book/detail?id={{item.book_id}}&library_id={{library_id}}&user_id={{item.user_id}}')">
+          <view style="width: 33%;text-align: center;margin-top: 32rpx; position: relative" class="flo_l">
+            <image src="{{item.image}}" mode="aspectFit" style="width: 180rpx;height: 200rpx;"></image>
+            <view class="font_26 text-center ellipsis_2" style="width: 80%; height: 80rpx;margin: auto">
+              {{item.title}}
+            </view>
+            <view style="width: 180rpx;height: 180rpx; background: rgba(0,0,0,0.5);border-radius: 50%;position: absolute;left: 13%;top: 2%;color: #fff;line-height: 180rpx" wx:if="{{item.borrow_out == 1}}">已借出</view>
+          </view>
         </view>
-        <view style="width: 180rpx;height: 180rpx; background: rgba(0,0,0,0.5);border-radius: 50%;position: absolute;left: 13%;top: 2%;color: #fff;line-height: 180rpx" wx:if="{{item.borrow_out == 1}}">已借出</view>
-      </view>
-    </view>
+      </button>
+    </form>
     <view class="clearfloat"></view>
     <view style="width: 100%; height: 50rpx"></view>
     <!--<view class="classifyList" wx:for="{{list}}" wx:key="*this"  @tap="goto('/pages/user/booklist?library_id={{library_id}}&id={{item.id}}')">-->
@@ -77,11 +85,19 @@
         type: Number,
         default: null
       }
-    };
+    }
+    data = {
+      formID: []
+    }
     onLoad () {
       console.log(this.list)
     }
     methods = {
+      formSubmit(e) {
+        console.log(e.detail.formId)
+        this.formID.push(e.detail.formId)
+        wx.setStorageSync('fromId', this.formID)
+      },
       goto(url) {
         console.log(this.library_id)
         wx.navigateTo({url: url})
