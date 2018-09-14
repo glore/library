@@ -183,7 +183,7 @@
       this.sliderWidth = _this.screenWidth / this.tabs.length
       this.sliderLeft = 0
       this.sliderOffset = _this.screenWidth / this.tabs.length * this.activeIndex
-      this.getMessage()
+//      this.getMessage()
     }
     onShow() {
       if (this.activeIndex == '1') {
