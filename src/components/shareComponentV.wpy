@@ -27,7 +27,7 @@
 
 
   <modal class="modal" hidden="{{hide}}"  confirm-text="取消"  no-cancel no-confirm @confirm="listenerCancel1">
-    <view style="width: 50%" class="text-center flo_l" @tap="hideModel">
+    <view style="width: 50%" class="text-center flo_l" @tap.stop="hideModel">
       <button class="btn text-center font_28 color-666" open-type="share" style="line-height: 1.6;padding: 6rpx">
         <image class="share-image" mode="aspectFit" src="http://images.ufutx.com/201808/20/0c33d683fc63ca4aab594d079bda93aa.png"></image>
         <view>分享到群/朋友</view>

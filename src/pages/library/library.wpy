@@ -366,7 +366,7 @@
       this.noMore = true
       this.loadingV2 = true
       let data = {page: this.page}
-      this.$get({url: service.libraries + `/${this.mylib.id}/v2`, data}, {
+      this.$get({url: service.libraries + `/${this.mylib.id}/v3`, data}, {
         success: ({code, data}) => {
           this.mylib = data
           this.library_id = data.id
