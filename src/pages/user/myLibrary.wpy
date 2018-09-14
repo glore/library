@@ -108,7 +108,7 @@
 
     // 初始化页面数据
     initPageData() {
-      this.$get({url: service.user}, {
+      this.$get({url: `${service.user}/v3`}, {
         success: ({code, data}) => {
           this.user = data.user
           this.libraries = data.libraries

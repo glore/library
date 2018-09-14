@@ -6,7 +6,7 @@
           <view class="weui-navbar__title" >{{item}}</view>
         </view>
         <view class="weui-navbar__slider" style="width:{{sliderWidth}}px; left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
-        <view  class="library_num {{activeIndex == 1 ? 'library_member' : ''}} {{activeIndex == 2 ? 'library_admin' : ''}}">{{library_num}}</view>
+        <view  class="library_num {{activeIndex == 1 ? 'library_member' : ''}} {{activeIndex == 2 ? 'library_admin' : ''}} {{activeIndex == 3 ? 'library_all' : ''}}">{{library_num}}</view>
       </view>
       <view style="width: 100%;height: 100rpx"></view>
       <view class="weui-panel__hd">
@@ -73,7 +73,7 @@
       libraryId: 0,
       library: {},
       members: [],
-      tabs: ['待审核', '会员', '管理员'],
+      tabs: ['待审核', '会员', '管理员', '全部'],
       activeIndex: 0,
       sliderOffset: 0,
       sliderLeft: 0,
@@ -129,6 +129,9 @@
         url = service.libraries + '/' + this.libraryId + '/members'
       } else if (Index == 2) {
         statusIndex = 'ADMIN'
+        url = service.libraries + '/' + this.libraryId + '/members'
+      }  else if (Index == 3) {
+        statusIndex = ''
         url = service.libraries + '/' + this.libraryId + '/members'
       }
       this.$get({
@@ -262,7 +265,7 @@
 }
 .library_num{
   position: absolute;
-  left: 24%;top: 12rpx;
+  left: 21%;top: 12rpx;
   background: red;
   color: white;
   border-radius: 50%;
@@ -272,10 +275,13 @@
   font-size: 22rpx;
 }
 .library_member{
-  left: 55%;
+  left: 46%;
 }
 .library_admin{
-  left: 90%;
+  left: 71%;
+}
+.library_all{
+  left: 94%;
 }
 .weui-loadmore_line{
   position: inherit;

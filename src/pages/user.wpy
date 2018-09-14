@@ -59,7 +59,7 @@
     </view>
     <view class="weui-cells__title"></view>
     <view class="page__bd page__bd_spacing" plain="true">
-      <button  class="weui-btn btn-blue_l font_32" style="width: 62%"  open-type="contact" >建议交流</button>
+      <button  class="weui-btn btn-blue_l font_32" style="width: 62%"  open-type="feedback" >建议交流</button>
     </view>
     <view class="weui-cells__title"></view>
   </view>
@@ -111,7 +111,7 @@
 
     // 初始化页面数据
     initPageData() {
-      this.$get({url: service.user}, {
+      this.$get({url: `${service.user}/v3`}, {
         success: ({code, data}) => {
           this.user = data.user
           this.libraries = data.libraries

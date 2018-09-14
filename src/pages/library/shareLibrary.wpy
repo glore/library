@@ -17,9 +17,23 @@
       </view>
       <shareComponent  :shareImage.sync="shareImage" :library_id.sync="library_id"></shareComponent>
       <view class="clearfloat"></view>
-      <view class="library-title flo_l ellipsis_1" wx:if="{{mylib.intro !== null}}" style="margin-top: 20rpx;font-weight: inherit;font-size: 26rpx;width: 63%;">
-        <span class="font_28 bold">简介：</span>{{mylib.intro}}
+      <view class="library-title flo_l " wx:if="{{mylib.intro !== null}}" style="margin-top: 20rpx;font-weight: inherit;font-size: 26rpx;width: 63%;height:inherit;min-height: 42rpx;">
+        <block wx:if="{{hideFocus}}">
+          <view class="flo_l font_26 ellipsis_1" style="width: 82%"><span class="font_28 bold">简介：</span>{{mylib.intro}}</view>
+          <view class="flo_r" style="color: #1296db" @tap="open">展开 <image src="../../images/open.png" mode="aspectFit" style="width: 28rpx;height: 32rpx;margin-bottom:-4rpx; margin-left: -8rpx;"></image></view>
+        </block>
+        <block wx:else>
+          <view class="flo_l font_26" style="width: 86%">
+            <span class="font_28 bold">简介：</span>
+            {{mylib.intro}}
+            <span style="color: #1296db" class="font_28" @tap="close">
+              收起
+              <image src="../../images/close.png" mode="aspectFit" style="width: 28rpx;height: 32rpx;margin-bottom:-4rpx; margin-left: -8rpx;"></image>
+            </span>
+          </view>
+        </block>
       </view>
+
       <view class="flo_r" style="margin-right:26rpx;">
         <form bindsubmit="formSubmit" report-submit>
           <button formType="submit" class="btn" data-type="click">
@@ -292,7 +306,8 @@
       last_borrows: [], // 动态
       init: false,
       loadingV2: false,
-      noMore: false
+      noMore: false,
+      hideFocus: true
     }
 
     onShareAppMessage(res) {
@@ -305,8 +320,6 @@
     onShow() {
       this.getshareImage()
       this.initPageData()
-      // google tracker
-//      console.log(this.mylib.id)
       this.$parent.getTracker(this.$root.$name, this.mylib.name)
     }
 
@@ -343,6 +356,7 @@
           let name = data.sorts.map(function (item) {
             return item.name
           })
+          wx.setStorageSync('libraryName', data.name) // 缓存title shareComponent获取
           this.sortslist = {name: name, index: 0, ShowSorts: false}
           wx.setNavigationBarTitle({
             title: data.name // 页面标题为路由参数
@@ -407,6 +421,10 @@
         }
       })
     }
+    // 页面跳转
+    onUnload() {
+      wx.removeStorageSync('libraryName')
+    }
     RemoveEdit() {
       this.EditImage = ''
       this.EditAuthor = ''
@@ -416,6 +434,12 @@
       this.ShowUpload = false
     }
     methods = {
+      open() { // 展开
+        this.hideFocus = false
+      },
+      close() { // 关闭
+        this.hideFocus = true
+      },
       goadderss(latitude, longitude) {
         let that = this
         wepy.openLocation({
