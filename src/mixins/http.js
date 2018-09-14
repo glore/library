@@ -108,7 +108,7 @@ export default class httpMixin extends wepy.mixin {
             url = `${url}${key}=${options[key]}&`
           }
           console.log(`${currentPage.route}?${url}`)
-          wx.setStorageSync('jump', `${currentPage.route}?${url}`)
+          wx.setStorageSync('jump', `/${currentPage.route}?${url}`)
           // 删除过时token
           wx.removeStorageSync('token', null)
 
@@ -124,7 +124,6 @@ export default class httpMixin extends wepy.mixin {
                     wx.setStorageSync('token', data.token)
                   }
                   var route = '/' + getCurrentPages()[0].__route__;
-
 
                   if (route == '/pages/user/register'){
                     return
