@@ -123,6 +123,7 @@
       },
       hideModel() {
         this.hide = true
+        this.$apply()
       },
       showPic() {
         console.log(this.location)
