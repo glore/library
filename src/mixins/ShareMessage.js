@@ -27,7 +27,7 @@ export default class ShareMessage extends wepy.mixin {
   }
   methods = {
     onShareAppMessage(res) {
-      console.log(this.config.navigationBarTitleText)
+      let title = this.config.navigationBarTitleText
       let that = this
       that.from_openid = wx.getStorageSync('openid')
       let pages = getCurrentPages()    //获取加载的页面
@@ -45,6 +45,9 @@ export default class ShareMessage extends wepy.mixin {
       }else {
         url = link + '?from_openid=' + that.from_openid
       }
+      if (wx.getStorageSync('libraryName')) {
+        title = wx.getStorageSync('libraryName')
+      }
       console.log(url)
       console.log(currentPage.options)
       // debugger
@@ -52,7 +55,7 @@ export default class ShareMessage extends wepy.mixin {
         console.log(res.target)
       }
       return {
-        title: this.config.navigationBarTitleText,
+        title: title,
         path: url,
         // 设置转发image，不设默认当前截图
         imageUrl: '',

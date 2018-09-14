@@ -82,7 +82,8 @@
           <view class="weui-label reset-label-left text-center">简介</view>
         </view>
         <view class="weui-cell__bd   color-red">
-            <input @input="typing('intro')" value="{{intro}}" placeholder="图书馆简单说明"/>
+          <textarea @input="typing('intro')" value="{{intro}}" placeholder="图书馆简单说明" style="width: 98%;" auto-height maxlength="-1"/>
+            <!--<input @input="typing('intro')" value="{{intro}}" placeholder="图书馆简单说明"/>-->
         </view>
       </view>
     </view>
@@ -104,7 +105,7 @@
     <block wx:if="{{id}}">
       <view class="div_btn">
         <button @tap="destroy" class="weui-btn flo_l btn-blue_r" type="danger" style="width: 50%;border-radius: 0px" >删除</button>
-        <button @tap="save"   class="weui-btn btn-blue_l" type="primary" style="border-radius: 0px">{{text}}</button>
+        <button @tap="save"   class="weui-btn btn-blue_l" type="primary" style="border-radius: 0px;margin:0 ">{{text}}</button>
       </view>
     </block>
     <block wx:else>

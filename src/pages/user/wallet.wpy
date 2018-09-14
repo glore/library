@@ -38,8 +38,8 @@
     }
     data = {
       popUpModel: true, // 弹框
-      money: 0, // 充值金额
-      balance: 0 //钱包余额
+      money: 0.00, // 充值金额
+      balance: 0.00 //钱包余额
     }
 
     onShow() {
