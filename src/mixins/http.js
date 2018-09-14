@@ -108,8 +108,10 @@ export default class httpMixin extends wepy.mixin {
           var url = '/' + currentPage.route
           if (options.id) {
             url = '/' + currentPage.route + `?id=${options.id}`
-          } else if(options.id && options.library_id) {
-            url = '/' + currentPage.route  + '?id=' + options.id + `&library_id=${options.library_id}`
+          } else if (options.id && options.library_id) {
+            url = '/' + currentPage.route + '?id=' + options.id + `&library_id=${options.library_id}`
+          } else if (options.user_id && options.library_id) {
+            url = '/' + currentPage.route + '?id=' + options.id + `&library_id=${options.library_id}` + `&user_id=${options.user_id}`
           }
           console.log(url)
           wx.setStorageSync('jump', url)
