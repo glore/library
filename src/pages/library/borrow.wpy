@@ -71,7 +71,7 @@
 
 <script>
   import wepy from 'wepy'
-  import { service } from '../../config.js'
+  import {service} from '../../config.js'
   import http from '../../mixins/http'
   import base from '../../mixins/base'
   import user from '../../mixins/user'
@@ -79,7 +79,7 @@
   import ShareMessage from '../../mixins/ShareMessage'
 
   var QRCode = require('../../utils/weapp-qrcode.js')
-  var qrcode;
+  var qrcode
   export default class libraryBorrow extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
@@ -113,7 +113,7 @@
     }
 
     computed = {
-      banners () {
+      banners() {
         return this.getArray(this.book && this.book.images)
       },
       description() {
@@ -147,13 +147,13 @@
         this.user_id = query.user_id
       }
       qrcode = new QRCode('canvas', {
-        text: "code=0000000000000",
+        text: 'code=0000000000000',
         width: 200,
         height: 200,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H,
-      });
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+      })
     }
 
     onShow() {
@@ -174,7 +174,7 @@
     // 获取图书信息
     getDetail() {
       let url = service.libraries + '/' + this.library_id,
-        data = { book_user_id : this.user_id}
+        data = {book_user_id: this.user_id}
       if (this.isbn) {
         url = url + '/borrow/isbn/' + this.isbn
       } else {
@@ -182,6 +182,7 @@
       }
       this.$get({url: url, data}, {
         success: ({code, data}) => {
+          this.user_id = data.user_id
           if (this.isbn) {
             this.book = data[0].book
             this.borrows = data
@@ -197,20 +198,19 @@
     }
 
     methods = {
-      radioChange: function(e) {
+      radioChange: function (e) {
         console.log('radio发生change事件，携带value值为：', e.detail.value)
-        this.active =  !this.active
+        this.active = !this.active
         this.$apply()
         console.log(this.active)
       },
-      getmoney: function(e) {
-        this.money =  e.detail.value
+      getmoney: function (e) {
+        this.money = e.detail.value
         this.$apply()
       },
       checkUser(e) {
         console.log('radio发生change事件，携带value值为：', e.detail.value)
         this.borrow_id = e.detail.value
-        this.userID = data.user.id
         this.borrows.forEach(v => {
           if (this.getNumber(v.id) === this.getNumber(e.detail.value)) {
             switch (v.status) {
@@ -239,16 +239,16 @@
         this.SHOWPAY = true
       },
       confirm() {
-        if(this.active) {
-          this.$showLoading ('生成二维码中...')
+        if (this.active) {
+          this.$showLoading('生成二维码中...')
           let data = {
             price: this.money,
-            pay_user_id: this.userID
+            pay_user_id: this.user_id
           }
           this.$post({url: service.damage, data}, {
             success: ({code, data}) => {
               wx.hideLoading()
-              qrcode.makeCode(data.wx_pay.pay_qrcode);
+              qrcode.makeCode(data.wx_pay.pay_qrcode)
               this.pay_url = data.wx_pay.pay_url
               this.hiddenmodalput = true
               this.SHOWPAY = false
@@ -256,8 +256,11 @@
             }
           })
         } else {
+          let dataV = {
+            book_user_id: this.user_id
+          }
           var url = service.libraries + '/' + this.library_id + '/borrows/' + this.borrow_id + '/' + this.borrow_status
-          this.$put({url: url}, {
+          this.$post({url: url, dataV}, {
             success: ({code, data}) => {
               wx.navigateBack({delta: 1})
             }
@@ -265,10 +268,13 @@
         }
       },
       confirmV2() {
+        let dataV = {
+          book_user_id: this.user_id
+        }
         this.$post({url: service.mark + `/${this.trade_no}`}, {
           success: ({code, data}) => {
             let url = service.libraries + '/' + this.library_id + '/borrows/' + this.borrow_id + '/' + this.borrow_status
-            this.$put({url: url}, {
+            this.$put({url: url, dataV}, {
               success: ({code, data}) => {
                 wx.navigateBack({delta: 1})
               }
@@ -277,17 +283,20 @@
           fail: ({code, data}) => {
           },
           complete: () => {
-            this.SHOWPAY = true;
+            this.SHOWPAY = true
           }
         })
       },
       borrowReturn() {
+        let dataV = {
+          book_user_id: this.user_id
+        }
         console.log(this.borrow_status)
         if (this.borrow_status == 'return') {
           this.hiddenmodalput = false
-        }else{
+        } else {
           var url = service.libraries + '/' + this.library_id + '/borrows/' + this.borrow_id + '/' + this.borrow_status
-          this.$put({url: url}, {
+          this.$put({url: url, dataV}, {
             success: ({code, data}) => {
               wx.navigateBack({delta: 1})
             }
