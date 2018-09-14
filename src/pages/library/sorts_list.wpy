@@ -48,10 +48,10 @@
     // 初始化页面数据
     initPageData() {
       // 获取分类列表
-      this.$get({ url: service.libraries + '/' + this.library_id }, {
+      this.$get({ url: `${service.libraries}/${this.library_id}/sorts/v2` }, {
         success: ({code, data}) => {
-          this.sorts = data.sorts
-          this.library = data.library
+//          this.sorts = data.sorts
+//          this.library = data.library
           this.list = data.library_sorts
         },
         fail: ({code, data}) => {
