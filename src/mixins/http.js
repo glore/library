@@ -100,22 +100,16 @@ export default class httpMixin extends wepy.mixin {
           })
         }else if (data.code == 2) {
           // 删除过时token
-          var pages = getCurrentPages()    //获取加载的页面
-
-          var currentPage = pages[pages.length-1]    //获取当前页面的对象
-
+          var pages = getCurrentPages()    // 获取加载的页面
+          var currentPage = pages[pages.length - 1]    // 获取当前页面的对象
           var options = currentPage.options
-          var url = '/' + currentPage.route
-          if (options.id) {
-            url = '/' + currentPage.route + `?id=${options.id}`
-          } else if (options.id && options.library_id) {
-            url = '/' + currentPage.route + '?id=' + options.id + `&library_id=${options.library_id}`
-          } else if (options.user_id && options.library_id) {
-            url = '/' + currentPage.route + '?id=' + options.id + `&library_id=${options.library_id}` + `&user_id=${options.user_id}`
+          let url = ''
+          for (var key in options) {
+            url = `${url}${key}=${options[key]}&`
           }
-          console.log(url)
-          wx.setStorageSync('jump', url)
-          // debugge
+          console.log(`${currentPage.route}?${url}`)
+          wx.setStorageSync('jump', `${currentPage.route}?${url}`)
+          // 删除过时token
           wx.removeStorageSync('token', null)
 
           // 重新登录
