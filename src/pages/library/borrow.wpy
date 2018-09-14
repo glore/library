@@ -210,7 +210,7 @@
       checkUser(e) {
         console.log('radio发生change事件，携带value值为：', e.detail.value)
         this.borrow_id = e.detail.value
-        //          this.userID = data.user.id
+        this.userID = data.user.id
         this.borrows.forEach(v => {
           if (this.getNumber(v.id) === this.getNumber(e.detail.value)) {
             switch (v.status) {
@@ -243,7 +243,7 @@
           this.$showLoading ('生成二维码中...')
           let data = {
             price: this.money,
-            pay_user_id: this.borrow_id
+            pay_user_id: this.userID
           }
           this.$post({url: service.damage, data}, {
             success: ({code, data}) => {

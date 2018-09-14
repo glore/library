@@ -125,7 +125,6 @@ export default class httpMixin extends wepy.mixin {
                   }
                   var route = '/' + getCurrentPages()[0].__route__;
 
-
                   if (route == '/pages/user/register'){
                     return
                   }
