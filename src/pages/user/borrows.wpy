@@ -46,12 +46,13 @@
                 <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
                   <image class="weui-media-box__thumb" src="{{item.book.image}}" mode="aspectFit"/>
                 </view>
-                <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+                <view class="weui-media-box__bd weui-media-box__bd_in-appmsg" >
                   <view class="weui-media-box__desc">{{item.book.title}}</view>
                   <view class="weui-media-box__desc" style="width: 80%;">【{{item.library.name}}】藏书</view>
                   <view style="position: absolute; right: 36rpx; top: 64rpx;border-radius: 32rpx;box-shadow: 1rpx 1rpx 12rpx #dedede;padding: 4rpx 12rpx" @tap="makePhoneCall('{{item.book_user.mobile}}')">
                     <image src="../../images/tabbars/icon-phone.png" style="width: 60rpx;height: 60rpx;margin-top: 16rpx"></image>
                   </view>
+                  <span class="font_26" style="position: absolute; right: 12rpx; bottom: -36rpx;border-radius: 32rpx;border-bottom: 1rpx solid #d3d3d3; color: #16afe6" @tap="makePhoneCall('{{item.book_user.mobile}}')">联系管理员</span>
                 </view>
               </view>
             </view>
