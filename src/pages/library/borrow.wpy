@@ -262,7 +262,10 @@
           var url = service.libraries + '/' + this.library_id + '/borrows/' + this.borrow_id + '/' + this.borrow_status
           this.$post({url: url, dataV}, {
             success: ({code, data}) => {
-              wx.navigateBack({delta: 1})
+              this.$Toast_success('还书成功！')
+              setTimeout(() => {
+                wx.navigateBack({delta: 1})
+              }, 1200)
             }
           })
         }
@@ -276,7 +279,10 @@
             let url = service.libraries + '/' + this.library_id + '/borrows/' + this.borrow_id + '/' + this.borrow_status
             this.$put({url: url, dataV}, {
               success: ({code, data}) => {
-                wx.navigateBack({delta: 1})
+                this.$Toast_success('还书成功！')
+                setTimeout(() => {
+                  wx.navigateBack({delta: 1})
+                }, 1200)
               }
             })
           },
@@ -298,7 +304,10 @@
           var url = service.libraries + '/' + this.library_id + '/borrows/' + this.borrow_id + '/' + this.borrow_status
           this.$put({url: url, dataV}, {
             success: ({code, data}) => {
-              wx.navigateBack({delta: 1})
+              this.$Toast_success('借阅成功！')
+              setTimeout(() => {
+                wx.navigateBack({delta: 1})
+              }, 1200)
             }
           })
         }
