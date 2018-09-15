@@ -67,7 +67,7 @@
 
     methods = {
       toIndex() {
-        wx.switchTab({url: '/pages/index'})
+//        wx.switchTab({url: '/pages/index'})
       },
       // 取消充值
       listenerCancel() {
