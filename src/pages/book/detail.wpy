@@ -338,12 +338,21 @@
 //                      title: '预约借书成功',
 //                      content: '请找管理员取书！'
 //                    })
-                      wx.redirectTo({
-                        url: '/pages/user/borrows'
+                      wx.showModal({
+                        title: '预约借书成功',
+                        content: `跳转到借阅详情页面，去找管理员取书！`,
+                        showCancel: true,
+                        success: function(res) {
+                          if (res.confirm) {
+                            wx.redirectTo({
+                              url: '/pages/user/borrows'
+                            })
+                          }
+                        }
                       })
-                      that.library_id = item.library_id
-                      that.$apply()
-                      that.getDetail()
+//                      that.library_id = item.library_id
+//                      that.$apply()
+//                      that.getDetail()
                     }
                   })
                 }

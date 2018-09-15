@@ -18,20 +18,24 @@
       <shareComponent  :shareImage.sync="shareImage" :library_id.sync="library_id"></shareComponent>
       <view class="clearfloat"></view>
       <view class="library-title flo_l " wx:if="{{mylib.intro !== null}}" style="margin-top: 20rpx;font-weight: inherit;font-size: 26rpx;width: 63%;height:inherit;min-height: 42rpx;">
-        <block wx:if="{{hideFocus}}">
-          <view class="flo_l font_26 ellipsis_1" style="width: 82%"><span class="font_28 bold">简介：</span>{{mylib.intro}}</view>
-          <view class="flo_r" style="color: #1296db" @tap="open">展开 <image src="../../images/open.png" mode="aspectFit" style="width: 28rpx;height: 32rpx;margin-bottom:-4rpx; margin-left: -8rpx;"></image></view>
-        </block>
-        <block wx:else>
-          <view class="flo_l font_26" style="width: 86%">
-            <span class="font_28 bold">简介：</span>
-            {{mylib.intro}}
-            <span style="color: #1296db" class="font_28" @tap="close">
-              收起
-              <image src="../../images/close.png" mode="aspectFit" style="width: 28rpx;height: 32rpx;margin-bottom:-4rpx; margin-left: -8rpx;"></image>
-            </span>
-          </view>
-        </block>
+        <view class="flo_l font_26" style="width: 86%">
+          <span class="font_28 bold">简介：</span>
+          {{mylib.intro}}
+        </view>
+        <!--<block wx:if="{{hideFocus}}">-->
+          <!--<view class="flo_l font_26 ellipsis_1" style="width: 82%"><span class="font_28 bold">简介：</span>{{mylib.intro}}</view>-->
+          <!--<view class="flo_r" style="color: #1296db" @tap="open">展开 <image src="../../images/open.png" mode="aspectFit" style="width: 28rpx;height: 32rpx;margin-bottom:-4rpx; margin-left: -8rpx;"></image></view>-->
+        <!--</block>-->
+        <!--<block wx:else>-->
+          <!--<view class="flo_l font_26" style="width: 86%">-->
+            <!--<span class="font_28 bold">简介：</span>-->
+            <!--{{mylib.intro}}-->
+            <!--<span style="color: #1296db" class="font_28" @tap="close">-->
+              <!--收起-->
+              <!--<image src="../../images/close.png" mode="aspectFit" style="width: 28rpx;height: 32rpx;margin-bottom:-4rpx; margin-left: -8rpx;"></image>-->
+            <!--</span>-->
+          <!--</view>-->
+        <!--</block>-->
       </view>
 
       <view class="flo_r" style="margin-right:26rpx;">
