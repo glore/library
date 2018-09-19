@@ -155,9 +155,6 @@
         this.$apply()
       },
       goto(url) {
-        if (this.library_id == 523) {
-          return wx.navigateTo({url: `/pages/library/shareLibrary523?id=${this.library_id}`})
-        }
         if (this.library_id == 0) {
           wx.redirectTo({url: url})
         } else {
