@@ -1,5 +1,5 @@
 const path = require('path');
-var prod = process.env.NODE_ENV === 'production'
+var prod = process.env.NODE_ENV === 'production'  // 开发环境development build环境production
 
 module.exports = {
   wpyExt: '.wpy',
@@ -27,7 +27,10 @@ module.exports = {
       plugins: [
         'transform-decorators-legacy',
         'transform-export-extensions',
-        'syntax-export-extensions'
+        'syntax-export-extensions',
+        ['global-define', {
+          _NODE_: prod
+        }]
       ]
     }
   },

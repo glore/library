@@ -80,25 +80,6 @@
       nickName: ''
     }
 
-//    computed = {
-//      listIndex() {
-//        const arr = this.getArray((this.list || []).filter((item, index.wpy) => {
-//          item.TEMPINDEX = index.wpy
-//          return this.getString(this.value) === this.getString(item.id)
-//        }))
-//        const index.wpy = arr[0] && arr[0].TEMPINDEX
-//        return this.getNumber(index.wpy)
-//      },
-//      realPrice() {
-//        const item = this.list && this.list[this.listIndex]
-//        const price = item && item.price
-//        return price || 0
-//      },
-//      btnText() {
-//        return +this.time > 0 ? `${this.time}s后重新获取` : '获取验证码'
-//      }
-//    }
-
     onLoad() {
       // 初始化页面数据
       this.initPageData()

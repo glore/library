@@ -51,7 +51,7 @@
     <modal hidden="{{SHOWPAY}}" title="请对方扫描二维码支付！" confirm-text="确认"  bindconfirm="confirmV2" bindcancel="cancelV2">
       <view class="text-center">
         <!--<image src="{{pay_url}}"  mode="aspectFit" style="width: 400rpx; height: 400rpx;"/>-->
-        <canvas class='canvas' canvas-id='canvas' style="width: 400rpx; height: 400rpx;margin: auto;"></canvas>
+        <canvas class='canvas' canvas-id='canvas' style="width: 200px; height: 200px;margin: auto;"></canvas>
       </view>
     </modal>
     <modal hidden="{{hiddenmodalput}}" title="图书是否有损坏？" confirm-text="确认" cancel-text="取消" bindcancel="cancel" bindconfirm="confirm">
@@ -148,8 +148,8 @@
       }
       qrcode = new QRCode('canvas', {
         text: 'code=0000000000000',
-        width: 200,
-        height: 200,
+        width: 196,
+        height: 196,
         colorDark: '#000000',
         colorLight: '#ffffff',
         correctLevel: QRCode.CorrectLevel.H
@@ -240,6 +240,9 @@
       },
       confirm() {
         if (this.active) {
+          if (!this.money) {
+            return this.$showToast('请输入赔偿金额')
+          }
           this.$showLoading('生成二维码中...')
           let data = {
             price: this.money,

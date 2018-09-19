@@ -13,58 +13,77 @@
       pages: [
         // tab-bar
         'pages/map',
-        'pages/index',
         'pages/collect',
         'pages/qr',
         'pages/borrow',
-        // 'pages/party',
         'pages/user',
-
-        // 首页
-        'pages/main/search',
-        'pages/main/list',
-        'pages/main/detail',
-
-        // 图书
-        'pages/book/comment',
-        'pages/book/comments',
-        'pages/book/list',
-        'pages/book/detail',
-        'pages/book/unpage',
-
-        // 图书馆管理
-        'pages/library/library',
-        'pages/library/shareLibrary',
-        'pages/library/shareLibrary523',
-        'pages/library/shareLibrary523V2',
-        'pages/library/searchLibrary',
-        'pages/library/borrow',
-        'pages/library/usercollect',
-        'pages/library/members',
-        'pages/library/borrows',
-        'pages/library/book',
-        'pages/library/book_edit',
-        'pages/library/sorts',
-        'pages/library/sorts_list',
-        'pages/library/sort',
-        'pages/library/create',
-
-        'pages/borrow/subscribe',
-        'pages/borrow/result',
-
-        // 我的
-        'pages/user/register',
-        'pages/user/registerV2',
-        'pages/user/follower',
-        'pages/user/booklist',
-        'pages/user/myLibrary',
-        'pages/user/borrow',
-        'pages/user/borrows',
-        'pages/user/return',
-        'pages/user/cash',
-        'pages/user/wallet',
-        'pages/user/walletHistories',
-        'pages/user/subscribe'
+      ],
+      'subPackages': [
+        {
+          'root': 'pages/main',
+          'pages': [
+            // 首页
+            'search',
+            'list',
+            'detail',
+          ]
+        },
+        {
+          'root': 'pages/book',
+          'pages': [
+            // 图书
+            'comment',
+            'comments',
+            'list',
+            'detail',
+            'unpage',
+          ]
+        },
+        {
+          'root': 'pages/library',
+          'pages': [
+            // 图书馆管理
+            'library',
+            'shareLibrary',
+            'shareLibrary523V2',
+            'searchLibrary',
+            'borrow',
+            'usercollect',
+            'members',
+            'borrows',
+            'book',
+            'book_edit',
+            'sorts',
+            'sorts_list',
+            'sort',
+            'create',
+          ]
+        },
+        {
+          'root': 'pages/borrow',
+          'pages': [
+            'subscribe',
+            'result',
+          ]
+        },
+        {
+          'root': 'pages/user',
+          'pages': [
+            // 我的
+            'register',
+            'registerV2',
+            'follower',
+            'booklist',
+            'myLibrary',
+            'borrow',
+            'borrows',
+            'return',
+            'cash',
+            'wallet',
+            'walletHistories',
+            'subscribe'
+          ]
+        }
       ],
       window: {
         navigationBarTitleText: '友福图书馆',

@@ -375,9 +375,6 @@
         }
       },
       goto(url) {
-        if (url.includes('523')) {
-          url = '/pages/library/shareLibrary523?id=523'
-        }
         wx.navigateTo({url: url})
       },
       joinTip() {
