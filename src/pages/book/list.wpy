@@ -175,10 +175,6 @@
     getBooks(data) {
       return this.getArray(data).map((book, index) => {
         // 拼接示例数据
-        let book_id = book.book_id
-        if(this.libraryId == 0){
-          book_id: book.id
-        }
         return {
           id: book.id,
           title: book.title ? book.title : '无标题',
@@ -190,7 +186,7 @@
           name: book.name,
           // 暂时开发所有人都能修改，后续需要判断是否为书籍拥有人
           isOwner: '1',
-          book_id: book_id,
+          book_id: book.book_id,
           user_id: book.user_id,
           library_id: book.library_id ? book.library_id : 0,
           type: book.type,

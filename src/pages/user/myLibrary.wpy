@@ -107,7 +107,7 @@
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
     }
     async onLoad(e) {
-//      let _this = this
+      let _this = this
 //      wx.getSystemInfo({success: function (rst) {
 //        _this.screenWidth = rst.screenWidth
 //      }})
@@ -138,7 +138,7 @@
       let self = this
       self.loading = false
       // 我的图书馆
-      this.$get({url: service.my_libraries}, {
+      this.$get({url: `${service.my_libraries}/v2`}, {
         success: ({code, data}) => {
           self.init = true
           self.mylibs = data

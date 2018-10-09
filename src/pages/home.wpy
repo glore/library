@@ -77,7 +77,7 @@
         {
           icon: 'http://images.ufutx.com/201810/07/aea927b23d323232965b061a4033191d.png',
           title: '查找图书',
-          link: '/pages/book/list',
+          link: '/pages/book/listV2',
           type: 'nav'
         },
         {
