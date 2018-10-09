@@ -1,16 +1,30 @@
 <template>
-  <view class="main-list">
-    <view class="main-list-title clearfix" wx:if="{{keywords && keywords.length}}">
-      <view class="pull-left width-8p">
-        <block wx:for="{{keywords}}" wx:key="index">
-          <text wx:if="{{index > 0}}">，</text>
-          <text>{{item}}</text>
-        </block>
+  <view>
+    <view class="weui-search-bar" style="position: fixed;width: 100%;background-color: #005b9e;border-top: none">
+      <view class="weui-search-bar__form">
+        <view class="weui-search-bar__box">
+          <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+          <input type="text" class="weui-search-bar__input" placeholder="搜索" value="{{inputVal}}" focus="{{inputShowed}}" @confirm="inputTyping" />
+          <view class="weui-icon-clear" wx:if="{{inputVal.length > 0}}" bindtap="clearInput">
+            <icon type="clear" size="14"></icon>
+          </view>
+        </view>
+        <label class="weui-search-bar__label" hidden="{{inputShowed}}" bindtap="showInput">
+          <icon class="weui-icon-search" type="search" size="14"></icon>
+          <view class="weui-search-bar__text">搜索</view>
+        </label>
       </view>
-      <text @tap="clearSearch" class="link link-blue pull-right">清空筛选</text>
+      <view class="weui-search-bar__cancel-btn" hidden="{{!inputShowed}}" bindtap="hideInput">取消</view>
     </view>
-    <SearchBar :placeholder.sync="searchText" :libraryId.sync='libraryId' :isAdmin.sync='isAdmin'></SearchBar>
-    <BookList :list.sync="list" :loading.sync="loading" :noMore.sync="noMoreList" :libraryId.sync='libraryId' :isAdmin.sync='isAdmin'></BookList>
+    <view style="width: 100%;height: 80rpx"></view>
+    <view class="weui-cells__title"></view>
+    <view class="scrollBox text-center" wx:if="{{showBackTopBtn}}"  catchtap="BackTop">
+      <image src='../../images/Stick.png'  mode="aspectFit"  style="width: 40rpx;height: 40rpx;margin-top: 8rpx;"></image>
+      <view style="margin-top: -22rpx;font-size: 24rpx;">置顶</view>
+    </view>
+    <view class="page__bd">
+      <BookList :list.sync="list" :loading.sync="loading" :noMore.sync="noMoreList" :libraryId.sync='libraryId' :isAdmin.sync='isAdmin'></BookList>
+    </view>
   </view>
 </template>
 
@@ -26,7 +40,7 @@
   export default class mainList extends wepy.page {
     mixins = [base, http, ShareMessage]
     config = {
-      navigationBarTitleText: '查找图123书'
+      navigationBarTitleText: '查找图书'
     }
     data = {
       params: {},
@@ -37,10 +51,20 @@
       page: 1,
       keyword: '',
       isAdmin: 0,
+      inputShowed: false,
+      inputVal: '',
+      showBackTopBtn: false, // 显示置顶
       is_recommend: 0
     }
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+    onPageScroll(res) {
+      let top = res.scrollTop,
+        show = top > 380 ? true : false
+      this.showBackTopBtn = show
+      this.$apply()
+      console.log(top)
     }
     onShow() {
       // google analytics
@@ -59,11 +83,11 @@
           title: '推荐图书'
         })
       }
-      if (!params == 'object') {
-        this.keyword = params
-      } else {
-        this.keyword = ''
-      }
+//      if (!params == 'object') {
+//        this.keyword = params
+//      } else {
+//        this.keyword = ''
+//      }
       this.params = params
       let libraryid = this.getNumber(query.library_id)
       this.libraryId = this.isNumber(libraryid) ? libraryid : 0
@@ -89,6 +113,28 @@
     }
 
     methods = {
+      BackTop() {
+        this.showBackTopBtn = false
+        wx.pageScrollTo({
+          scrollTop: 0,
+          duration: 400
+        })
+      },
+      showInput () {
+        this.inputShowed = true
+      },
+      hideInput () {
+        this.inputVal = ''
+        this.inputShowed = false
+      },
+      clearInput () {
+        this.inputVal = ''
+      },
+      inputTyping (e) {
+        this.keyword = e.detail.value
+        this.page = 1
+        this.initPageData()
+      },
       clearSearch() {
         // 清空参数
         this.params = {}
@@ -107,7 +153,7 @@
     }
 
     // 初始化页面数据
-    initPageData() {
+    initPageData(keyword) {
       // 初始化参数
       this.page = 1
       this.loading = false
@@ -212,5 +258,20 @@
     color: @weuiTextColorGray;
     font-size: @weuiCellTipsFontSize;
   }
+}
+.page__bd {
+  height:100%;
+}
+.scrollBox{
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: white;
+  border: 4rpx solid #eeeeee;
+  box-shadow: 1rpx 1rpx 18rpx #cbcbcb;
+  position: fixed;
+  bottom: 12%;
+  right: 8%;
+  z-index: 9999;
 }
 </style>

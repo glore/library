@@ -12,6 +12,10 @@
                       </view>
                       <view class="page__bd">
                         <Load :init.sync="init"/>
+                        <view class="scrollBox text-center" wx:if="{{showBackTopBtn}}"  catchtap="BackTop">
+                          <image src='../../images/Stick.png'  mode="aspectFit"  style="width: 40rpx;height: 40rpx;margin-top: 8rpx;"></image>
+                          <view style="margin-top: -22rpx;font-size: 24rpx;">置顶</view>
+                        </view>
                         <moveDelete :list.sync="mylibs"></moveDelete>
                       </view>
                     </view>
@@ -97,6 +101,7 @@
       noMore: false,
       loading: false,
       inputShowed: false,
+      showBackTopBtn: false, // 显示置顶
       inputVal: ''
     }
 
@@ -105,6 +110,13 @@
 
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+    onPageScroll(res) {
+      let top = res.scrollTop,
+        show = top > 380 ? true : false
+      this.showBackTopBtn = show
+      this.$apply()
+      console.log(top)
     }
     async onLoad(e) {
       let _this = this
@@ -143,6 +155,7 @@
           self.init = true
           self.mylibs = data
           self.mylibs.forEach((item) => {
+            item.news_num = item.reserve_book_num + item.join_number_count < 99 ? item.reserve_book_num + item.join_number_count : 99
             if (item.type == 'SHARE') {
               item.url = '/pages/library/shareLibrary?id=' + item.id
             } else {
@@ -228,6 +241,13 @@
     }
 
     methods = {
+      BackTop() {
+        this.showBackTopBtn = false
+        wx.pageScrollTo({
+          scrollTop: 0,
+          duration: 400
+        })
+      },
       showInput () {
         this.inputShowed = true
       },
@@ -273,5 +293,17 @@
     margin-top: 38rpx;
     margin-left: -12rpx;
   }
+}
+.scrollBox{
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: white;
+  border: 4rpx solid #eeeeee;
+  box-shadow: 1rpx 1rpx 18rpx #cbcbcb;
+  position: fixed;
+  bottom: 12%;
+  right: 8%;
+  z-index: 9999;
 }
 </style>

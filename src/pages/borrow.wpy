@@ -1,10 +1,11 @@
 <template>
   <template name="tem_recommend">
-    <view wx:for="{{libs}}" wx:key="index" class="recommend_item" @tap="goto('/pages/library/library?id={{item.id}}')">
+    <view wx:for="{{libs}}" wx:key="index" class="recommend_item" @tap="goto({{item.url}})">
       <image src="{{item.logo}}" mode="aspectFill" class="flo_l"></image>
       <view class="flo_l" style="width: 80%">
-        <view class="ellipsis_1 font_28 bold color-666" style="width: 100%">{{item.name}}</view>
-        <view class="flo_r font_26">共享</view>
+        <view class="ellipsis_1 flo_l font_28 bold color-666" style="width: 80%">{{item.name}}</view>
+        <view class="list_title" wx:if="{{item.type == 'SHARE'}}">共享</view>
+        <view class="list_title" wx:else>个人</view>
         <view class="ellipsis_2 font_26 color-666" style="width: 100%">简介：{{item.intro}}</view>
       </view>
       <view class="clearfloat"></view>
@@ -93,6 +94,10 @@
                       <view style="width: 100%;height: 76rpx"></view>
                       <view class="weui-cells__title"></view>
                       <view class="page__bd">
+                        <view class="scrollBox text-center" wx:if="{{showBackTopBtn}}"  catchtap="BackTop">
+                          <image src='../images/Stick.png'  mode="aspectFit"  style="width: 40rpx;height: 40rpx;margin-top: 8rpx;"></image>
+                          <view style="margin-top: -22rpx;font-size: 24rpx;">置顶</view>
+                        </view>
                         <template is="tem_recommend"  data="{{libs}}"></template>
                         <!--<view class="weui-form-preview">-->
                           <!--<view class="weui-form-preview__hd">-->
@@ -171,6 +176,7 @@
       noMore: false,
       loading: false,
       inputShowed: false,
+      showBackTopBtn: false, // 显示置顶
       inputVal: ''
     }
 
@@ -179,6 +185,13 @@
 
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
+    }
+    onPageScroll(res) {
+      let top = res.scrollTop,
+        show = top > 380 ? true : false
+      this.showBackTopBtn = show
+      this.$apply()
+      console.log(top)
     }
     async onLoad(e) {
       let _this = this
@@ -330,6 +343,13 @@
     }
 
     methods = {
+      BackTop() {
+        this.showBackTopBtn = false
+        wx.pageScrollTo({
+          scrollTop: 0,
+          duration: 400
+        })
+      },
       showModel(name,_id) {
         this.libraryName = name
         this.deleteId = _id
@@ -545,6 +565,18 @@ page{
     margin-bottom: 12rpx;
     min-height: 220rpx;
   }
+
+/* 列表标题 */
+.list_title {
+  font-size: 13px;
+  color: #818181;
+  border: 1rpx solid #d3d3d3;
+  height: 36rpx;
+  padding: 0rpx 4rpx;
+  border-radius: 6rpx;
+  margin-bottom: -12rpx;
+  float: right;
+}
   .listtext {
     margin: 0rpx 10rpx 0rpx 10rpx;
     width: 60%;
@@ -560,5 +592,17 @@ page{
     height: 120rpx;
     margin-right: 16rpx;
   }
+}
+.scrollBox{
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: white;
+  border: 4rpx solid #eeeeee;
+  box-shadow: 1rpx 1rpx 18rpx #cbcbcb;
+  position: fixed;
+  bottom: 12%;
+  right: 8%;
+  z-index: 9999;
 }
 </style>

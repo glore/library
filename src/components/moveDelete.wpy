@@ -8,7 +8,13 @@
         <view class=" flo_l"  style="line-height: 180rpx;margin-top: 26rpx;margin-left: 16rpx">
           <image class="flo_l" mode="aspectFit" src="{{item.logo}}" style="width: 120rpx;height: 120rpx;border: 2rpx solid #eeeeee"></image>      <!-- 列表名称 -->
         </view>
-        <text class='list_name font_28'>{{item.name}}</text>
+        <view class='list_name font_28'>{{item.name}}
+          <text class="list_news" wx:if="{{item.news_num}}">
+            <text class="news_text">{{item.news_num}}</text>
+          </text>
+        </view>
+        <text class='list_title' wx:if="{{item.type == 'SHARE'}}">共享</text>
+        <text class='list_title' wx:else>个人</text>
         <!-- 活动时间 -->
         <text class='list_datas'>加入时间:{{item.created_at}}</text>
         <image src="../images/tabbars/icon-authstr.png" style="width: 120rpx;height: 120rpx;margin-left: 60%;margin-top: -22rpx;" wx:if="{{item.status=='JOIN'}}"></image>
@@ -232,9 +238,14 @@
   .list_title {
     position: absolute;
     right: 155rpx;
-    bottom: 18rpx;
+    bottom: 86rpx;
+    line-height: 40rpx;
     font-size: 13px;
     color: #818181;
+    border: 1rpx solid #d3d3d3;
+    height: 36rpx;
+    padding: 0rpx 4rpx;
+    border-radius: 6rpx;
   }
 
   /* 活动时间 */
@@ -244,6 +255,21 @@
     top: 35rpx;
     font-size: 13px;
     color: #818181;
+  }
+  .list_news{
+    width: 52rpx;
+    height: 38rpx;
+    line-height: 42rpx;
+    background-image: url('http://images.ufutx.com/201810/09/e65426f8697b8f8230f3668ff213c6bf.png') ;
+    background-repeat: no-repeat;
+    background-size: contain;
+    position: relative;
+    text-align: center;
+    .news_text{
+      /*position: absolute;*/
+      color: white;
+      line-height: 38rpx;
+    }
   }
 
 </style>

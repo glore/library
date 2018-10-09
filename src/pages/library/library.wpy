@@ -40,7 +40,7 @@
       <view class="flo_r" style="margin-right:26rpx;">
         <form bindsubmit="formSubmit" report-submit>
           <button formType="submit" class="btn" data-type="click">
-            <button  @tap="joinLibrary('member')"  wx:if="{{!mylib.member}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="primary" size="mini">申请加入</button>
+            <button  @tap="joinLibrary('member')"  wx:if="{{!mylib.member}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx;background: #005b9e" type="primary" size="mini">申请加入</button>
           </button>
         </form>
         <button  @tap="joinLibrary('join')"  wx:if="{{mylib.member && mylib.member.status == 'JOIN'}}" style="padding:8rpx 22rpx;line-height: 40rpx;margin-right: 32rpx" type="warn" size="mini">待审核...</button>
@@ -98,7 +98,9 @@
       <!--<button wx:if="{{mylib.member && mylib.member.status=='JOIN'}}" @tap="joinTip"  class="weui-btn mini-btn" type="primary" size="mini">待审核</button>-->
       <!--</view>-->
       <view style="height: 68rpx; background: #f4f4f4;line-height: 68rpx;">
-        <view class="flo_l" style="margin-left: 22rpx">图书馆动态：</view>
+        <view class="flo_l" style="margin-left: 22rpx">
+          <image src="http://images.ufutx.com/201810/09/09a1852fdc447feb362929f20a7f6bdc.png" mode="aspectFit" style="width: 36rpx;height: 36rpx;margin-bottom: -6rpx"></image>
+          动态：</view>
         <rollComponent class="flo_l" :list.sync="last_borrows"></rollComponent>
       </view>
     </view>
