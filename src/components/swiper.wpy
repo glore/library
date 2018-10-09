@@ -1,21 +1,21 @@
 <template>
-  <swiper class="swiper" style="height:{{style_height}}" autoplay="{{autoplay}}"
-   indicator-dots="{{indicatorDots}}" 
+  <swiper class="swiper" style="height:{{style_height}};" autoplay="{{autoplay}}"
+   indicator-dots="{{indicatorDots}}"
    indicator-color="{{indicatorColor}}"
+          bindchange="changeIndex"
    indicator-active-color="{{indicatorActiveColor}}">
     <block wx:for="{{list}}" wx:key="index">
       <swiper-item>
         <navigator wx:if="{{item.url}}" url="{{item.url}}">
-          <image src="{{item.image}}" style="height:{{style_height}}" class="swiper-image" mode="widthFix"/>
+          <image src="{{item.image}}" class="swiper-image" style="height:{{style_height}};"  mode="widthFix"/>
         </navigator>
         <view wx:else style="height:{{style_height}}">
-          <image src="{{item.image}}" style="height:{{style_height}}" class="swiper-image" mode="aspectFit"/>
+          <image src="{{item.image}}"  class="swiper-image" style="height:{{style_height}};" mode="widthFix"/>
         </view>
       </swiper-item>
     </block>
   </swiper>
 </template>
-
 <script>
   import wepy from 'wepy'
   import base from '../mixins/base.js'
@@ -40,7 +40,7 @@
     data = {
       autoplay: true,
       indicatorColor: 'rgba(255, 255, 255, 0.6)',
-      indicatorActiveColor: 'rgba(255, 255, 255, 1)'
+      indicatorActiveColor: 'rgba(255, 255, 255, 1)',
     }
 
     computed = {
@@ -54,6 +54,29 @@
     }
 
     methods = {
+      changeIndex(e) {
+        console.log(e)
+        console.log(e.detail.current)
+        if(e.detail.current == 0){
+          wx.setNavigationBarColor({
+            frontColor: '#ffffff',
+            backgroundColor: '#FCEBD1',
+            animation: {
+              duration: 400,
+              timingFunc: 'easeIn'
+            }
+          })
+        }else{
+          wx.setNavigationBarColor({
+            frontColor: '#ffffff',
+            backgroundColor: '#DCE0E7',
+            animation: {
+              duration: 400,
+              timingFunc: 'easeIn'
+            }
+          })
+        }
+      }
     }
 
     isMatchHeight(str) {

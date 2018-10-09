@@ -50,8 +50,6 @@
 
 <style type="less">
   @import "../styles/custom/fn.less";
-
-
   swiper {
     width: 68%;
     height: 68rpx;

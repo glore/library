@@ -7,10 +7,11 @@
             <view class="weui-cell__bd userinfo clearfix">
               <image class="userinfo-avatar" src="{{ user.wechat.avatar }}" background-size="cover"/>
               <view class="userinfo-info">
-                <view class="userinfo-nickname">{{ user.name }}(微信名称:{{user.wechat.nickname}})
+                <view class="userinfo-nickname bold" style="color: #1898c7">{{ user.name }}
+                  <!--(微信名称:{{user.wechat.nickname}})-->
                   <image src="../images/icon/icon-modification.png" style="width: 32rpx;height: 32rpx;margin-bottom: -4rpx;"></image>
                 </view>
-                <view class="userinfo-status">手机号：{{user.mobile}}</view>
+                <view class="userinfo-status font_28" style="margin-top: 20rpx">手机号：{{user.mobile}}</view>
               </view>
             </view>
           </navigator>
@@ -77,7 +78,8 @@
     mixins = [base, http, user, ShareMessage]
     config = {
       navigationBarTitleText: '我的',
-      enablePullDownRefresh: true
+      enablePullDownRefresh: true,
+    navigationBarBackgroundColor: '#005b9e'
     }
     data = {
       libraries: {},

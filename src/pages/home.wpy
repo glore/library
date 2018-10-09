@@ -1,0 +1,176 @@
+<template>
+  <template name="tem_recommend">
+  <view wx:for="{{recommendList}}" wx:key="index" class="recommend_item" @tap="goto('/pages/library/library?id={{item.id}}')">
+    <image src="{{item.logo}}" mode="aspectFill" class="flo_l"></image>
+    <view class="flo_l" style="width: 80%">
+      <view class="ellipsis_1 font_28 bold color-666" style="width: 100%">{{item.name}}</view>
+      <view class="ellipsis_2 font_26 color-666" style="width: 100%">简介：{{item.intro}}</view>
+    </view>
+    <view class="clearfloat"></view>
+  </view>
+</template>
+  <view class="_home">
+    <Swiper :list="list"></Swiper>
+    <view class="bc_conter">
+      <view class="bc_title">
+        <view class="bc_icon flo_l text-center" wx:for="{{iconList}}" wx:key="index" @tap="goto({{item.link}}, {{item.type}})">
+          <image src="{{item.icon}}"  mode="aspectFit"></image>
+          <view class="font_26">{{item.title}}</view>
+        </view>
+        <view class="clearfloat"></view>
+      </view>
+      <view class="bc_recommend">
+        <view class="title font_32">
+          推荐图书馆
+          <span class="flo_r font_26" @tap="goto('/pages/borrow', 'tab')">
+            全部图书
+            <image src="../images/icon/more.png" mode="aspectFit" style="width: 22rpx;height: 22rpx;margin-left: -6rpx;"></image>
+          </span>
+        </view>
+        <template is="tem_recommend" data="{{recommendList}}"></template>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import http from '../mixins/http'
+  import base from '../mixins/base'
+  import user from '../mixins/user'
+  import ShareMessage from '../mixins/ShareMessage'
+  import { service } from '../config.js'
+  import swiper from '../components/swiper'
+
+  export default class pageQr extends wepy.page {
+    mixins = [base, http, user, ShareMessage]
+    config = {
+      navigationBarTitleText: '首页',
+      navigationBarBackgroundColor: '#005b9e',
+      backgroundColor: '#005b9e',
+      enablePullDownRefresh: false
+    }
+    components = {
+      Swiper: swiper
+    }
+    data = {
+      libraries: [],
+      list: [
+        {
+          image: 'http://images.ufutx.com/201810/07/8c26a2221bf712841b7f1d68bf0b2942.png',
+          url: '/pages/library/create'
+        }
+      ],
+      iconList: [
+        {
+          icon: 'http://images.ufutx.com/201810/07/ab62a07e7fd6c81e0b61231d988ea15e.png',
+          title: '我的图书馆',
+          link: '/pages/user/myLibrary',
+          type: 'nav'
+        },
+        {
+          icon: 'http://images.ufutx.com/201810/07/6d9822dc81882f6998f303ffcb1759d0.png',
+          title: '创建图书馆',
+          link: '/pages/library/create',
+          type: 'nav'
+        },
+        {
+          icon: 'http://images.ufutx.com/201810/07/aea927b23d323232965b061a4033191d.png',
+          title: '查找图书',
+          link: '/pages/book/list',
+          type: 'nav'
+        },
+        {
+          icon: 'http://images.ufutx.com/201810/07/c01d1703659f13a155aee74be149b429.png',
+          title: '查找图书馆',
+          link: '/pages/borrow',
+          type: 'tab'
+        }
+      ],
+      recommendList: []
+    }
+    onShow() {
+      this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)
+    }
+    onLoad() {
+      this.getRecommendData()
+    }
+    getRecommendData() {
+      this.$get({
+        url: `${service.recommend}/libraries`
+      },{
+        success: ({code, data}) => {
+          console.log(code)
+          this.recommendList = data
+        }
+      })
+    }
+    methods = {
+      goto(url, type) {
+        if (type == 'tab') {
+          return wx.switchTab({url: url})
+        }
+        wx.navigateTo({url: url})
+      },
+      formSubmit(e) {
+        this.formId.push(e.detail.formId)
+        console.log(this.formId)
+      },
+    }
+  }
+</script>
+
+<style lang="less">
+  @import "../styles/custom/qr.less";
+  ._home{
+    .bc_conter{
+      width: 100%;
+      min-height: 80vh;
+      background: #F5F5F5;
+      margin: auto;
+      box-shadow: 0rpx -8rpx 34rpx white;
+      position: absolute;
+    }
+    .bc_title{
+      width: 94%;
+      min-height: 180rpx;
+      background: white;
+      margin: -12rpx auto;
+      border-radius: 8rpx;
+    }
+    .bc_icon{
+      width: 98/4%;
+      height: 180rpx;
+      border-left: 2rpx solid #f7f7f7;
+      border-bottom: 2rpx solid #f7f7f7;
+      image{
+        width: 100rpx;
+        height: 100rpx;
+        margin-top: 12rpx;
+      }
+    }
+    .bc_icon:first-child{
+      border: none;
+    }
+    .bc_recommend{
+      width: 88%;
+      min-height: 180rpx;
+      background: white;
+      margin: 32rpx auto;
+      border-radius: 8rpx;
+      padding: 12rpx 22rpx;
+      .title{
+        border-bottom: 4rpx solid #f7f7f7;
+      }
+    }
+    .recommend_item{
+      padding: 22rpx 0;
+      border-bottom: 4rpx solid #f7f7f7;
+      image{
+        width: 120rpx;
+        height: 120rpx;
+        margin-right: 12rpx;
+      }
+    }
+  }
+</style>

@@ -1,0 +1,249 @@
+<template>
+  <!-- 外层包裹视图 -->
+  <view class="cont">  <!-- 列表 -->
+    <view wx:for="{{list}}" wx:key="index" class="list">    <!-- 滑动删除 -->
+      <view bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE" data-index="{{index}}"
+            style="{{item.shows}}; height: 180rpx;" class="list_del txt" @tap.stop="goto({{item.url}})">      <!-- 列表图片 -->
+
+        <view class=" flo_l"  style="line-height: 180rpx;margin-top: 26rpx;margin-left: 16rpx">
+          <image class="flo_l" mode="aspectFit" src="{{item.logo}}" style="width: 120rpx;height: 120rpx;border: 2rpx solid #eeeeee"></image>      <!-- 列表名称 -->
+        </view>
+        <text class='list_name font_28'>{{item.name}}</text>
+        <!-- 活动时间 -->
+        <text class='list_datas'>加入时间:{{item.created_at}}</text>
+        <image src="../images/tabbars/icon-authstr.png" style="width: 120rpx;height: 120rpx;margin-left: 60%;margin-top: -22rpx;" wx:if="{{item.status=='JOIN'}}"></image>
+      </view>    <!-- 删除 -->
+      <view data-index="{{index}}" bindtap="delItem" class="list_del del">移除</view>
+    </view>
+  </view>
+  <modal hidden="{{hiddenmodalput}}" title="提示" confirm-text="确认删除" cancel-text="取消" bindcancel="cancel" bindconfirm="daleteBorrow">
+    <p>是否确认删除《{{libraryName}}》吗？</p>
+  </modal>
+</template>
+<script>
+  import wepy from 'wepy'
+  import base from '../mixins/base.js'
+  import { service } from '../config.js'
+  import http from '../mixins/http'
+
+  var initdata = function (that) {
+    var list = that.list
+    for (var i = 0; i < list.length; i++) {
+      list[i].shows = ""
+    }
+  }
+  export default class moveDelete extends wepy.component {
+    mixins = [base, http]
+    props = {
+      list: {
+        type: Object,
+        default: []
+      }
+    }
+
+    data = {
+      delBtnWidth: 185, //删除按钮宽度单位（rpx）     // 列表数据
+      list: [ ],
+      libraryName: '', // 删除赋值名字
+      hiddenmodalput: true, // 删除弹框
+      deleteId: 0, // 删除id
+      index: Number // 删除下标
+    }
+
+    onLoad() {
+      var delBtnWidth = this.getEleWidth(this.delBtnWidth);
+      this.delBtnWidth = delBtnWidth
+    }
+
+    getEleWidth (w) {
+      var real = 0;
+      try {
+        var res = wx.getSystemInfoSync().windowWidth;
+        var scale = (750 / 2) / (w / 2); //以宽度750px设计稿做宽度的自适应
+        // console.log(scale);
+        real = Math.floor(res / scale);
+        return real;
+      } catch (e) {
+        return false;
+        // Do something when catch error
+      }
+    }
+
+    methods = {
+      goto(url) {
+        wx.navigateTo({url: url})
+      },
+      cancel () {
+        this.hiddenmodalput = true
+        this.$apply()
+      },
+      daleteBorrow() {
+        this.$post({
+          url: service.libraries + '/' + this.deleteId + '/out'
+        }, {
+          success: ({code, data}) => {
+            this.hiddenmodalput = true
+            this.list.splice(this.index, 1);    // 重新渲染
+            wx.showToast({
+              title: '删除成功！',
+              duration: 1500
+            })
+          },
+          fail: ({code, data}) => {},
+          complete: () => {  }
+        })
+      },
+    // 开始滑动事件
+      touchS (e) {
+        if (e.touches.length == 1) {
+          this.startX = e.touches[0].clientX
+//          this.$apply()
+        }
+      },
+      touchM (e) {
+        var that = this;
+        initdata(that)
+        if (e.touches.length == 1) {      //手指移动时水平方向位置
+          var moveX = e.touches[0].clientX;      //手指起始点位置与移动期间的差值
+          var disX = this.startX - moveX;
+          var delBtnWidth = this.delBtnWidth;      //
+//          var txtStyle = "";
+          if (disX == 0 || disX < 0) { //如果移动距离小于等于0，文本层位置不变
+            // txtStyle = "left:0px";
+          } else if (disX > 0) { //移动距离大于0，文本层left值等于手指移动距离
+            // txtStyle = "left:-" + disX + "px";
+            if (disX >= delBtnWidth) {          //控制手指移动距离最大值为删除按钮的宽度
+//              txtStyle = "left:-" + delBtnWidth + "px";
+            }
+          }
+        }
+      },
+    // 滑动中事件
+      touchE (e) {
+        //创建动画
+        if (e.changedTouches.length == 1) {      //手指移动结束后水平位置
+          var endX = e.changedTouches[0].clientX;      //触摸开始与结束，手指移动的距离
+          var disX = this.startX - endX;
+          var delBtnWidth = 0;
+          //如果距离小于删除按钮的1/2，不显示删除按钮
+          if(disX > delBtnWidth / 2 ) {
+             delBtnWidth = this.delBtnWidth;
+          } else{
+             delBtnWidth = 0;
+          }
+          var txtStyle = "";
+//          animation.left(-delBtnWidth).step();
+          txtStyle = "left:-" + delBtnWidth + "px"   //获取手指触摸的是哪一项
+//          txtStyle = animation.export()   //获取手指触摸的是哪一项
+          var index = e.target.dataset.index;
+          console.log(typeof index)
+          if (typeof index === 'undefined') {
+            return
+          }
+          var list = this.list;
+          list[index].shows = txtStyle;
+//          console.log("1", list[index].shows);      //更新列表的状态
+          this.list= list
+        } else {
+          console.log("2");
+        }
+      },
+      //点击删除按钮事件
+      delItem(e) {
+        let that = this,
+          {index} = e.currentTarget.dataset
+        this.libraryName = this.list[index].name
+        this.deleteId = this.list[index].id
+        this.hiddenmodalput = false
+        this.index = index
+//        this.$apply()
+        initdata(that)
+      }
+    }
+  }
+</script>
+
+<style type="less">
+  /* 父级 */
+  page {
+    background-color: #f5f5f5;
+  }
+
+  /* 外层视图 */
+  .cont {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .list {
+    position: relative;
+    height: 170rpx;
+    line-height: 170rpx;
+    overflow: hidden;
+    border-bottom: 2px solid #f7f7f7;
+  }
+
+  /* 删除外层包裹视图 */
+  .list_del {
+    position: absolute;
+    top: 0;
+  }
+
+  .list_del.txt {
+    position: relative;
+    background-color: #fff;
+    width: 100%;
+    z-index: 5;
+    padding: 0 10rpx;
+    transition: left 0.2s ease-in-out;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* 删除 */
+  .list_del.del {
+    background-color: #e64340;
+    width: 180rpx;
+    text-align: center;
+    z-index: 4;
+    right: 0;
+    color: #fff
+  }
+
+  /* 列表图片 */
+  .list_img {
+    width: 105rpx;
+    height: 105rpx;
+    border-radius: 10rpx;
+    vertical-align: middle;
+    margin-left: 15rpx;
+    margin-top: -8rpx;
+  }
+
+  /* 列表名称 */
+  .list_name {
+    position: absolute;
+    left: 168rpx;
+    bottom: 18rpx;
+  }
+
+  /* 列表标题 */
+  .list_title {
+    position: absolute;
+    right: 155rpx;
+    bottom: 18rpx;
+    font-size: 13px;
+    color: #818181;
+  }
+
+  /* 活动时间 */
+  .list_datas {
+    position: absolute;
+    left: 168rpx;
+    top: 35rpx;
+    font-size: 13px;
+    color: #818181;
+  }
+
+</style>

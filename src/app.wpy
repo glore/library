@@ -12,6 +12,7 @@
     config = {
       pages: [
         // tab-bar
+        'pages/home',
         'pages/map',
         'pages/collect',
         'pages/qr',
@@ -88,31 +89,32 @@
       window: {
         navigationBarTitleText: '友福图书馆',
         navigationBarTextStyle: 'white',
-        navigationBarBackgroundColor: '#36a2e6',
+        navigationBarBackgroundColor: '#005b9e',
         backgroundColor: '#eaeaea',
         backgroundTextStyle: 'light',
         enablePullDownRefresh: true
       },
       tabBar: {
         color: '#707070',
-        selectedColor: '#36a2e6',
+        selectedColor: '#005b9e',
         backgroundColor: '#fff',
         borderStyle: 'black',
         list: [{
-          pagePath: 'pages/map',
-          selectedIconPath: './images/tabbars/icon-map-active.png',
-          iconPath: './images/tabbars/icon-map.png',
+          pagePath: 'pages/home',
+          selectedIconPath: './images/tabbars/icon-shelf-active@2x.png',
+          iconPath: './images/tabbars/icon-shelf@2x.png',
           text: '首页'
-        }, {
-          pagePath: 'pages/collect',
-          selectedIconPath: './images/tabbars/icon-book-active.png',
-          iconPath: './images/tabbars/icon-book.png',
-          text: '藏书'
-        }, {
-          pagePath: 'pages/qr',
-          selectedIconPath: './images/tabbars/icon-qrv.png',
-          iconPath: './images/tabbars/icon-qrv.png',
-          text: '扫码'
+//        },
+//          {
+//          pagePath: 'pages/collect',
+//          selectedIconPath: './images/tabbars/icon-book-active.png',
+//          iconPath: './images/tabbars/icon-book.png',
+//          text: '藏书'
+//        }, {
+//          pagePath: 'pages/qr',
+//          selectedIconPath: './images/tabbars/icon-qrv.png',
+//          iconPath: './images/tabbars/icon-qrv.png',
+//          text: '扫码'
           /* }, {
             pagePath: 'pages/party',
             selectedIconPath: './images/tabbars/icon-shelf-active@2x.png',
@@ -122,7 +124,7 @@
           pagePath: 'pages/borrow',
           selectedIconPath: './images/tabbars/icon-book2-active.png',
           iconPath: './images/tabbars/icon-book2.png',
-          text: '书房'
+          text: '全部图书馆'
         }, {
           pagePath: 'pages/user',
           selectedIconPath: './images/tabbars/icon-my-active.png',

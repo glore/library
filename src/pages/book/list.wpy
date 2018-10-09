@@ -124,8 +124,12 @@
       if (this.loading || this.noMoreList) return
       this.loading = true
       // 推荐列表
+      let url = `${service.libraries}/${this.libraryId}/books/v2?library_id=${this.libraryId}&keyword=${this.keyword}&is_recommend=${this.is_recommend}`
+      if(this.libraryId == 0){
+        url = `${service.books}/v2?keyword=${this.keyword}`
+      }
       this.$get({
-        url: `${service.libraries}/${this.libraryId}/books/v2?library_id=${this.libraryId}&keyword=${this.keyword}&is_recommend=${this.is_recommend}`,
+        url: url,
         data: Object.assign({}, this.getObject(this.params), {
           // 默认从1开始为第一页
           page: page
@@ -171,6 +175,10 @@
     getBooks(data) {
       return this.getArray(data).map((book, index) => {
         // 拼接示例数据
+        let book_id = book.book_id
+        if(this.libraryId == 0){
+          book_id: book.id
+        }
         return {
           id: book.id,
           title: book.title ? book.title : '无标题',
@@ -182,8 +190,9 @@
           name: book.name,
           // 暂时开发所有人都能修改，后续需要判断是否为书籍拥有人
           isOwner: '1',
-          book_id: book.book_id,
+          book_id: book_id,
           user_id: book.user_id,
+          library_id: book.library_id ? book.library_id : 0,
           type: book.type,
           is_admin: book.is_admin
         }

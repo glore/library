@@ -1,24 +1,28 @@
 <template>
   <view class="" style="margin:26rpx;z-index: 1000;position:relative;">
-    <!--<button  type="default" size="mini"  @tap="gotoTab('/pages/index')"  style="padding:2rpx 12rpx;line-height: 42rpx;margin-right: 22rpx">-->
-    <!--<image  class="imgicon" mode="aspectFit" src="../../images/tabbars/icon-home.png"></image>-->
-    <!--</button>-->
+    <!--<form bindsubmit="formSubmit" report-submit>-->
+      <!--<button formType="submit" class="btn" data-type="click">-->
+        <!--<button  size="mini" @tap="gotoTab('/pages/map')" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 140rpx;top: -42rpx;background: -webkit-gradient(linear, 20% 20%, 20% 100%,from(#005b9e), to(#6bb2e6))">-->
+          <!--<image  class="imgicon" mode="aspectFit" src="../images/tabbars/home.png" style="width: 60rpx;height: 60rpx;float: left;"></image>-->
+        <!--</button>-->
+      <!--</button>-->
+    <!--</form>-->
     <form bindsubmit="formSubmit" report-submit>
       <button formType="submit" class="btn" data-type="click">
-        <button  size="mini" @tap="gotoTab('/pages/map')" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 140rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
-          <image  class="imgicon" mode="aspectFit" src="../images/tabbars/home.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
+        <button  size="mini" @tap="gotoTab('/pages/home')" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 92rpx;top: -42rpx;">
+          <image  class="imgicon" mode="aspectFit" src="http://images.ufutx.com/201810/09/183da8cde123d7c5654655c17892bada.png" style="width: 120rpx;height: 120rpx;float: left;"></image>
         </button>
       </button>
     </form>
-    <view class="smile" style="position: fixed;z-index: 1000;right: 24.5vw; top: -25rpx;"></view>
+    <!--<view class="smile" style="position: fixed;z-index: 1000;right: 24.5vw; top: -25rpx;"></view>-->
     <form bindsubmit="formSubmit" report-submit>
       <button formType="submit" class="btn" data-type="click">
-        <button  size="mini"  @tap="share" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 12rpx;top: -42rpx;background: -webkit-gradient(linear, 0% 0%, 0% 100%,from(#0b95e6), to(#6bb2e6))">
-          <image  class="imgicon" mode="aspectFit" src="../images/icon/share_red.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
+        <button  size="mini"  @tap="share" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: -8rpx;top: -42rpx;">
+          <image  class="imgicon" mode="aspectFit" src="http://images.ufutx.com/201810/09/92546bb009abfeda55517433be8bd39c.png" style="width: 120rpx;height: 120rpx;float: left;"></image>
         </button>
       </button>
     </form>
-    <view class="smile" style="position: fixed;z-index: 1000;right: 7vw; top: -25rpx;"></view>
+    <!--<view class="smile" style="position: fixed;z-index: 1000;right: 7vw; top: -25rpx;"></view>-->
     <!--<button  size="mini" open-type="share" class="btn" style="padding:2rpx 12rpx 2rpx 0;line-height: 42rpx;border-radius: 50%;box-shadow: 1rpx 1rpx 12rpx red;position: fixed;right: -12rpx;top: 40rpx;">-->
     <!--<image  class="imgicon" mode="aspectFit" src="../../images/icon/icon-share_red.png" style="width: 78rpx;height: 78rpx;float: left;"></image>-->
     <!--</button>-->
