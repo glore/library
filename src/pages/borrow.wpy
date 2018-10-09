@@ -4,6 +4,7 @@
       <image src="{{item.logo}}" mode="aspectFill" class="flo_l"></image>
       <view class="flo_l" style="width: 80%">
         <view class="ellipsis_1 font_28 bold color-666" style="width: 100%">{{item.name}}</view>
+        <view class="flo_r font_26">共享</view>
         <view class="ellipsis_2 font_26 color-666" style="width: 100%">简介：{{item.intro}}</view>
       </view>
       <view class="clearfloat"></view>
