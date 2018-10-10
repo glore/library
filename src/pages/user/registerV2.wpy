@@ -27,7 +27,7 @@
         </view>
         <view class="weui-cell__hd">
           <view class="weui-label">
-            <button class="font_26 btn-blue flo_r" type="primary"  open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">从微信获取</button>
+            <button class="font_26 btn-blue_l flo_r" type="primary"  open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">从微信获取</button>
           </view>
         </view>
       </view>
