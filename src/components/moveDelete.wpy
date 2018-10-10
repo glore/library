@@ -9,8 +9,8 @@
           <image class="flo_l" mode="aspectFit" src="{{item.logo}}" style="width: 120rpx;height: 120rpx;border: 2rpx solid #eeeeee"></image>      <!-- 列表名称 -->
         </view>
         <view class='list_name font_28'>{{item.name}}
-          <text class="list_news" wx:if="{{item.news_num}}">
-            <text class="news_text">{{item.news_num}}</text>
+          <text class="list_news" wx:if="{{item.news_num}}" >
+            <text class="news_text" style="{{item.news_num < 9 ? 'margin-left: 20rpx' : ''}}">{{item.news_num}}</text>
           </text>
         </view>
         <text class='list_title' wx:if="{{item.type == 'SHARE'}}">共享</text>
@@ -264,9 +264,9 @@
     background-repeat: no-repeat;
     background-size: contain;
     position: relative;
-    text-align: center;
     .news_text{
       /*position: absolute;*/
+      margin-left: 15rpx;
       color: white;
       line-height: 38rpx;
     }

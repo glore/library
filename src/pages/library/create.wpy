@@ -1,94 +1,72 @@
 
 <template>
   <view class="book-sort">
-
-    <view class="weui-cells__title">
-      <image src="/images/streamer.jpg" mode="aspectFit"  style="width: 100%;height: 166rpx;margin-top: -12rpx;" ></image>
-      <!--每个人都有一个属于自己的图书馆-->
-    </view>
-    <view class="flo_l" wx:if="{{EditImage}}" style="margin: 32rpx 12rpx 0 20rpx" @tap="chooseimage">
-      <image src="{{EditImage}}" mode="aspectFit" style="box-shadow: 1rpx 1rpx 12rpx #d3d3d3" />
-    </view>
-    <view class="flo_l hide_image" wx:else>
-      <image src="../../images/icon/icon-upload.png" mode="aspectFit" @tap="chooseimage"/>
-      <text class="font_26">上传logo</text>
-    </view>
-    <view style="position: relative;margin-left: -32rpx;top: -34rpx;" class="flo_l">
-      <image src='../../images/message.png'  mode="aspectFit"  style="transform: rotateY(0deg) rotateZ(36deg);width: 340rpx;height: 218rpx;"></image>
-      <view class="font_26" style="position: absolute;left: 106rpx;bottom: 126rpx;transform: rotateZ(40deg);">logo很重要哦！</view>
-    </view>
-    <view>
-      <!--<image src="../../images/upload.png" mode="aspectFit" @tap="chooseimage"/>-->
-    </view>
-    <!--<view class="font_26 flo_r" style="width: 60%;padding: 18rpx;background: white;margin-top: 30%">上传属于你自己的图书馆LOGO</view>-->
-    <view class="clearfloat"></view>
-    <view class="weui-cells weui-cells_after-title book-address font_28">
-      <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
-        <view class="weui-cell__hd">
-          <view class="weui-label reset-label-left text-center">名称</view>
+    <view class="borderV2">
+      <view class="flo_l" wx:if="{{EditImage}}" style="margin: 20rpx" @tap="chooseimage">
+        <image src="{{EditImage}}" mode="aspectFit"  style="width: 200rpx;height: 260rpx"/>
+      </view>
+      <view class="flo_l hide_image" wx:else>
+        <image src="../../images/icon/icon-upload.png" mode="aspectFit" @tap="chooseimage"/>
+        <text class="font_26 color-666 bold">上传logo</text>
+      </view>
+      <view class="bc_creat color-666 font_32 flo_l">
+        <view>
+          <view class="bc_creat_title">
+            名称:
+          </view>
+          <view class="bc_creat_center">
+            <input  @input="typing('name')" value="{{name}}" placeholder="请输入你的图书馆名称" />
+          </view>
         </view>
-        <view class="weui-cell__bd  color-red">
-          <input  @input="typing('name')" value="{{name}}" placeholder="请输入你的图书馆名称" />
+        <view>
+          <view class="bc_creat_title">
+            简介:
+          </view>
+          <view class="bc_creat_center">
+            <textarea @input="typing('intro')" value="{{intro}}" placeholder="图书馆简单说明" style="width: 98%;" auto-height maxlength="-1"/>
+          </view>
         </view>
       </view>
+      <view class="clearfloat"></view>
     </view>
-    <view class="weui-cells weui-cells_after-title book-address font_28">
-      <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
-        <view class="weui-cell__hd">
-          <view class="weui-label reset-label-left text-center">每人可借阅数</view>
-        </view>
-        <view class="weui-cell__bd   color-red">
-          <input type = "number" @input="typing('count')" value="{{count}}" placeholder="请输入可借阅数" />
-        </view>
+    <view class="bc_creat_details color-666">
+      <view class="details_title flo_l text-center">每人可借阅数</view>
+      <view class="details_center flo_r">
+        <input type = "number" @input="typing('count')" value="{{count}}" placeholder="请输入可借阅数" />
       </view>
+      <view class="clearfloat"></view>
     </view>
-    <view class="weui-cells weui-cells_after-title book-address font_28">
-      <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
-        <view class="weui-cell__hd">
-          <view class="weui-label reset-label-left text-center">地址</view>
-        </view>
-        <view class="weui-cell__bd   color-red">
-          <input type = "number" @tap="choose" value="{{address}}" class="font_28" placeholder="点击选择地址"  disabled/>
-        </view>
+    <view class="bc_creat_details color-666">
+      <view class="details_title flo_l text-center">地址</view>
+      <view class="details_center flo_r">
+        <input @tap="choose" value="{{address}}" class="font_28" placeholder="点击选择地址"  disabled/>
       </view>
+      <view class="clearfloat"></view>
     </view>
-    <view class="weui-cells weui-cells_after-title book-address font_28">
-      <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
-        <view class="weui-cell__hd">
-          <view class="weui-label reset-label-left text-center">还书时长</view>
-        </view>
-        <view class="weui-cell__bd h3  color-red">
-          <picker bindchange="bindPickerChange" value="{{timeIndex}}" range="{{array}}">
-            <view class="picker">
-              <input class="weui-input" value="{{array[timeIndex]}}" disabled placeholder="请选择还书时长"/>
-            </view>
-          </picker>
-        </view>
+    <view class="bc_creat_details color-666">
+      <view class="details_title flo_l text-center">还书时长</view>
+      <view class="details_center flo_r">
+        <picker bindchange="bindPickerChange" value="{{timeIndex}}" range="{{array}}">
+          <view class="picker">
+            <input class="" value="{{array[timeIndex]}}" disabled placeholder="请选择还书时长"/>
+          </view>
+        </picker>
       </view>
+      <view class="clearfloat"></view>
     </view>
-    <view class="weui-cells weui-cells_after-title book-address font_28">
-      <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
-        <view class="weui-cell__hd">
-          <view class="weui-label reset-label-left text-center">是否需要押金（99元）？</view>
-        </view>
-        <view class="weui-cell__bd h3  color-red">
-          <switch checked="{{cash_pledge}}" bindchange="switch1Change" color="#6db6cf), to(#0b95e6))"/>
-        </view>
+    <view class="bc_creat_details color-666">
+      <view class="details_title flo_l text-center">是否需要押金？</view>
+      <view class="details_center flo_r">
+        <radio-group class="radio-group" bindchange="switch1Change" style="padding-top: 6rpx">
+          <label class="radio" wx:for="{{items}}" wx:key="index">
+            <radio value="{{item.name}}" checked="{{item.checked}}" color="{{item.color}}" style="color: #13a664;"/>{{item.value}}
+          </label>
+        </radio-group>
+        <!--<switch checked="{{cash_pledge}}" type="checkbox" bindchange="switch1Change" color="#6db6cf), to(#0b95e6))"/>-->
       </view>
+      <view class="clearfloat"></view>
     </view>
-    <view class="weui-cells weui-cells_after-title font_28">
-      <view class="weui-cell weui-cell_input" style="padding: 12rpx;">
-        <view class="weui-cell__hd">
-          <view class="weui-label reset-label-left text-center">简介</view>
-        </view>
-        <view class="weui-cell__bd   color-red">
-          <textarea @input="typing('intro')" value="{{intro}}" placeholder="图书馆简单说明" style="width: 98%;" auto-height maxlength="-1"/>
-            <!--<input @input="typing('intro')" value="{{intro}}" placeholder="图书馆简单说明"/>-->
-        </view>
-      </view>
-    </view>
-
-    <view class="weui-cells__title">图书馆类型</view>
+    <view class="weui-cells__title font_28 bold color-666" style="padding-left: 44rpx;margin: 12rpx 0">图书馆类型:</view>
     <view class="weui-cells weui-cells_after-title" style="position: none;  box-shadow: 1rpx 1rpx 12rpx #dedede;">
         <radio-group @change="radioChange">
             <label class="weui-cell weui-check__label" wx:for="{{radioItems}}" wx:key="value">
@@ -160,7 +138,11 @@
       sort: null,
       files: [],
       cash_pledge: 0,
-      text: '创建'
+      text: '创建',
+      items:[
+        {name: '1', value: '需要', color: '#13a664', checked: 'true'},
+        {name: '0', value: '不需要', color: '#e54c3f'}
+      ]
     }
 
     computed = {
@@ -232,17 +214,19 @@
         },
         success: (resp) => {
           that.EditImage = JSON.parse(resp.data).data
+          console.log(that.EditImage)
           that.$apply()
         },
         fail: (res) => {
           failUp++
         },
         complete: () => {
-          i++
-          if (i === length) {
-          } else {
-            that.uploadFiles(filePaths, successUp, failUp, i, length)
-          }
+//          i++
+//          if (i === length) {
+//          } else {
+//            that.uploadFiles(filePaths, successUp, failUp, i, length)
+//          }
+          wx.hideToast();
         }
       })
     }
@@ -329,11 +313,7 @@
     methods = {
       switch1Change(e) {
         console.log('switch1 发生 change 事件，携带值为', e.detail.value)
-        if (e.detail.value) {
-          this.cash_pledge = 1
-        } else {
-          this.cash_pledge = 0
-        }
+        this.cash_pledge = e.detail.value
       },
       bindPickerChange: function(e) {
         console.log('picker发送选择改变，携带值为', e.detail.value)
@@ -376,6 +356,12 @@
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
           sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
           success: function (res) {
+            wx.showToast({
+              title: '正在上传...',
+              icon: 'loading',
+              mask: true,
+              duration: 10000
+            })
             // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
             that.files = res.tempFilePaths
             that.ShowUpload = true
@@ -518,6 +504,8 @@
 page{
   background: white;
 }
+@bor_size: 2rpx solid #eeeeee;
+@inline:  inline-block;
 image {
   width: 200rpx;
   height: 200rpx;
@@ -586,5 +574,47 @@ image {
   .weui-cells{
     /*position: none;  box-shadow: 1rpx 1rpx 12rpx #dedede;*/
   }
+  .borderV2{
+    border-bottom: 2px solid #f4f4f4;
+  }
+  .bc_creat{
+    width: 62%;
+    padding: 22rpx 12rpx;
+    height:280rpx;
+    border-left: 2px solid #f2f2f2;
+    .bc_creat_title{
+      width: 24%;
+      border-bottom: @bor_size;
+      display: @inline;
+      font-size: 28rpx;
+      font-weight: bold;
+    }
+    .bc_creat_center{
+      width: 100%;
+      border-bottom: @bor_size;
+      font-size: 26rpx;
+      padding: 6rpx;
+      textarea{
+        height: 118rpx !important;
+      }
+    }
+  }
+  .bc_creat_details{
+    margin-left:32rpx;
+    font-size: 28rpx;
+    border-bottom: 2px solid #f7f7f7;
+    .details_title{
+      font-weight: bold;
+      width: 208rpx;
+      height: 60rpx;
+      line-height: 60rpx;
+      border-right: 2px solid #eeeeee;
+    }
+    .details_center{
+      width: 66%;
+      font-size: 26rpx;
+    }
+  }
+
 
 </style>

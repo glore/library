@@ -12,7 +12,10 @@
   </view>
 </template>
   <view class="_home">
-    <Swiper :list="list"></Swiper>
+    <!--<Swiper :list="list"></Swiper>-->
+    <view wx:if="{{list.url}}" @tap="goto({{list.url}})">
+      <image src="{{list.image}}" style="height: 260rpx;width: 100%;"  mode="widthFix"/>
+    </view>
     <view class="bc_conter">
       <view class="bc_title">
         <view class="bc_icon flo_l text-center" wx:for="{{iconList}}" wx:key="index" @tap="goto({{item.link}}, {{item.type}})">
@@ -25,7 +28,7 @@
         <view class="title font_32">
           推荐图书馆
           <span class="flo_r font_26" @tap="goto('/pages/borrow', 'tab')">
-            全部图书
+            全部图书馆
             <image src="../images/icon/more.png" mode="aspectFit" style="width: 22rpx;height: 22rpx;margin-left: -6rpx;"></image>
           </span>
         </view>
@@ -57,12 +60,10 @@
     }
     data = {
       libraries: [],
-      list: [
-        {
+      list: {
           image: 'http://images.ufutx.com/201810/07/8c26a2221bf712841b7f1d68bf0b2942.png',
           url: '/pages/library/create'
-        }
-      ],
+      },
       iconList: [
         {
           icon: 'http://images.ufutx.com/201810/07/ab62a07e7fd6c81e0b61231d988ea15e.png',
