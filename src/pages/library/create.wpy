@@ -7,7 +7,7 @@
       </view>
       <view class="flo_l hide_image" wx:else>
         <image src="../../images/icon/icon-upload.png" mode="aspectFit" @tap="chooseimage"/>
-        <text class="font_26 color-666 bold">上传logo</text>
+        <text class="font_26 color-666 bold" style="width: 100%">上传logo</text>
       </view>
       <view class="bc_creat color-666 font_32 flo_l">
         <view>
