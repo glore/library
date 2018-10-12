@@ -119,7 +119,7 @@
       console.log(top)
     }
     async onLoad(e) {
-      let _this = this
+//      let _this = this
 //      wx.getSystemInfo({success: function (rst) {
 //        _this.screenWidth = rst.screenWidth
 //      }})
@@ -133,7 +133,7 @@
     }
 
     onPullDownRefresh() {
-        this.initPageData()
+      this.initPageData()
     }
     onReachBottom() {
       setTimeout(() => {

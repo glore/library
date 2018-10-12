@@ -39,7 +39,7 @@
     data = {
       popUpModel: true, // 弹框
       money: 0.00, // 充值金额
-      balance: 0.00 //钱包余额
+      balance: 0.00 // 钱包余额
     }
 
     onShow() {
@@ -96,8 +96,8 @@
               that.$showToast('提现操作中...')
               that.$post({url: `${service.withdraw}`}, {
                 success: ({code, data}) => {
-                  let {trade_no} = data
-                  that.$post({url: `${service.transfer}/${trade_no}`}, {
+                  let {tradeNo} = data
+                  that.$post({url: `${service.transfer}/${tradeNo}`}, {
                     success: ({code, data}) => {
                       that.$Toast_success('提现成功！')
                       that.initPageData()

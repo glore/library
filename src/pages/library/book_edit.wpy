@@ -173,7 +173,7 @@
     }
 
     onLoad(options) {
-      if(options.user_id){
+      if (options.user_id) {
         this.user_id = options.user_id
       }
       if (options.id) {

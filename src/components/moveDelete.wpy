@@ -10,11 +10,11 @@
         </view>
         <view class='list_name font_28'>{{item.name}}
           <text class="list_news" wx:if="{{item.news_num}}" >
-            <text class="news_text" style="{{item.news_num < 9 ? 'margin-left: 20rpx' : ''}}">{{item.news_num}}</text>
+            <text class="news_text" style="{{item.news_num < 9 ? 'margin-left: 25rpx' : ''}}">{{item.news_num}}</text>
           </text>
         </view>
         <text class='list_title' wx:if="{{item.type == 'SHARE'}}">共享</text>
-        <text class='list_title' wx:else>个人</text>
+        <text class='list_title' wx:else>机构</text>
         <!-- 活动时间 -->
         <text class='list_datas'>加入时间:{{item.created_at}}</text>
         <image src="../images/tabbars/icon-authstr.png" style="width: 120rpx;height: 120rpx;margin-left: 60%;margin-top: -22rpx;" wx:if="{{item.status=='JOIN'}}"></image>
@@ -29,13 +29,13 @@
 <script>
   import wepy from 'wepy'
   import base from '../mixins/base.js'
-  import { service } from '../config.js'
+  import {service} from '../config.js'
   import http from '../mixins/http'
 
   var initdata = function (that) {
     var list = that.list
     for (var i = 0; i < list.length; i++) {
-      list[i].shows = ""
+      list[i].shows = ''
     }
   }
   export default class moveDelete extends wepy.component {
@@ -48,8 +48,8 @@
     }
 
     data = {
-      delBtnWidth: 185, //删除按钮宽度单位（rpx）     // 列表数据
-      list: [ ],
+      delBtnWidth: 185, // 删除按钮宽度单位（rpx）     // 列表数据
+      list: [],
       libraryName: '', // 删除赋值名字
       hiddenmodalput: true, // 删除弹框
       deleteId: 0, // 删除id
@@ -57,20 +57,20 @@
     }
 
     onLoad() {
-      var delBtnWidth = this.getEleWidth(this.delBtnWidth);
+      var delBtnWidth = this.getEleWidth(this.delBtnWidth)
       this.delBtnWidth = delBtnWidth
     }
 
-    getEleWidth (w) {
-      var real = 0;
+    getEleWidth(w) {
+      var real = 0
       try {
-        var res = wx.getSystemInfoSync().windowWidth;
-        var scale = (750 / 2) / (w / 2); //以宽度750px设计稿做宽度的自适应
+        var res = wx.getSystemInfoSync().windowWidth
+        var scale = (750 / 2) / (w / 2) // 以宽度750px设计稿做宽度的自适应
         // console.log(scale);
-        real = Math.floor(res / scale);
-        return real;
+        real = Math.floor(res / scale)
+        return real
       } catch (e) {
-        return false;
+        return false
         // Do something when catch error
       }
     }
@@ -79,7 +79,7 @@
       goto(url) {
         wx.navigateTo({url: url})
       },
-      cancel () {
+      cancel() {
         this.hiddenmodalput = true
         this.$apply()
       },
@@ -89,72 +89,74 @@
         }, {
           success: ({code, data}) => {
             this.hiddenmodalput = true
-            this.list.splice(this.index, 1);    // 重新渲染
+            this.list.splice(this.index, 1)    // 重新渲染
             wx.showToast({
               title: '删除成功！',
               duration: 1500
             })
           },
-          fail: ({code, data}) => {},
-          complete: () => {  }
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+          }
         })
       },
-    // 开始滑动事件
-      touchS (e) {
+      // 开始滑动事件
+      touchS(e) {
         if (e.touches.length == 1) {
           this.startX = e.touches[0].clientX
 //          this.$apply()
         }
       },
-      touchM (e) {
-        var that = this;
+      touchM(e) {
+        var that = this
         initdata(that)
-        if (e.touches.length == 1) {      //手指移动时水平方向位置
-          var moveX = e.touches[0].clientX;      //手指起始点位置与移动期间的差值
-          var disX = this.startX - moveX;
-          var delBtnWidth = this.delBtnWidth;      //
+        if (e.touches.length == 1) {      // 手指移动时水平方向位置
+          var moveX = e.touches[0].clientX      // 手指起始点位置与移动期间的差值
+          var disX = this.startX - moveX
+          var delBtnWidth = this.delBtnWidth
 //          var txtStyle = "";
-          if (disX == 0 || disX < 0) { //如果移动距离小于等于0，文本层位置不变
+          if (disX == 0 || disX < 0) { // 如果移动距离小于等于0，文本层位置不变
             // txtStyle = "left:0px";
-          } else if (disX > 0) { //移动距离大于0，文本层left值等于手指移动距离
+          } else if (disX > 0) { // 移动距离大于0，文本层left值等于手指移动距离
             // txtStyle = "left:-" + disX + "px";
-            if (disX >= delBtnWidth) {          //控制手指移动距离最大值为删除按钮的宽度
+            if (disX >= delBtnWidth) {          // 控制手指移动距离最大值为删除按钮的宽度
 //              txtStyle = "left:-" + delBtnWidth + "px";
             }
           }
         }
       },
-    // 滑动中事件
-      touchE (e) {
-        //创建动画
-        if (e.changedTouches.length == 1) {      //手指移动结束后水平位置
-          var endX = e.changedTouches[0].clientX;      //触摸开始与结束，手指移动的距离
-          var disX = this.startX - endX;
-          var delBtnWidth = 0;
-          //如果距离小于删除按钮的1/2，不显示删除按钮
-          if(disX > delBtnWidth / 2 ) {
-             delBtnWidth = this.delBtnWidth;
-          } else{
-             delBtnWidth = 0;
+      // 滑动中事件
+      touchE(e) {
+        // 创建动画
+        if (e.changedTouches.length == 1) {      // 手指移动结束后水平位置
+          var endX = e.changedTouches[0].clientX     // 触摸开始与结束，手指移动的距离
+          var disX = this.startX - endX
+          var delBtnWidth = 0
+          // 如果距离小于删除按钮的1/2，不显示删除按钮
+          if (disX > delBtnWidth / 2) {
+            delBtnWidth = this.delBtnWidth
+          } else {
+            delBtnWidth = 0
           }
-          var txtStyle = "";
+          var txtStyle = ''
 //          animation.left(-delBtnWidth).step();
-          txtStyle = "left:-" + delBtnWidth + "px"   //获取手指触摸的是哪一项
-//          txtStyle = animation.export()   //获取手指触摸的是哪一项
-          var index = e.target.dataset.index;
+          txtStyle = 'left:-' + delBtnWidth + 'px'   // 获取手指触摸的是哪一项
+//          txtStyle = animation.export()   // 获取手指触摸的是哪一项
+          var index = e.target.dataset.index
           console.log(typeof index)
           if (typeof index === 'undefined') {
             return
           }
-          var list = this.list;
-          list[index].shows = txtStyle;
-//          console.log("1", list[index].shows);      //更新列表的状态
-          this.list= list
+          var list = this.list
+          list[index].shows = txtStyle
+//          console.log("1", list[index].shows);      // 更新列表的状态
+          this.list = list
         } else {
-          console.log("2");
+          console.log('2')
         }
       },
-      //点击删除按钮事件
+      // 点击删除按钮事件
       delItem(e) {
         let that = this,
           {index} = e.currentTarget.dataset
@@ -239,7 +241,7 @@
     position: absolute;
     right: 155rpx;
     bottom: 86rpx;
-    line-height: 40rpx;
+    line-height: 37rpx;
     font-size: 13px;
     color: #818181;
     border: 1rpx solid #d3d3d3;

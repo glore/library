@@ -5,7 +5,7 @@
     <view class="flo_l" style="width: 80%">
       <view class="ellipsis_1 flo_l font_28 bold color-666" style="width: 80%">{{item.name}}</view>
       <view class="list_title" wx:if="{{item.type == 'SHARE'}}">共享</view>
-      <view class="list_title" wx:else>个人</view>
+      <view class="list_title" wx:else>机构</view>
       <view class="ellipsis_2 font_26 color-666" style="width: 100%">简介：{{item.intro}}</view>
     </view>
     <view class="clearfloat"></view>
@@ -61,8 +61,8 @@
     data = {
       libraries: [],
       list: {
-          image: 'http://images.ufutx.com/201810/07/8c26a2221bf712841b7f1d68bf0b2942.png',
-          url: '/pages/library/create'
+        image: 'http://images.ufutx.com/201810/07/8c26a2221bf712841b7f1d68bf0b2942.png',
+        url: '/pages/library/create'
       },
       iconList: [
         {
@@ -101,7 +101,7 @@
     getRecommendData() {
       this.$get({
         url: `${service.recommend}/libraries`
-      },{
+      }, {
         success: ({code, data}) => {
           console.log(code)
           this.recommendList = data
@@ -118,7 +118,7 @@
       formSubmit(e) {
         this.formId.push(e.detail.formId)
         console.log(this.formId)
-      },
+      }
     }
   }
 </script>
@@ -146,7 +146,7 @@
       font-size: 13px;
       color: #818181;
       border: 1rpx solid #d3d3d3;
-      height: 36rpx;
+      height: 40rpx;
       padding: 0rpx 4rpx;
       border-radius: 6rpx;
       margin-bottom: -12rpx;

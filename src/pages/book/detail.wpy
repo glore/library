@@ -164,7 +164,7 @@
 
     onLoad(query) {
       this.book.id = query.id
-      if(query.user_id) {
+      if (query.user_id) {
         this.bookUserID = query.user_id
       }
       if (query && query.library_id) {
@@ -332,7 +332,10 @@
                   let data = {
                     book_user_id: that.bookUserID
                   }
-                  that.$post({url: service.libraries + '/' + item.library_id + '/books/' + book.book_id + '/reserve',data}, {
+                  that.$post({
+                    url: service.libraries + '/' + item.library_id + '/books/' + book.book_id + '/reserve',
+                    data
+                  }, {
                     success: ({code, data}) => {
 //                    wx.showModal({
 //                      title: '预约借书成功',

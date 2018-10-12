@@ -79,7 +79,7 @@
     config = {
       navigationBarTitleText: '我的',
       enablePullDownRefresh: true,
-    navigationBarBackgroundColor: '#005b9e'
+      navigationBarBackgroundColor: '#005b9e'
     }
     data = {
       libraries: {},

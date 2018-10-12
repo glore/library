@@ -5,11 +5,12 @@
       <!--为方便彼此识别及联系，请完善如下基本信息：-->
       <!--</view>-->
       <view style="height: 120rpx;"></view>
-      <view class="weui-cells weui-cells_after-title main-address">
-        <!--<view class="weui-cell reset-cell-block" style=" width: 100%; position: absolute;left: 25rpx;top: -100rpx;">-->
+      <view class="weui-cells weui-cells_after-title main-address" style="padding-top: 36rpx">
+        <view class="weui-cell reset-cell-block" style=" width: 100%; position: absolute;left: 25rpx;top: -100rpx;">
+          <open-data type="userAvatarUrl" class="party_image flo_l" style="width: 120rpx;height: 120rpx;box-shadow: 1rpx 1rpx 12rpx #dedede"></open-data>
           <!--<image src="{{avatarUrl}}" mode="aspectFit" class="party_image flo_l" style="width: 120rpx;height: 120rpx;box-shadow: 1rpx 1rpx 12rpx #dedede"></image>-->
-          <!--<view class="clearfloat"></view>-->
-        <!--</view>-->
+          <view class="clearfloat"></view>
+        </view>
         <view class="weui-cell reset-cell-block">
           <view class="weui-media-box__title h3 color-666">姓名：</view>
         </view>
@@ -29,7 +30,7 @@
           </view>
           <view class="weui-cell__hd">
             <view class="weui-label">
-              <button class="font_26 btn-blue_l flo_r" type="primary"  open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">从微信获取</button>
+              <button class="font_26 btn-blue_l flo_r" type="primary"  open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" style="margin-bottom: 12rpx">从微信获取</button>
             </view>
           </view>
         </view>
@@ -135,7 +136,7 @@
           })
         }
       },
-      do_login() {
+      do_login(res) {
         // 防抖
         if (this.loading) return
         if (!this.isPhone(this.mobile)) {
@@ -146,53 +147,47 @@
         }
         wepy.login({
           success: (resV2) => {
-            wx.getUserInfo({
-              success: (res) => {
-                // 缓存用户信息
-                wx.setStorageSync('user', res.userInfo)
-                const data = {
-                  mobile: this.getString(this.mobile),
-                  name: this.getString(this.name),
-                  code: resV2.code,
-                  wechat_code: this.getString(this.$getCode()),
-                  info: res.userInfo,
-                  encryptedData: res.encryptedData,
-                  iv: res.iv
-              }
-                // 绑定手机号
-                this.loading = true
-                this.$post({url: service.register, data}, {
-                  success: ({code, data}) => {
-                    wx.setStorageSync('token', data.token)
-                    wx.showModal({
-                      title: '注册成功',
-                      content: '返回之前页面！',
-                      showCancel: false,
-                      success: (res) => {
-                        var jump = wx.getStorageSync('jump')
-                        if (jump) {
-                          let i = 0
-                          jump.split('').forEach((item) => {
-                            if (item == '/') {
-                              i++
-                            }
-                          })
-                          if (i == 2) {
-                            wx.switchTab({url: jump})
-                          } else {
-                            wx.redirectTo({url: jump})
-                          }
-                        } else {
-                          wx.switchTab({url: '/pages/user'})
+            wx.setStorageSync('user', res.userInfo)
+            const data = {
+              mobile: this.getString(this.mobile),
+              name: this.getString(this.name),
+              code: resV2.code,
+              wechat_code: this.getString(this.$getCode()),
+              info: res.detail.userInfo,
+              encryptedData: res.detail.encryptedData,
+              iv: res.detail.iv
+            }
+            // 绑定手机号
+            this.loading = true
+            this.$post({url: service.register, data}, {
+              success: ({code, data}) => {
+                wx.setStorageSync('token', data.token)
+                wx.showModal({
+                  title: '注册成功',
+                  content: '返回之前页面！',
+                  showCancel: false,
+                  success: (res) => {
+                    var jump = wx.getStorageSync('jump')
+                    if (jump) {
+                      let i = 0
+                      jump.split('').forEach((item) => {
+                        if (item == '/') {
+                          i++
                         }
+                      })
+                      if (i == 2) {
+                        wx.switchTab({url: jump})
+                      } else {
+                        wx.redirectTo({url: jump})
                       }
-                    })
-                  },
-                  fail: ({code, data}) => {},
-                  complete: () => { this.loading = false }
+                    } else {
+                      wx.switchTab({url: '/pages/user'})
+                    }
+                  }
                 })
               },
-              fail: (res) => { }
+              fail: ({code, data}) => {},
+              complete: () => { this.loading = false }
             })
           }
         })

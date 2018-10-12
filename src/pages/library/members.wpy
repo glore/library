@@ -130,7 +130,7 @@
       } else if (Index == 2) {
         statusIndex = 'ADMIN'
         url = service.libraries + '/' + this.libraryId + '/members'
-      }  else if (Index == 3) {
+      } else if (Index == 3) {
         statusIndex = ''
         url = service.libraries + '/' + this.libraryId + '/members'
       }

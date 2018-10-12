@@ -139,7 +139,7 @@
       files: [],
       cash_pledge: 0,
       text: '创建',
-      items:[
+      items: [
         {name: '1', value: '需要', color: '#13a664', checked: 'true'},
         {name: '0', value: '不需要', color: '#e54c3f'}
       ]
@@ -226,7 +226,7 @@
 //          } else {
 //            that.uploadFiles(filePaths, successUp, failUp, i, length)
 //          }
-          wx.hideToast();
+          wx.hideToast()
         }
       })
     }

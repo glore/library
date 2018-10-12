@@ -170,7 +170,7 @@
       this.loading = true
       // 推荐列表
       let url = `${service.libraries}/${this.libraryId}/books/v2?library_id=${this.libraryId}&keyword=${this.keyword}&is_recommend=${this.is_recommend}`
-      if(this.libraryId == 0){
+      if (this.libraryId == 0) {
         url = `${service.books}/v2?keyword=${this.keyword}`
       }
       this.$get({
@@ -227,14 +227,14 @@
           image: book.image ? book.image : 'http://images.ufutx.com/201709/27/97bae3e1de000df7b4b6b28a3195a4de.png',
           tags: [book.author ? book.author : '无'],
           publisher: book.publisher,
-          switchActive: book.is_recommend == '1' ? true : false,
+          switchActive: book.is_recommend == '1' ? 'true' : 'false',
           name: book.name,
           // 暂时开发所有人都能修改，后续需要判断是否为书籍拥有人
           isOwner: '1',
           book_id: book.id,
           user_id: book.user_id,
           library_id: book.library_id ? book.library_id : 0,
-          type: book.type,
+          type: book.type
         }
       })
     }

@@ -110,8 +110,8 @@
         let fn = () => {
           this.$post({url: service.refund}, {
             success: ({code, data}) => {
-              let trade_no = data.refund_trade_no
-              this.$get({url: `${service.refundMark}/${trade_no}`}, {
+              let tradeNo = data.refund_trade_no
+              this.$get({url: `${service.refundMark}/${tradeNo}`}, {
                 success: ({code, data}) => {
                   this.initPageData()
                   wx.showModal({
@@ -235,10 +235,10 @@
             that.trade_no = data.trade_no
             that.$apply()
             let wxconfig = data.wx_pay.config,
-              {payment_debug} = wxconfig
-            if(payment_debug){
+              {paymentDebug} = wxconfig
+            if (paymentDebug) {
               mark()
-            }else {
+            } else {
               wxPay(wxconfig)
             }
           },

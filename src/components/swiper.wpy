@@ -40,7 +40,7 @@
     data = {
       autoplay: true,
       indicatorColor: 'rgba(255, 255, 255, 0.6)',
-      indicatorActiveColor: 'rgba(255, 255, 255, 1)',
+      indicatorActiveColor: 'rgba(255, 255, 255, 1)'
     }
 
     computed = {
@@ -57,7 +57,7 @@
       changeIndex(e) {
         console.log(e)
         console.log(e.detail.current)
-        if(e.detail.current == 0){
+        if (e.detail.current == 0) {
           wx.setNavigationBarColor({
             frontColor: '#ffffff',
             backgroundColor: '#FCEBD1',
@@ -66,7 +66,7 @@
               timingFunc: 'easeIn'
             }
           })
-        }else{
+        } else {
           wx.setNavigationBarColor({
             frontColor: '#ffffff',
             backgroundColor: '#DCE0E7',

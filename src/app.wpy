@@ -17,7 +17,7 @@
         'pages/collect',
         'pages/qr',
         'pages/borrow',
-        'pages/user',
+        'pages/user'
       ],
       'subPackages': [
         {
@@ -26,7 +26,7 @@
             // 首页
             'search',
             'list',
-            'detail',
+            'detail'
           ]
         },
         {
@@ -38,7 +38,7 @@
             'list',
             'listV2',
             'detail',
-            'unpage',
+            'unpage'
           ]
         },
         {
@@ -58,14 +58,14 @@
             'sorts',
             'sorts_list',
             'sort',
-            'create',
+            'create'
           ]
         },
         {
           'root': 'pages/borrow',
           'pages': [
             'subscribe',
-            'result',
+            'result'
           ]
         },
         {

@@ -31,7 +31,7 @@
       noMoreList: false,
       loading: false,
       list: [],
-      page: 1,
+      page: 1
     }
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.config.navigationBarTitleText)
@@ -96,7 +96,7 @@
       this.loading = true
       // 推荐列表
       this.$get({
-        url: `${service.withdraw}/histories?page=${this.page}`,
+        url: `${service.withdraw}/histories?page=${this.page}`
       }, {
         success: ({code, data}) => {
           this.noMoreList = false

@@ -5,7 +5,7 @@
       <view class="flo_l" style="width: 80%">
         <view class="ellipsis_1 flo_l font_28 bold color-666" style="width: 80%">{{item.name}}</view>
         <view class="list_title" wx:if="{{item.type == 'SHARE'}}">共享</view>
-        <view class="list_title" wx:else>个人</view>
+        <view class="list_title" wx:else>机构</view>
         <view class="ellipsis_2 font_26 color-666" style="width: 100%">简介：{{item.intro}}</view>
       </view>
       <view class="clearfloat"></view>
@@ -350,7 +350,7 @@
           duration: 400
         })
       },
-      showModel(name,_id) {
+      showModel(name, _id) {
         this.libraryName = name
         this.deleteId = _id
         this.hiddenmodalput = false
@@ -371,8 +371,10 @@
               duration: 1500
             })
           },
-          fail: ({code, data}) => {},
-          complete: () => {  }
+          fail: ({code, data}) => {
+          },
+          complete: () => {
+          }
         })
       },
       showInput () {
@@ -571,7 +573,7 @@ page{
   font-size: 13px;
   color: #818181;
   border: 1rpx solid #d3d3d3;
-  height: 36rpx;
+  height: 40rpx;
   padding: 0rpx 4rpx;
   border-radius: 6rpx;
   margin-bottom: -12rpx;
