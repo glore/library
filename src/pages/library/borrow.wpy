@@ -109,6 +109,7 @@
       pay_url: '',
       trade_no: '',
       user_id: '',
+      book_user_id: '',
       borrows: []
     }
 
@@ -144,7 +145,7 @@
         this.library_id = query && +query.library_id
       }
       if (query.user_id) {
-        this.user_id = query.user_id
+        this.book_user_id = query.user_id
       }
       qrcode = new QRCode('canvas', {
         text: 'code=0000000000000',
@@ -174,7 +175,7 @@
     // 获取图书信息
     getDetail() {
       let url = service.libraries + '/' + this.library_id,
-        data = {book_user_id: this.user_id}
+        data = {book_user_id: this.book_user_id}
       if (this.isbn) {
         url = url + '/borrow/isbn/' + this.isbn
       } else {
