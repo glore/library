@@ -3,8 +3,8 @@
 ======================================================== */
 // 域名
 // var host = _NODE_ ? 'https://library.ufutx.com/api': 'http://library.hankin.ufutx.cn/api'
-var host = 'https://library.ufutx.com/api'
-// var host = 'http://library.hankin.com/api'
+// var host = 'https://library.ufutx.com/api'
+var host = 'http://library.hankin.ufutx.cn/api'
 // var host = 'http://library.hankin.ufutx.cn/api'
 
 export const service = {
