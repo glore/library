@@ -7,18 +7,18 @@
         <!--</button>-->
       <!--</button>-->
     <!--</form>-->
-    <form bindsubmit="formSubmit" report-submit>
-      <button formType="submit" class="btn" data-type="click">
-        <button  size="mini"  @tap="gotoTab('/pages/home')" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 140rpx;top: -42rpx;background: -webkit-gradient(linear, 20% 20%, 20% 100%,from(#005b9e), to(#6bb2e6))">
-          <image  class="imgicon" mode="aspectFit" src="../images/tabbars/home.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
-        </button>
-      </button>
-    </form>
-    <view class="smile" style="position: fixed;z-index: 1000;right: 24.5vw; top: -25rpx;"></view>
+<!--    <form bindsubmit="formSubmit" report-submit>-->
+<!--      <button formType="submit" class="btn" data-type="click">-->
+<!--        <button  size="mini"  @tap="gotoTab('/pages/home')" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 140rpx;top: -42rpx;background: -webkit-gradient(linear, 20% 20%, 20% 100%,from(#005b9e), to(#6bb2e6))">-->
+<!--          <image  class="imgicon" mode="aspectFit" src="../images/tabbars/home.png" style="width: 60rpx;height: 60rpx;float: left;"></image>-->
+<!--        </button>-->
+<!--      </button>-->
+<!--    </form>-->
+<!--    <view class="smile" style="position: fixed;z-index: 1000;right: 24.5vw; top: -25rpx;"></view>-->
     <form bindsubmit="formSubmit" report-submit>
       <button formType="submit" class="btn" data-type="click">
         <button  size="mini"  @tap="share" class="btn" style="padding:48rpx 22rpx 10rpx 22rpx;line-height: 42rpx;border-radius: 50%;position: fixed;right: 12rpx;top: -42rpx;background: -webkit-gradient(linear, 20% 20%, 20% 100%,from(#005b9e), to(#6bb2e6))">
-          <image  class="imgicon" mode="aspectFit" src="../images/icon/share_red.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
+          <image  class="imgicon" mode="aspectFit" src="https://images.ufutx.com/202002/17/bd5901f59fad2756e4a270c412b61fbc.png" style="width: 60rpx;height: 60rpx;float: left;"></image>
         </button>
       </button>
     </form>

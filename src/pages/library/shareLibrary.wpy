@@ -15,7 +15,7 @@
       <view class="library-title ellipsis_1 flo_l font_26" style="margin-top: -1rpx !important; font-weight: 100 !important;height: 36rpx">
         馆长：{{mylib.link_name}}
       </view>
-      <shareComponent  :shareImage.sync="shareImage" :library_id.sync="library_id"></shareComponent>
+<!--      <shareComponent  :shareImage.sync="shareImage" :library_id.sync="library_id"></shareComponent>-->
       <view class="clearfloat"></view>
       <view class="library-title flo_l " wx:if="{{mylib.intro !== null}}" style="margin-top: 20rpx;font-weight: inherit;font-size: 26rpx;width: 63%;height:inherit;min-height: 42rpx;">
         <view class="flo_l font_26" style="width: 86%">
@@ -37,7 +37,6 @@
           <!--</view>-->
         <!--</block>-->
       </view>
-
       <view class="flo_r" style="margin-right:26rpx;">
         <form bindsubmit="formSubmit" report-submit>
           <button formType="submit" class="btn" data-type="click">
@@ -57,11 +56,11 @@
       <view class="clearfloat"></view>
       <view class="weui-flex library-wrapper">
         <view @tap="goto('/pages/library/sorts?library_id={{mylib.id}}')" wx:if="{{member_type == 'ADMIN'}}" class="weui-flex__item list-item">
-          <view class="color-666 item-title"><span class="num">{{mylib.library_books_count}}</span>册</view>
+          <view class="color-666 item-title"><span class="num">{{mylib.library_books_count}}</span><span class="font_26"> 册</span></view>
           <view class="color-bbb h5">馆藏册数</view>
         </view>
         <view @tap="goto('/pages/library/sorts_list?library_id={{mylib.id}}')" wx:else class="weui-flex__item list-item">
-          <view class="color-666 item-title"><span class="num">{{mylib.library_books_count}}</span>册</view>
+          <view class="color-666 item-title"><span class="num">{{mylib.library_books_count}}</span><span class="font_26"> 册</span></view>
           <view class="color-bbb h5">馆藏册数</view>
         </view>
         <view  class="weui-flex__item list-item">
@@ -69,12 +68,12 @@
           <view class="color-bbb h5">人气</view>
         </view>
         <view @tap="goto('/pages/library/members?library_id={{mylib.id}}')" class="weui-flex__item list-item" style="position: relative">
-          <view class="color-666 item-title"><span class="num">{{mylib.members_count}}</span>位</view>
+          <view class="color-666 item-title"><span class="num">{{mylib.members_count}}</span><span class="font_26"> 位</span></view>
           <view class="color-bbb h5">会员数量</view>
           <view class="lead" wx:if="{{mylib.join_member_num > 0 && mylib.is_admin == 1}}">{{mylib.join_member_num}}</view>
         </view>
         <view @tap="goto('/pages/library/borrows?library_id={{mylib.id}}')" class="weui-flex__item list-item" style="position: relative">
-          <view class="color-666 item-title" ><span class="num">{{mylib.borrows_count}}</span>册</view>
+          <view class="color-666 item-title" ><span class="num">{{mylib.borrows_count}}</span><span class="font_26"> 册</span></view>
           <view class="color-bbb h5">借阅册数</view>
           <block wx:if="{{mylib.type == 'SHARE'}}">
             <view class="lead" wx:if="{{mylib.reserve_book_num > 0 && mylib.is_member == 1}}"> {{mylib.reserve_book_num}}</view>
@@ -174,6 +173,7 @@
     <!--</view>-->
   </block>
 
+
   <block wx:else>
     <view class="scrollBox text-center" wx:if="{{showBackTopBtn}}"  catchtap="BackTop">
       <image src='../../images/Stick.png'  mode="aspectFit"  style="width: 40rpx;height: 40rpx;margin-top: 8rpx;"></image>
@@ -243,8 +243,27 @@
       </form>
     </view>
   </view>
-
-
+  <view class="main-sign" wx:if="{{showSign}}">
+    <view class="main-signModel" @tap="hideDate"></view>
+    <view class="main-date">
+      <Calendar
+        :startDate.sync="startDate"
+        :endDate.sync="endDate"
+        :hasIconList.sync="hasIconList"
+        :moduleId.sync="'step1Calendar'"
+      ></Calendar>
+      <view class="{{isSign?'signBtnA':'signBtn'}} bold" hover-class="btn_active"  @tap="setSignFn">{{isSign?'签到':'今日已签到'}}</view>
+      <view class="clearfloat"></view>
+      <view class="text-center" @tap="hideDate">
+        <image src="https://images.ufutx.com/202002/17/aadd831f77acaa831e54f80c043bc2eb.png" mode="aspectFill" style="width: 68rpx;height: 68rpx;"></image>
+      </view>
+    </view>
+  </view>
+  <view @tap="showDate" class="signBox text-center" wx:if="{{mylib.id == '1444'}}">
+<!--    <image src="https://images.ufutx.com/202002/17/b774a1fbc15a64a508e14833f926488b.jpeg" mode="aspectFill"></image>-->
+    <image src="https://images.ufutx.com/202002/17/7eb98cfbbd9e717cbfd5b2511e345175.jpeg" mode="aspectFill"></image>
+    <view class="text">签到</view>
+  </view>
   <modal hidden="{{hiddenmodalput}}" title="联系管理员取书" confirm-text="拨打电话" cancel-text="取消" bindcancel="cancel" bindconfirm="confirm({{mylib.link_mobile}})">
     <input type='text' placeholder="请输入内容" value="管理员：{{mylib.link_name}}"/>
     <input type='text' placeholder="请输入内容" value="电话号码：{{mylib.link_mobile}}"/>
@@ -263,6 +282,7 @@
   import ClassifyListV2 from '../../components/classifyListV2'
   import rollComponent from '../../components/rollComponent'
   import shareComponent from '../../components/shareComponent'
+  import Calendar from '../../components/Calendar'
 
   export default class shareLibrary extends wepy.page {
     mixins = [base, http, user, ShareMessage]
@@ -276,7 +296,8 @@
       ClassifyListV2: ClassifyListV2,
       Loading: Loading,
       rollComponent: rollComponent,
-      shareComponent: shareComponent
+      shareComponent: shareComponent,
+      Calendar,
     }
 
     data = {
@@ -285,17 +306,25 @@
       mylib: {},
       name: '友福图书馆',
       libraries: [],
+      selectedDates: ['2020-02-14', '2020-02-10', '2020-02-1'],
+      currentDate: "2020-08-09",
+      startDate: '2020-01-01',
+      endDate: '2020-02-01',
+      hasIconList: [],
 //      动画
       Show: false,
+      isSign: true,
       rotate: false,
       changerotate: false,
       shrink: false,
       CollectAnimation: false,
       showanimation: true,
       EditAnimation: false,
+      showSign:false,
       sortslist: [],
       sorts_id: 0,
       sortsindex: 0,
+      dateText: '今日签到',
 //      BookId: [],
       EditImage: '',
       EditTitle: '',
@@ -331,14 +360,15 @@
         show = top > 380 ? true : false
       this.showBackTopBtn = show
       this.$apply()
-      console.log(top)
+      // console.log(top)
     }
     onShareAppMessage(res) {
       return this.$parent.onShareAppMessage(this.mylib.name)
     }
     onLoad(query) {
       this.mylib.id = query && +query.id
-      console.log(this.mylib.id)
+      this.getSignDate()
+      // console.log(this.mylib.id)
     }
     onShow() {
       this.getshareImage()
@@ -413,6 +443,39 @@
           this.init = true
           this.loadingV2 = false
         }
+      })
+    }
+    getSignDate(){
+      let date = new Date();
+      let year = date.getFullYear()
+      let month = date.getMonth() + 1
+      let day = date.getDate()
+      if (month < 10) {
+        month = `0${month}`
+      }
+      if (day < 10) {
+        day = `0${day}`
+      }
+      let dateList = [],
+        nowDate = `${year}-${month}-${day}`
+      this.$get({url: `${service.libraries}/${this.mylib.id}/user/sign/in/state`}, {
+        success: ({code, data}) => {
+          let {sign_in_histories} = data
+          for (let item of sign_in_histories) {
+            console.log(item.sign_in_time.split(' ')[0])
+            dateList.push(item.sign_in_time.split(' ')[0])
+            console.log(item.sign_in_time.split(' ')[0],nowDate)
+            if (item.sign_in_time.split(' ')[0] == nowDate){
+              this.isSign = false
+              this.$apply()
+            }
+          }
+          this.hasIconList = dateList
+          this.$apply()
+          console.log(this.hasIconList)
+        },
+        fail: ({code, data}) => {},
+        complete: () => { }
       })
     }
     uploadFiles(filePaths, successUp, failUp, i, length) {
@@ -492,6 +555,16 @@
       formSubmit(e) {
         this.formId.push(e.detail.formId)
         console.log(this.formId)
+      },
+      showDate() {
+        // this.$invoke('modalUp', 'showModal')
+        this.showSign = true
+        this.$apply()
+        this.$broadcast("startRenderCalendar");//通知日历组件可以开始渲染
+      },
+      hideDate() {
+        this.showSign = false
+        this.$apply()
       },
       goto(url) {
         wx.navigateTo({url: url})
@@ -825,6 +898,38 @@
       textareaChange(e) {
         this.EditSummary = e.detail.value
       },
+      setSignFn() {  // 签到
+        let vm = this
+        if (!vm.isSign) {
+          wx.showToast({
+            title: '今天已经签到过了！',
+            icon: 'none',
+            duration: 1200
+          })
+          return
+        }
+        wx.showLoading({
+          title: '签到中...',
+          mask: true
+        })
+        this.$post({
+          url: `${service.libraries}/${vm.mylib.id}/user/sign/in`
+        }, {
+          success: ({code, data}) => {
+            wx.hideLoading()
+            wx.showToast({
+              title: '签到成功',
+              duration: 1000,
+            })
+            vm.showSign = false
+            vm.isSign = false
+            vm.$apply()
+            vm.getSignDate()
+          },
+          fail: ({code, data}) => {},
+          complete: () => { vm.loaded = false }
+        })
+      },
       scanBorrow(libraryId) {
         wx.scanCode({
           success: (res) => {
@@ -849,6 +954,30 @@
         })
       }
     }
+    events = {
+      calendarAfterTapDay(date, e) {
+        // 点击某一天后的回调
+        console.log(date)
+      },
+      calChangeCurrentMonth (date,moduleId,e) {
+        //日历当前月份改变回调
+        //单个用例只需用到date
+        //多个用例是通过传回来的moduleId去判断是那个用例，从而操作不懂逻辑：
+        //if(moduleId=='xxxx'){
+        //
+        // }else{
+        // }
+      },
+      calChangeSelectedDay (date,moduleId,e) {
+        //日历当前月份改变回调
+        //单个用例只需用到date
+        //多个用例是通过传回来的moduleId去判断是那个用例，从而操作不懂逻辑：
+        //if(moduleId=='xxxx'){
+        //
+        // }else{
+        // }
+      }
+    }
   }
 </script>
 
@@ -856,6 +985,7 @@
 <style lang="less" scoped>
   @import "../../styles/weui/base/fn.wxss";
   @import "../../styles/custom/fn.less";
+  @import "../../styles/custom/reset.less";
   /*@import "../../styles/custom/animation.less";*/
   @import "../../styles/custom/library.less";
   page{
@@ -883,5 +1013,68 @@
     border-radius: 6rpx;
     height: 42rpx;
     width: 300rpx;
+  }
+  .main-sign{
+    .main-signModel{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,.6);
+      z-index: 99999;
+    }
+    .main-date{
+      background: #fff;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      background: white;
+      z-index: 999999;
+    }
+    .signBtn{  // 已签到
+      padding: 6rpx 32rpx;
+      /*border: 1rpx solid #d0d0d0;*/
+      border-radius: 32rpx;
+      float: right;
+      margin-right: 80rpx;
+      margin-bottom: 12rpx;
+      /*box-shadow: 1rpx 1rpx 12rpx #d6d6d6;*/
+      background: #f0f0f0;
+      color: #888888;
+      margin-top: 36rpx;
+    }
+    .signBtnA{ // 未签到
+      padding: 6rpx 50rpx;
+      /*border: 1rpx solid #d0d0d0;*/
+      border-radius: 32rpx;
+      float: right;
+      margin-right: 80rpx;
+      margin-bottom: 12rpx;
+      color: #666666;
+      box-shadow: 1rpx 1rpx 12rpx #d6d6d6;
+      margin-top: 36rpx;
+    }
+  }
+  .signBox{
+    position: fixed;
+    right: 10vw;
+    top: 0vw;
+    border-radius: 6%;
+    width: 90rpx;
+    height: 90rpx;
+    box-shadow: 1rpx 1rpx 12rpx #d6d6d6;
+    border-bottom-left-radius: 14rpx;
+    border-bottom-right-radius: 14rpx;
+    image{
+      width: 72rpx;
+      height: 72rpx;
+      margin-top: -12rpx;
+    }
+    .text{
+      font-size: 22rpx;
+      margin-top: -26rpx;
+    }
   }
 </style>
