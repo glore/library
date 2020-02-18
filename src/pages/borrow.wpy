@@ -201,14 +201,15 @@
       this.sliderWidth = _this.screenWidth / this.tabs.length
       this.sliderLeft = 0
       this.sliderOffset = _this.screenWidth / this.tabs.length * this.activeIndex
-//      this.getMessage()
-    }
-    onShow() {
       if (this.activeIndex == '1') {
         this.getLibraries()
       } else {
         this.initPageData()
       }
+//      this.getMessage()
+    }
+    onShow() {
+
       // this.getLibraries()
       // google tracker
       this.$parent.getTracker(this.$root.$name, this.config.navigationBarTitleText)

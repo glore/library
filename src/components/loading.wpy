@@ -49,7 +49,7 @@
   }
   .loading-wrap {
     height: 100vh;
-    z-index: 99999;
+    z-index: 99999999;
   }
   .text, view {
     font-size:28rpx;

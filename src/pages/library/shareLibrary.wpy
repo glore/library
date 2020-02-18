@@ -246,12 +246,14 @@
   <view class="main-sign" wx:if="{{showSign}}">
     <view class="main-signModel" @tap="hideDate"></view>
     <view class="main-date">
-      <Calendar
-        :startDate.sync="startDate"
-        :endDate.sync="endDate"
-        :hasIconList.sync="hasIconList"
-        :moduleId.sync="'step1Calendar'"
-      ></Calendar>
+<!--      <Calendar-->
+<!--        :currentDate.sync="currentDate"-->
+<!--        :startDate.sync="startDate"-->
+<!--        :endDate.sync="endDate"-->
+<!--        :hasIconList.sync="hasIconList"-->
+<!--        :moduleId.sync="'step1Calendar'"-->
+<!--      ></Calendar>-->
+      <Calendar :checks.sync="hasIconList"  theme="blue"   icon="https://images.ufutx.com/202002/18/ab7bc4f29d713de995dfa208c40aa514.png" />
       <view class="{{isSign?'signBtnA':'signBtn'}} bold" hover-class="btn_active"  @tap="setSignFn">{{isSign?'签到':'今日已签到'}}</view>
       <view class="clearfloat"></view>
       <view class="text-center" @tap="hideDate">
@@ -282,8 +284,8 @@
   import ClassifyListV2 from '../../components/classifyListV2'
   import rollComponent from '../../components/rollComponent'
   import shareComponent from '../../components/shareComponent'
-  import Calendar from '../../components/Calendar'
-
+  import Calendar from 'wepy-com-calendar'
+  let newDate = new Date()
   export default class shareLibrary extends wepy.page {
     mixins = [base, http, user, ShareMessage]
     config = {
@@ -306,8 +308,8 @@
       mylib: {},
       name: '友福图书馆',
       libraries: [],
+      currentDate: newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate(),
       selectedDates: ['2020-02-14', '2020-02-10', '2020-02-1'],
-      currentDate: "2020-08-09",
       startDate: '2020-01-01',
       endDate: '2020-02-01',
       hasIconList: [],
@@ -369,6 +371,7 @@
       this.mylib.id = query && +query.id
       this.getSignDate()
       // console.log(this.mylib.id)
+      // this.$broadcast('startRenderCalendar')//通知日历组件可以开始渲染
     }
     onShow() {
       this.getshareImage()
@@ -381,9 +384,10 @@
       this.initPageData()
     }
     onReachBottom() {
+      let vm = this
       setTimeout(() => {
-        this.initPageData()
-        this.$apply()
+        vm.initPageData()
+        vm.$apply()
       }, 200)
     }
     // 初始化页面数据
@@ -560,7 +564,10 @@
         // this.$invoke('modalUp', 'showModal')
         this.showSign = true
         this.$apply()
-        this.$broadcast("startRenderCalendar");//通知日历组件可以开始渲染
+        let vm = this
+        // setTimeout(() => {
+        //   vm.$broadcast('startRenderCalendar') // 通知日历组件可以开始渲染
+        // })
       },
       hideDate() {
         this.showSign = false
@@ -629,15 +636,15 @@
       rotate() {
         if (this.showanimation) {
           this.changerotate = true
-          setTimeout(() => {
-            this.$apply()
-          }, 500)
+          // setTimeout(() => {
+          //   this.$apply()
+          // }, 500)
           this.shrink = false
           this.showanimation = false
         } else {
-          setTimeout(() => {
-            this.$apply()
-          }, 500)
+          // setTimeout(() => {
+          //   this.$apply()
+          // }, 500)
           this.shrink = true
           this.showanimation = true
         }
@@ -1032,6 +1039,7 @@
       width: 100vw;
       background: white;
       z-index: 999999;
+      padding-top: 32rpx;
     }
     .signBtn{  // 已签到
       padding: 6rpx 32rpx;
@@ -1067,6 +1075,7 @@
     box-shadow: 1rpx 1rpx 12rpx #d6d6d6;
     border-bottom-left-radius: 14rpx;
     border-bottom-right-radius: 14rpx;
+    background: #FFFFFF;
     image{
       width: 72rpx;
       height: 72rpx;

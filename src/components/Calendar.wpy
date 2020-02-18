@@ -8,6 +8,7 @@
               end="{{endDate}}" @change="bindDateChange">
         <view class="picker">
           {{current.year || "--"}} 年 {{current.month || "--"}} 月
+<!--          {{startDate}}-->
         </view>
       </picker>
       <view class="wepy-calendar-next" @tap.stop="handleCalendar('next')">
@@ -71,6 +72,7 @@
       this.now.year = newDate.getFullYear()
       this.now.month = newDate.getMonth() + 1
       this.now.day = newDate.getDate()
+      this.$apply()
     }
 
     data = {
@@ -142,10 +144,11 @@
         this.current.month = newMonth
         this.calculateEmptyGrids(newYear, newMonth)
         this.$emit('calChangeCurrentMonth', this.current.year + '-' + this.setDouble(this.current.month), this.moduleId, e)
+        this.$apply()
       },
       // 点击年月调用picker选择器
       bindDateChange(e) {
-        // console.log('datechange:', e)
+        console.log('datechange:', e)
         let value = e.detail.value.split('-')
         let year = parseInt(value[0])
         let month = parseInt(value[1])
@@ -155,6 +158,7 @@
           this.current.year = year
           this.current.month = month
           this.$emit('calChangeCurrentMonth', this.current.year + '-' + this.setDouble(this.current.month), this.moduleId, e)
+          this.$apply()
         }
       }
     }
@@ -176,14 +180,17 @@
 
     calculateEmptyGrids(year, month) {
       const firstDayOfWeek = this.getFirstDayOfWeek(year, month)
-      let empytGrids = []
+      let empytGrids = [],
+        vm = this
       if (firstDayOfWeek > 0) {
         for (let i = 0; i < firstDayOfWeek; i++) {
           empytGrids.push(i)
         }
-        this.hasEmptyGrid = true
+        vm.hasEmptyGrid = true
+        vm.$apply()
       }
-      this.empytGrids = empytGrids
+      vm.empytGrids = empytGrids
+      vm.$apply()
     }
 
     // 渲染日历格子
@@ -196,7 +203,7 @@
         let checkDay = year + '-' + month + '-' + this.setDouble(i)
         if (this.hasIconList && this.hasIconList.length > 0) {
           this.hasIconList.map((item) => {
-            // console.log(i,item)
+            console.log(i,item)
             if (checkDay === item) {
               day.hasIcon = true
             }
@@ -221,18 +228,25 @@
     }
 
     drawCalendar() {
-      this.calculateEmptyGrids(this.current.year, this.current.month)
-      this.calculateDays(this.current.year, this.current.month)
+      let vm = this
+      vm.calculateEmptyGrids(vm.current.year, vm.current.month)
+      vm.calculateDays(vm.current.year, vm.current.month)
 
-      let getDayWidth = new Promise((resolve, reject) => {
-        wx.createSelectorQuery().select('.wepy-calendar-weeks').boundingClientRect(function (rect) {
-          resolve(parseInt(rect.width / 7))
-        }).exec()
-      })
-      getDayWidth.then((width) => {
-        this.dayWidth = width
-        this.$apply()
-      })
+      // let getDayWidth = new Promise((resolve, reject) => {
+      //   // wx.createSelectorQuery().select('.wepy-calendar-weeks').boundingClientRect(function (rect) {
+      //   //   resolve(parseInt(rect.width / 7))
+      //   // }).exec()
+      //   const query = wx.createSelectorQuery()
+      //   query.select('.wepy-calendar-weeks').boundingClientRect()
+      //   query.exec((res) => {
+      //     console.log(res)
+      //   })
+      // })
+      vm.dayWidth = 375/7
+      vm.$apply()
+      // getDayWidth.then((width) => {
+      //
+      // })
     }
 
     setDouble(value) { // 设置月或日两位数格式
@@ -249,6 +263,7 @@
     setCurrentData() { // 设置当前年月
       this.current.year = new Date(this.currentDate).getFullYear()
       this.current.month = new Date(this.currentDate).getMonth() + 1
+      this.$apply()
     }
   }
 </script>
