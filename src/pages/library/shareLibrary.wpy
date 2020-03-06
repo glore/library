@@ -231,12 +231,12 @@
           <view class="nav__item inline-block text-center"> <span class="nav__item-text"> 录书 </span> </view>
         </button>
       </form>
-      <form bindsubmit="formSubmit" report-submit>
+      <form bindsubmit="formSubmit" report-submit wx:if="{{mylib.id != '1444'}}">
         <button formType="submit" class="btn flo_l" data-type="click" @tap="scanReturn({{mylib.id}})">
           <view class="nav__item inline-block text-center"> <span class="nav__item-text"> 还书 </span> </view>
         </button>
       </form>
-      <form bindsubmit="formSubmit" report-submit>
+      <form bindsubmit="formSubmit" report-submit wx:if="{{mylib.id != '1444'}}">
         <button formType="submit" class="btn flo_l" data-type="click" @tap="scanBorrow({{mylib.id}})">
           <view class="nav__item inline-block text-center"> <span class="nav__item-text"> 借书 </span> </view>
         </button>
