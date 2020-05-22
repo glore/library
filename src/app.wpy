@@ -19,6 +19,11 @@
         'pages/borrow',
         'pages/user'
       ],
+      'permission': {
+        'scope.userLocation': {
+          'desc': '你的位置信息将用于小程序位置接口的效果展示'
+        }
+      },
       'subPackages': [
         {
           'root': 'pages/main',

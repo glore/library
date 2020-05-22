@@ -106,9 +106,11 @@
       </view>
     </view>
     <view style="height: 120rpx;"></view>
-    <view style="position: fixed; left: 0;bottom: 0;width: 100%;" wx:if="{{book_library !== null}}">
-      <button class="weui-btn btn-blue_l" @tap="toAdd({{book_library}}, {{book_library}})" type="primary" style="margin: 22rpx;">借阅 {{book_library.lent_num}}/{{book_library.num}}</button>
-    </view>
+    <block wx:if="{{library_id != 1444}}">
+      <view style="position: fixed; left: 0;bottom: 0;width: 100%;" wx:if="{{book_library !== null}}">
+        <button class="weui-btn btn-blue_l" @tap="toAdd({{book_library}}, {{book_library}})" type="primary" style="margin: 22rpx;">借阅 {{book_library.lent_num}}/{{book_library.num}}</button>
+      </view>
+    </block>
   </view>
 </template>
 
