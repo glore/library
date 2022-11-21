@@ -1,0 +1,960 @@
+<style lang="less" scoped>
+@import '../styles/index.less';
+
+page {
+  //background-color: #F4F7FC;
+}
+
+.upload_file {
+
+  overflow: hidden;
+  position: relative;
+
+  ._item {
+    padding: 32rpx;
+    //margin: 0 32rpx;
+    border-bottom: 1rpx solid #f5f5f5;
+  }
+
+  ._title {
+    padding-top: 30rpx;
+  }
+
+  ._title_sb {
+    margin-top: 8rpx;
+    color: #C8C8C8;
+  }
+
+  ._cancel {
+    border-top: 16rpx solid #f8f8f8;
+    margin-bottom: 24rpx;
+  }
+
+  .close_icon {
+    width: 34rpx;
+    height: 34rpx;
+    padding: 8rpx;
+    position: absolute;
+    right: 32rpx;
+    top: 32rpx;
+    background-size: cover;
+    background-image: url("https://image.fulllinkai.com/202208/16/78698e898cd570e5e7751c323e4a5cb7.png");
+  }
+
+  .file_item {
+    margin: 40rpx 38rpx;
+
+    .f_title {
+      //font-weight: 400;
+    }
+
+    .file_text {
+      width: 670rpx;
+      height: 80rpx;
+      background: #F8F8F8;
+      border-radius: 16rpx;
+      padding: 0 26rpx;
+      margin-top: 16rpx;
+
+      ._icon {
+        width: 24rpx;
+        height: auto;
+      }
+    }
+
+    ._textarea {
+      background: #f8f8f8;
+      padding: 24rpx 20rpx;
+      border-radius: 16rpx;
+      width: 100%;
+      height: 160rpx;
+      margin-top: 30rpx;
+    }
+
+    ._file_icon {
+      width: 140rpx;
+      height: 140rpx;
+    }
+
+    ._item_pic {
+      width: 140rpx;
+      height: auto;
+    }
+  }
+
+  .file_btn {
+    margin-bottom: 60rpx;
+
+    .save_btn_h, .save_btn {
+      width: 480rpx;
+      height: 80rpx;
+      border-radius: 40rpx;
+      //border: 2rpx solid #71A1FF;
+      color: #FFFFFF;
+      background: linear-gradient(90deg, #8C9BFF 0%, #707FFA 100%);
+    }
+
+    .save_btn {
+      margin-left: 40rpx;
+      background: linear-gradient(90deg, #6F96FE 0%, #2D66FF 100%);
+    }
+  }
+}
+
+.image-group {
+  display: flex;
+  white-space: nowrap;
+  margin-top: 16rpx;
+  width: 100%;
+}
+
+.image-group ._pic {
+  //display: inline-block;
+  width: 140rpx;
+  height: 140rpx;
+  margin-right: 16rpx;
+  border-radius: 16rpx;
+}
+
+.image-group #_video {
+  width: 140rpx;
+  height: 140rpx;
+  margin-right: 16rpx;
+  border-radius: 16rpx;
+  position: relative;
+
+  ._close {
+    width: 24rpx;
+    height: 24rpx;
+    position: absolute;
+    right: 8rpx;
+    top: 8rpx;
+  }
+}
+
+._file {
+  margin-top: 16rpx;
+}
+
+._file_icon {
+  width: 140rpx;
+  height: auto;
+}
+
+._img {
+  width: 140rpx;
+  height: 140rpx;
+  position: relative;
+  margin-right: 16rpx;
+
+  ._model {
+    width: 140rpx;
+    height: 140rpx;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 16rpx;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    ._play {
+      width: 36rpx;
+      height: 36rpx;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+
+  }
+}
+
+._close {
+  width: 24rpx;
+  height: 24rpx;
+  position: absolute;
+  right: 8rpx;
+  top: 8rpx;
+}
+.f_input{
+  width: 100%;
+  height: 80rpx;
+  background: #F8F8F8;
+  border-radius: 16rpx;
+  margin: 30rpx 0;
+  padding: 0 20rpx;
+  line-height: 80rpx;
+}
+.bg_unfold, .bg_close{
+  width: 108rpx;
+  height: 40rpx;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin: 40rpx auto;
+  background-image: url("https://image.fulllinkai.com/202209/06/0cc3cdff2e308ada5a6a5089f8fa009d.png");
+}
+.bg_close{
+  background-image: url("https://image.fulllinkai.com/202209/06/4cadcc66ae221e20f1ef979967ebfb11.png");
+}
+
+._select_icon {
+  width: 28rpx;
+  height: auto;
+  margin-top: 8rpx;
+  margin-right: 16rpx;
+}
+</style>
+<template>
+  <template name="aaa">
+    <block v-if="content_type.num == 1" >
+      <input type="number" class="f_input font_28" placeholder="请输入数字" v-model="num" placeholder-style="color:#999999">
+    </block>
+    <block v-if="content_type.checkbox == 1 && optionList">
+      <block v-for="(item, index) in optionList" :key="index">
+        <view class="f-ffs" style="margin-top: 28rpx;" @tap="checkboxFn(index)">
+          <view>
+            <image v-if="item.active == 1" class="_select_icon"
+                   mode="widthFix"
+                   src="https://image.fulllinkai.com/202209/07/d48341e5dd532977094a82bfeea6d1e2.png"></image>
+            <image v-else class="_select_icon"
+                   mode="widthFix"
+                   src="https://image.fulllinkai.com/202209/07/84fe72dc313610e05f6e8b3e080343d3.png"></image>
+          </view>
+          <view class="color333 font_28">{{ item.title }}
+          </view>
+        </view>
+      </block>
+    </block>
+    <block v-if="content_type.radio == 1 &&optionList">
+      <block v-for="(item, index) in optionList" :key="index">
+        <view class="f-ffs" style="margin-top: 28rpx;" @tap="radioFn(index)">
+          <view>
+            <image v-if="item.active == 1" class="_select_icon"
+                   mode="widthFix"
+                   src="https://image.fulllinkai.com/202209/07/d48341e5dd532977094a82bfeea6d1e2.png"></image>
+            <image v-else class="_select_icon"
+                   mode="widthFix"
+                   src="https://image.fulllinkai.com/202209/07/84fe72dc313610e05f6e8b3e080343d3.png"></image>
+          </view>
+          <view class="color333 font_28">{{ item.title }}
+          </view>
+        </view>
+      </block>
+    </block>
+
+  </template>
+  <view :class="{'show': modalName=='showFileModal'}" class="cu-modal bottom-modal">
+    <view class="cu-dialog" style="border-radius: 32rpx 32rpx 0 0;">
+      <view class="bg_f upload_file">
+        <view class="close_icon" @tap="cancelFn"></view>
+        <view class="_title font_36 color333 bold">跟进内容</view>
+        <view style="max-height: 62vh;overflow: auto">
+          <view v-if="content_type.txt == 1" class="file_item text-l">
+            <view class="f_title color333 font_30 bold">{{ title }}</view>
+            <template is="aaa" data="{{content_type,titles,num,optionList}}"></template>
+            <textarea v-model="text" class="font_28 color-666 _textarea text-l"
+                      placeholder="请输入备注内容" placeholder-style="color:#999999" maxlength="-1"/>
+          </view>
+          <block v-if="!isClose">
+            <view v-if="content_type.img == 1" class="file_item text-l">
+              <view class="f-fbc">
+                <view class="f_title color333 font_28">上传图片（最多上传9张图片）</view>
+                <view v-if="picList.length >4" class="f_title font_24" style="color: #707FFA" @tap="chooseImage">继续上传
+                </view>
+              </view>
+              <scroll-view class="image-group " scroll-x="true">
+                <view class="f-fc">
+                  <view class="_img">
+                    <image class="_file_icon _pic" mode="widthFix"
+                           src="https://image.fulllinkai.com/202209/06/864711b9d271be21bdf794ff6d0a65f7.png"
+                           @tap="chooseImage"></image>
+                  </view>
+                  <block v-for="(item, index) in picList" :key="item.filePath">
+                    <view class="_img">
+                      <image :src="item.filePath"
+                             class="_pic"
+                             mode="aspectFill" @tap="previewImages(item.filePath,picList)"></image>
+                      <view class="_model" @tap="previewImages(item.filePath,picList)">
+                        <image class="_close"
+                               mode="aspectFill"
+                               src="https://image.fulllinkai.com/202208/17/28ce322eb0fe405e97cdad1ec0904c08.png"
+                               @tap.stop="closePicFn(index)"></image>
+                      </view>
+                    </view>
+                  </block>
+
+                </view>
+              </scroll-view>
+            </view>
+            <view v-if="content_type.video == 1" class="file_item text-l">
+              <view class="f_title color333 font_28">上传视频（最多上传3个视频）</view>
+              <scroll-view class="image-group " scroll-x="true">
+                <view class="f-fc">
+                  <view class="_img">
+                    <image class="_file_icon _pic" mode="widthFix"
+                           src="https://image.fulllinkai.com/202209/06/6c6dee71f01ab36fbdbcb36b7ba29879.png"
+                           @tap="chooseVideo"></image>
+                  </view>
+                  <block v-for="(item, index) in videoList" :key="item.filePath">
+                    <view class="_img">
+                      <video id="video _video" controls="{{true}}"
+                             direction="0"
+                             referrer-policy="origin" src="{{item.filePath}}"
+                             style="width: 140rpx;height: 140rpx; margin-right: 16rpx;border-radius: 16rpx;position: relative;">
+                        <image class="_close"
+                               mode="aspectFill"
+                               src="https://image.fulllinkai.com/202208/17/28ce322eb0fe405e97cdad1ec0904c08.png"
+                               @tap.stop="closeVideoFn(index)"></image>
+                      </video>
+
+                    </view>
+                  </block>
+                </view>
+              </scroll-view>
+            </view>
+            <view v-if="content_type.file == 1" class="file_item text-l">
+              <view class="f-fbc">
+                <view class="f_title color333 font_28">上传文件</view>
+                <view v-if="fileList.length" class="f_title font_24" style="color: #707FFA" @tap="chooseFile">重新上传
+                </view>
+              </view>
+              <block v-if="fileList.length">
+                <view class="file_text ellipsis_1 color333 font_28 f-fbc" @tap="">
+                  <view @tap="openDocument(fileList[0].filePath)"> {{ fileList[0].name }}</view>
+                  <image class="_icon" mode="widthFix"
+                         src="https://image.fulllinkai.com/202209/06/28ce322eb0fe405e97cdad1ec0904c08.png"
+                         @tap="deleteFileFn"></image>
+                </view>
+              </block>
+              <block v-else>
+                <image class="_file_icon _file" mode="widthFix"
+                       src="https://image.fulllinkai.com/202208/16/dde7afa21ee483f22b7d268002017d7e.png"
+                       style="width: 240rpx;" @tap="chooseFile"></image>
+              </block>
+            </view>
+          </block>
+        </view>
+        <view class="bg_unfold" v-if="isClose" @tap="unfoldFn"></view>
+        <view class="bg_close" v-else @tap="unfoldFn"></view>
+        <view class="file_btn f-fcc">
+          <view class="save_btn_h f-fcc" @tap="saveFn_h">保存记录</view>
+<!--          <view class="save_btn f-fcc colorfff" @tap="saveFn_s">标记已完成</view>-->
+        </view>
+        <!--        <view class=" _item font_32 color333" @tap="chooseImage">图片</view>-->
+        <!--        <view class=" _item font_32 color333" @tap="chooseImageV2">本地上传</view>-->
+        <!--        <view class=" _item font_32 color333" @tap="chooseVideo">视频</view>-->
+        <!--        <view class=" _item font_32 color333" @tap="choosevideo">YUN视频</view>-->
+        <!--        <view class=" _item font_32 color333" @tap="chooseFile">文件</view>-->
+        <!--        <view class=" _item font_32 color333 _cancel" @tap="cancelFn">取消</view>-->
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from '@wepy/core'
+import {service} from '../config'
+import base from '../mixins/base'
+import https from '../mixins/https'
+import VODUpload from '../mixins/aliyun-upload-sdk-1.0.1.min'
+
+wepy.component({
+  props: {
+    modalName: {
+      type: String,
+      default: '',
+      twoWay: true
+    },
+    title: {
+      type: String,
+      default: '',
+      twoWay: true
+    },
+    type: {
+      type: String,
+      default: '',
+      twoWay: true
+    },
+    fileType: {
+      type: String,
+      default: '',
+      twoWay: true
+    },
+    files: {
+      type: String,
+      default: '',
+      twoWay: true
+    },
+    options: {
+      type: String,
+      default: '',
+      twoWay: false
+    },
+  },
+  data: {
+    text: '',
+    num: null,
+    isClose: true,
+    picList: [],
+    fileList: [],
+    videoList: [],
+    optionList: [], // 初始多选数据
+    content_type: {},
+    files_List: {}
+  },
+  watch: {
+    options(val) { // 多选数据
+      console.log('=====================')
+      if (!val) return false
+      this.optionList = []
+      let list = JSON.parse(val)
+      for (let item of list) {
+        console.log(item)
+        this.optionList.push({title: item, active: false})
+      }
+      console.log(this.optionList, 'options')
+    },
+    fileType(val) {
+      console.log(val,'filetype')
+      this.content_type = JSON.parse(val)
+      console.log(this.content_type,'content_type')
+    },
+    files(val){ // 回填数据
+      console.log(val)
+      if(!val)return false
+      this.files_List = JSON.parse(val)
+      console.log(this.files_List, 'content_type')
+      this.picList = this.files_List.img
+      this.text = this.files_List.txt
+      this.fileList = this.files_List.file
+      this.videoList = this.files_List.video
+      this.num = this.files_List.num
+      this.isClose = false
+      if (this.files_List.checkbox) {
+        for (let item of this.files_List.checkbox) {
+          for (let itemV2 of this.optionList) {
+            if (item == itemV2.title){
+              itemV2.active = true
+            }
+          }
+        }
+      }
+      if (this.files_List.radio) {
+        for (let item of this.optionList) {
+          if (this.files_List.radio == item.title){
+            item.active = true
+          }
+        }
+      }
+    }
+  },
+  mixins: [https, base],
+  methods: {
+    checkboxFn(index) { // 多选事件
+      this.optionList[index].active = !this.optionList[index].active
+    },
+    radioFn(index) {  // 单选事件
+      for (let item of this.optionList) {
+        item.active = false
+      }
+      this.optionList[index].active = true
+    },
+    touchMove() {},  // fixed默认触摸事件
+    unfoldFn(){
+      console.log(this.isClose);
+      this.isClose = !this.isClose
+    },
+
+    openDocument(url) { // 打开文档
+      this.$openDocument(url)
+    },
+    previewImages(item, array) { // 预览图片
+      console.log(item, array)
+      let arr = []
+      for (let i of array) {
+        arr.push(i.filePath)
+      }
+      console.log(item, arr)
+      this.$previewImages(item, arr)
+    },
+    saveFn_h() {
+      console.log(this.content_type)
+      if (this.content_type.num == 1 && !this.num) {
+        // console.log(this.content_type.num,this.num,'this.content_type.num')
+        this.$showToast('请填写内容后提交')
+        return false
+      }
+      // if (this.content_type.img == 1 && this.picList.length < 1) {
+      //   this.$showToast('请上传图片附件')
+      //   return false
+      // }
+      // if (this.content_type.video == 1 && this.videoList.length < 1) {
+      //   this.$showToast('请上传视频附件')
+      //   return false
+      // }
+      // if (this.content_type.file == 1 && this.fileList.length < 1) {
+      //   this.$showToast('请上传文件')
+      //   return false
+      // }
+      let data = {
+        num: this.num,
+        content: this.text,
+        file: this.fileList,
+        image: this.picList,
+        video: this.videoList,
+        checkbox: [],
+        radio: '',
+      }, checkbox= [], radio= []
+      if (this.content_type.checkbox == 1) {
+        for (let item of this.optionList) {
+          if (item.active == true){
+            checkbox.push(item.title)
+          }
+        }
+        data.checkbox = checkbox
+      }
+      if (this.content_type.radio == 1) {
+        for (let item of this.optionList) {
+          if (item.active == true) {
+            data.radio = item.title
+          }
+        }
+      }
+      console.log(data.checkbox,'data.checkbox')
+
+      if (this.content_type.checkbox == 1 && data.checkbox.length<1) {
+        this.$showToast('请选择内容后提交')
+        return false
+      }
+      if (this.content_type.radio == 1 && data.radio == '') {
+        this.$showToast('请选择内容后提交')
+        return false
+      }
+
+      console.log(data)
+      this.$emit('changeValV2', data, false)
+      // this.num = null
+      // this.text = ''
+      // this.fileList = []
+      // this.picList = []
+      // this.videoList = []
+    },
+    saveFn_s() {
+      let data = {
+        content: this.text,
+        file: this.fileList,
+        image: this.picList,
+        video: this.videoList
+      }
+      this.text = ''
+      this.fileList = []
+      this.picList = []
+      this.videoList = []
+      this.$emit('changeValV2', data, true)
+    },
+    getSignature() {
+      var that = this
+      var uploader = new VODUpload({
+        timeout: 60000,
+        region: 'cn-shanghai',
+        // 添加文件成功
+        addFileSuccess: (uploadInfo) => {
+          console.log('addFileSuccess' + JSON.stringify(uploadInfo))
+          that.uploader.startUpload()
+        },
+        // 开始上传
+        onUploadstarted: function (uploadInfo) {
+          console.log('文件开始上传...')
+          console.log('onUploadStarted:' + JSON.stringify(uploadInfo))
+          let data = {
+            title: uploadInfo.url,
+            fileSize: uploadInfo.fileSize,
+            description: 'description',
+            coverURL: uploadInfo.coverUrl,
+            tags: 'tags',
+            file_name: uploadInfo.url
+          }
+          that.$post({url: `${service.host}/admin/create/upload/video`, data}).then(({code, data}) => {
+            if (code == 0) {
+              console.log(data.VideoId)
+              uploader.setUploadAuthAndAddress(uploadInfo, data.UploadAuth, data.UploadAddress, data.VideoId)
+            } else {
+              that.$showToast('上传失败了')
+              uploader.stopUpload()
+            }
+            wx.hideLoading()
+          })
+        },
+        // 文件上传成功
+        onUploadSucceed: function (uploadInfo) {
+          console.log(JSON.stringify(uploadInfo))
+          console.log('文件上传成功!')
+          that.loadModal = false
+          that.getVideoUrl(uploadInfo.videoId)
+        },
+        // 文件上传失败
+        onUploadFailed: function (uploadInfo, code, message) {
+          console.log('onUploadFailed: file:' + uploadInfo.file.name + ',code:' + code + ', message:' + message)
+          console.log('文件上传失败!')
+          uploader.stopUpload()
+        },
+        // 取消文件上传
+        onUploadCanceled: function (uploadInfo, code, message) {
+          console.log(JSON.stringify(uploadInfo) + code + message)
+          console.log('文件已暂停上传!')
+          uploader.stopUpload()
+        },
+        // 文件上传进度，单位：字节, 可以在这个函数中拿到上传进度并显示在页面上
+        onUploadProgress: function (uploadInfo, totalSize, progress) {
+          var files
+          if (uploadInfo.isImage) {
+            files = that.images
+          } else {
+            files = that.videos
+          }
+
+          files.forEach((file, idx) => {
+            if (file.url === uploadInfo.url) {
+              file.progress = progress
+              if (uploadInfo.isImage) {
+                that.setData({
+                  images: files
+                })
+              } else {
+                that.setData({
+                  videos: files
+                })
+              }
+            }
+          })
+          var progressPercent = Math.ceil(progress)
+          console.log('文件上传中...' + progressPercent)
+          wx.hideLoading()
+          that.loadModal = true
+          that.progressPercent = progressPercent
+        },
+        // 上传凭证超时
+        onUploadTokenExpired: function (uploadInfo) {
+        },
+        // 全部文件上传结束
+        onUploadEnd: (uploadInfo) => {
+          console.log('文件上传完毕 onUploadEnd: uploaded all the files')
+        }
+      })
+      this.uploader = uploader
+    },
+    // 获取视频URL
+    getVideoUrl(videoId) {
+      var vm = this
+      vm.$showLoading('加载中...')
+      vm.$get({url: `${service.host}/admin/video/url?aliyun_video_id=${videoId}`}).then(({code, data}) => {
+        console.log(data, '=========')
+        let file = {
+          filePath: data.play_url,
+          type: 'video'
+        }
+        vm.$emit('changeVal', file)
+        wx.hideLoading()
+        // }
+      })
+    },
+    choosevideo(maxTime = 30) {
+      let vm = this
+      wx.chooseMedia({
+        count: 1, // 上传视频的个数
+        mediaType: ['video'], // 限制上传的类型为video
+        sourceType: ['album', 'camera'], // 视频选择来源
+        maxDuration: maxTime, // 拍摄限制时间
+        compressed: true,
+        camera: 'back', // 采用后置摄像头
+        success: (res) => { // 获取临时存放的视频资源
+          let tempFilePath = res.tempFiles[0].tempFilePath
+          // 获取该视频的播放时间
+          let duration = res.tempFiles[0].duration
+          console.log('视频播放时间为' + duration)
+          // 视频封面
+          let thumbTempFilePath = res.tempFiles[0].thumbTempFilePath
+          console.log('视频封面为' + thumbTempFilePath)
+          // 获取视频的大小(MB单位)
+          let size = parseFloat(res.tempFiles[0].size / 1024 / 1024).toFixed(1)
+          console.log('视频大小为' + size)
+          // 获取视频的高度
+          let height = res.tempFiles[0].height
+          console.log('视频高度为' + height)
+          // 获取视频的宽度
+          let width = res.tempFiles[0].width
+          console.log('视频宽度为' + width)
+          var file = {
+            url: tempFilePath,
+            coverUrl: thumbTempFilePath,
+            fileSize: size
+          }
+          // 校验大小后，符合进行上传
+          if (duration > maxTime) {
+            let beyongSize = parseFloat(duration - 30).toFixed(0)
+            // 获取视频超出限制大小的数量
+            wx.showModal({
+              title: '提示',
+              content: '上传的视频时长超限,超出' + beyongSize + '秒,是否剪辑视频！',
+              success(res) {
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                } else if (res.cancel) {
+                  console.log('用户点击取消')
+                }
+              }
+            })
+          } else {
+            vm.$showLoading('压缩中')
+            // 上传视频
+            vm.uploadFileV2(file)
+          }
+        }
+      })
+    },
+    uploadFileV2(file) { // 上传视频
+      let vm = this
+      var uploader = vm.uploader
+      var userData = '{"Vod":{}}'
+      console.log(file, 'file')
+      wx.hideLoading()
+      uploader.addFile(file, null, null, null, userData)
+    },
+    cancelFn() {   // 取消方法
+      this.modalName = ''
+      this.$emit('changeValV2', '')
+    },
+    chooseImage() { // 上传照片
+      let vm = this
+      vm.$showLoading('加载中...')
+      wx.chooseMessageFile({
+        count: 7, // 上传视频的个数
+        type: 'image', // 限制上传的类型为image
+        sourceType: ['album', 'camera'], // 视频选择来源
+        compressed: true,
+        success: (res) => { // 获取临时存放的视频资源
+          for (let item of res.tempFiles) {
+            vm.uploadFile(item.path, 'img', item.name)
+          }
+        },
+        fail: () => {
+          vm.$emit('changeVal', '')
+          // vm.modalName = ''
+          wx.hideLoading()
+        }
+      })
+    },
+    chooseImageV2() { // 上传照片
+      let vm = this
+      vm.$showLoading('加载中...')
+      wx.chooseMedia({
+        count: 1, // 上传视频的个数
+        mediaType: ['image', 'video'], // 限制上传的类型为video
+        sourceType: ['album', 'camera'], // 视频选择来源
+        compressed: true,
+        success: (res) => { // 获取临时存放的视频资源
+          for (let item of res.tempFiles) {
+            console.log(item, '====')
+            let type = item.fileType == 'video' ? 'video' : 'img'
+            vm.uploadFile(item.tempFilePath, type, item.tempFilePath)
+          }
+        },
+        fail: () => {
+          vm.$emit('changeVal', '')
+          // vm.modalName = ''
+          wx.hideLoading()
+        }
+      })
+    },
+    chooseFile() { // 上传文件
+      let vm = this
+      vm.$showLoading('加载中...')
+      wx.chooseMessageFile({
+        count: 1,
+        type: 'all',
+        success: (res) => {
+          console.log(res, '文件')
+          vm.uploadFile(res.tempFiles[0].path, 'file', res.tempFiles[0].name)
+        },
+        fail: () => {
+          vm.$emit('changeVal', '')
+          // vm.modalName = ''
+          wx.hideLoading()
+        }
+      })
+    },
+    chooseVideo(maxTime = 30) {   // 上传视频
+      let vm = this
+      console.log('上传视频的方法')
+      wx.chooseMessageFile({
+        count: 1, // 上传视频的个数
+        type: 'video', // 限制上传的类型为video
+        sourceType: ['album', 'camera'], // 视频选择来源
+        maxDuration: maxTime, // 拍摄限制时间
+        compressed: true,
+        camera: 'back', // 采用后置摄像头
+        success: (res) => { // 获取临时存放的视频资源
+          console.log(res, 'de')
+          let tempFilePath = res.tempFiles[0].path
+          let size = parseFloat(res.tempFiles[0].size / 1024 / 1024).toFixed(1)
+          console.log('视频大小为' + size)
+          if (size > 25) {
+            let beyongSize = parseFloat(size - 25)
+            // 获取视频超出限制大小的数量
+            vm.$showToast('上传的视频大小超限,超出' + beyongSize + 'MB,请重新上传！')
+            // console.log('上传的视频大小超限,超出' + beyongSize + 'MB,请重新上传！')
+          }
+          vm.uploadFile(tempFilePath, 'video', res.tempFiles[0].name)
+        },
+        fail: () => {
+          vm.$emit('changeVal', '')
+          // vm.modalName = ''
+          wx.hideLoading()
+        }
+      })
+    },
+
+    deleteFileFn() { // 删除文件
+      let vm = this,
+      list = []
+      wx.showModal({ // 使用模态框提示用户进行操作
+        title: '温馨提示：',
+        content: '是否确认删除? ',
+        confirmText: '确定',
+        success: function (res) {
+          if (res.confirm) {
+            list = Array.from(vm.fileList);
+            list.splice(0, 1)
+            vm.fileList = list
+            console.log(vm.fileList)
+          }
+        }
+      })
+    },
+    closePicFn(index) { // 删除图片
+      let vm = this,
+        list = []
+      wx.showModal({ // 使用模态框提示用户进行操作
+        title: '温馨提示：',
+        content: '是否确认删除? ',
+        confirmText: '确定',
+        success: function (res) {
+          if (res.confirm) {
+            // list = Array.prototype.slice.call(vm.picList);
+            list = Array.from(vm.picList);
+            list.splice(index, 1)
+            vm.picList = list
+            console.log(vm.picList)
+          }
+        }
+      })
+    },
+    closeVideoFn(index) { // 删除视频
+      let vm = this, list = []
+      wx.showModal({ // 使用模态框提示用户进行操作
+        title: '温馨提示：',
+        content: '是否确认删除? ',
+        confirmText: '确定',
+        success: function (res) {
+          if (res.confirm) {
+            list = Array.from(vm.videoList);
+            list.splice(index, 1)
+            vm.videoList = list
+            console.log(vm.videoList)
+          }
+        }
+      })
+    },
+    uploadFile(filePaths, type, name) {
+      console.log(filePaths, type, name)
+      let vm = this
+      vm.$showLoading('上传中...')
+      console.log(filePaths, 'filePaths')
+      wx.uploadFile({
+        url: `${service.host}/uploads`,
+        filePath: filePaths,
+        method: 'POST',
+        name: 'fileData',
+        header: {
+          'Authorization': 'Bearer ' + wx.getStorageSync('token'),
+          'content-type': 'multipart/form-data',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        success: (res) => {
+          // console.log(JSON.parse(res.data), 'res')
+          // console.log(JSON.parse(res.data).data)
+          let {code, data, message} = JSON.parse(res.data),list=[]
+          switch (code) {
+            case 0:
+              let dataV2 = {
+                filePath: data,
+                type: type,
+                name: name
+              }
+              if (type == 'video') {
+                // vm.videoList.push(dataV2)
+                list = Array.from(vm.videoList);
+                list.push(dataV2)
+                vm.videoList = list
+                console.log(vm.videoList)
+              } else if (type == 'file') {
+                if (vm.fileList.length < 1) {
+                  // vm.fileList.push(dataV2)
+                  list = Array.from(vm.fileList);
+                  list.push(dataV2)
+                  vm.fileList = list
+                } else {
+                  // vm.fileList.splice(0, 1)
+                  // console.log(vm.fileList, '1222222')
+                  vm.fileList = [dataV2]
+                }
+              } else {
+                // vm.picList.push(dataV2)
+                list = Array.from(vm.picList);
+                list.push(dataV2)
+                vm.picList = list
+              }
+              console.log(vm.picList,'picList')
+              console.log(vm.fileList,'fileList')
+              console.log(vm.videoList,'videoList')
+              // vm.$emit('changeVal', dataV2)
+              break
+            default:
+              wx.showModal({ // 使用模态框提示用户进行操作
+                title: '温馨提示：',
+                content: '很抱歉！' + message,
+                showCancel: false,
+                confirmText: '确定',
+                success: function (res) {
+                  if (res.confirm) {
+                    wx.navigateBack({
+                      delta: 1
+                    })
+                  }
+                }
+              })
+              // vm.$emit('changeVal', '')
+              break
+          }
+          // vm.modalName = ''
+          wx.hideLoading()
+        },
+        fail: (res) => {
+        },
+        complete: () => {
+        }
+      })
+    }
+
+  },
+  // attached(query) {
+  //
+  // },
+  // attached(query) {
+  //   console.log(console.log('asdddddddd', this.options))
+  //   debugger
+  // },
+  created() {
+    this.getSignature()
+  }
+})
+</script>

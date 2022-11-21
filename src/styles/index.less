@@ -1,0 +1,68 @@
+@import url(./theme.less);
+@import url(./reset.less);
+@import url(./flex.wxss);
+@import url(./animation.wxss);
+@import url(./main.wxss);
+
+@colors: black, white, gray-1, gray-2, gray-3, gray-4, red, blue, yellow;
+each(@colors, {
+  .@{value} {
+    color: @@value;
+  }
+});
+each(@colors, {
+  .bg-@{value} {
+    background-color: @@value;
+  }
+});
+each(range(10, 100, 2), {
+  .size-@{value} {
+    font-size: @value*1rpx;
+  }
+})
+
+each(range(5, 30, 5), {
+  .radius-@{value} {
+    border-radius: @value*1rpx;
+  }
+})
+
+each(range(100), {
+  .pd-@{value}, .ptb-@{value}, .pt-@{value} {
+    padding-top: @value*1rpx;
+  }
+  .pd-@{value}, .ptb-@{value}, .pb-@{value} {
+    padding-bottom: @value*1rpx;
+  }
+  .pd-@{value}, .plr-@{value}, .pl-@{value} {
+    padding-left: @value*1rpx;
+  }
+  .pd-@{value}, .plr-@{value}, .pr-@{value} {
+    padding-right: @value*1rpx;
+  }
+  .mg-@{value}, .mtb-@{value}, .mt-@{value} {
+    margin-top: @value*1rpx;
+  }
+  .mg-@{value}, .mtb-@{value}, .mb-@{value} {
+    margin-bottom: @value*1rpx;
+  }
+  .mg-@{value}, .mlr-@{value}, .ml-@{value} {
+    margin-left: @value*1rpx;
+  }
+  .mg-@{value}, .mlr-@{value}, .mr-@{value} {
+    margin-right: @value*1rpx;
+  }
+})
+
+each(range(12), {
+  .flex-@{value} {
+    flex: @value;
+  }
+});
+.bg {
+  background-color: @gray-5;
+}
+
+.bold {
+  font-weight: 600;
+}

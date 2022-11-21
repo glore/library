@@ -1,0 +1,140 @@
+<style lang="less">
+@import './styles/index.less';
+
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  background: red;
+}
+</style>
+<script>
+import wepy from '@wepy/core'
+import vuex from '@wepy/x'
+import promisify from '@wepy/use-promisify'
+import utils from './utils/util'
+
+wepy.use(promisify)
+
+wepy.use(vuex)
+
+wepy.app({
+  hooks: {
+    // App 级别 hook，对整个 App 生效
+    // 同时存在 Page hook 和 App hook 时，优先执行 Page hook，返回值再交由 App hook 处
+    'before-setData': function (dirty) {
+      // console.log('setData dirty: ', dirty)
+      return dirty
+    }
+  },
+  globalData: {
+    userInfo: null
+  },
+  onLoad() {
+
+  },
+  onLaunch() {
+    // this.testAsync()
+    // this.appLogin()
+    // eventHub.$on('app-launch', (...args) => {
+    //   console.log('app-launch event emitted, the params are:')
+    //   console.log(args)
+    // })
+  },
+
+  methods: {
+    appLogin() {
+      utils.wx_login().then((data) => {
+        // console.log(data)
+        // resolve(data)
+        // let {accid, token} = data.user.wyy_user
+        // // let accid = '1304'
+        // // let token = 'fee12f11f791a4a615cd3aeef6451780'
+        // wx.setStorageSync('accid', accid)
+        // wx.setStorageSync('wytoken', token)
+        // vm.globalData.nim = utils.IM(accid, token) // 建立聊天
+        // if (vm.userInfoReadyCallback) {
+        //   vm.userInfoReadyCallback(data)
+        // }
+        wx.hideLoading()
+      })
+    },
+    sleep(s) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve('promise resolved')
+        }, s * 1000)
+      })
+    },
+
+    async testAsync() {
+      let d = await this.sleep(3)
+      console.log(d)
+    }
+  }
+})
+</script>
+<config>
+{
+pages: [
+'pages/tabBar/welcome',
+'pages/tabBar/home',
+'pages/tabBar/user',
+'pages/tabBar/chat'
+],
+subPackages: [
+{
+'root': 'pages/sub_page',
+'pages': ['measure']
+},
+],
+window: {
+backgroundTextStyle: 'light',
+navigationBarBackgroundColor: '#fff',
+navigationBarTitleText: 'WeChat',
+navigationBarTextStyle: 'black'
+},
+tabBar: {
+color: '#999999',
+selectedColor: '#707FFA',
+backgroundColor: '#ffffff',
+borderStyle: 'black',
+list: [
+{
+pagePath: 'pages/tabBar/home',
+iconPath: './images/tabbar/chart_default.png',
+selectedIconPath: './images/tabbar/chart_transparent.png',
+text: '测量'
+}
+, {
+pagePath: 'pages/tabBar/chat',
+iconPath: './images/tabbar/mine_default.png',
+selectedIconPath: './images/tabbar/mine_transparent.png',
+text: '聊天'
+}, {
+pagePath: 'pages/tabBar/user',
+iconPath: './images/tabbar/mine_default.png',
+selectedIconPath: './images/tabbar/mine_transparent.png',
+text: '我的'
+}]
+},
+useExtendedLib: {
+'weui': true
+},
+plugins: {
+"QNBleApi": {
+"version": "4.3.2",
+"provider": "wx2a4ca48ed5e96748"
+}
+<!--'FL-plugin': {-->
+<!--'version': '0.0.3',-->
+<!--'provider': 'wxc41491431733671e'-->
+<!--}-->
+},
+"lazyCodeLoading": "requiredComponents"
+}
+</config>

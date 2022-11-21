@@ -1,0 +1,67 @@
+<style lang="less" scoped>
+page {
+  background-color: #F4F7FC;
+}
+
+
+</style>
+<template>
+  <view class="_container">
+    个人中心
+
+  </view>
+
+  <view :class="{'show': modalName=='showNoteModal'}" class="cu-modal bottom-modal">
+    <view class="cu-dialog" style="border-radius: 32rpx 32rpx 0 0;">
+
+    </view>
+  </view>
+</template>
+<!--x-->
+
+<script>
+import wepy from '@wepy/core'
+import https from '../../mixins/https'
+import base from '../../mixins/base'
+import {service} from '../../config'
+
+wepy.page({
+  config: {},
+  mixins: [https, base],
+
+  data: {
+    modalName: '',
+    fileList: [],
+    photo: '',
+    list: [],
+    mobile: '',
+    nickName: '',
+    user: {}
+  },
+
+  methods: {
+
+  },
+  onPullDownRefresh() {  // 下拉刷新
+    // this.getUserInfo()
+  },
+  onShow() {
+    // this.$showLoading('加载中...')
+    // this.getUserInfo()
+  },
+  created() {
+  }
+})
+</script>
+<config>
+{
+navigationBarTitleText: '个人中心',
+<!--navigationStyle: 'custom',-->
+enablePullDownRefresh: true,
+backgroundColorTop: '#F4F7FC',
+backgroundColorBottom: '#F4F7FC',
+usingComponents: {
+uploadFile: '~@/components/uploadFile'
+}
+}
+</config>

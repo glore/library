@@ -1,0 +1,322 @@
+<style lang="less">
+input {
+  border: 1rpx solid #ccc;
+  display: inline-block;
+  width: 200rpx;
+  border-radius: 5rpx;
+}
+
+.info {
+  padding-right: 10rpx;
+}
+
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+
+.slide {
+  width: 640rpx;
+  display: flex;
+  border: 1rpx solid #ccc;
+  font-size: 28rpx;
+  align-items: center;
+  box-sizing: border-box;
+
+  .left {
+    width: 750rpx;
+    padding: 20rpx;
+  }
+
+  .right {
+    display: flex;
+
+    .right-item {
+      padding: 20rpx 30rpx;
+      background-color: red;
+      color: #fff;
+    }
+  }
+}
+</style>
+<wxs lang="babel" module="m1">
+const getTime = (time) => {
+let date = getDate(time);
+let hour = date.getHours();
+let mins = date.getMinutes();
+let sec = date.getSeconds();
+let milli = date.getMilliseconds();
+return `${hour}:${mins}:${sec}.${milli}`;
+}
+module.exports.getTime = getTime;
+</wxs>
+<template>
+  <div class="container">
+    <div class="userinfo" @tap="handleViewTap">
+      <image background-size="cover" class="userinfo-avatar" src="{{ userInfo.avatarUrl }}"/>
+      <div class="userinfo-nickname">{{ userInfo.nickName }}</div>
+    </div>
+
+    <panel>
+      <div slot="title" class="title">测试数据绑定</div>
+
+      <text class="info" @tap="currentTime = +new Date()">{{ m1.getTime(currentTime) }}</text>
+      <text class="info">{{ setTimeoutTitle }}</text>
+      <text class="info" @tap="mixintap">{{ mixin }}</text>
+      <text class="info">{{ testcomputed }}</text>
+      <text class="info">{{ counter }}</text>
+    </panel>
+
+    <panel>
+      <div slot="title" class="title">其它测试</div>
+      <!--button @tap="toast" size="mini">第三方组件</button-->
+      <button size="mini" @tap="communicate">组件通信</button>
+      <button size="mini" @tap="tap">混合TAP事件</button>
+    </panel>
+
+    <panel>
+      <div slot="title" class="title">测试并发网络请求</div>
+      <div>返回结果:
+        <text>{{ netrst }}</text>
+      </div>
+      <button size="mini" @tap="request"> 点我发起10个请求</button>
+    </panel>
+
+    <panel>
+      <div slot="title" class="title">测试 v-model</div>
+      <div style="display: flex; align-items: center;">
+        <input v-model="inputmodel"/>
+        <text style="margin-left: 30rpx;">Value: {{ inputmodel }}</text>
+      </div>
+    </panel>
+
+    <panel>
+      <div slot="title" class="title">测试组件</div>
+
+      <text class="testcounter">全局计数器：</text>
+      <div class="counterview">
+        <button size="mini" @tap="mynum++">全局计数器: {{ mynum }}</button>
+      </div>
+
+      <text class="testcounter">计数组件1 - num:</text>
+      <div class="counterview">
+
+        <counter @index-emit.user="counterEmit"/>
+      </div>
+
+      <text class="testcounter">计数组件2 - num.sync:</text>
+
+      <div class="counterview">
+        <counter :num.sync="mynum"></counter>
+      </div>
+    </panel>
+
+    <panel>
+      <div slot="title" class="title">测试组件Repeat</div>
+      <div v-for="(item, index) in groupList">
+        <group :grouplist="item" :index="index"></group>
+      </div>
+    </panel>
+
+    <panel>
+      <div slot="title" class="title">测试列表</div>
+      <list></list>
+    </panel>
+
+    <panel>
+      <div slot="title" class="title">测试引用第三方原生组件</div>
+      <slide-view class="slide" height="80" slideWidth="266" width="640">
+        <view slot="left" class="left">这是一个原生组件，右滑试试看。</view>
+        <view slot="right" class="right">
+          <view class="right-item">删除</view>
+        </view>
+      </slide-view>
+    </panel>
+    <!--toast /-->
+  </div>
+</template>
+
+<script>
+import wepy from '@wepy/core'
+import eventHub from '../common/eventHub'
+import {mapState} from '@wepy/x'
+import store from '../store'
+import testMixin from '../mixins/test'
+
+wepy.page({
+  store,
+  config: {
+    navigationBarTitleText: 'test'
+  },
+
+  hooks: {
+    // Page 级别 hook, 只对当前 Page 的 setData 生效。
+    'before-setData': function (dirty) {
+      if (Math.random() < 0.2) {
+        console.log('setData canceled')
+        return false // Cancel setData
+      }
+      dirty.time = +new Date()
+      return dirty
+    }
+  },
+
+  mixins: [testMixin],
+
+  data: {
+    inputmodel: 'v-model',
+    mynum: 20,
+    userInfo: {
+      nickName: '加载中...'
+    },
+    currentTime: +new Date(),
+    setTimeoutTitle: '标题三秒后会被修改',
+    count: 0,
+    netrst: '',
+    groupList: [
+      {
+        id: 1,
+        name: '点击改变',
+        list: [
+          {
+            childid: '1.1',
+            childname: '子项，点我改变'
+          }, {
+            childid: '1.2',
+            childname: '子项，点我改变'
+          }, {
+            childid: '1.3',
+            childname: '子项，点我改变'
+          }
+        ]
+      },
+      {
+        id: 2,
+        name: '点击改变',
+        list: [
+          {
+            childid: '2.1',
+            childname: '子项，点我改变'
+          }, {
+            childid: '2.2',
+            childname: '子项，点我改变'
+          }, {
+            childid: '2.3',
+            childname: '子项，点我改变'
+          }
+        ]
+      },
+      {
+        id: 3,
+        name: '点击改变',
+        list: [
+          {
+            childid: '3.1',
+            childname: '子项，点我改变'
+          }
+        ]
+      }
+    ]
+  },
+
+  computed: {
+    ...mapState(['counter']),
+    testcomputed() {
+      return 'computed - ' + this.mynum
+    }
+  },
+
+  methods: {
+    handleViewTap() {
+      console.log('handleVieTap clicked')
+    },
+    tap() {
+      throw 'can not go here'
+    },
+    plus() {
+      this.mynum++
+    },
+    toast() {
+      let promise = this.$invoke('toast', 'show', {
+        title: '自定义标题',
+        img: 'https://raw.githubusercontent.com/kiinlam/wetoast/master/images/star.png'
+      })
+
+      promise.then((d) => {
+        console.log('toast done')
+      })
+    },
+    mixintap() {
+      console.log('do noting from ' + this.$is)
+    },
+    communicate() {
+      let counters = this.$children.filter((com) => com.$is === 'components/counter')
+
+      // Get children counter
+      counters[0].num++
+      counters[1].num--
+
+      eventHub.$emit('app-launch', {a: 1}, {b: 2})
+    },
+    request() {
+      let self = this
+      let i = 10
+      let map = ['MA==', 'MQo=', 'Mg==', 'Mw==', 'NA==', 'NQ==', 'Ng==', 'Nw==', 'OA==', 'OQ==']
+      while (i--) {
+        wx.request({
+          url: 'https://www.madcoder.cn/tests/sleep.php?time=1&t=css&c=' + map[i] + '&i=' + i,
+          success: function (d) {
+            if (d.statusCode !== 200) {
+              self.netrst += d.statusCode + '.'
+            } else {
+              self.netrst += d.data + '.'
+            }
+          }
+        })
+      }
+    },
+    counterEmit(num) {
+      console.log(`${this.$is} receive event, the number is: ${num}`)
+    }
+  },
+
+  created() {
+    let self = this
+    self.currentTime = +new Date()
+
+    self.setTimeoutTitle = '标题三秒后会被修改'
+    setTimeout(() => {
+      self.setTimeoutTitle = '到三秒了'
+    }, 3000)
+
+    wx.getUserInfo({
+      success(res) {
+        self.userInfo = res.userInfo
+      }
+    })
+  }
+})
+</script>
+<config>
+{
+navigationBarTitleText: 'WePY 2.0 Feature Demo',
+usingComponents: {
+panel: '~@/components/panel',
+counter: '~counter',
+list: '../components/list',
+group: '../components/group',
+"slide-view": "module:miniprogram-slide-view",
+}
+}
+</config>

@@ -1,0 +1,42 @@
+<style lang="less">
+.group {
+}
+</style>
+<template>
+  <div class="group">
+    <span class="id">{{ grouplist.id }}. </span>
+    <span class="name" @tap="tap">{{ grouplist.name }}</span>
+    <div>
+      <div v-for="item in grouplist.list">
+        <groupitem :gitem="item"></groupitem>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import wepy from '@wepy/core'
+// import GroupItem from './groupitem'
+
+wepy.component({
+  props: {
+    grouplist: {},
+    index: {}
+  },
+
+  methods: {
+    tap() {
+      this.grouplist.name = `Parent Random(${Math.random()})`
+      let groups = this.$parent.$children.filter(com => com.$is === 'components/group')
+      let index = groups.indexOf(this)
+      console.log(`Clicked Group ${index}, ID is ${this.grouplist.id}`)
+    }
+  }
+})
+</script>
+<config>
+{
+usingComponents: {
+'groupitem': './groupitem'
+}
+}
+</config>

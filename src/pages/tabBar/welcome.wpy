@@ -1,0 +1,232 @@
+<style lang="less">
+page {
+  background-color: #F8F8F8 !important;
+}
+
+._list {
+  ._title {
+    margin: 50rpx 20rpx 20rpx 20rpx;
+  }
+
+  ._text {
+    width: 670rpx;
+    margin: auto;
+    padding: 24rpx;
+    border-radius: 24rpx;
+  }
+}
+
+._createModal {
+  width: 600rpx;
+  height: 400rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 40rpx 30rpx;
+
+  ._title {
+    letter-spacing: 4rpx;
+    margin-bottom: 32rpx;
+  }
+
+  ._input {
+    background: #f5f5f5;
+    padding: 14rpx;
+    width: 540rpx;
+    height: 80rpx;
+    border-radius: 16rpx;
+    margin-top: 60rpx;
+  }
+
+  .c_btn, .s_btn {
+    width: 200rpx;
+    height: 80rpx;
+    border-radius: 40rpx;
+    margin-top: 60rpx;
+    border: 2rpx solid #D8D8D8;
+  }
+
+  .s_btn {
+    border: none;
+    background: linear-gradient(90deg, #6F96FE 0%, #2D66FF 100%);
+  }
+}
+</style>
+<template>
+  <view :class="{'show': modalName=='bottomModal'}" class="cu-modal">
+    <view class="cu-dialog _createModal bg_f" style="border-radius: 24rpx;">
+      <view class="bg_f">
+        <view class="bold font_32 _title color333">任务清单</view>
+      <view class="font_30 color333">{{ title }}</view>
+        <view class="f-fbc" style="margin: 0 50rpx;">
+          <view class="c_btn f-fcc" @tap="calTaskFn()">取消</view>
+          <view class="s_btn f-fcc colorfff" @tap="getTaskFn">去完成</view>
+        </view>
+      </view>
+    </view>
+  </view>
+<!--  <block v-for="(item, index) in list" :key="index">-->
+<!--    <view class="_list text-c">-->
+<!--      <view class="_title colorC8 font_24">{{ item.created_at }}</view>-->
+<!--      <view class="_text color333 font_30 bg_f text-l">{{ item.content }}</view>-->
+<!--    </view>-->
+<!--  </block>-->
+
+<!--  <view  class="colorC8 text-c font_26" style="margin-top: 32rpx">没有数据啦~</view>-->
+<!--  <view style="height: 160rpx"></view>-->
+
+
+</template>
+<!--x-->
+
+<script>
+import wepy from '@wepy/core'
+import https from '../../mixins/https'
+import base from '../../mixins/base'
+import {service} from '../../config'
+import {throttle} from '../../utils/util'
+
+wepy.page({
+  config: {},
+  mixins: [https, base],
+
+  data: {
+    modalName: '',
+    page: 1,
+    list: [],
+    has_more: true,
+    title: '',
+    isTask: false
+  },
+  onPullDownRefresh() {  // 下拉刷新
+    this.page = 1
+    this.list = []
+    this.getLogsList()
+  },
+  onReachBottom() {
+    wx.showLoading('加载中')
+    if (this.has_more) {
+      // 如果has_more 为true ，就说明当前页 < 总页数，还有数据
+      this.getLogsList()
+    } else {
+      // 反之，便没有数据
+      wx.hideLoading()
+      console.log('再拉也没有啦')
+    }
+  },
+  methods: {
+    calTaskFn() {
+      this.modalName = ''
+      this.$gotoTab('/pages/tabBar/home')
+    },
+    appLoginFn() { // 登录
+      wx.login({
+        success: (res) => {
+          let versions = 'v5.4.25'
+          let data = {
+            code: res.code,
+            formId: wx.getStorageSync('formId'),
+            from_user_id: wx.getStorageSync('from_user_id'),
+            openGId: wx.getStorageSync('openGId'),
+            from_platform: wx.getStorageSync('from_platform'),
+            from_openid: wx.getStorageSync('from_openid'),
+            systemInfo: wx.getStorageSync('systemInfo'),
+            system: wx.getStorageSync('system'),
+            versions: versions,
+            share_user_id: wx.getStorageSync('share_user_id')
+          }
+          this.$post({url: `${service.host}/login/wechat/v2`, data}).then(({code, data}) => {
+            console.log(data)
+            switch (code) {
+              case 0:
+                wx.setStorageSync('token', data.api_token)
+                wx.setStorageSync('openid', data.openid)
+                let userInfo = {
+                  nickName: data.nickname,
+                  avatarUrl: data.avatar,
+                  id: data.id,
+                  created_at: data.created_at
+                }
+                wx.setStorageSync('userInfo', userInfo) // 用户基本信息
+                wx.setStorageSync('user_id', data.id) // 用户id
+                if (this.isTask) {
+                  this.getTaskInfoFn()
+                } else {
+                  let jump = wx.getStorageSync('jump')
+                  if (jump) { // 有上级路由，回去-
+                    // this.$Toast_success('登录成功')
+                      setTimeout(() => {
+                        this.$redirectTo(jump)
+                      }, 800)
+                    wx.removeStorageSync('jump')
+                  } else {
+                    this.$gotoTab('/pages/tabBar/home')
+                  }
+                }
+                break
+              case 1:
+                wx.showModal({ // 使用模态框提示用户进行操作
+                  title: '温馨提示：',
+                  content: '很抱歉！' + res.message,
+                  showCancel: false,
+                  confirmText: '确定',
+                  success: function (res) {
+                    if (res.confirm) {
+                      wx.navigateBack({
+                        delta: 1
+                      })
+                    }
+                  }
+                })
+                break
+              case 2:
+                break
+            }
+            wx.hideLoading()
+          })
+        },
+        fail: (res) => {
+          wx.showModal({ // 使用模态框提示用户进行操作
+            title: '温馨提示：',
+            content: '很抱歉！wx.login登录失败~，请重试',
+            showCancel: false,
+            confirmText: '确定',
+            success: function (res) {
+              if (res.confirm) {
+                wx.navigateBack({
+                  delta: 1
+                })
+              }
+            }
+          })
+          console.log('wx.login登录失败')
+        }
+      })
+    }
+  },
+  onLoad(query) {
+    // if (query.scene) {
+    //   this.isTask = true
+    //   let scenes = unescape(query.scene).split('&')
+    //   for (let item of scenes) {
+    //     wx.setStorageSync(item.split('=')[0], item.split('=')[1])
+    //   }
+    //   console.log(scenes, '122222-')
+    // }
+  },
+  created() {
+    this.$showLoading('加载中')
+    // this.appLoginFn()
+    setTimeout(() => {
+      this.$gotoTab('/pages/tabBar/home')
+      // this.$redirectTo(jump)
+    }, 800)
+  }
+})
+</script>
+<config>
+{
+navigationBarTitleText: '加载中...',
+navigationBarBackgroundColor: '#f8f8f8',
+enablePullDownRefresh: true,
+}
+</config>

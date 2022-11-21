@@ -1,0 +1,685 @@
+<style lang="less" scoped>
+page {
+  ._container {
+    margin-top: 32px;
+    line-height: 36px;
+    padding: 22px;
+  }
+
+  .btn {
+    padding: 8rpx 32rpx;
+    border-radius: 32rpx;
+    box-shadow: 0 0 12rpx #d2d1d1;
+    margin: 32rpx 22rpx;
+  }
+}
+
+</style>
+<template>
+  <view class="_container text-c">
+    <view>{{ state }}</view>
+    <view class="bold" v-if="state == 'running'">正在测量中：<span class="font_52">{{ realTimeWeight }}</span> kg</view>
+    <block v-if="measureData && realTimeWeight == 0">
+      <view class="bold">你的体重是：<span class="font_52">{{ measureData[0].value }}</span> kg</view>
+      <view class="font_28 color666">体重提示： {{ measureData[0].desc }}</view>
+      <view class="bold">BMI指数是：<span class="font_52">{{ measureData[1].value }}</span></view>
+      <view class="font_28 color666">BMI提示： {{ measureData[1].desc }}</view>
+    </block>
+    <view class="btn inline-block" @tap="initFn">开始测试</view>
+  </view>
+
+</template>
+
+<script>
+import wepy from '@wepy/core'
+import https from '../../mixins/https'
+import base from '../../mixins/base'
+import {sealGenderParam, formatDate} from '../../utils/util'
+import getReports from '@yolanda-qn/four-electrodes-report-lib-pe'
+
+const {QNMPPlugin, QNConsts} = requirePlugin('QNBleApi')
+import {service} from '../../config'
+
+const logger = () => {
+  const wxlogger =
+    wx.getLogManager &&
+    wx.getLogManager({
+      level: 0
+    })
+  const log = (...params) => {
+    console.log(...params)
+    wxlogger && wxlogger.log(...params)
+  }
+  return {
+    log
+  }
+}
+let test = [{
+  displayProgress: 0,
+  nameI18nKey: 'Weight.1001',
+  stdValue: '0',
+  fixed: 2,
+  unit: 'kg',
+  unitValue: 'kg',
+  order: 10,
+  icon: 'fer-Weight',
+  descI18nKey: 'Weight.1002',
+  desc: '长期体重过轻会导致一系统列问题，如脱发、厌食症等，身体机能会下降，需要加强营养，多吃高蛋白食物，摄入更多的热量以增加体重。',
+  introI18nKey: '',
+  intro: '',
+  boundaries: ['50.4', '56.7', '69.3', '75.6'],
+  subBoundaries: [],
+  min: '31.5',
+  max: '94.5',
+  levels: [{
+    color: '#AA8EE4',
+    nameI18nKey: 'lowest',
+    name: '严重偏低',
+    desc: '长期体重过轻会导致一系统列问题，如脱发、厌食症等，身体机能会下降，需要加强营养，多吃高蛋白食物，摄入更多的热量以增加体重。',
+    descI18nKey: 'Weight.1002'
+  }, {
+    color: '#00C1E4',
+    nameI18nKey: 'lower',
+    name: '偏低',
+    desc: '体重偏低，身体消瘦，建议加强营养，平衡饮食，多吃高蛋白食物，摄入更多的热量以增加体重。',
+    descI18nKey: 'Weight.1003'
+  }, {
+    color: '#A7CB40',
+    nameI18nKey: 'standard',
+    name: '标准',
+    desc: '恭喜你拥有理想的体重，保持合理健康的生活方式，适量参加运动，你就可以维持标准体重了。',
+    descI18nKey: 'Weight.1004'
+  }, {
+    color: '#FBC13D',
+    nameI18nKey: 'higher',
+    name: '偏高',
+    desc: '体重偏重，略显肥胖，建议一周进行３-５次有氧运动，减少主食（米饭面食等）的摄入，增加高纤维粗粮比例。',
+    descI18nKey: 'Weight.1005'
+  }, {
+    color: '#F74142',
+    nameI18nKey: 'highest',
+    name: '严重偏高',
+    desc: '体重严重超标，建议低脂、低胆固醇、高纤维膳食，补充多种维生素，增加运动量进行体重控制。',
+    descI18nKey: 'Weight.1006'
+  }],
+  levelIndex: 0,
+  progress: -16.428571428571427,
+  levelProgress: -100,
+  processBarVisible: true,
+  isNeedTransformWeightValueByUnit: true,
+  isAdditional: false,
+  id: 'Weight',
+  name: '体重',
+  value: '21.15'
+}, {
+  displayProgress: 5.679012345679012,
+  nameI18nKey: 'BMI.1001',
+  stdValue: '0',
+  fixed: 1,
+  unit: '',
+  unitValue: '',
+  order: 70,
+  icon: 'fer-BMI',
+  descI18nKey: 'BMI.1002',
+  desc: '需要提升体能健康增重，适当多吃高热量、高蛋白、高脂肪饮食，多做力量运动如举重、俯卧撑、仰卧起坐等。',
+  introI18nKey: 'BMI.1006',
+  intro: 'BMI：是指身体质量指数，国际上常用的衡量人体胖瘦程度以及是否健康的一个标准。',
+  boundaries: ['18.5', '25'],
+  subBoundaries: [],
+  min: '5',
+  max: '35',
+  levels: [{
+    color: '#00C1E4',
+    nameI18nKey: 'lower',
+    name: '偏低',
+    desc: '需要提升体能健康增重，适当多吃高热量、高蛋白、高脂肪饮食，多做力量运动如举重、俯卧撑、仰卧起坐等。',
+    descI18nKey: 'BMI.1002'
+  }, {
+    color: '#A7CB40',
+    nameI18nKey: 'standard',
+    name: '标准',
+    desc: 'BMI达标，如果腰围也属于建议的尺寸（男性计算公式：身高(厘米) x 1/2-10=标准腰围(厘米）就更加理想了。',
+    descI18nKey: 'BMI.1003'
+  }, {
+    color: '#FBC13D',
+    nameI18nKey: 'higher',
+    name: '偏高',
+    desc: 'BMI超标，建议选择比较健康的方法减重，如控制饮食、改变不良生活习惯和参加跑步、跳绳、打篮球、踢足球等消耗体能的运动。',
+    descI18nKey: 'BMI.1005'
+  }],
+  levelIndex: 0,
+  progress: 7.666666666666667,
+  levelProgress: 17.037037037037038,
+  processBarVisible: true,
+  isNeedTransformWeightValueByUnit: false,
+  isAdditional: false,
+  id: 'BMI',
+  name: 'BMI',
+  value: '7.3'
+}]
+const APPID = 'wxb0989a4bbce13d87'
+wepy.page({
+  config: {},
+  mixins: [https, base],
+
+  data: {
+    age: 30,
+    // 1 男 0 女
+    gender: 1,
+    height: 170,
+    unit: 'kg',
+    realTimeWeight: 0,
+    realTimeHeight: 0,
+    bleState: '空闲',
+    state: 'paused',
+    measureData: null,
+    eightMeasureData: null,
+    score: 0,
+    // 蓝牙是否可用
+    available: false,
+    // 发现设备中
+    discovering: false,
+    // 是否已连接
+    connected: false,
+    // 是否正在连接
+    connecting: false,
+    // 八电级秤拟合阻抗(仅八电级需要)
+    hmac: '',
+    bleApi: null,
+    deviceHandler: null
+  },
+  onLoad(query) {
+    // console.log('options', options)
+    // options.form = `"{"gender":"1","height":170,"age":30,"isSport":false,"unit":"kg","autoStopDiscovery":true,"id":1}"`
+    // if (options.form) {
+    //   const form = JSON.parse(options.form)
+    //   this.setData({
+    //     ...form
+    //   })
+    // }
+    const {locationAuthorized, locationEnabled, bluetoothEnabled} = wx.getSystemInfoSync()
+    console.log(locationAuthorized, locationEnabled, bluetoothEnabled, 'locationAuthorized, locationEnabled, bluetoothEnabled')
+    if (!locationAuthorized || !locationEnabled || !bluetoothEnabled) {
+      this.$showToast('请确认相关权限是否开启')
+      // setTimeout(() => {
+      //   wx.navigateBack()
+      // }, 2000)
+    }
+    /**
+     * 判断相关权限是否开启, 根据需求放在合适的位置
+     * locationEnabled 是否开启定位
+     * locationAuthorized 是否授权定位(仅安卓需要,需要选择始终允许,不能选择询问,因为微信不会询问用户是否开启定位)
+     * bluetoothEnabled 蓝牙是否开启
+     */
+  },
+  onUnload: function () {
+    this.stopBle()
+  },
+  created(query) {    // 初始化蓝牙
+    // this.bleApi = new QNMPPlugin({
+    //   appId: APPID, // 必须, 客户小程序的appid, 需要配置才能使用，
+    //   mpwx: wx, // 非必须 连接广播称时需要
+    //   logger: logger() // 非必须，日志功能，最好有，方便排查问题，可以替换为客户自己的
+    // })
+  },
+  onShow: function () {
+
+    // this.mockNormalScaleData();
+    // this.mockEightScaleData();
+  },
+  methods: {
+    initFn() {
+      let vm = this
+      vm.$showLoading('正在搜索设备')
+      // 初始化蓝牙
+      this.bleApi = new QNMPPlugin({
+        appId: APPID, // 必须, 客户小程序的appid, 需要配置才能使用，
+        mpwx: wx, // 非必须 连接广播称时需要
+        logger: logger() // 非必须，日志功能，最好有，方便排查问题，可以替换为客户自己的
+      })
+
+      // 错误监听
+      this.bleApi.onError = (err) => {
+        console.error('捕捉到错误', err.detail)
+      }
+
+      // 初始化回调
+      this.bleApi.onReady = ({bleEnableState}) => {    // 表示当前蓝牙是否为开启状态
+        if (bleEnableState) {
+          vm.bleApi.startBleDeviceDiscovery()
+        } else {
+          console.log('蓝牙状态为关闭')
+          vm.$showToast('请先打开蓝牙')
+        }
+      }
+
+      // 设置蓝牙监听事件
+      this.bleApi.setBleEventListener(vm.bleEventListener())
+
+      // 初始化
+      this.bleApi.init()
+    },
+    /**
+     * 停止蓝牙活动
+     */
+    stopBle: async function () {
+      await this.bleApi.stop()
+      await this.bleApi.releaseBleSource()
+    },
+
+    /**
+     * 刷新蓝牙
+     */
+    restart() {
+      this.bleApi
+        .stop()
+        .then(() => {
+          this.connected = false
+          this.bleApi.startBleDeviceDiscovery()
+        })
+        .catch((err) => {
+          console.log('停止扫描失败', err)
+        })
+    },
+
+    async handlerConnect(device) {
+      console.log(device, 'vmvmvmvmvm')
+      let vm = this
+      // const {height, gender, age, unit, connected, hmac} = this.data
+      if (vm.connecting || vm.connected) {
+        console.log('当前正在连接，不再处理')
+        return
+      }
+      vm.$showLoading('正在连接')
+      vm.connecting = true
+      const birthday = new Date()
+      birthday.setFullYear(birthday.getFullYear() - vm.age)
+      const user = {
+        // height,
+        // gender: sealGenderParam(gender),
+        // birthday: formatDate(birthday)
+        birthday: '1999-1-1',
+        gender: 1,
+        height: 170
+      }
+      console.log(user)
+
+      /**
+       * 调用连接成功后，会返回本次连接的设备访问对象，可以对设备进行一些蓝牙数据通讯
+       * 每次连接返回的都不一样，连接成功后，该对象开始可以操作，连接失败或断开后，该对象会失效
+       */
+      console.log('要连接的对象', device)
+      vm.deviceHandler = await vm.bleApi.createBleConnection(device, vm.deviceEventListener(), {
+        user,
+        unit: vm.unit,
+        hmac: vm.hmac
+      })
+
+      console.log('设备方位对象为：', vm.deviceHandler)
+    },
+
+    // 蓝牙相关事件回调
+    bleEventListener() {
+      /**
+       * 监听扫描到设备的回调
+       */
+        // return false
+      let vm = this
+
+      function onBleDeviceFound(device) {
+        vm.handlerConnect(device)
+        vm.$showLoading('发现匹配数据')
+      }
+
+      /**
+       * 监听蓝牙断开连接的回调
+       */
+      // const onDisconnected = (device) => {
+      function onDisconnected(device) {
+        vm.updateState('设备连接已断开')
+        vm.connected = false
+        vm.state = 'paused'
+        vm.connecting = false
+        vm.connecting = false
+        vm.connected = false
+        console.log('设备连接已断开', device)
+      }
+
+      /**
+       * 监听蓝牙状态发生变化回调，连接成功或断开连接都会出触发
+       */
+      // const onBluetoothEnableChange = ({available}) => {
+      function onBluetoothEnableChange({available}) {
+        if (available) {
+          vm.updateState('蓝牙可用，空闲')
+          vm.bleApi.startBleDeviceDiscovery()
+        } else {
+          vm.updateState('蓝牙不可用')
+        }
+        vm.available = available
+      }
+
+      /**
+       *  监听设备连接成功回调
+       */
+      // const onConnected = (device) => {
+      function onConnected(device) {
+        wx.hideLoading()
+        vm.$Toast_success('连接成功')
+        vm.updateState('已连接')
+        console.log('设备已连接', device)
+        vm.connecting = false
+        vm.connected = true
+        vm.state = 'running'
+        vm.device = device
+      }
+
+      /**
+       * 监听停止扫描的回调
+       */
+      // const onStopDiscoveryDevice = () => {
+      function onStopDiscoveryDevice() {
+        vm.updateState('已停止扫描')
+        vm.discovering = false
+      }
+
+      /**
+       * 监听开始扫描设备的回调
+       */
+      function onStartDiscoveryDevice() {
+        // const onStartDiscoveryDevice = () => {
+        vm.updateState('开始扫描')
+        vm.devices = []
+        vm.discovering = true
+      }
+
+      return {
+        onBleDeviceFound,
+        onDisconnected,
+        onBluetoothEnableChange,
+        onConnected,
+        onStopDiscoveryDevice,
+        onStartDiscoveryDevice
+      }
+    },
+
+    // 秤端相关事件回调
+    deviceEventListener() {
+      /**
+       * 实时测量体重
+       */
+      let vm = this
+
+      // const onGetUnsteadyWeight = ({weight}) => {
+      function onGetUnsteadyWeight({weight}) {
+        vm.updateState('测量中')
+        vm.realTimeWeight = weight
+        vm.state = 'running'
+        vm.unit = 'kg'
+      }
+
+      /**
+       * 获取到了实时的稳定测量数据，在连接APP的情况下，进行测量，数据会进入到这个回调
+       * @param {object} measure 体脂秤测量数据
+       */
+      // const onGetScaleData = ({measure}) => {
+      function onGetScaleData({measure}) {
+        vm.updateState('测量完成')
+        console.log('测量结束', measure)
+        vm.analysisData(measure)
+      }
+
+      /**
+       * 身高秤测量实时身高的回调
+       */
+      // const onGetUnsteadyHeight = ({height}) => {
+      function onGetUnsteadyHeight({height}) {
+        if (height <= 0) return
+        vm.realTimeHeight = height
+        vm.state = 'running'
+        vm.unit = 'cm'
+      }
+
+      /**
+       * 身高秤测量身高结束的回调
+       */
+      // const onMeasureHeightEnd = ({weight, height}) => {
+      function onMeasureHeightEnd({weight, height}) {
+        vm.realTimeWeight = weight
+        vm.realTimeHeight = height
+        vm.state = 'running'
+        vm.unit = 'cm'
+      }
+
+      /**
+       * 请求算法接口错误回调，一般是因为用户信息的参数错误导致
+       */
+      // const onFetchScaleDataFail = (err) => {
+      function onFetchScaleDataFail(err) {
+        console.error('请求算法接口出错了', err)
+      }
+
+      return {
+        onGetUnsteadyWeight,
+        onGetScaleData,
+        onGetUnsteadyHeight,
+        onMeasureHeightEnd,
+        // onMeasureHeightEnd,
+        onFetchScaleDataFail
+      }
+    },
+
+    /**
+     * 处理测量后的数据, 根据设备类型调用不同的处理方法
+     */
+    analysisData(scaleData) {
+      switch (scaleData.device.type) {
+        case QNConsts.QNBleDeviceType.WSP_EIGHT_DUAL_MODE_SCALE:
+        case QNConsts.QNBleDeviceType.SINGLE_BLE_EIGHT_SCALE:
+          this.analysisEightData(scaleData)
+          break
+        default:
+          this.analysisNormalData(scaleData)
+          break
+      }
+    },
+
+    /**
+     * 展示普通秤测量后的数据，仅供参考，
+     */
+    analysisNormalData(scaleData) {
+      // 配置信息
+      let vm = this
+      const config = {
+        weightUnit: 'kg', // 重量单位
+        lang: 'zh_CN' // 当前系统语言
+      }
+      const measureData = {
+        ...scaleData.user,
+        ...scaleData
+      }
+      console.log('构造前', measureData)
+      // 这里只是拿到kg数据，尚未进行单位转换和小数位精度fixed处理
+      const reports = getReports(measureData, config)
+        // 可以使用order字段来排序
+        .sort((a, b) => a.order - b.order)
+        // toObject会进行单位转换和小数位精度处理，返回的是string类型，不应该使用这里的数据来进行额外计算
+        .map((item) => item.toObject())
+
+      vm.realTimeWeight = 0
+      vm.realTimeHeight = 0
+      vm.state = 'paused'
+      vm.score = scaleData.score
+      vm.measureData = reports
+      console.log(reports, 'reportsreportsreports')
+    },
+
+    /**
+     * @brief 展示八电级秤测量后的数据，仅供参考，
+     *
+     */
+    analysisEightData(scaleData) {
+      // 八电级测出电阻才能显示深度报告
+      if (!this.isValidEightMeasure(scaleData)) {
+        this.tip('未测出电阻, 请重新测量')
+        return
+      }
+
+      // 记录阻抗
+      if (scaleData.hmac) {
+        // 需要客户自己记录该参数对应的用户
+        this.hmac = scaleData.hmac
+      }
+      console.log(scaleData, 'scaleDatascaleDatascaleData')
+      this.eightMeasureData = scaleData
+      this.realTimeWeight = 0
+      this.realTimeHeight = 0
+      this.state = 'paused'
+      this.score = scaleData.score
+    },
+
+    /**
+     * 设置蓝牙提示
+     * @param {string} bleState
+     * 蓝牙提示信息
+     */
+    updateState(bleState) {
+      this.bleState = bleState
+    },
+
+    /**
+     * 提示
+     * @param {string} title
+     */
+    tip(title) {
+      wx.showToast({
+        icon: 'none',
+        title,
+        duration: 2500
+      })
+    },
+
+    /**
+     * 是否是有效的八电级测量数据(是否测出电阻)
+     */
+    isValidEightMeasure(scaleData) {
+      const validKeys = [
+        'muscleRh',
+        'muscleLh',
+        'muscleRf',
+        'muscleLf',
+        'muscleT',
+        'fatRh',
+        'fatLh',
+        'fatRf',
+        'fatLf',
+        'fatT'
+      ]
+      return validKeys.every((key) => scaleData[key])
+    },
+
+    /**
+     *  模拟普通数据
+     */
+
+    mockNormalScaleData() {
+      const scaleData = {
+        user: {
+          birthday: '1999-1-1',
+          gender: 1,
+          height: 170
+        },
+        device: {
+          type: QNConsts.QNBleDeviceType.NORMAL_BLE_SCALE
+        },
+        bestVisualWeight: 63,
+        bmi: 27.4,
+        bmr: 1608,
+        bodyAge: 33,
+        bodyShape: 6,
+        bodyfat: 27.6,
+        bodyfatMass: 21.85,
+        bone: 2.9,
+        fatControl: -9.97,
+        fattyLiver: 2,
+        heartIndex: 3,
+        heartRate: 84,
+        lbm: 57.3,
+        mineralSalt: 1,
+        muscleMass: 54.7,
+        muscle: 46.8,
+        obesity: 25.63,
+        protein: 16.5,
+        proteinMass: 13.06,
+        score: 72.2,
+        sinewControl: 3.32,
+        sinewRate: 68.86,
+        standardWeight: 63,
+        subfat: 24.4,
+        time: new Date().getTime(),
+        visfat: 8,
+        stature: 165,
+        water: 52.8,
+        waterMass: 41.4,
+        weight: 75,
+        weightControl: -6.65
+      }
+
+      this.analysisData(scaleData)
+    },
+
+    /**
+     *  模拟8电级数据
+     */
+    mockEightScaleData() {
+      const scaleData = {
+        bmi: 26,
+        bmr: 1537,
+        bodyAge: 34,
+        bodyShape: 1,
+        bodyfat: 28.1,
+        bone: 3.65,
+        fatLf: 4.5,
+        fatLh: 1.8,
+        fatRf: 4.5,
+        fatRh: 1.8,
+        fatT: 1.8,
+        lbm: 54.1,
+        muscleMass: 54.7,
+        muscle: 38.9,
+        muscleLf: 8.7,
+        muscleLh: 2.6,
+        muscleRf: 8.8,
+        muscleRh: 2.7,
+        muscleT: 23.2,
+        protein: 14.2,
+        score: 69.1,
+        subfat: 25.4,
+        time: new Date().getTime(),
+        user: {
+          birthday: '2000-1-1',
+          gender: 1,
+          height: 170
+        },
+        device: {
+          type: QNConsts.QNBleDeviceType.WSP_EIGHT_DUAL_MODE_SCALE
+        },
+        visfat: 8,
+        water: 52.8,
+        weight: 75.2
+      }
+      this.analysisData(scaleData)
+    }
+
+  }
+})
+</script>
+<config>
+{
+navigationBarTitleText: '蓝牙测试',
+enablePullDownRefresh: true,
+navigationBarBackgroundColor: '#EDEDED',
+backgroundColorTop: '#F4F7FC',
+backgroundColorBottom: '#F4F7FC',
+}
+</config>

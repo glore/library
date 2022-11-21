@@ -1,0 +1,351 @@
+<style lang="less">
+@import '../styles/index.less';
+
+page {
+  background-color: #FFFFFF;
+}
+
+.upload_file {
+
+  overflow: hidden;
+  position: relative;
+
+  ._item {
+    padding: 32rpx;
+    //margin: 0 32rpx;
+    border-bottom: 1rpx solid #f5f5f5;
+  }
+
+  ._cancel {
+    border-top: 16rpx solid #f8f8f8;
+  }
+}
+
+</style>
+<template>
+  <view :class="{'show': modalName=='fileModal'}" class="cu-modal bottom-modal">
+    <view class="cu-dialog" style="border-radius: 32rpx 32rpx 0 0;">
+      <view class="bg_f upload_file">
+        <!--        <view class="_title _item font_32">请上传文件</view>-->
+        <view class="_title _item font_32 color333" @tap="chooseImage">图片</view>
+        <view class="_title _item font_32 color333" @tap="chooseVideo">视频</view>
+        <view class="_title _item font_32 color333" @tap="choosevideo">YUN视频</view>
+        <view class="_title _item font_32 color333" @tap="chooseFile">文件</view>
+        <view class="_title _item font_32 color333 _cancel" @tap="cancelFn">取消</view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from '@wepy/core'
+import {service} from '../config'
+import base from '../mixins/base'
+import https from '../mixins/https'
+import VODUpload from '../mixins/aliyun-upload-sdk-1.0.1.min'
+
+wepy.component({
+  props: {
+    modalName: {
+      type: String,
+      default: '',
+      twoWay: true
+    }
+  },
+  data: {
+    uploader: {},
+    videos: [],
+    uploadFiles: []
+  },
+  mixins: [https, base],
+  methods: {
+    getSignature() {
+      var that = this
+      var uploader = new VODUpload({
+        timeout: 60000,
+        region: 'cn-shanghai',
+        // 添加文件成功
+        addFileSuccess: (uploadInfo) => {
+          console.log('addFileSuccess' + JSON.stringify(uploadInfo))
+          that.uploader.startUpload()
+        },
+        // 开始上传
+        onUploadstarted: function (uploadInfo) {
+          console.log('文件开始上传...')
+          console.log('onUploadStarted:' + JSON.stringify(uploadInfo))
+          let data = {
+            title: uploadInfo.url,
+            fileSize: uploadInfo.fileSize,
+            description: 'description',
+            coverURL: uploadInfo.coverUrl,
+            tags: 'tags',
+            file_name: uploadInfo.url
+          }
+          that.$post({url: `${service.host}/admin/create/upload/video`, data}).then(({code, data}) => {
+            if (code == 0) {
+              console.log(data.VideoId)
+              uploader.setUploadAuthAndAddress(uploadInfo, data.UploadAuth, data.UploadAddress, data.VideoId)
+            } else {
+              that.$showToast('上传失败了')
+              uploader.stopUpload()
+            }
+            wx.hideLoading()
+          })
+        },
+        // 文件上传成功
+        onUploadSucceed: function (uploadInfo) {
+          console.log(JSON.stringify(uploadInfo))
+          console.log('文件上传成功!')
+          that.loadModal = false
+          that.getVideoUrl(uploadInfo.videoId)
+        },
+        // 文件上传失败
+        onUploadFailed: function (uploadInfo, code, message) {
+          console.log('onUploadFailed: file:' + uploadInfo.file.name + ',code:' + code + ', message:' + message)
+          console.log('文件上传失败!')
+          uploader.stopUpload()
+        },
+        // 取消文件上传
+        onUploadCanceled: function (uploadInfo, code, message) {
+          console.log(JSON.stringify(uploadInfo) + code + message)
+          console.log('文件已暂停上传!')
+          uploader.stopUpload()
+        },
+        // 文件上传进度，单位：字节, 可以在这个函数中拿到上传进度并显示在页面上
+        onUploadProgress: function (uploadInfo, totalSize, progress) {
+          var files
+          if (uploadInfo.isImage) {
+            files = that.images
+          } else {
+            files = that.videos
+          }
+
+          files.forEach((file, idx) => {
+            if (file.url === uploadInfo.url) {
+              file.progress = progress
+              if (uploadInfo.isImage) {
+                that.setData({
+                  images: files
+                })
+              } else {
+                that.setData({
+                  videos: files
+                })
+              }
+            }
+          })
+          var progressPercent = Math.ceil(progress)
+          console.log('文件上传中...' + progressPercent)
+          wx.hideLoading()
+          that.loadModal = true
+          that.progressPercent = progressPercent
+        },
+        // 上传凭证超时
+        onUploadTokenExpired: function (uploadInfo) {
+        },
+        // 全部文件上传结束
+        onUploadEnd: (uploadInfo) => {
+          console.log('文件上传完毕 onUploadEnd: uploaded all the files')
+        }
+      })
+      this.uploader = uploader
+    },
+    // 获取视频URL
+    getVideoUrl(videoId) {
+      var vm = this
+      vm.$showLoading('加载中...')
+      vm.$get({url: `${service.host}/admin/video/url?aliyun_video_id=${videoId}`}).then(({code, data}) => {
+        console.log(data, '=========')
+        let file = {
+          filePath: data.play_url,
+          type: 'video'
+        }
+        vm.$emit('changeVal', file)
+        wx.hideLoading()
+        // }
+      })
+    },
+    choosevideo(maxTime = 30) {
+      let vm = this
+      wx.chooseMedia({
+        count: 1, // 上传视频的个数
+        mediaType: ['video'], // 限制上传的类型为video
+        sourceType: ['album', 'camera'], // 视频选择来源
+        maxDuration: maxTime, // 拍摄限制时间
+        compressed: true,
+        camera: 'back', // 采用后置摄像头
+        success: (res) => { // 获取临时存放的视频资源
+          let tempFilePath = res.tempFiles[0].tempFilePath
+          // 获取该视频的播放时间
+          let duration = res.tempFiles[0].duration
+          console.log('视频播放时间为' + duration)
+          // 视频封面
+          let thumbTempFilePath = res.tempFiles[0].thumbTempFilePath
+          console.log('视频封面为' + thumbTempFilePath)
+          // 获取视频的大小(MB单位)
+          let size = parseFloat(res.tempFiles[0].size / 1024 / 1024).toFixed(1)
+          console.log('视频大小为' + size)
+          // 获取视频的高度
+          let height = res.tempFiles[0].height
+          console.log('视频高度为' + height)
+          // 获取视频的宽度
+          let width = res.tempFiles[0].width
+          console.log('视频宽度为' + width)
+          var file = {
+            url: tempFilePath,
+            coverUrl: thumbTempFilePath,
+            fileSize: size
+          }
+          // 校验大小后，符合进行上传
+          if (duration > maxTime) {
+            let beyongSize = parseFloat(duration - 30).toFixed(0)
+            // 获取视频超出限制大小的数量
+            wx.showModal({
+              title: '提示',
+              content: '上传的视频时长超限,超出' + beyongSize + '秒,是否剪辑视频！',
+              success(res) {
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                } else if (res.cancel) {
+                  console.log('用户点击取消')
+                }
+              }
+            })
+          } else {
+            vm.$showLoading('压缩中')
+            // 上传视频
+            vm.uploadFileV2(file)
+          }
+        }
+      })
+    },
+    uploadFileV2(file) { // 上传视频
+      let vm = this
+      // var videosCount = --9
+      // vm.videosCount = videosCount
+      // vm.videos = vm.videos.concat(file)
+      var uploader = vm.uploader
+      var userData = '{"Vod":{}}'
+      console.log(file, 'file')
+      wx.hideLoading()
+      uploader.addFile(file, null, null, null, userData)
+    },
+    cancelFn() {   // 取消方法
+      this.modalName = ''
+      this.$emit('changeVal', '')
+    },
+    chooseImage() { // 上传照片
+      let vm = this
+      vm.$showLoading('加载中...')
+      wx.chooseMedia({
+        count: 7, // 上传视频的个数
+        mediaType: ['image'], // 限制上传的类型为image
+        sourceType: ['album', 'camera'], // 视频选择来源
+        compressed: true,
+        success: (res) => { // 获取临时存放的视频资源
+          console.log(res.tempFiles)
+          let tempFilePath = res.tempFiles[0].tempFilePath
+          for (let item of res.tempFiles) {
+            // if (!/\.(jpg|jpeg|png|JPG|PNG|JPEG)$/.test(item.tempFilePath)) {
+            //   vm.$showToast('上传图片只能是 jpg、png、jpeg 格式!')
+            //   return
+            // }
+            vm.uploadFile(tempFilePath, 'image')
+          }
+        }
+      })
+    },
+    chooseFile() { // 上传文件
+      let vm = this
+      vm.$showLoading('加载中...')
+      wx.chooseMessageFile({
+        count: 1,
+        type: 'all',
+        success: (res) => {
+          console.log(res, '文件')
+          vm.uploadFile(res.tempFiles[0].path, 'file')
+        },
+        fail: () => {
+          console.log('1111')
+          vm.modalName = ''
+          wx.hideLoading()
+        }
+      })
+    },
+    chooseVideo(maxTime = 30) {   // 上传视频
+      let vm = this
+      console.log('上传视频的方法')
+      wx.chooseMedia({
+        count: 1, // 上传视频的个数
+        mediaType: ['video'], // 限制上传的类型为video
+        sourceType: ['album', 'camera'], // 视频选择来源
+        maxDuration: maxTime, // 拍摄限制时间
+        compressed: true,
+        camera: 'back', // 采用后置摄像头
+        success: (res) => { // 获取临时存放的视频资源
+          let tempFilePath = res.tempFiles[0].tempFilePath
+          // 获取该视频的播放时间
+          let duration = res.tempFiles[0].duration
+          console.log('视频播放时间为' + duration)
+          // 获取视频的大小(MB单位)
+          let size = parseFloat(res.tempFiles[0].size / 1024 / 1024).toFixed(1)
+          console.log('视频大小为' + size)
+          // 获取视频的高度
+          let height = res.tempFiles[0].height
+          console.log('视频高度为' + height)
+          // 获取视频的宽度
+          let width = res.tempFiles[0].width
+          console.log('视频宽度为' + width)
+          // 校验大小后，符合进行上传
+          if (size > 25) {
+            let beyongSize = parseFloat(size - 25)
+            // 获取视频超出限制大小的数量
+            vm.$showToast('上传的视频大小超限,超出' + beyongSize + 'MB,请重新上传！')
+            // console.log('上传的视频大小超限,超出' + beyongSize + 'MB,请重新上传！')
+          }
+          // 符合大小限制，进行上传
+          // console.log('开始上传！！！', tempFilePath)
+          // vm.editorVideo(tempFilePath).then((data) => {
+          // vm.compressVideo(tempFilePath)
+          vm.uploadFile(tempFilePath, 'video')
+          // })
+          // }
+        }
+      })
+    },
+    uploadFile(filePaths, type) {
+      let vm = this
+      vm.$showLoading('上传中...')
+      console.log(filePaths, 'filePaths')
+      wx.uploadFile({
+        url: `${service.host}/uploads`,
+        filePath: filePaths,
+        method: 'POST',
+        name: 'fileData',
+        header: {
+          'Authorization': 'Bearer ' + wx.getStorageSync('token'),
+          'content-type': 'multipart/form-data',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        success: (res) => {
+          console.log(JSON.parse(res.data).data)
+          vm.modalName = ''
+          let data = {
+            filePath: JSON.parse(res.data).data,
+            type: type
+          }
+          vm.$emit('changeVal', data)
+          wx.hideLoading()
+        },
+        fail: (res) => {
+        },
+        complete: () => {
+        }
+      })
+    }
+
+  },
+  created() {
+    this.getSignature()
+  }
+})
+</script>
