@@ -126,10 +126,10 @@ useExtendedLib: {
 'weui': true
 },
 plugins: {
-"QNBleApi": {
-"version": "4.3.2",
-"provider": "wx2a4ca48ed5e96748"
-}
+<!--"QNBleApi": {-->
+<!--"version": "4.3.2",-->
+<!--"provider": "wx2a4ca48ed5e96748"-->
+<!--}-->
 <!--'FL-plugin': {-->
 <!--'version': '0.0.3',-->
 <!--'provider': 'wxc41491431733671e'-->

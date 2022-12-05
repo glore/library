@@ -16,7 +16,6 @@
   "author": "mamba <dengzhifeng_63@163.com>",
   "license": "MIT",
   "dependencies": {
-    "@yolanda-qn/four-electrodes-report-lib-pe": "^1.1.2",
     "@wepy/core": "^2.0.0-alpha.16",
     "@wepy/use-promisify": "^2.1.0",
     "@wepy/x": "^2.0.2",

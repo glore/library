@@ -35,7 +35,7 @@ import wepy from '@wepy/core'
 import https from '../../mixins/https'
 import base from '../../mixins/base'
 import {sealGenderParam, formatDate} from '../../utils/util'
-import getReports from '@yolanda-qn/four-electrodes-report-lib-pe'
+// import getReports from '@yolanda-qn/four-electrodes-report-lib-pe'
 
 const {QNMPPlugin, QNConsts} = requirePlugin('QNBleApi')
 import {service} from '../../config'

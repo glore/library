@@ -9,7 +9,7 @@ page {
   <view class="_container">
     首页
   </view>
-  <button @tap="goto('/pages/sub_page/measure')">上称测量</button>
+<!--  <button @tap="goto('/pages/sub_page/measure')">上称测量</button>-->
   <view :class="{'show': modalName=='showNoteModal'}" class="cu-modal bottom-modal">
     <view class="cu-dialog" style="border-radius: 32rpx 32rpx 0 0;">
 
