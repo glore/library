@@ -1,3 +1,18 @@
+# 基于wepy2.0封装的开箱即用框架
+
+---
+
+## 介绍
+
+wepy2.0空项目
+
+> 安装教程：
+```npm install```
+```npm run dev```
+
+> package.json文件
+
+```json
 {
   "name": "mamba_wepy",
   "version": "0.0.1",
@@ -42,3 +57,5 @@
     "wepy-eslint": "^1.5.3"
   }
 }
+
+```

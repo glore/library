@@ -9,12 +9,11 @@ page {
   <view class="_container">
     首页
   </view>
-<!--  <button @tap="goto('/pages/sub_page/measure')">上称测量</button>-->
-  <view :class="{'show': modalName=='showNoteModal'}" class="cu-modal bottom-modal">
-    <view class="cu-dialog" style="border-radius: 32rpx 32rpx 0 0;">
-
-    </view>
+  <view class="ui-record-list" v-for="(item,index) in list" :key="index">
   </view>
+  <block v-if="list.length == 0">
+    <view class="text-center ui-no-more-data color333 font_30" v-if="no_more">暂无更多数据</view>
+  </block>
 </template>
 <!--x-->
 
@@ -29,15 +28,26 @@ wepy.page({
   mixins: [https, base],
 
   data: {
+    list: [],
+    no_more: true
   },
-
+// 上拉获取更多数据
+  onReachBottom() {
+    if (!this.no_more) {
+      // this.getList()
+    }
+  },
+  // 下拉刷新
+  onPullDownRefresh() {
+    // this.page = 1
+    // this.list = []
+    // this.no_more = false
+    // this.getList()
+  },
   methods: {
     goto(path) {
       this.$goto(path)
     }
-  },
-  onPullDownRefresh() {  // 下拉刷新
-    // this.getUserInfo()
   },
   onShow() {
     // this.$showLoading('加载中...')
