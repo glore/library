@@ -1,0 +1,155 @@
+
+
+
+<style lang="less" scoped>
+._pic{
+  width: 100%;
+  border-radius: 12rpx;
+}
+._icon_close{
+  z-index: 99999;
+}
+._save_btn{
+  width: 600rpx;
+  height: 80rpx;
+  background: linear-gradient(90deg, #9DC0F8 0%, #508AFC 100%);
+  border-radius: 40rpx;
+}
+</style>
+<template>
+  <view class="~cu-modal {{modalName=='Modal'?'~show':''}}">
+    <view class="~cu-dialog" style="padding: 50rpx 30rpx;">
+      <image class="~_icon_close" src="~@/images/icon/close_icon.png" mode="aspectFit" @tap="cancelFn"></image>
+      <view class="~_c ~font_32 ~lineH44 ~color333 ~bold">分享至</view>
+      <view class="~f-fcc ~marginT50">
+        <button class="~_wx_box ~color999 ~btn" open-type="share" @tap="cancelFn">
+          <image class="~_icon_wx" src="~@/images/icon/wx_icon.png" mode="aspectFit"></image>
+          <view class="~color666 ~font_24 ~lineH34 ~marginT10">微信好友</view>
+        </button>
+        <view class="~_wx_box ~color999 ~_wx_pyq" @tap="modalName='showPic'">
+          <image class="~_icon_wx" src="~@/images/icon/pyq_icon.png" mode="aspectFit"></image>
+          <view class="~color666 ~font_24 ~lineH34 ~marginT10">朋友圈</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="~cu-modal {{modalName=='showPic'?'~show':''}}">
+<!--  <view class="~cu-modal {{modalName=='Modal'?'~show':''}}">-->
+    <view class="~cu-dialog" style="padding: 0; background: none;border-radius: 0;">
+      <image class="~_icon_close_pic _icon_close" src="~@/images/icon/close_icon_v3.png" mode="aspectFit" @tap="cancelFn"></image>
+      <image class="_pic" src="{{sharePic}}" mode="widthFix" @tap="cancelFn"></image>
+      <view class="_save_btn ~spacing2 ~font_30 ~f-fcc ~marginT24 ~colorfff" @tap="saveImgFn()">保存至相册，分享给好友或朋友圈</view>
+    </view>
+  </view>
+
+  <view class="~cu-modal {{modalName=='showSet'?'~show':''}}">
+    <view class="~cu-dialog" style="padding-top: 58rpx;">
+      <view class="~_t ~font_32 ~lineH44 ~color333 ~text-c ~bold">提示</view>
+      <view class="~_c ~font_32 ~lineH44 ~color333 ~text-c ~marginT30">
+        需要你授权才能保存到相册哦
+      </view>
+      <view class="~f-fcc ~marginT12">
+        <view class="~cancel ~marginT40 ~f-fcc ~color999 ~font_28" @tap="cancelFn">取消</view>
+        <button class="~btn ~confirm ~marginT40 ~f-fcc ~colorfff ~font_28" open-type="openSetting"
+                @opensetting="openSetSaveImg($wx)">
+          打开设置
+        </button>
+<!--        <view class="~confirm ~marginT40 ~f-fcc ~colorfff" @tap="openSetSaveImg">确认</view>-->
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from '@wepy/core'
+import {secondToTime} from '../utils/util'
+// import {service} from '../config'
+// import base from '../mixins/base'
+// import https from '../mixins/https'
+
+wepy.component({
+  props: {
+    modalName: {type: String, default: '', twoWay: true},
+    sharePic: {type: String, default: '', twoWay: true}
+  },
+  data: {
+  },
+  watch: {
+    modalName() {
+      // console.log(this.modalName)
+    }
+  },
+  mixins: [],
+  methods: {
+    cancelFn() {
+      this.modalName = ''
+      this.$emit('modalFn', this.modalName)
+    },
+    openSetSaveImg(e) { // 打开设置，且保存到相册
+      let vm = this
+      if (e.detail.authSetting['scope.writePhotosAlbum']) {
+        vm.modalName = ''
+        wx.downloadFile({
+          url: vm.sharePic,
+          success: (res) => {
+            wx.saveImageToPhotosAlbum({
+              filePath: res.tempFilePath,
+              success: (res) => {
+                wx.showModal({
+                  title: '保存成功',
+                  content: '赶紧分享给你的朋友吧！',
+                  showCancel: false
+                })
+                vm.$emit('modalFn', vm.modalName)
+              },
+              fail: () => {
+                console.log('取消了')
+              }
+            })
+          },
+          fail: () => {
+            console.log('fail')
+          }
+        })
+      }
+    },
+    saveImgFn() {
+      let vm = this
+      wx.downloadFile({
+        url: vm.sharePic,
+        success: (res) => {
+          wx.saveImageToPhotosAlbum({
+            filePath: res.tempFilePath,
+            success: (res) => {
+              vm.modalName = ''
+              vm.$emit('modalFn', vm.modalName)
+              wx.showModal({
+                title: '已保存在相册了！',
+                content: '赶紧分享给你的朋友吧！',
+                showCancel: false
+              })
+            },
+            fail: () => {
+              wx.getSetting({
+                success(res) {
+                  if (!res.authSetting['scope.writePhotosAlbum']) {
+                    vm.modalName = 'showSet'
+                    vm.$emit('modalFn', vm.modalName)
+                  }
+                }
+              })
+            }
+          })
+        },
+        fail: () => {
+          console.log('fail')
+        }
+      })
+    }
+  },
+
+  attached() {
+  },
+  created() {
+  }
+})
+</script>

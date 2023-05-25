@@ -2,6 +2,8 @@
                小程序基础公用方法，类似于弹框.....等
 ======================================================== */
 
+import {service} from '../config'
+
 export default {
   data: {},
 
@@ -24,6 +26,16 @@ export default {
         duration: 1200
       })
     },
+    $showModal(title) {
+      wx.showModal({
+        title: '提示',
+        content: title,
+        showCancel: false,
+        success: (res) => {
+          if (res.confirm) {}
+        }
+      })
+    },
     $Toast_success(title) {
       wx.showToast({
         title: title,
@@ -44,6 +56,18 @@ export default {
         mask: true
       })
     },
+
+    $hideLoading(title) {
+      wx.hideLoading()
+    },
+
+    $BackTop(title) {
+      wx.pageScrollTo({
+        scrollTop: 0,
+        duration: 400
+      })
+    },
+
     // 跳转链接
     $goto(url) {  // 普通跳转,有路由栈限制
       wx.navigateTo({url: url})
@@ -57,10 +81,32 @@ export default {
     $reLaunchTo(url) { // 关闭所有页面
       wx.redirectTo({url: url})
     },
-    $gotoBack(num) {
-      wx.navigateBack({
-        delta: num
-      })
+    $gotoBack(num) { // 返回上一页,如果没有上一页就去首页
+      let pages = getCurrentPages()
+      if (pages[pages.length - 2]) {
+        // 如果有上一页，就返回上一页
+        wx.navigateBack({
+          delta: num
+        })
+      } else {
+        wx.reLaunch({url: '/pages/tabBar/home'})
+      }
+    },
+    $gotoBackV2(num, data) { // 返回上一页,追加调用上一页的onLoad()
+      let pages = getCurrentPages()
+      if (pages[pages.length - 2]) {
+        // 如果有上一页，就返回上一页
+        wx.navigateBack({
+          delta: num,
+          success: (e) => { // 成功的回调
+            var page = getCurrentPages().pop()  // 获取A页面
+            if (page == undefined || page == null) return
+            page.onLoad(data)  // 调用A页面的方法, 并将值传过去
+          }
+        })
+      } else {
+        wx.reLaunch({url: '/pages/tabBar/home'})
+      }
     },
     $gotoH5(URL) {
       console.log(encodeURIComponent(URL))

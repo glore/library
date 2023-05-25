@@ -1,21 +1,130 @@
 <style lang="less" scoped>
 page {
-  background-color: #F4F7FC;
+  background-color: #FFFFFF;
+
+  ._bg {
+    width: 100vw;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+
+  ._container {
+    ._userInfo{
+      padding: 36rpx 60rpx;
+      ._icon{
+        width: 28rpx;
+        height: 28rpx;
+        margin-left: 8rpx;
+        //vertical-align: middle;
+      }
+      .img{
+        width: 120rpx;
+        height: 120rpx;
+        box-shadow: 0rpx 4rpx 16rpx 0rpx rgba(102, 81, 81, 0.5);
+        border: 4rpx solid #FFFFFF;
+        border-radius: 50%;
+        margin-right: 20rpx;
+      }
+    }
+    ._mylibrary{
+      //margin-bottom: 24rpx;
+      image{
+        width: 100%;
+        height: 136rpx;
+      }
+    }
+    ._list{
+      width: 690rpx;
+      height: 440rpx;
+      background: #FFFFFF;
+      box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0, 0, 0, 0.1);
+      border-radius: 24rpx;
+      margin: auto;
+      ._item{
+        padding: 40rpx 24rpx 18rpx 24rpx;
+        ._next_icon{
+          width: 16rpx;
+          height: 28rpx;
+          margin-right: 16rpx;
+        }
+        ._icon{
+          width: 44rpx;
+          height: 44rpx;
+          margin-right: 20rpx;
+        }
+      }
+    }
+  }
 }
 
 
 </style>
 <template>
-  <view class="_container">
-    个人中心
-
-  </view>
-
-  <view :class="{'show': modalName=='showNoteModal'}" class="cu-modal bottom-modal">
-    <view class="cu-dialog" style="border-radius: 32rpx 32rpx 0 0;">
-
+  <!-- 引入组件 -->
+  <skeleton
+    loading="{{ skeletonSelectedLoadingType }}"
+    bgcolor="{{ skeletonBgcolor }}"
+    isDev="{{ skeletonIsDev }}"
+    data="{{ skeletonData }}"
+    wx:if="{{ !pageIsReady || skeletonIsDev }}"
+  ></skeleton>
+  <view class="cu-custom ">
+    <view class="cu-bar fixed" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+      <view class="content {{showCustom?'animation-TOP forwards':'animation-slide-top'}}" style="top:{{StatusBar}}px;">我的</view>
     </view>
   </view>
+  <image src="https://image.fulllinkai.com/202305/09/0f16fa4e30e8e2cae9c63c29da67060b.png" mode="widthFix"
+         class="_bg"></image>
+  <view class="_container skeleton" style="margin-top:{{CustomBar+22}}px;">
+    <view class="_userInfo f-fc" @tap="$goto('/pages/user_page/userInfor')">
+      <view class="_avatar skeleton-circle">
+<!--        <image class="img" src="~@/images/icon/avatarIcon.png"  mode="aspectFit"></image>-->
+        <image class="img" :src="userInfo.circle_avatar?userInfo.circle_avatar:'https://image.fulllinkai.com/202305/17/449c3253ca2bbed9314d39977a486d0e.png'"  mode="aspectFit"></image>
+      </view>
+      <view >
+        <view class="color333 lineH50 bold f-fc skeleton-rect" >
+          <view class="font_36 lineH50 ">{{userInfo.name?userInfo.name:'完善个人信息'}}</view>
+          <image class="_icon" src="~@/images/icon/edit_icon.png" mode="aspectFit"></image>
+        </view>
+        <view class="color666 font_24 lineH34 skeleton-rect marginT8">ID账号：{{userInfo.id}}</view>
+      </view>
+    </view>
+    <view class="_mylibrary relative f-fcc" @tap="$goto('/pages/user_page/myLibrary')">
+      <image src="https://image.fulllinkai.com/202305/15/3168d50d9951ef7748a41b0f06a9bf79.png" mode="widthFix"
+             class=""></image>
+<!--      <image src="https://image.fulllinkai.com/202305/10/3fe10b245b32382ac90f87cf64509de7.gif" mode="widthFix"-->
+<!--             class="absolute gif-black response" style="bottom:0;height: auto; border-radius: 22rpx"></image>-->
+    </view>
+    <view class="_list">
+      <block v-for="(item, index) in list" :key="index">
+        <block v-if="item.title == '意见反馈'">
+          <button open-type="feedback" class="btn">
+            <template is="_item" data="{{item}}"></template>
+          </button>
+        </block>
+        <block v-else>
+          <view @tap="$goto(item.path)">
+            <template is="_item" data="{{item}}"></template>
+          </view>
+        </block>
+      </block>
+    </view>
+  </view>
+  <editInforCom :modalName.sync="modalName" @modalFn="modalEditInforComFn"></editInforCom>
+  <template name="_item">
+    <view class="_item f-fbc" >
+      <view class="f-fc">
+        <image src="{{item.icon}}" mode="widthFix"
+               class="_icon"></image>
+        <view class="color333 font_28 lineH40 bold" style="letter-spacing: 2rpx;">{{item.title}}</view>
+      </view>
+      <image src="~@/images/icon/next_icon.png" mode="widthFix"
+             class="_next_icon"></image>
+    </view>
+  </template>
 </template>
 <!--x-->
 
@@ -23,6 +132,7 @@ page {
 import wepy from '@wepy/core'
 import https from '../../mixins/https'
 import base from '../../mixins/base'
+import {getPhoneNumber, onShareAppMessage} from '../../utils/util'
 import {service} from '../../config'
 
 wepy.page({
@@ -30,38 +140,153 @@ wepy.page({
   mixins: [https, base],
 
   data: {
+    pageIsReady: false,
     modalName: '',
-    fileList: [],
-    photo: '',
-    list: [],
-    mobile: '',
-    nickName: '',
-    user: {}
+    skeletonLoadingTypes: ['spin', 'chiaroscuro', 'shine', 'null'],
+    skeletonSelectedLoadingType: 'shine',
+    skeletonIsDev: false,
+    skeletonBgcolor: 'none',
+    showCustom: false,
+    avatarUrl: '',
+    name: 'mamba',
+    userInfo: {},
+    mobile: '15707534403',
+    StatusBar: 0,
+    CustomBar: 0,
+    Custom: 0,
+
+    list: [
+      {
+        icon: 'https://image.fulllinkai.com/202305/09/c04926f7cb0630448b1c13982f1e4d79.png',
+        title: '我的押金',
+        path: '/pages/user_page/myDeposit'
+      },
+      {
+        icon: 'https://image.fulllinkai.com/202305/09/c2fbfef6f1dd23acab3a446866184a16.png',
+        title: '我的借阅',
+        path: '/pages/user_page/myBorrow'
+      },
+      {
+        icon: 'https://image.fulllinkai.com/202305/09/bb1c6646158a746a6dd7760b6b3f3b6b.png',
+        title: '我的钱包',
+        path: '/pages/user_page/myWallet'
+      },
+      {
+        icon: 'https://image.fulllinkai.com/202305/09/15d1372edef73da4bee232ff73be2ed1.png',
+        title: '意见反馈',
+        path: ''
+      }
+    ]
+  },
+// 上拉获取更多数据
+  onReachBottom() {
+    if (!this.no_more) {
+      // this.getList()
+    }
   },
 
+  onPageScroll(res) {
+    let top = res.scrollTop
+    this.showCustom = (top >= 18)
+    console.log(top)
+  },
+  // 下拉刷新
+  onPullDownRefresh() {
+    // this.page = 1
+    // this.list = []
+    // this.no_more = false
+    // this.getList()
+  },
+  onShareAppMessage(e) {
+    let title = `「个人中心」`
+    let path = `/pages/tabBar/home`
+    return onShareAppMessage(title, path)
+  },
   methods: {
 
+    modalEditInforComFn(val) { // 完善资料的弹框回调
+      this.modalName = val
+    },
+    submitFn() { // 提交
+      let vm = this
+      if (!vm.avatarUrl) {
+        return vm.$showToast('请上传你的头像')
+      }
+      if (!vm.name) {
+        return vm.$showToast('请输入昵称')
+      }
+      if (!vm.mobile) {
+        return vm.$showToast('请输入手机号码')
+      }
+      if (!/^1(3|4|5|6|7|8|9)\d{9}$/.test(vm.mobile)) {
+        return vm.$showToast('手机号码错误')
+      }
+      vm.$showToast('登录成功')
+      // const data = {
+      //   mobile: this.mobile,
+      //   name: this.name
+      // }
+      // vm.$post({url: `${service.host}/wechat/register`, data}).then(({code, data}) => {
+      //     if (code === 0) {
+      //     }
+      // })
+      // debugger
+    },
+    initPageData() {
+      let vm = this
+      vm.$get({url: `${service.host}/user/v3`}).then(({code, data}) => {
+        if (code === 0) {
+          vm.userInfo = data.user
+          let {circle_avatar, name, mobile} = data.user
+          if (!circle_avatar || !name || !mobile) {
+            vm.modalName = 'editInfor'
+          }
+        }
+      })
+    },
+    getPhoneNumber(e) { // 获取手机号
+      console.log(e.detail.iv)
+      let vm = this
+      if (e.detail.iv) {
+        getPhoneNumber(e).then(({phoneNumber}) => {
+          if (phoneNumber) {
+            vm.mobile = phoneNumber
+            vm.$showToast('获取成功')
+          }
+        }).catch(() => {
+        })
+      }
+    },
+    onChooseAvatar(e) {
+      const {avatarUrl} = e.detail
+      this.avatarUrl = avatarUrl
+    },
+    goto(path) {
+      this.$goto(path)
+    }
   },
-  onPullDownRefresh() {  // 下拉刷新
-    // this.getUserInfo()
-  },
-  onShow() {
-    // this.$showLoading('加载中...')
-    // this.getUserInfo()
+  onLoad() {
+    this.initPageData()
   },
   created() {
+    let app = this.$app.$options
+    this.StatusBar = app.globalData.StatusBar
+    this.CustomBar = app.globalData.CustomBar
+    this.Custom = app.globalData.Custom
+    console.log(this.Custom)
   }
 })
 </script>
 <config>
 {
 navigationBarTitleText: '个人中心',
-<!--navigationStyle: 'custom',-->
-enablePullDownRefresh: true,
+enablePullDownRefresh: false,
+navigationStyle: 'custom',
 backgroundColorTop: '#F4F7FC',
 backgroundColorBottom: '#F4F7FC',
-usingComponents: {
-uploadFile: '~@/components/uploadFile'
+"usingComponents": {
+skeleton: '~@/components/skeleton/skeleton',
+editInforCom: '~@/components/editInforCom'
 }
 }
 </config>

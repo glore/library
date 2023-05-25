@@ -20,7 +20,8 @@
     "@wepy/use-promisify": "^2.1.0",
     "@wepy/x": "^2.0.2",
     "dayjs": "^1.11.7",
-    "miniprogram-slide-view": "0.0.3"
+    "miniprogram-slide-view": "0.0.3",
+    "weapp-qrcode-canvas-2d": "^1.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.1.0",

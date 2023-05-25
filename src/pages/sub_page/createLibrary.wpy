@@ -1,0 +1,443 @@
+<style lang="less" scoped>
+page {
+  background-color: #FFFFFF;
+  ._bg{
+    width: 100vw;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+  .avatar-wrapper{
+    .avatar {
+      width: 200rpx;
+      height: 200rpx;
+      margin: auto;
+      border-radius: 50%;
+    }
+  }
+
+  .pic-wrapper {
+    width: 100%;
+    border-bottom: 2rpx solid #f5f5f5;
+    padding: 10rpx;
+    padding-bottom: 30rpx;
+    ._pic {
+      width: 180rpx;
+      height: 180rpx;
+      border-radius: 12rpx;
+      box-shadow: 0rpx 4rpx 16rpx 0rpx rgba(0, 0, 0, 0.15);
+      background: white;
+    }
+    ._btn {
+      padding: 10rpx 24rpx;
+      border: 2rpx solid #ADCEFF;
+      border-radius: 34rpx;
+      margin-bottom: 4rpx;
+    }
+    ._icon {
+      width: 32rpx;
+      height: 28rpx;
+      margin-right: 8rpx;
+      //vertical-align: middle;
+    }
+  }
+
+  ._list {
+    width: 690rpx;
+    background: #FFFFFF;
+    box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0, 0, 0, 0.1);
+    border-radius: 24rpx;
+    margin: 40rpx auto;
+    padding: 20rpx;
+
+    ._item {
+      padding: 20rpx;
+      ._next_icon {
+        width: 10rpx;
+        height: 20rpx;
+        margin-left: 20rpx;
+      }
+      ._address{
+        width: 460rpx;
+      }
+    }
+  }
+
+  ._intro_b {
+    width: 690rpx;
+    margin: 50rpx auto;
+    ._intro{
+      background: #FFFFFF;
+      box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0, 0, 0, 0.1);
+      border-radius: 24rpx;
+      padding: 30rpx 40rpx;
+      margin-top: 20rpx;
+      textarea{
+        width: 100%;
+        height: 300rpx;
+        z-index: 1;
+      }
+    }
+  }
+  ._form_btn {
+    width: 600rpx;
+    height: 80rpx;
+    background: linear-gradient(90deg, #9DC0F8 0%, #508AFC 100%);
+    box-shadow: 0rpx 8rpx 24rpx 0rpx rgba(55, 123, 203, 0.5);
+    border-radius: 40rpx;
+    margin: auto;
+    position: relative;
+    z-index: 99999;
+  }
+}
+
+
+</style>
+
+<wxs lang="babel" module="m1">
+const getBorrowTime = (item) => {
+  if(item == 'week') return '7天'
+  if(item == 'month') return '30天'
+}
+const getCashPledge = (item) => {
+  if(item == '1') return '需要押金'
+  if(item == '0') return '不需要押金'
+}
+const getLibraryType = (item) => {
+  if(item == 'FAMILY') return '个人图书馆'
+  if(item == 'ORG') return '机构图书馆'
+  if(item == 'SHARE') return '共享图书馆'
+}
+
+module.exports.getBorrowTime = getBorrowTime;
+module.exports.getCashPledge = getCashPledge;
+module.exports.getLibraryType = getLibraryType;
+</wxs>
+<template>
+  <view class="cu-custom">
+    <view class="cu-bar fixed" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+      <view @tap="$gotoBack(1)" class="action">
+        <text class="cuIcon-back"></text>
+        返回
+      </view>
+      <view class="content {{showCustom?'animation-TOP forwards':'animation-slide-top'}}" style="top:{{StatusBar}}px;">
+        {{id?'编辑图书馆':'创建图书馆'}}</view>
+    </view>
+  </view>
+  <image src="https://image.fulllinkai.com/202305/09/fe9e791027aeec5509358f995c676e84.png" mode="widthFix" class="_bg"></image>
+  <view class="_container " style="margin-top:{{CustomBar+22}}px;">
+<!--    <button class="avatar-wrapper btn "  open-type="chooseAvatar" @chooseavatar="onChooseAvatar($wx)">-->
+<!--      <image class="avatar f-fc" src="{{avatarUrl}}" v-if="avatarUrl"></image>-->
+<!--      <image class="avatar f-fc" src="~@/images/icon/avatarIcon.png" v-else></image>-->
+<!--      <view class="font_28 color666 text-c marginT24 lineH40 spacing2">点击上传logo</view>-->
+<!--    </button>-->
+
+    <view class="_list">
+      <view class="pic-wrapper f-fbb" @tap="replacePic()">
+        <image class="_pic f-fc" mode="aspectFill" src="{{formData.logo}}" v-if="formData.logo"></image>
+        <image class="_pic f-fc" mode="aspectFill"
+               src="https://image.fulllinkai.com/202305/19/b6738aa72609fc2f8ba55aca065b7641.png"
+               v-else></image>
+        <view class="text-c f-fcc _btn">
+          <image src="~@/images/icon/ghtp_icon.png" mode="aspectFill" class="_icon"></image>
+          <text class="font_28 color666 lineH40 spacing2 color-theme">上传logo</text>
+        </view>
+      </view>
+      <view class="_item f-fbc">
+        <view class="color333 font_28 lineH40 spacing2">名称</view>
+        <view class="f-fc">
+          <input type="text" placeholder="请输入你的图书馆昵称" class="text-r spacing2" v-model="formData.name"
+                 placeholder-class="color999"/>
+          <image src="~@/images/icon/next_iconV2.png" mode="widthFix"
+                 class="_next_icon"></image>
+        </view>
+      </view>
+      <view class="_item f-fbc">
+        <view class="color333 font_28 lineH40 spacing2">每人可借阅数</view>
+        <view class="f-fc">
+          <input type="number" placeholder="请填写借阅次数" class="text-r spacing2" v-model="formData.count"
+                 placeholder-class="color999"/>
+          <image src="~@/images/icon/next_iconV2.png" mode="widthFix"
+                 class="_next_icon"></image>
+        </view>
+
+      </view>
+      <view class="_item f-fbc">
+        <view class="color333 font_28 lineH40 spacing2">押金</view>
+        <picker @change="PickerChange($wx)" data-name="cash_pledge" data-list="{{cashPledgeDataKEY}}" value="{{cashPledgeIndex}}"  range="{{cashPledgeData}}">
+          <view class="f-fc">
+            <input type="text" placeholder="是否需要押金" class="text-r spacing2" value="{{m1.getCashPledge(formData.cash_pledge)}}" disabled
+                   placeholder-class="color999"/>
+            <image src="~@/images/icon/next_iconV2.png" mode="widthFix"
+                   class="_next_icon"></image>
+          </view>
+        </picker>
+      </view>
+      <view class="_item f-fbc">
+        <view class="color333 font_28 lineH40 spacing2">地址</view>
+        <view class="f-fc" @tap="getAddressFn()">
+          <view class="text-r spacing2 _address ellipsis_2 font_28 lineH40 {{formData.address?'':'color999'}}">{{formData.address?formData.address:'请输入你的地址'}}</view>
+          <image src="~@/images/icon/next_iconV2.png" mode="widthFix"
+                 class="_next_icon"></image>
+        </view>
+      </view>
+      <view class="_item f-fbc">
+        <view class="color333 font_28 lineH40 spacing2">还书时长</view>
+        <picker @change="PickerChange($wx)" data-name="borrow_time" data-list="{{borrowTimeDataKEY}}"
+                value="{{borrowTimeIndex}}" range="{{borrowTimeData}}">
+          <view class="f-fc">
+            <input type="text" placeholder="请设置还书时长" class="text-r spacing2 font_28 lineH40" value="{{m1.getBorrowTime(formData.borrow_time)}}"
+                   disabled placeholder-class="color999"/>
+            <image src="~@/images/icon/next_iconV2.png" mode="widthFix"
+                   class="_next_icon"></image>
+          </view>
+        </picker>
+      </view>
+      <view class="_item f-fbc">
+        <view class="color333 font_28 lineH40 spacing2">图书馆类型</view>
+        <picker @change="PickerChange($wx)" data-name="type" data-list="{{typeDatakey}}"
+                value="{{typeIndex}}" range="{{typeData}}">
+          <view class="f-fc">
+            <input type="text" placeholder="图书馆类型" class="text-r spacing2" value="{{m1.getLibraryType(formData.type)}}"
+                   disabled placeholder-class="color999"/>
+            <image src="~@/images/icon/next_iconV2.png" mode="widthFix"
+                   class="_next_icon"></image>
+          </view>
+        </picker>
+
+      </view>
+    </view>
+    <view class="_intro_b">
+      <view class="marginL40 bold lineH42 color333 font_30">简介介绍</view>
+      <view class="_intro">
+        <textarea name="" id="" maxlength="-1" class="spacing2" style="line-height: 2em;" placeholder-class="color999" placeholder="请写下自己的图书馆简介介绍" v-model="formData.intro"></textarea>
+      </view>
+    </view>
+    <view class="heigth160"></view>
+    <view class="fixed_bot text-c" style="width: 100%;padding: 70rpx;z-index: 99" @tap.stop="submitFn">
+      <view class="_form_btn f-fcc colorfff font_30" >{{id?'保存':'创建'}}</view>
+    </view>
+  </view>
+  <editInforCom :modalName.sync="modalName" @modalFn="modalFn"></editInforCom>
+
+</template>
+<!--x-->
+
+
+<script>
+import wepy from '@wepy/core'
+import https from '../../mixins/https'
+import base from '../../mixins/base'
+import {getPhoneNumber, uploadImg} from '../../utils/util'
+import {service} from '../../config'
+
+wepy.page({
+  config: {},
+  mixins: [https, base],
+
+  data: {
+    showCustom: false,
+    StatusBar: 0,
+    CustomBar: 0,
+    Custom: 0,
+    id: '',
+    modalName: '',
+    cashPledgeData: ['需要押金', '不需要押金'],
+    cashPledgeDataKEY: ['1', '0'],
+    cashPledgeIndex: 0,
+    borrowTimeData: ['7天', '30天'],
+    borrowTimeDataKEY: ['week', 'month'],
+    borrowTimeIndex: 0,
+    typeData: ['个人图书馆', '机构图书馆', '共享图书馆'],
+    typeDatakey: ['FAMILY', 'ORG', 'SHARE'],
+    typeIndex: 0,
+    formData: {
+      name: '',
+      intro: '',
+      type: '',
+      logo: '',
+      count: '',
+      borrow_time: '',
+      address: '',
+      location_longitude: '',
+      location_latitude: '',
+      cash_pledge: '' // 押金
+    }
+  },
+  onPageScroll(res) {
+    let top = res.scrollTop
+    this.showCustom = top > 18
+  },
+// 上拉获取更多数据
+  onReachBottom() {
+    if (!this.no_more) {
+      // this.getList()
+    }
+  },
+  // 下拉刷新
+  onPullDownRefresh() {
+    // this.page = 1
+    // this.list = []
+    // this.no_more = false
+    // this.getList()
+  },
+  methods: {
+
+    modalFn(val) {
+      this.modalName = val
+    },
+    replacePic() { // 更换封面
+      let vm = this
+      wx.chooseImage({
+        count: 1,
+        sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+        success: (res) => {
+          uploadImg(res.tempFilePaths[0]).then((res) => {
+            vm.formData.logo = res
+          })
+        },
+        fail: () => {
+          vm.$showToast('已取消')
+        }
+      })
+    },
+    PickerChange(e) {
+      console.log(e)
+      let {name, list} = e.target.dataset,
+        index = e.detail.value
+      console.log(name, list[index])
+      this.formData[name] = list[index]
+    },
+    getAddressFn() { // 获取经纬度
+      let vm = this
+      vm.$showLoading('加载中...')
+      wx.getFuzzyLocation({
+        type: 'gcj02',
+        success: (res) => {
+          let data = {
+            key: 'DQ3BZ-SWT3U-HUQV7-BBO3U-OU7WS-53FBV',
+            location: res.latitude + ',' + res.longitude
+          }
+          vm.formData.location_latitude = res.latitude
+          vm.formData.location_longitude = res.longitude
+          vm.$getV2({url: `https://apis.map.qq.com/ws/geocoder/v1/`, data}).then(({status, result}) => {
+            vm.$hideLoading()
+            if (status === 0) {
+              console.log(result.address)
+              vm.formData.address = result.address
+            }
+          })
+        },
+        fail: (res) => {
+          console.log(res)
+        }
+      })
+    },
+    initPageData() { // 获取数据
+      let vm = this
+      vm.$get({url: `${service.host}/libraries/${vm.id}`}).then(({code, data}) => {
+        if (code === 0) {
+          console.log(data)
+          Object.assign(vm.formData, data)
+          console.log(vm.formData)
+          vm.borrowTimeIndex = data.borrow_time === 'month' ? 1 : 0
+          vm.cashPledgeIndex = data.cash_pledge === 1 ? 0 : 1
+          if (data.type === 'FAMILY') return vm.typeIndex = 0
+          if (data.type === 'ORG') return vm.typeIndex = 1
+          if (data.type === 'SHARE') return vm.typeIndex = 2
+        }
+      })
+    },
+    submitFn() { // 提交
+      let vm = this
+      console.log(vm.formData)
+      let {circle_avatar, name, mobile} = wx.getStorageSync('userInfo')
+      if (!circle_avatar || !name || !mobile) {
+        return this.modalName = 'editInfor'
+      }
+      if (!vm.formData.logo) {
+        return vm.$showToast('请上传你的头像')
+      }
+      if (!vm.formData.name) {
+        return vm.$showToast('请输入图书馆名称')
+      }
+      if (!vm.formData.intro) {
+        return vm.$showToast('请输入图书馆简介')
+      }
+      if (!vm.formData.address) {
+        return vm.$showToast('请选择地址')
+      }
+      if (!vm.formData.type) {
+        return vm.$showToast('请选择图书馆类型')
+      }
+      let data = vm.formData
+      if (this.id) { // 编辑
+        vm.$put({url: `${service.host}/libraries/${vm.id}`, data}).then(({code, data}) => {
+          if (code === 0) {
+            vm.$Toast_success('图书馆资料保存成功')
+            setTimeout(() => {
+              vm.$gotoBackV2(1, {id: vm.id})
+            }, 800)
+          }
+        })
+      } else {  // 创建
+        vm.$post({url: `${service.host}/libraries`, data}).then(({code, data}) => {
+            if (code === 0) {
+              wx.showModal({
+                title: '提示',
+                content: '创建成功,前往图书馆创建分类',
+                success: function (res) {
+                  if (res.confirm) {
+                    vm.$redirectTo(`/pages/sub_page/libraryDetail?id=${data.id}`)
+                  }
+                }
+              })
+            }
+        })
+      }
+    },
+    goto(path) {
+      this.$goto(path)
+    }
+  },
+
+  onLoad(e) {
+    this.id = e.id
+    let {circle_avatar, name, mobile} = wx.getStorageSync('userInfo')
+    if (!circle_avatar || !name || !mobile) {
+      return this.modalName = 'editInfor'
+    }
+    if (this.id) {
+      this.initPageData()
+    }
+  },
+  onShow() {
+    // this.$showLoading('加载中...')
+    // this.getUserInfo()
+  },
+  created() {
+    let app = this.$app.$options
+    this.StatusBar = app.globalData.StatusBar
+    this.CustomBar = app.globalData.CustomBar
+    this.Custom = app.globalData.Custom
+    console.log(this.Custom)
+  }
+})
+</script>
+<config>
+{
+navigationBarTitleText: '创建/修改图书馆',
+enablePullDownRefresh: false,
+navigationStyle: 'custom',
+backgroundColorTop: '#F4F7FC',
+backgroundColorBottom: '#F4F7FC',
+"usingComponents": {
+editInforCom: '~@/components/editInforCom'
+
+<!--navigation: '~@/components/navigation'-->
+}
+}
+</config>

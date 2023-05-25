@@ -32,14 +32,36 @@ wepy.app({
     }
   },
   globalData: {
-    userInfo: null
+    userInfo: null,
+    statusBarHeight: 0,
+    titleBarHeight: 0,
+    StatusBar: 0, // 顶部状态栏
+    bottomLift: 0 // 小黑条
   },
   onLoad() {
 
   },
-  onLaunch() {
+  onLaunch(options) {
+    if (options.query && options.query.from_openid) {
+      wx.setStorageSync('from_openid', options.query.from_openid)
+    }
+    console.log(this.$options)
+    let app = this.$options
+    wx.getSystemInfo({
+      success: e => {
+        app.globalData.bottomLift = e.screenHeight - e.safeArea.bottom
+        app.globalData.StatusBar = e.statusBarHeight
+        let capsule = wx.getMenuButtonBoundingClientRect()
+        if (capsule) {
+          app.globalData.Custom = capsule
+          app.globalData.CustomBar = capsule.bottom + capsule.top - e.statusBarHeight
+        } else {
+          app.globalData.CustomBar = e.statusBarHeight + 50
+        }
+      }
+    })
     // this.testAsync()
-    // this.appLogin()
+    this.appLogin()
     // eventHub.$on('app-launch', (...args) => {
     //   console.log('app-launch event emitted, the params are:')
     //   console.log(args)
@@ -49,7 +71,7 @@ wepy.app({
   methods: {
     appLogin() {
       utils.wx_login().then((data) => {
-        // console.log(data)
+        console.log(data)
         // resolve(data)
         // let {accid, token} = data.user.wyy_user
         // // let accid = '1304'
@@ -81,15 +103,21 @@ wepy.app({
 <config>
 {
 pages: [
-'pages/tabBar/welcome',
 'pages/tabBar/home',
+'pages/register',
+'pages/tabBar/welcome',
 'pages/tabBar/user',
-'pages/tabBar/chat'
+'pages/tabBar/library'
 ],
 subPackages: [
 {
 'root': 'pages/sub_page',
-'pages': ['measure']
+'pages': ['searchLibrary','searchBooks','createLibrary','libraryDetail','bookDetail','createBookComment',
+'editBook','BookComment','enteringBooks','classBooks','Management','BorrowManage','BorrowBook','bookClassList','bookLibrary']
+},
+{
+'root': 'pages/user_page',
+'pages': ['myDeposit','myWallet','myBorrow','myLibrary','userInfor']
 },
 ],
 window: {
@@ -100,41 +128,41 @@ navigationBarTextStyle: 'black'
 },
 tabBar: {
 color: '#999999',
-selectedColor: '#707FFA',
+selectedColor: '#5C9DFF',
 backgroundColor: '#ffffff',
 borderStyle: 'black',
 list: [
 {
 pagePath: 'pages/tabBar/home',
-iconPath: './images/tabbar/chart_default.png',
-selectedIconPath: './images/tabbar/chart_transparent.png',
-text: '测量'
+iconPath: './images/tabbar/home.png',
+selectedIconPath: './images/tabbar/home_a.png',
+text: '首页'
 }
 , {
-pagePath: 'pages/tabBar/chat',
-iconPath: './images/tabbar/mine_default.png',
-selectedIconPath: './images/tabbar/mine_transparent.png',
-text: '聊天'
+pagePath: 'pages/tabBar/library',
+iconPath: './images/tabbar/library.png',
+selectedIconPath: './images/tabbar/library_a.png',
+text: '图书馆'
 }, {
 pagePath: 'pages/tabBar/user',
-iconPath: './images/tabbar/mine_default.png',
-selectedIconPath: './images/tabbar/mine_transparent.png',
+iconPath: './images/tabbar/user.png',
+selectedIconPath: './images/tabbar/user_a.png',
 text: '我的'
 }]
 },
 useExtendedLib: {
-'weui': true
 },
 plugins: {
-<!--"QNBleApi": {-->
-<!--"version": "4.3.2",-->
-<!--"provider": "wx2a4ca48ed5e96748"-->
-<!--}-->
-<!--'FL-plugin': {-->
-<!--'version': '0.0.3',-->
-<!--'provider': 'wxc41491431733671e'-->
-<!--}-->
 },
-"lazyCodeLoading": "requiredComponents"
+'permission': { // 地理位置获取
+'scope.userFuzzyLocation': {
+'desc': '你的位置信息将用于小程序位置接口的效果展示'
+}
+},
+"lazyCodeLoading": "requiredComponents",
+'requiredPrivateInfos': [
+'getFuzzyLocation',
+'chooseLocation'
+],
 }
 </config>

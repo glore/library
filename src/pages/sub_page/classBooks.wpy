@@ -1,0 +1,273 @@
+
+
+
+<style lang="less" scoped>
+page {
+  background-color: #f8f8f8;
+  ._container {
+    padding: 30rpx;
+
+    ._sort_box {
+      width: 690rpx;
+      background: #FFFFFF;
+      margin-bottom: 30rpx;
+      border-radius: 16rpx;
+      padding: 24rpx 30rpx;
+    }
+    ._edit{
+      width: 118rpx;
+      height: 52rpx;
+      border-radius: 34rpx;
+      border: 2rpx solid #ADCEFF;
+    }
+    ._delete{
+      border: 2rpx solid #F95F5F;
+      color: #F95F5F;
+      margin-left: 12rpx;
+    }
+    ._input_box{
+      width: 540rpx;
+      height: 80rpx;
+      background: #F8F8F8;
+      border-radius: 16rpx;
+    }
+    ._btn {
+      width: 600rpx;
+      height: 80rpx;
+      background: linear-gradient(90deg, #9DC0F8 0%, #508AFC 100%);
+      box-shadow: 0rpx 8rpx 24rpx 0rpx rgba(55, 123, 203, 0.5);
+      border-radius: 40rpx;
+      margin: auto;
+    }
+  }
+
+  ._input_box {
+    width: 540rpx;
+    height: 80rpx;
+    background: #F8F8F8;
+    border-radius: 16rpx;
+    input{
+      margin-left: 30rpx;
+      margin-right: 30rpx;
+      width: 100%;
+    }
+  }._textarea_box {
+    width: 540rpx;
+    background: #F8F8F8;
+    border-radius: 16rpx;
+    textarea{
+      margin: 30rpx;
+      width: 100%;
+      height: 160rpx;
+      //background: red;
+    }
+  }
+}
+</style>
+<template>
+  <view class="_container " style="margin-top:{{CustomBar}}px;">
+    <view v-if="no_more" class="_no_more text-c">
+      <image src="https://image.fulllinkai.com/202305/20/126800766170e753faeb31a74b370152.png" mode="widthFix"
+             class="_no_more_img"></image>
+      <view class="color999 lineH42 font_28 spacing2">暂无数据</view>
+    </view>
+    <view class="_sort_box" v-for="(item, index) in sorts" :key="index">
+      <view class="f-fbc" @tap="$goto(`/pages/sub_page/bookClassList?library_id=${id}&id=${item.id}&title=${item.name}`)">
+        <view >
+          <view class="font_30 bold color333 lineH42 ellipsis_1 spacing2" style="width: 416rpx;">{{item.name}}</view>
+          <view class="font_24  color666 lineH34 marginT20 spacing2" style="width: 416rpx;">分类说明：{{item.intro}}</view>
+        </view>
+        <block v-if="is_admin == 1">
+          <view class="_edit f-fcc color-theme font_26" @tap.stop="editFn(index)">编辑</view>
+          <view class="_edit _delete f-fcc font_26" @tap.stop="deleteFn(item.id)">删除</view>
+        </block>
+      </view>
+    </view>
+    <view class="cu-modal {{modalName=='Modal'?'show':''}}">
+      <view class="cu-dialog bg_f" style="padding: 50rpx 30rpx;">
+        <view class="_t font_32 lineH44 color333">{{sortIndex!=null?'编辑分类':'创建分类'}}</view>
+        <view class="_input_box f-fc marginT40">
+          <input type="text" class="text-l" placeholder="请输入分类名称" v-model="name">
+        </view>
+        <view class="_textarea_box f-fc marginT40">
+<!--          <input type="text" class="text-l" placeholder="请输入分类简介" v-model="intro">-->
+          <textarea name="" id="" maxlength="-1" class="spacing2 text-l"  placeholder-class="color999"
+                    placeholder="请输入分类简介" v-model="intro"></textarea>
+        </view>
+        <view class="f-fcc">
+          <view class="cancel f-fcc color999" @tap="modalName=''">取消</view>
+          <view class="confirm f-fcc colorfff" @tap="saveFn">确定</view>
+        </view>
+      </view>
+    </view>
+    <view class="fixed text-c" style="bottom: 120rpx;width: 100%;left: 0;" v-if="is_admin == 1">
+      <view class="_btn colorfff f-fcc spacing2" @tap="addFn">添加分类</view>
+    </view>
+  </view>
+</template>
+<!--x-->
+
+
+<script>
+import wepy from '@wepy/core'
+import https from '../../mixins/https'
+import base from '../../mixins/base'
+import {getPhoneNumber} from '../../utils/util'
+import {service} from '../../config'
+
+wepy.page({
+  config: {},
+  mixins: [https, base],
+
+  data: {
+    modalName: '',
+    no_more: false,
+    showCustom: false,
+    id: 0,
+    is_admin: 0,
+    sortIndex: null,
+    name: '',
+    intro: '',
+    sorts: [],
+    library: {}
+  },
+  onPageScroll(res) {
+    let top = res.scrollTop
+    this.showCustom = top > 18
+  },
+// 上拉获取更多数据
+  onReachBottom() {
+    // if (!this.no_more) {
+    //   this.getComments()
+    // }
+  },
+  // 下拉刷新
+  onPullDownRefresh() {
+    // this.page = 1
+    // this.list = []
+    this.initPageData()
+  },
+  methods: {
+    deleteFn(id) {  // 删除分类
+      let vm = this
+      wx.showModal({
+        title: '提示',
+        content: '是否确认删除该分类?',
+        showCancel: true,
+        confirmText: '确定',
+        success: function (res) {
+          if (res.confirm) {
+            vm.$delete({url: `${service.host}/sorts/${id}`}).then(({code, data}) => {
+              if (code === 0) {
+                vm.$Toast_success('删除成功')
+                vm.initPageData()
+              }
+            })
+          }
+        }
+      })
+    },
+    editFn(index) {
+      let vm = this
+      vm.sortIndex = index
+      vm.modalName = 'Modal'
+      vm.name = vm.sorts[index].name
+      vm.intro = vm.sorts[index].intro
+    },
+    addFn(index) {
+      let vm = this
+      vm.sortIndex = null
+      vm.modalName = 'Modal'
+      vm.name = ''
+      vm.intro = ''
+    },
+    addCollect() {
+      let vm = this
+      let data = {
+        books: vm.bookList
+      }
+      vm.$post({url: `${service.host}/libraries/${vm.id}/sorts`, data}).then(({code, data}) => {
+        if (code === 0) {
+          console.log(data)
+          vm.$Toast_success('录入成功')
+          vm.bookData = []
+          vm.bookList = []
+          vm.$gotoBack(1)
+        }
+      })
+    },
+    saveFn() { // 保存
+      let vm = this
+      if (vm.name == '') return vm.$showToast('请输入分类名称')
+      if (vm.intro == '') return vm.$showToast('请输入分类简介')
+
+      let data = {
+        name: this.name,
+        intro: this.intro
+      }
+      if (vm.sortIndex != null) { // 修改
+        vm.$put({url: `${service.host}/sorts/${vm.sorts[vm.sortIndex].id}`, data}).then(({code, data}) => {
+          if (code === 0) {
+            vm.$showToast('修改成功')
+            vm.sortIndex = null
+            vm.modalName = ''
+            vm.name = ''
+            vm.intro = ''
+            vm.initPageData()
+          }
+        })
+      } else { // 添加
+        vm.$post({url: `${service.host}/libraries/${vm.id}/sorts`, data}).then(({code, data}) => {
+          if (code === 0) {
+            console.log(data)
+            vm.sortIndex = null
+            vm.$showToast('创建成功')
+            vm.modalName = ''
+            vm.name = ''
+            vm.intro = ''
+            vm.initPageData()
+          }
+        })
+      }
+      console.log(vm.sortIndex)
+    },
+    initPageData() {
+      let vm = this
+      vm.$get({url: `${service.host}/libraries/${vm.id}/sorts`}).then(({code, data}) => {
+        if (code === 0) {
+          console.log(data)
+          vm.sorts = data.sorts
+          vm.library = data.library
+          vm.no_more = false
+          if (vm.sorts.length < 1) {
+            vm.no_more = true
+          }
+        }
+      })
+    },
+    goto(path) {
+      this.$goto(path)
+    }
+  },
+  onLoad(e) {
+    this.id = e.id
+    this.is_admin = e.is_admin
+    this.initPageData()
+  },
+  created() {
+    let app = this.$app.$options
+  }
+})
+</script>
+<config>
+{
+navigationBarTitleText: '图书分类',
+enablePullDownRefresh: true,
+<!--navigationStyle: 'custom',-->
+backgroundColorTop: '#F4F7FC',
+backgroundColorBottom: '#F4F7FC',
+"usingComponents": {
+<!--navigation: '~@/components/navigation'-->
+}
+}
+</config>

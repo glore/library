@@ -19,6 +19,7 @@ module.exports = {
   },
   // add your custom rules here
   'rules': {
+    // 'vue/script-indent': ['error', 2, {'baseIndent': 1}],
     'indent': 'off',
     'eqeqeq': 0,
     'no-fallthrough': 0,

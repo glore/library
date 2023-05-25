@@ -1,0 +1,90 @@
+
+
+
+<style lang="less" scoped>
+._editInfor_bg{
+  width: 328rpx;
+  height: 208rpx;
+  border-radius: 12rpx;
+}
+._editInfor_btn{
+  width: 400rpx !important;
+  height: 80rpx !important;
+}
+._save_btn{
+  width: 600rpx;
+  height: 80rpx;
+  background: linear-gradient(90deg, #9DC0F8 0%, #508AFC 100%);
+  border-radius: 40rpx;
+}
+</style>
+<template>
+  <view class="~cu-modal {{modalName=='editInfor'?'~show':''}}">
+    <view class="~cu-dialog" style="padding: 40rpx 30rpx 40rpx 30rpx;">
+<!--      <image class="~_icon_close" src="~@/images/icon/close_icon.png" mode="aspectFit" @tap="cancelFn"></image>-->
+      <view class="~_c ~font_32 ~lineH44 ~color333 ~bold">完善个人信息</view>
+      <image src="https://image.fulllinkai.com/202305/22/40bb4379316ac569ef594764fc2c1357.png" class="_editInfor_bg ~marginT50" mode="aspectFill"></image>
+      <view class="~lineH42 ~color666 ~font_30 ~marginT50 ~spacing2">资料填写不完整，请完善资料信息</view>
+      <view class="~confirm _editInfor_btn ~f-fcc ~colorfff ~marginT50" @tap="goto()">去完善</view>
+      <view class="~font_28 ~lineH40 ~color666 ~marginT30" @tap="cancelFn">稍后完善</view>
+
+      <!--      <view class="~f-fcc ~marginT40">-->
+<!--        <button class="~_wx_box ~color999 ~btn" open-type="share" @tap="cancelFn">-->
+<!--          <image class="~_icon_wx" src="~@/images/icon/wx_icon.png" mode="aspectFit"></image>-->
+<!--          <view class="~color666 ~font_24 ~lineH34 ~marginT10">微信好友</view>-->
+<!--        </button>-->
+<!--        <view class="~_wx_box ~color999 ~_wx_pyq" @tap="modalName='showPic'">-->
+<!--          <image class="~_icon_wx" src="~@/images/icon/pyq_icon.png" mode="aspectFit"></image>-->
+<!--          <view class="~color666 ~font_24 ~lineH34 ~marginT10">朋友圈</view>-->
+<!--        </view>-->
+<!--      </view>-->
+    </view>
+  </view>
+</template>
+<script>
+import wepy from '@wepy/core'
+import {secondToTime} from '../utils/util'
+// import {service} from '../config'
+// import base from '../mixins/base'
+// import https from '../mixins/https'
+
+wepy.component({
+  props: {
+    modalName: {type: String, default: '', twoWay: true},
+    sharePic: {type: String, default: '', twoWay: true}
+  },
+  data: {
+  },
+  watch: {
+    modalName() {
+      // console.log(this.modalName)
+    }
+  },
+  mixins: [],
+  methods: {
+    cancelFn() {
+      this.modalName = ''
+      this.$emit('modalFn', this.modalName)
+    },
+    goto(path) {
+      let vm = this,
+        parameter = ''
+      let {options} = vm.$root.$wx
+      for (let item in options) {
+        parameter = `${item}=${options[item]}&${parameter}`
+        // parameter = parameter.slice(0, -1)
+      }
+      setTimeout(() => {
+        vm.modalName = ''
+        vm.$emit('modalFn', vm.modalName)
+        wx.navigateTo({url: `/pages/user_page/userInfor?${parameter}`})
+      })
+    }
+  },
+
+  attached() {
+  },
+  created() {
+  }
+})
+</script>

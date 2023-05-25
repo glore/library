@@ -1,0 +1,335 @@
+
+
+<style lang="less" scoped>
+page {
+  background-color: #FFFFFF;
+
+  ._bg {
+    width: 100vw;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+  ._container{
+    padding-top: 40rpx;
+    ._icon_deposit{
+      width: 128rpx;
+      height: 120rpx;
+      background-image: url("https://image.fulllinkai.com/202305/13/0da46e09f390862b8243252aa84501b9.png");
+      background-repeat: no-repeat;
+      background-size: cover;
+      margin: auto;
+      margin-top: 98rpx;
+    }
+    ._btn{
+      width: 464rpx;
+      height: 84rpx;
+      //background: linear-gradient(90deg, #9DC0F8 0%, #508AFC 100%);
+      border-radius: 42rpx;
+      margin: auto;
+    }
+  }
+  ._list{
+    padding: 36rpx 30rpx;
+    min-height: 50vh;
+    //border-radius: 40rpx 40rpx 0rpx 0rpx;
+    border-top-left-radius: 40rpx;
+    border-top-right-radius: 40rpx;
+    ._dot{
+      width: 8rpx;
+      height: 32rpx;
+      background: #5C9DFF;
+      border-radius: 4rpx;
+      margin-right: 10rpx;
+    }
+    ._item{
+      display: flex;
+      border-bottom: 2rpx solid #F5F5F5;
+      padding-bottom: 22rpx;
+      margin-top: 24rpx;
+      ._icon{
+        width: 56rpx;
+        height: 56rpx;
+        margin: 14rpx 14rpx 14rpx 0;
+      }
+    }
+  }
+}
+
+.cu-dialog {
+  position: relative;
+  .image{
+    width: 192rpx;
+    height: 180rpx;
+  }
+  ._dot {
+    width: 520rpx;
+    height: 2rpx;
+    border: 2rpx solid #f5f5f5;
+  }
+  .close_icon{
+    //position: relative;
+    //position: absolute;
+    //bottom: -64rpx;
+    //background: red;
+    margin-top: 50rpx;
+    z-index: 99999;
+    image{
+      width: 60rpx;
+      height: 60rpx;
+    }
+  }
+}
+
+</style>
+<template>
+  <view class="cu-custom">
+    <view class="cu-bar fixed" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+      <view @tap="$gotoBack(1)" class="action">
+        <text class="cuIcon-back"></text>
+        返回
+      </view>
+      <view class="content colorfff {{showCustom?'animation-TOP forwards':'animation-slide-top'}}" style="top:{{StatusBar}}px;">
+        我的钱包
+      </view>
+    </view>
+  </view>
+  <image src="https://image.fulllinkai.com/202305/13/0da46e09f390862b8243252aa84501b9.png" mode="widthFix"
+         class="_bg"></image>
+  <view class="_container text-c" style="margin-top:{{CustomBar}}px;">
+<!--    <view class="_icon_deposit"> </view>-->
+    <view class="font_30 colorfff">我的余额</view>
+    <view class="marginT20">
+      <text class="font_60 bold spacing2 colorfff">{{balance}}</text>
+      <text class="font_26 bold colorfff">元</text>
+    </view>
+    <view class="_btn f-fcc color-theme marginT30 bg_f bold spacing2" @tap="submitFn()">提现</view>
+  </view>
+  <view class="_list marginT60 bg_f">
+    <view class="f-fc" style="margin-bottom: 24rpx;">
+      <view class="_dot"></view>
+      <view class="font_32 color333 bold spacing2 lineH44">提现记录</view>
+    </view>
+    <view v-if="no_more" class="_no_more text-c" style="height: 32vh;">
+      <image src="https://image.fulllinkai.com/202305/20/126800766170e753faeb31a74b370152.png" mode="widthFix"
+             class="_no_more_img"></image>
+      <view class="color999 lineH42 font_28 spacing2">暂无数据</view>
+    </view>
+    <view class="_item" v-for="(item, index) in list" :key="index">
+      <image src="~@/images/icon/wallet_icon.png" mode="aspectFill" class="_icon"></image>
+      <view class="f-fbc" style="width: 618rpx;">
+        <view>
+          <view class="lineH40 color333 font_28 bold ">
+            微信-
+            <span class="{{item.status==0?'text-yellow ':''}}">
+            {{item.status == 0?'审核中':'提现成功'}}</span></view>
+          <view class="lineH34 color666 font_24 marginT14">{{item.created_at}}</view>
+        </view>
+        <view>
+          <view class="lineH40 color333 font_28 bold text-r">{{item.amount}}</view>
+          <view class="lineH34 color666 font_24 marginT14 text-r">手续费：{{item.fee}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="cu-modal {{modalName=='Modal'?'show':''}}">
+    <view class="cu-dialog" style="background: none;padding: 0">
+     <view class="cu-dialog" style="padding: 40rpx 40rpx 70rpx 40rpx;">
+       <view class="_t font_28 lineH40 bold color333 spacing2">申请提现</view>
+       <view class="_c font_32 lineH44 color333 marginT40 spacing2">提现金额</view>
+       <view class="_c font_60 lineH84 color333 bold marginT10 f-fcc">
+         <input type="number" style="height: 84rpx;padding-left: 12rpx;" class="text-c" disabled placeholder="请输入金额" :value="balance" @input="checkMoney($wx)"  placeholder-class="font_32">
+       </view>
+       <view class="_dot"></view>
+<!--       <view class="f-fbc marginT14">-->
+<!--         <view class="font_24 lineH34 color999">手续费</view>-->
+<!--         <view class="font_24 lineH34 color999">¥0.8</view>-->
+<!--       </view>-->
+       <view class="f-fbc marginT14">
+         <view class="font_24 lineH34 color999">提现手续费</view>
+         <view class="font_24 lineH34 color999">0.01%</view>
+       </view>
+       <view class="f-fcc">
+         <view class="confirm f-fcc colorfff margin0 marginT40" style="width: 220rpx;" @tap="WithdrawalFn()">确定</view>
+       </view>
+     </view>
+      <view class="close_icon">
+        <image src="~@/images/icon/close_icon_v2.png" mode="aspectFill" @tap="modalName=''" ></image>
+      </view>
+    </view>
+  </view>
+  <view class="cu-modal {{modalName=='state'?'show':''}}">
+    <view class="cu-dialog" style="background: none;padding: 0">
+      <view class="cu-dialog" style="padding: 40rpx;">
+        <image src="https://image.fulllinkai.com/202305/15/f761ea8607605d493c5b24f75c63ab82.png" mode="aspectFill" class="image marginT20"></image>
+        <view class="font_32 lineH44 color-theme spacing2 bold marginT24">申请成功，等待审核</view>
+        <view class="marginT50 lineH40 font_28 color333">
+          审核结果将在1～3个工作日内通知，请耐心等待；如有需要，请直接联系客服 <text class="color-theme">4000401707</text>
+        </view>
+        <view class="f-fcc">
+          <view class="confirm_know f-fcc colorfff margin0 marginT40 spacing2"  @tap="modalName=''">我知道了</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from '@wepy/core'
+import https from '../../mixins/https'
+import base from '../../mixins/base'
+import {getPhoneNumber} from '../../utils/util'
+import {service} from '../../config'
+
+wepy.page({
+  config: {},
+  mixins: [https, base],
+
+  data: {
+    modalName: '',
+    showBackTopBtn: false,
+    showCustom: false,
+    no_more: false,
+    list: [],
+    balance: 0.00,
+    page: 1,
+    StatusBar: 0,
+    CustomBar: 0,
+    Custom: 0
+  },
+
+  onPageScroll(res) {
+    let top = res.scrollTop
+    this.showCustom = top > 18
+  },
+// 上拉获取更多数据
+  onReachBottom() {
+    // if (!this.no_more) {
+      this.withdrawRecords()
+    // }
+  },
+  // 下拉刷新
+  onPullDownRefresh() {
+    this.page = 1
+    this.list = []
+    // this.no_more = false
+    this.withdrawRecords()
+  },
+  methods: {
+    WithdrawalFn() {
+      let vm = this
+      wx.showModal({
+        title: '提示',
+        content: '提现将收取0.01%的微信平台手续费（不低于0.01元），是否继续？',
+        success: function (res) {
+          if (res.confirm) {
+            vm.$showLoading('提现操作中...')
+            vm.$post({url: `${service.host}/account/withdraw`}).then(({codeV2, dataV2}) => {
+              if (code === 0) {
+                let {tradeNo} = data
+                vm.$post({url: `${service.host}/mark/order/transfer/${tradeNo}`}).then(({code, data}) => {
+                  if (codeV2 === 0) {
+                    vm.modalName = 'state'
+                    vm.withdrawRecords()
+                  }
+                })
+              }
+            })
+          }
+        }
+      })
+    },
+    initPageData() {
+      let vm = this
+      vm.$get({url: `${service.host}/user/account`}).then(({code, data}) => {
+        if (code === 0) {
+          this.balance = data.balance
+        }
+      })
+    },
+    withdrawRecords() { // 提现记录
+      let vm = this
+      vm.$get({url: `${service.host}/account/withdraw/histories?page=${vm.page}`}).then(({code, data}) => {
+        if (code === 0) {
+          if (data.data == [] || data.data.length < 1) {
+            console.log('暂无更多数据')
+            if (vm.list.length < 1) {
+              vm.no_more = true
+            }
+            return
+          }
+          if (vm.page == 1) {
+            vm.page++
+            vm.list = data.data
+          } else {
+            vm.page++
+            data.data.map((item, index) => {
+              vm.list.push(item)
+            })
+          }
+          console.log(vm.list)
+        }
+      })
+    },
+    checkMoney(e) {
+      console.log(e.detail.value)
+      let value = e.detail.value, vm = this
+      var tempValue = value.replace(/(^\s+)|(\s+$)/g, '').replace('￥', '')
+      if (!tempValue) {
+        return
+      }
+      if (/^-?\d+(\.\d+)?$/.test(tempValue)) {
+        value = '￥' + parseFloat(tempValue).toFixed(2)
+      } else {
+        vm.$showToast('请输入合法的货币值！')
+      }
+      this.balance = value
+    },
+    submitFn() {
+      let vm = this
+      vm.modalName = 'Modal'
+      // vm.$showToast('充值失败')
+    },
+    searchConfirm() {
+      let vm = this
+      vm.$showLoading('搜索中')
+      setTimeout(() => {
+        vm.$hideLoading()
+        vm.searchVal = ''
+      }, 1200)
+    },
+    onChooseAvatar(e) {
+      const {avatarUrl} = e.detail
+      this.avatarUrl = avatarUrl
+    },
+    goto(path) {
+      this.$goto(path)
+    }
+  },
+  onShow() {
+  },
+  created() {
+    let app = this.$app.$options
+    this.StatusBar = app.globalData.StatusBar
+    this.CustomBar = app.globalData.CustomBar
+    this.Custom = app.globalData.Custom
+    console.log(this.Custom)
+    this.initPageData()
+    this.withdrawRecords()
+  }
+})
+</script>
+<config>
+{
+navigationBarTitleText: '我的押金',
+enablePullDownRefresh: false,
+navigationStyle: 'custom',
+backgroundColorTop: '#F4F7FC',
+backgroundColorBottom: '#F4F7FC',
+"usingComponents": {
+<!--navigation: '~@/components/navigation'-->
+}
+}
+</config>

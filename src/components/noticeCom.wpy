@@ -1,0 +1,146 @@
+
+
+<style lang="less" scoped>
+.newNoticeBox {
+  //display: flex;
+  //background: #fff;
+  //margin: 36rpx 30rpx 20rpx 30rpx;
+  //border-radius: 10rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  width: 560rpx;
+}
+
+.newNoticePicBox {
+  //flex: 1;
+  padding-left: 20rpx;
+}
+
+.newNoticePic {
+  width: 24rpx;
+  height: 24rpx;
+}
+
+.swiper_zi {
+  flex: 15;
+  height: 100%;
+  padding-top: 6rpx;
+  width: 80vw;
+}
+
+.swiper_zi .zimubox {
+  height: 100%;
+  width: 100%;
+  display: flex; /*横向布局*/
+}
+
+.swiper_zi .zimubox .swiper_item {
+  //font-size: 22rpx;
+  //width: 100%;
+  width: 560rpx;
+  overflow: hidden; /*隐藏溢出*/
+  text-overflow: ellipsis; /*显示省略符号来代表被修剪的文本*/
+  white-space: nowrap; /*强制文字不换行*/
+  //color: #E1BC74;
+  line-height: 52rpx;
+}
+
+.more {
+  //font-size: 22rpx;
+  //color: #E1BC74;
+  padding-right: 30rpx;
+}
+
+</style>
+<template>
+  <view class="newNoticeBox  ~color666 ~ellipsis_1 ">
+    <swiper class="swiper_zi" vertical="true" autoplay="true" circular="true" interval="3000">
+      <block v-for="(item, index) in list" :key="index">
+        <swiper-item @tap="intervalChange(index)">
+          <view class="zimubox">
+            <view class="swiper_item ~font_24 ~color333 ~spacing2 ~ellipsis_1">
+              {{item.user_name}}借了一本《{{item.book_name}}》</view>
+          </view>
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+</template>
+<script>
+import wepy from '@wepy/core'
+import {secondToTime} from '../utils/util'
+// import {service} from '../config'
+// import base from '../mixins/base'
+// import https from '../mixins/https'
+
+wepy.component({
+  props: {
+    url: {type: String, default: '', twoWay: true},
+    name: {type: String, default: '', twoWay: true},
+    list: {type: Array, default: [], twoWay: true}
+  },
+  data: {
+    contentList: [],
+    listI: -1,
+    content: '欢迎进入小程序',
+    animationData: {}
+  },
+  watch: {
+    list() {
+      // console.log(this.list)
+    }
+  },
+  mixins: [],
+  methods: {
+
+    intervalChange(val) {
+      this.$emit('listIndex', val)
+    },
+    update(content) {
+      var that = this
+      var animation = wx.createAnimation()
+      // 旧消息向上平移
+      animation.translateY(-30).step({
+        duration: 1000,
+        timingFunction: 'ease-in'
+      })
+      // 为了实现下一条新内容向上平移的效果，必须把内容很快平移到下方，并且不能被用户看见，这里其原理类似轮播图的思路。
+      // 实现方法：动画时间设置为1ms，过渡效果设置为’动画第一帧就跳至结束状态直到结束‘
+      animation.opacity(0).translateY(30).step({
+        duration: 1,
+        timingFunction: 'step-start'
+      })
+      // 新消息向上平移的同时恢复透明
+      animation.opacity(1).translateY(0).step({
+        duration: 1000,
+        timingFunction: 'ease-out'
+      })
+      that.animationData = animation.export()
+
+      // 更新内容的延时必须大于第一步动画时间
+      setTimeout(() => {
+        that.content = content
+      }, 1000)
+    },
+
+    // 这里处理可能由于个人水平有限，实现的可能比较粗糙，可以留言指点我哈！
+    getListInfo() {
+      if (this.listI >= this.list.length - 1) {
+        this.listI = -1
+        this.getListInfo()
+      } else {
+        this.listI++
+      }
+      return this.list[this.listI]
+    }
+  },
+
+  attached() {
+  },
+  created() {
+    setInterval(() => {
+      this.update(this.getListInfo())
+    }, 3000)
+  }
+})
+</script>

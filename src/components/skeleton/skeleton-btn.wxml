@@ -1,0 +1,3 @@
+<view bindtap="toggleBtnTap" class="skeleton__render-button">
+  {{ isShow ? '关闭' : '骨架屏' }}
+</view>

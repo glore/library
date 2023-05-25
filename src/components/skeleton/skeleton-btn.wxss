@@ -1,0 +1,16 @@
+.skeleton__render-button {
+  position: fixed;
+  z-index: 9999;
+  right: 10rpx;
+  bottom: 10rpx;
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 50%;
+  color: #fff;
+  line-height: 90rpx;
+  font-size: 24rpx;
+  text-align: center;
+  background-color: #ff613b;
+  background-image: linear-gradient(90deg, #ff613b 0%, #d30500 100%);
+  box-shadow: 0 4px 8px 0 rgba(240, 60, 39, 0.3);
+}

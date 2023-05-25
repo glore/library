@@ -1,0 +1,238 @@
+<style lang="less" scoped>
+page {
+  background-color: #FFFFFF;
+  ._bg{
+    width: 100vw;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  .avatar-wrapper{
+
+    .avatar {
+
+      width: 200rpx;
+      height: 200rpx;
+      margin: 22rpx auto;
+      border-radius: 50%;
+      border: 4rpx solid #FFFFFF;
+      box-shadow: 0rpx 4rpx 16rpx 0rpx rgba(102, 81, 81, 0.5);
+    }
+    ._camera_icon{
+      width: 56rpx;
+      height: 56rpx;
+      position: absolute;
+      bottom: 0;
+      right: 16rpx;
+    }
+  }
+  ._form_input{
+    width: 590rpx;
+    margin: auto;
+    margin-top: 70rpx;
+    border-bottom: 2rpx solid #f5f5f5;
+    ._input_t{margin-bottom: 10rpx;}
+    ._input{padding-bottom: 20rpx;height: 42rpx;min-height: 2rem}
+
+    ._wxBtn{
+      width: 152rpx;
+      height: 52rpx;
+      border-radius: 26rpx;
+      margin-bottom: 12rpx;
+      border: 2rpx solid #ADCEFF;
+    }
+  }
+
+
+  ._form_btn {
+    width: 500rpx;
+    height: 80rpx;
+    background: linear-gradient(90deg, #9DC0F8 0%, #508AFC 100%);
+    box-shadow: 0rpx 8rpx 24rpx 0rpx rgba(55, 123, 203, 0.5);
+    border-radius: 40rpx;
+    margin: auto;
+    margin-top: 100rpx;
+  }
+}
+
+
+</style>
+<template>
+  <view class="cu-custom">
+    <view class="cu-bar fixed" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+      <view @tap="$gotoBack(1)" class="action">
+        <text class="cuIcon-back"></text>
+        返回
+      </view>
+      <view class="content" style="top:{{StatusBar}}px;">编辑资料</view>
+    </view>
+  </view>
+  <image src="https://image.fulllinkai.com/202305/09/fe9e791027aeec5509358f995c676e84.png" mode="widthFix" class="_bg"></image>
+  <view class="_container " style="margin-top:{{CustomBar+22}}px;">
+    <button class="avatar-wrapper btn f-fcc"  open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar($wx)">
+      <view class="relative inline-block">
+        <image class="avatar f-fc" src="{{userInfo.circle_avatar}}" v-if="userInfo.circle_avatar"></image>
+        <image class="avatar f-fc" src="~@/images/icon/avatarIcon.png" v-else></image>
+        <image class="_camera_icon f-fc" src="~@/images/icon/camera_icon.png"></image>
+      </view>
+    </button>
+    <view class="_form_input" open-type="chooseAvatar">
+      <view class="_input_t color333 font_28 lineH40">姓名</view>
+      <input type="nickname" class="_input lineH42 font_30" placeholder="请填写姓名" v-model="userInfo.name"/>
+    </view>
+    <view class="_form_input marginT40">
+      <view class="_input_t color333 font_28 lineH40">手机号</view>
+      <view class="f-fbc">
+        <input type="nickname" class="_input lineH42 font_30" placeholder="请填写手机号码" v-model="userInfo.mobile"/>
+        <button class="btn f-fbc" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber($wx)">
+          <view class="font_24 lineH34 _wxBtn color-theme f-fcc">从微信获取</view>
+        </button>
+      </view>
+
+    </view>
+    <view class="_form_btn f-fcc colorfff font_30 " @tap="submitFn">保存</view>
+  </view>
+</template>
+<!--x-->
+
+<script>
+import wepy from '@wepy/core'
+import https from '../../mixins/https'
+import base from '../../mixins/base'
+import {getPhoneNumber, uploadImg} from '../../utils/util'
+import {service} from '../../config'
+
+wepy.page({
+  config: {},
+  mixins: [https, base],
+
+  data: {
+    userInfo: {
+      mobile: '',
+      circle_avatar: '',
+      name: ''
+    },
+    id: 0,
+    library_id: 0,
+    user_id: 0,
+    list: [],
+    no_more: true,
+    StatusBar: 0,
+    CustomBar: 0,
+    Custom: 0
+  },
+// 上拉获取更多数据
+  onReachBottom() {
+    if (!this.no_more) {
+      // this.getList()
+    }
+  },
+  // 下拉刷新
+  onPullDownRefresh() {
+    // this.page = 1
+    // this.list = []
+    // this.no_more = false
+    // this.getList()
+  },
+  methods: {
+    submitFn() { // 提交
+      let vm = this
+      if (!vm.userInfo.circle_avatar) {
+        return vm.$showToast('请上传你的头像')
+      }
+      if (!vm.userInfo.name) {
+        return vm.$showToast('请输入昵称')
+      }
+      if (!vm.userInfo.mobile) {
+        return vm.$showToast('请输入手机号码')
+      }
+      if (!/^1(3|4|5|6|7|8|9)\d{9}$/.test(vm.userInfo.mobile)) {
+        return vm.$showToast('手机号码错误')
+      }
+
+      const data = {
+        circle_avatar: this.userInfo.circle_avatar,
+        mobile: this.userInfo.mobile,
+        name: this.userInfo.name
+      }
+      vm.$put({url: `${service.host}/user`, data}).then(({code, data}) => {
+        if (code === 0) {
+          vm.$showToast('保存成功')
+          let userInfo = {
+            cash_pledge: data.cash_pledge,
+            name: data.name,
+            mobile: data.mobile,
+            circle_avatar: data.circle_avatar,
+            id: data.id,
+            openid: wx.getStorageSync('openid'),
+            created_at: data.created_at
+          }
+          wx.setStorageSync('userInfo', userInfo) // 用户基本信息
+          setTimeout(() => {
+            // vm.$gotoBackV2(1)
+            vm.$gotoBackV2(1, {id: vm.id, library_id: vm.library_id, user_id: vm.user_id})
+          }, 800)
+        }
+      })
+    },
+    getPhoneNumber(e) { // 获取手机号
+      console.log(e.detail.iv)
+      let vm = this
+      if (e.detail.iv) {
+        getPhoneNumber(e).then(({phoneNumber}) => {
+          if (phoneNumber) {
+            vm.userInfo.mobile = phoneNumber
+            vm.$showToast('获取成功')
+          }
+        }).catch(() => {
+        })
+      }
+    },
+    onChooseAvatar(e) {
+      const {avatarUrl} = e.detail
+      uploadImg(avatarUrl).then((res) => {
+        this.userInfo.circle_avatar = res
+      })
+    },
+
+    initPageData() {
+      let vm = this
+      vm.$get({url: `${service.host}/user/v3`}).then(({code, data}) => {
+        if (code === 0) {
+          vm.userInfo = data.user
+        }
+      })
+    },
+    goto(path) {
+      this.$goto(path)
+    }
+  },
+
+  onLoad(e) {
+    this.id = e.id
+    this.library_id = e.library_id
+    this.user_id = e.user_id
+    this.initPageData()
+  },
+  created() {
+    let app = this.$app.$options
+    this.StatusBar = app.globalData.StatusBar
+    this.CustomBar = app.globalData.CustomBar
+    this.Custom = app.globalData.Custom
+    console.log(this.Custom)
+  }
+})
+</script>
+<config>
+{
+navigationBarTitleText: '编辑资料',
+enablePullDownRefresh: false,
+navigationStyle: 'custom',
+backgroundColorTop: '#F4F7FC',
+backgroundColorBottom: '#F4F7FC',
+"usingComponents": {
+<!--navigation: '~@/components/navigation'-->
+}
+}
+</config>

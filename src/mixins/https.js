@@ -12,6 +12,14 @@ export default {
         })
       })
     },
+    $getV2({url = '', headers = {}, data = {}}) {
+      const methods = 'GET'
+      return new Promise((resolve, reject) => {
+        this.$ajax({url, headers, methods, data}).then((res) => {
+          resolve(res)
+        })
+      })
+    },
     $post({url = '', headers = {}, data = {}}) {
       const methods = 'POST'
       return new Promise((resolve, reject) => {
@@ -63,10 +71,11 @@ export default {
       // console.table(request)
       // 发起请求
       return new Promise((resolve, reject) => {
-        console.log()
         wx.request(Object.assign(request, {
           success: ({statusCode, data}) => {
+            let dataCopy = data
             wx.hideNavigationBarLoading()
+            wx.hideLoading()
             const {code, message, notice, operate, path} = data
             wx.removeStorageSync('message')
             wx.stopPullDownRefresh()
@@ -118,6 +127,9 @@ export default {
               })
               let errorMessage = {message: '错误,需要重新登录'}
               throw errorMessage
+            } else {
+              // 针对外部的接口
+              resolve(dataCopy)
             }
           },
 

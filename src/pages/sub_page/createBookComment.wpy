@@ -1,0 +1,184 @@
+
+<style lang="less" scoped>
+page {
+  background-color: #FFFFFF;
+  ._bg{
+    width: 100vw;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  ._container{
+    padding: 30rpx;
+    ._book_box{
+      padding: 30rpx 0;
+      display: flex;
+      border-bottom: 2rpx solid #f5f5f5;
+      margin-bottom: 30rpx;
+      ._img{
+        width: 120rpx;
+        height: 160rpx;
+        border-radius: 16rpx;
+        margin-right: 16rpx;
+        box-shadow: 0rpx 4rpx 16rpx 0rpx rgba(0, 0, 0, 0.15);
+      }
+    }
+    ._intro_b {
+      width: 100%;
+      margin: auto;
+      ._intro {
+        background: #FFFFFF;
+        textarea {
+          width: 100%;
+          height: 300rpx;
+          z-index: 1;
+          margin-bottom: 20rpx;
+        }
+      }
+    }
+  }
+  ._form_btn {
+    width: 600rpx;
+    height: 80rpx;
+    background: linear-gradient(90deg, #9DC0F8 0%, #508AFC 100%);
+    box-shadow: 0rpx 8rpx 24rpx 0rpx rgba(55, 123, 203, 0.5);
+    border-radius: 40rpx;
+    margin: auto;
+    position: relative;
+    z-index: 99999;
+  }
+}
+</style>
+<template>
+  <view class="cu-custom">
+    <view class="cu-bar fixed" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+      <view @tap="$gotoBack(1)" class="action">
+        <text class="cuIcon-back"></text>
+        返回
+      </view>
+      <view class="content {{showCustom?'animation-TOP forwards':'animation-slide-top'}}" style="top:{{StatusBar}}px;">图书评论</view>
+    </view>
+  </view>
+  <view class="_container " style="margin-top:{{CustomBar}}px;">
+    <view class="_book_box">
+      <image src="{{bookData.image}}" mode="aspectFill"
+             class="_img"></image>
+      <view style="width: 526rpx;">
+        <view class="font_30 bold color333 lineH42">{{bookData.title}}</view>
+        <view class="color666 lineH34 font_24 marginT12">作者：{{bookData.author}}</view>
+      </view>
+    </view>
+    <view class="_intro_b">
+      <view class="_intro">
+        <textarea name="" id="" maxlength="800" class="spacing2 " placeholder-class="color999" placeholder="请发布该书的评论" v-model="content"></textarea>
+        <view class="text-r color666 spacing2">{{content.length}}/800</view>
+      </view>
+    </view>
+    <view class="heigth160"></view>
+    <view class="fixed_bot text-c" style="width: 100%;padding: 70rpx;z-index: 99999" @tap.stop="submitFn">
+      <view class="_form_btn f-fcc colorfff font_30" >提交</view>
+    </view>
+  </view>
+</template>
+<!--x-->
+
+
+<script>
+import wepy from '@wepy/core'
+import https from '../../mixins/https'
+import base from '../../mixins/base'
+import {getPhoneNumber} from '../../utils/util'
+import {service} from '../../config'
+
+wepy.page({
+  config: {},
+  mixins: [https, base],
+
+  data: {
+    showCustom: false,
+    StatusBar: 0,
+    CustomBar: 0,
+    Custom: 0,
+    library_id: 0,
+    user_id: 0,
+    id: 0,
+    bookData: null,
+    content: ''
+  },
+  onPageScroll(res) {
+    let top = res.scrollTop
+    this.showCustom = top > 18
+  },
+// 上拉获取更多数据
+  onReachBottom() {
+    if (!this.no_more) {
+      // this.getList()
+    }
+  },
+  // 下拉刷新
+  onPullDownRefresh() {
+    // this.page = 1
+    // this.list = []
+    // this.no_more = false
+    // this.getList()
+  },
+  methods: {
+    initPageData() {
+      let vm = this
+      vm.$get({url: `${service.host}/books/${vm.id}`}).then(({
+        code,
+        data
+      }) => {
+        if (code === 0) {
+          vm.bookData = data
+        }
+      })
+    },
+    submitFn() { // 提交
+      let vm = this
+      if (!vm.content) return vm.$showToast('请输入评论内容')
+      console.log(vm.content)
+      const data = {
+        content: this.content
+      }
+      vm.$post({url: `${service.host}/books/${vm.id}/comments`, data}).then(({code, data}) => {
+          if (code === 0) {
+            vm.$Toast_success('评论成功')
+            setTimeout(() => {
+              vm.$gotoBackV2(1, {id: vm.id, library_id: vm.library_id, user_id: vm.user_id})
+            }, 800)
+          }
+      })
+    },
+    goto(path) {
+      this.$goto(path)
+    }
+  },
+  onLoad(e) {
+    this.id = e.id
+    this.library_id = e.library_id
+    this.user_id = e.user_id
+    this.initPageData()
+  },
+  created() {
+    let app = this.$app.$options
+    this.StatusBar = app.globalData.StatusBar
+    this.CustomBar = app.globalData.CustomBar
+    this.Custom = app.globalData.Custom
+    console.log(this.Custom)
+  }
+})
+</script>
+<config>
+{
+navigationBarTitleText: '创建图书评论',
+enablePullDownRefresh: false,
+navigationStyle: 'custom',
+backgroundColorTop: '#F4F7FC',
+backgroundColorBottom: '#F4F7FC',
+"usingComponents": {
+<!--navigation: '~@/components/navigation'-->
+}
+}
+</config>

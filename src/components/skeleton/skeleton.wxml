@@ -1,0 +1,27 @@
+<!--<canvas canvas-id="skeleton" disable-scroll="true"></canvas>-->
+<view
+  style="background-color: {{ bgcolor || '#FFF' }}; {{ isDev ? devData.container : data.container }}"
+  class="skeleton skeleton_{{loading}}"
+  wx:if="{{ !isDev || isShowByDev }}"
+>
+  <block wx:for="{{ isDev ? devData.lists : data.lists }}" wx:for-item="list" wx:key="type">
+    <view
+      v-for="(item, index) in list.elements"
+      :key="index"
+      class="skeleton__item skeleton__item_{{ list.type }}"
+      style="{{ item }}"
+    />
+  </block>
+  <view class="skeleton__spinbox">
+    <view class="skeleton__spin" />
+  </view>
+  <view class="skeleton__shine"/>
+</view>
+<skeleton-btn
+  wx:if="{{ isDev }}"
+  selector="{{ selector }}"
+  isShow="{{ isShowByDev }}"
+  selectorTypes="{{ selectorTypes }}"
+  bindupdateData="handleUpdateData"
+  bindtoggleShow="handleToggleShow"
+></skeleton-btn>

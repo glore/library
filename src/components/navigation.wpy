@@ -1,0 +1,109 @@
+<style lang="less">
+
+.m_search {
+  width: 446rpx;
+  height: 64rpx;
+  background-color: #F8F8F8;
+  border-radius: 100rpx;
+  padding: 0 22rpx;
+  margin-left: 30rpx;
+
+  .m_search_icon {
+    width: 28rpx;
+    height: 28rpx;
+    margin-right: 8rpx;
+  }
+
+  .m_search_icon_add {
+    width: 28rpx;
+    height: 28rpx;
+    margin-left: 60rpx;
+  }
+}
+</style>
+<template>
+  <view class="~cu-custom" style="height:{{CustomBar}}px">
+    <view class="~cu-bar ~fixed {{bgImage!=''?'none-bg text-white bg-img':''}} {{bgColor}}"
+          style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;{{bgImage?'background-image:url(' + bgImage+')':''}}">
+      <view class="~action" bindtap="BackPage" v-if="isBack">
+        <text class="~cuIcon-back"></text>
+        <slot name="backText"></slot>
+      </view>
+      <view class="~action ~border-custom" v-if="isCustom"
+            style="width:{{Custom.width}}px;height:{{Custom.height}}px;margin-left:calc(750rpx - {{Custom.right}}px)">
+        <text class="~cuIcon-back" bindtap="BackPage"></text>
+        <text class="~cuIcon-homefill" bindtap="toHome"></text>
+      </view>
+      <view class="~content" style="top:{{StatusBar}}px">
+        <slot name="content"></slot>
+      </view>
+      <slot name="right"></slot>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from '@wepy/core'
+
+wepy.component({
+    props: {
+      bgColor: {
+        type: String,
+        default: ''
+      },
+      isCustom: {
+        type: [Boolean, String],
+        default: false
+      },
+      isBack: {
+        type: [Boolean, String],
+        default: false
+      },
+      bgImage: {
+        type: String,
+        default: ''
+      }
+    },
+  data: {
+    StatusBar: 0,
+    CustomBar: 0,
+    Custom: 0
+  },
+    events: {},
+    watch: {},
+    methods: {
+      BackPage() {
+        wx.navigateBack({
+          delta: 1
+        })
+    },
+      toHome() {
+        wx.reLaunch({
+          url: '/pages/index/index'
+        })
+      }
+    },
+    created() {
+        console.log(this.$app.$options)
+      let app = this.$app.$options
+      this.StatusBar = app.globalData.StatusBar
+      this.CustomBar = app.globalData.CustomBar
+      this.Custom = app.globalData.Custom
+      console.log(this.Custom)
+        // console.log(this.handleIndex)
+        // let pages = getCurrentPages()
+        // this.token = wx.getStorageSync('token')
+        // let prevPage = pages[pages.length - 2]  // 上一个页面
+        // this.prevPage = prevPage
+        // try {
+        //   var systemInfo = wx.getSystemInfoSync()
+        //   this.computeNavigateBarHeight(systemInfo)
+        // } catch (e) {
+        //   // 获取系统信息失败
+        //     this.windowHeight = 812
+        //     this.totalTopHeight = 68
+        //     this.statusBarHeight = 20
+        //     this.titleBarHeight = 48
+        // }
+    }
+  })
+</script>

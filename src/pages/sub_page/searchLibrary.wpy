@@ -1,0 +1,235 @@
+
+<style lang="less" scoped>
+page {
+  background-color: #FFFFFF;
+  ._container{
+    ._library_container {
+      position: relative;
+      top: 40rpx;
+    }
+
+    ._search_box {
+      width: 100%;
+      background: #FFFFFF;
+      z-index: 999;
+      padding-bottom: 18rpx;
+      top: 0;
+    }
+    ._search {
+      width: 690rpx;
+      height: 80rpx;
+      background: #F8F8F8;
+      border-radius: 40rpx;
+      padding: 0 30rpx;
+      margin: 10rpx auto;
+      ._icon{
+        width: 28rpx;
+        height: 28rpx;
+        margin-right: 10rpx;
+      }
+      ._input{
+        width: 90%;
+        letter-spacing: 2rpx;
+      }
+    }
+    ._title{
+      padding: 30rpx 30rpx 20rpx 30rpx;
+      ._icon{
+        width: 116rpx;
+        height: 40rpx;
+      }
+    }
+    ._list{
+      padding: 0 30rpx;
+      padding-bottom: 30rpx;
+
+      ._item{
+        margin-bottom: 40rpx;
+        ._pic{
+          width: 140rpx;
+          height: 140rpx;
+          background: #d0d0d0;
+          border-radius: 16rpx;
+          margin-right: 16rpx;
+          box-shadow: 0rpx 4rpx 16rpx 0rpx rgba(0, 0, 0, 0.15);
+        }
+        ._t{
+          ._icon{
+            width: 64rpx;
+            height: 32rpx;
+            margin-left: 12rpx;
+          }
+        }
+        ._intro{
+          margin-top: 12rpx;
+          width: 534rpx;
+        }
+      }
+    }
+  }
+}
+
+
+</style>
+<template>
+  <view class="_container">
+    <view class="fixed _search_box">
+      <view class="_search f-fc">
+        <image class="_icon" src="~@/images/icon/search_icon.png" mode="aspectFit"></image>
+        <input type="text" class="_input lineH40 font_28" placeholder="搜索图书馆" v-model="searchVal" focus="{{true}}"
+               @confirm="searchConfirm($wx)" />
+      </view>
+    </view>
+<!--    <view class="_title f-fbc">-->
+<!--      <view class="font_32 color333 lineH44 bold">猜你喜欢</view>-->
+<!--      <image class="_icon" src="~@/images/icon/dlybyq_icon.png" mode="aspectFit" @tap="searchConfirm"></image>-->
+<!--    </view>-->
+
+    <view class="_library_container " style="top: {{navHeight+22}}px;">
+      <view class="_list">
+        <view v-if="no_more" class="_no_more text-c" style="height: 42vh;margin-top: 12vh;">
+          <image src="https://image.fulllinkai.com/202305/20/126800766170e753faeb31a74b370152.png" mode="widthFix"
+                 class="_no_more_img"></image>
+          <view class="color999 lineH42 font_28 spacing2">搜索暂无结果</view>
+        </view>
+        <view class="_item f-ffs" v-for="(item, index) in list" :key="index"
+              @click="$goto(`/pages/sub_page/libraryDetail?id=${item.id}`)">
+          <image class="_pic"
+                 src="{{item.logo?item.logo:'https://image.fulllinkai.com/202305/17/e072b39804d657bbe98ff99809e1948f.png'}}"
+                 mode="aspectFill"></image>
+          <view>
+            <view class="_t f-fc">
+              <text class="font_28 bold color333">{{item.name}}</text>
+<!--              <image class="_icon" src="~@/images/icon/share_icon.png" mode="aspectFit"></image>-->
+              <image class="_icon" src="~@/images/icon/institution_icon.png" mode="aspectFit"
+                     v-if="item.type === 'ORG'"></image>
+              <image class="_icon" src="~@/images/icon/share_icon.png" mode="aspectFit"
+                     v-if="item.type === 'SHARE'"></image>
+              <image class="_icon" src="~@/images/icon/person_icon.png" mode="aspectFit"
+                     v-if="item.type==='FAMILY'"></image>
+            </view>
+            <view class="_intro ellipsis_2 color666 font_24 lineH34">
+              简介：{{item.intro}}
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="scroll_top {{showBackTopBtn?'animation-slide-bottom':'animation-slide-top'}}" v-if="showBackTopBtn"
+          @tap="$BackTop()">
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from '@wepy/core'
+import https from '../../mixins/https'
+import base from '../../mixins/base'
+import {getElement_WH, getPhoneNumber, onShareAppMessage} from '../../utils/util'
+import {service} from '../../config'
+
+wepy.page({
+  config: {},
+  mixins: [https, base],
+
+  data: {
+    searchVal: '',
+    navHeight: 0,
+    page: 1,
+    no_more: false,
+    showBackTopBtn: false,
+    list: []
+  },
+  onPageScroll(res) {
+    let top = res.scrollTop
+    this.showBackTopBtn = top > 300
+  },
+// 上拉获取更多数据
+  onReachBottom() {
+    if (!this.no_more) {
+      this.initPageData()
+    }
+  },
+  // 下拉刷新
+  onPullDownRefresh() {
+    this.page = 1
+    this.list = []
+    this.no_more = false
+    this.initPageData()
+  },
+  onShareAppMessage(e) {
+    let title = `向您推荐了「查找图书馆」`
+    let path = `/pages/sub_page/searchLibrary`
+    return onShareAppMessage(title, path)
+  },
+  methods: {
+    searchConfirm() {
+      let vm = this
+      // if (!vm.searchVal) {
+      //   return vm.$showToast('请输入搜索内容')
+      // }
+      vm.page = 1
+      vm.list = []
+      vm.no_more = false
+      vm.$showLoading('搜索中')
+      vm.initPageData()
+      setTimeout(() => {
+        vm.$hideLoading()
+        // vm.searchVal = ''
+      }, 1200)
+    },
+initPageData() {
+      let vm = this
+      vm.$get({url: `${service.host}/libraries/v2?page=${vm.page}&keyword=${vm.searchVal}`}).then(({code, data}) => {
+        if (code === 0) {
+          if (data.data == [] || data.data.length < 1) {
+            console.log('暂无更多数据')
+            if (vm.list < 1) {
+              return vm.no_more = true
+            }
+            return
+          }
+          if (vm.page == 1) {
+            vm.page++
+            vm.list = data.data
+          } else {
+            vm.page++
+            data.data.map((item, index) => {
+              vm.list.push(item)
+            })
+          }
+
+          console.log(vm.list)
+        }
+      })
+    },
+    goto(path) {
+      this.$goto(path)
+    }
+  },
+  onShow() {
+    getElement_WH('._search').then((res) => {
+      this.navHeight = res.height
+    })
+    this.initPageData()
+  },
+  created() {
+    let app = this.$app.$options
+    this.StatusBar = app.globalData.StatusBar
+    this.CustomBar = app.globalData.CustomBar
+    this.Custom = app.globalData.Custom
+    console.log(this.Custom)
+  }
+})
+</script>
+<config>
+{
+navigationBarTitleText: '查找图书馆',
+enablePullDownRefresh: false,
+backgroundColorTop: '#F4F7FC',
+backgroundColorBottom: '#F4F7FC',
+"usingComponents": {
+<!--navigation: '~@/components/navigation'-->
+}
+}
+</config>

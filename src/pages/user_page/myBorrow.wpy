@@ -1,0 +1,235 @@
+
+
+
+<style lang="less" scoped>
+page {
+  background-color: #f8f8f8;
+
+  ._bg {
+    width: 100vw;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+  ._container{
+    ._list{
+      width: 100%;
+      padding: 30rpx;
+      ._item{
+        padding: 24rpx 30rpx;
+        border-radius: 24rpx;
+        margin-bottom: 30rpx;
+        ._code{
+          padding-bottom: 24rpx;
+          border-bottom: 2rpx solid #f5f5f5;
+        }
+        ._logo{
+          width: 36rpx;
+          height: 36rpx;
+          border-radius: 50%;
+          margin-right: 8rpx;
+        }
+        ._btn{
+          width: 144rpx;
+          height: 56rpx;
+          background: linear-gradient(90deg, #9DC0F8 0%, #508AFC 100%);
+          border-radius: 34rpx;
+        }
+        ._pic{
+          width: 120rpx;
+          height: 160rpx;
+          background:  #d0d0d0;
+          border-radius: 10rpx;
+          margin-right: 24rpx;
+        }
+      }
+    }
+  }
+}
+
+</style>
+
+<template>
+  <view class="_container">
+    <scroll-view scroll-x class="bg-white nav fixed">
+      <view class="flex text-center">
+        <view class="cu-item  lineH42 margin0  flex-sub {{index==TabCur?'color-theme cur':''}}" v-for="(item, index) in tabList"
+              :key="index"  bindtap="tabSelect"
+              data-id="{{index}}">
+          <view class="relative">
+            {{item}}
+            <view class="cu-tag badge" style="top: 16rpx;right: 24rpx" v-if="index == 1 &&badge">
+              {{badge>99?"99+":badge}}
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+    <view class="_list absolute" style="top: {{navHeight}}px;">
+      <view class="color999 font_26 marginB20 spacing2" v-if="total&&total>0">共
+        <text class="bold color666">{{total}}</text>
+        本书
+      </view>
+      <view v-if="no_more" class="_no_more text-c">
+        <image src="https://image.fulllinkai.com/202305/20/126800766170e753faeb31a74b370152.png" mode="widthFix"
+               class="_no_more_img"></image>
+        <view class="color999 lineH42 font_28 spacing2">暂无数据</view>
+      </view>
+      <view class="_item bg_f" v-for="(item, index) in list" :key="index" @tap="goto(`/pages/sub_page/bookDetail?id=${item.book_id}&library_id=${item.library_id}&user_id=${item.user_id}`)">
+       <view class="f-fbc _code">
+         <view class=" font_24 lineH34 color666" v-if="TabCur==0">借阅时间：{{item.created_at}}</view>
+         <view class=" font_24 lineH34 color666" style="{{TabCur==1?'color:#F95F5F':''}}" v-else>还书时间：{{item.return_time}}</view>
+         <view class=" f-fbc">
+           <image src="{{item.library.logo}}" mode="aspectFill" class="_logo"></image>
+           <view class="font_24 lineH34 color666 ellipsis_1"  style="max-width: 200rpx;">{{item.library.name}}</view>
+         </view>
+       </view>
+        <view class="marginT24 f-fbc">
+          <view class="f-ffs">
+            <image src="{{item.book?item.book.image:''}}" mode="aspectFill" class="_pic"></image>
+            <view style="width: 318rpx;">
+              <view class="lineH42 color333 bold font_30 ellipsis_2">{{item.book?item.book.title:'未获取'}}</view>
+              <view class="font_24 lineH34 color666 marginT8 ellipsis_2">作者：{{item.book?item.book.author:'未获取'}}</view>
+            </view>
+          </view>
+          <view class="lineH36 colorfff bold font_26 _btn f-fcc spacing2" @tap.stop="$callPhone(item.book_user?item.book_user.mobile:'')">联系馆主</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from '@wepy/core'
+import https from '../../mixins/https'
+import base from '../../mixins/base'
+import {getElement_WH} from '../../utils/util'
+import {service} from '../../config'
+
+wepy.page({
+  config: {},
+  mixins: [https, base],
+
+  data: {
+    modalName: '',
+    showBackTopBtn: false,
+    showCustom: false,
+    no_more: false,
+    TabCur: 0,
+    status: 'RESERVE',
+    tabList: ['已预约', '借阅中', '已归还'],
+    list: [],
+    page: 1,
+    badge: 0,
+    total: 0,
+    navHeight: 0,
+    scrollLeft: 0,
+    StatusBar: 0,
+    CustomBar: 0,
+    Custom: 0
+  },
+// 上拉获取更多数据
+  onReachBottom() {
+    if (!this.no_more) {
+      this.initPageData()
+    }
+  },
+  // 下拉刷新
+  onPullDownRefresh() {
+    this.page = 1
+    this.list = []
+    this.no_more = false
+    this.initPageData()
+  },
+  methods: {
+    getBadgeFn() {
+      let vm = this
+      vm.$get({url: `${service.host}/user/borrows?status=BORROW&page=${vm.page}`}).then(({code, data}) => {
+        vm.badge = data.total
+      })
+    },
+    initPageData() {
+      let vm = this
+
+      switch (vm.TabCur) {
+        case 0:
+          vm.status = 'RESERVE'
+          break
+        case 1:
+          vm.status = 'BORROW'
+          break
+        default:
+          vm.status = 'RETURN'
+      }
+
+      vm.$get({url: `${service.host}/user/borrows?status=${vm.status}&page=${vm.page}`}).then(({code, data}) => {
+        if (code === 0) {
+          if (data.data == [] || data.data.length < 1) {
+            if (vm.list.length < 1) {
+              vm.no_more = true
+            }
+            console.log('暂无更多数据')
+            return
+          }
+          vm.total = data.total
+          if (vm.page == 1) {
+            vm.page++
+            vm.list = data.data
+          } else {
+            vm.page++
+            data.data.map((item, index) => {
+              vm.list.push(item)
+            })
+          }
+
+          console.log(vm.list)
+        }
+      })
+    },
+    tabSelect(e) {
+      let vm = this
+      vm.page = 1
+      vm.list = []
+      vm.TabCur = e.currentTarget.dataset.id
+      vm.scrollLeft = (e.currentTarget.dataset.id - 1) * 60
+      vm.$showLoading('加载中')
+      vm.initPageData()
+    },
+    submitFn() {
+      let vm = this
+    },
+    goto(path) {
+      return false
+      // this.$goto(path)
+    }
+  },
+  onShow() {
+    getElement_WH('.nav').then((res) => {
+      this.navHeight = res.height
+    })
+  },
+  created() {
+    let app = this.$app.$options
+    this.StatusBar = app.globalData.StatusBar
+    this.CustomBar = app.globalData.CustomBar
+    this.Custom = app.globalData.Custom
+    this.initPageData()
+    this.getBadgeFn()
+    console.log(this.Custom)
+  }
+})
+</script>
+<config>
+{
+navigationBarTitleText: '我的借阅',
+enablePullDownRefresh: true,
+<!--navigationStyle: 'custom',-->
+backgroundColorTop: '#F4F7FC',
+backgroundColorBottom: '#F4F7FC',
+"usingComponents": {
+<!--navigation: '~@/components/navigation'-->
+}
+}
+</config>

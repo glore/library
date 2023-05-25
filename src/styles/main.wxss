@@ -12,6 +12,7 @@ page {
 	/* Color 可以自定义相关配色 */
 	/* var属性兼容性 --> https://www.caniuse.com/#feat=css-variables */
 	/* 标准色 */
+	--theme: #5C9DFF;
 	--red: #e54d42;
 	--orange: #f37b1d;
 	--yellow: #fbbd08;
@@ -31,7 +32,7 @@ page {
 	--white: #ffffff;
 	/* 自定义 */
 	--yel:#FEA035;
-	--mainColor: #F33B6C;
+	--mainColor: #5C9DFF;
 	/* 浅色 */
 	--redLight: #fadbd9;
 	--orangeLight: #fde6d2;
@@ -313,6 +314,7 @@ checkbox.red[checked] .wx-checkbox-input,
 radio.red[checked] .wx-radio-input {
 	border-color: var(--red) !important;
 }
+
 
 switch.orange[checked] .wx-switch-input,
 checkbox.orange[checked] .wx-checkbox-input,

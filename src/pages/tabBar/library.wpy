@@ -1,0 +1,344 @@
+<style lang="less" scoped>
+page {
+  background-color: #FFFFFF;
+
+  ._bg {
+    width: 100vw;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+  ._container {
+    ._title {
+      padding: 16rpx 30rpx 20rpx 30rpx;
+
+      //border-top: 16rpx solid #f8f8f8;
+    }
+    .searchScrollTOP{
+      animation: M 500ms 1;
+    }
+    @keyframes M {
+      from{
+        width: 345px;
+      }
+      to{
+        width: 260px;
+      }
+    }
+
+    .searchScrollTOP_open {
+      animation: open_animation 500ms 1;
+    }
+
+    @keyframes open_animation {
+      from {
+        width: 260px;
+      }
+      to {
+        width: 345px;
+      }
+    }
+
+    ._item_box {
+      //justify-content: center;
+      //display: grid;
+      //gap: 30rpx;
+      //grid-template-columns: repeat(auto-fill, 320rpx);
+      //padding-bottom: 40rpx;
+    }
+
+    ._item {
+      //background: #FFFFFF;
+      width: 100%;
+      height: 370rpx;
+      ._c{padding: 16rpx;}
+      ._img_c{
+        width: 100%;
+        height: 100%;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-image: url('https://image.fulllinkai.com/202305/15/98298c19d757172d5d4001b64e399740.png')
+      }
+      ._img {
+        width: 320rpx;
+        height: 320rpx;
+        background: #ededed;
+        border-top-left-radius: 16rpx;
+        border-top-right-radius: 16rpx;
+      }
+      ._icon{
+        width: 28rpx;
+        height: 28rpx;
+      }
+
+      ._text {
+        padding: 4rpx;
+      }
+    }
+    ._list_l {
+      padding: 0 30rpx;
+      padding-bottom: 30rpx;
+      ._item_l {
+        margin-bottom: 24rpx;
+        padding: 20rpx;
+        background: #FFFFFF;
+        box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0, 0, 0, 0.08);
+        border-radius: 24rpx;
+        ._icon_del{
+          width: 48rpx;
+          height: 48rpx;
+          margin-right: 20rpx;
+          padding: 10rpx;
+        }
+        ._pic {
+          width: 140rpx;
+          height: 140rpx;
+          background: #d0d0d0;
+          border-radius: 16rpx;
+          margin-right: 16rpx;
+        }
+        ._t {
+          ._icon {
+            width: 64rpx;
+            height: 32rpx;
+            margin-left: 12rpx;
+          }
+        }
+
+        ._intro {
+          margin-top: 12rpx;
+          width: 416rpx;
+        }
+      }
+    }
+  }
+}
+
+
+</style>
+<template>
+  <view class="cu-custom">
+    <view class="cu-bar fixed  {{scrollTOP>20?'':''}}" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+      <view class="content {{showCustom?'animation-TOP forwards':'animation-slide-top'}}" style="top:{{StatusBar}}px;">创建图书馆</view>
+    </view>
+  </view>
+  <image src="https://image.fulllinkai.com/202305/09/0f16fa4e30e8e2cae9c63c29da67060b.png" mode="widthFix"
+         class="_bg"></image>
+  <view class="_container " style="margin-top:{{CustomBar}}px;">
+    <view class="_item_box">
+      <view  class="inline-block _item " @click="">
+        <view class="_img_c" @tap="$goto('/pages/sub_page/createLibrary')"></view>
+      </view>
+<!--      <view v-for="(item, index) in 8" :key="index" class="inline-block _item"-->
+<!--            @tap="$goto('/pages/sub_page/libraryDetail')">-->
+<!--        &lt;!&ndash;        <view class="_img" style="background-image: url('{{item.pic}}')"></view>&ndash;&gt;-->
+<!--        <image src="https://image.fulllinkai.com/202305/11/82b47ad6ea33581a05697e4edc1b3bd5.png" mode="aspectFill"-->
+<!--               class="_img"></image>-->
+<!--        <view class="_c">-->
+<!--          <view class="color333 font_30 lineH42 bold ellipsis_1">快乐小盒子书房</view>-->
+<!--          <view class="f-fbc">-->
+<!--            <view class="font_26 marginT12 lineH36 color666">馆长：盖儿</view>-->
+<!--            <image class="_icon" src="~@/images/icon/del_icon.png" mode="aspectFit" @tap="modalName='Modal'"></image>-->
+<!--          </view>-->
+<!--        </view>-->
+<!--      </view>-->
+    </view>
+    <view class="_title f-fbc">
+      <view class="font_32 color333 lineH44 bold spacing2">我的图书馆</view>
+    </view>
+    <view class="_list_l">
+      <view class="_item_l f-fbc" v-for="(item, index) in list" :key="index" >
+        <view class="f-ffs" @tap="$goto(`/pages/sub_page/libraryDetail?id=${item.id}`)">
+          <image class="_pic" src="{{item.logo}}" mode="aspectFill"></image>
+          <view>
+            <view class="_t f-fc">
+              <text class="font_28 bold color333">{{item.name}}</text>
+              <image class="_icon" src="~@/images/icon/institution_icon.png" mode="aspectFit"
+                     v-if="item.type === 'ORG'"></image>
+              <image class="_icon" src="~@/images/icon/share_icon.png" mode="aspectFit"
+                     v-if="item.type === 'SHARE'"></image>
+              <image class="_icon" src="~@/images/icon/person_icon.png" mode="aspectFit"
+                     v-if="item.type==='FAMILY'"></image>
+            </view>
+            <view class="_intro ellipsis_2 color666 font_24 lineH34 marginT8">
+              馆主：{{item.user?item.user.name:'未获取'}}
+            </view>
+            <view class="_intro ellipsis_2 color666 font_24 lineH34 margin0">
+              简介：{{item.intro?item.intro:'未获取'}}
+            </view>
+          </view>
+        </view>
+        <view>
+          <image class="_icon_del" src="~@/images/icon/del_icon.png" mode="aspectFit" @tap.stop="modalName='Modal',delIndex=index"></image>
+        </view>
+      </view>
+      <view v-if="no_more" class="_no_more text-c" style="height: 42vh;margin-top: 12vh;">
+        <image src="https://image.fulllinkai.com/202305/20/126800766170e753faeb31a74b370152.png" mode="widthFix"
+               class="_no_more_img"></image>
+        <view class="color999 lineH42 font_28 spacing2">暂无数据</view>
+      </view>
+    </view>
+    <view class="cu-modal {{modalName=='Modal'?'show':''}}">
+      <view class="cu-dialog">
+        <view class="_c font_32 lineH44 color333">是否确认删除【{{list[delIndex].name}}】？删除之后无法恢复哦！</view>
+        <view class="f-fcc">
+          <view class="cancel f-fcc color999" @tap="cancelFn">取消</view>
+          <view class="confirm f-fcc colorfff" @tap="deleteFn">确定</view>
+        </view>
+      </view>
+    </view>
+    <view class="scroll_top {{showBackTopBtn?'animation-slide-bottom':'animation-slide-top'}}" v-if="showBackTopBtn" @tap="$BackTop()">
+    </view>
+  </view>
+</template>
+<!--x-->
+
+<script>
+import wepy from '@wepy/core'
+import https from '../../mixins/https'
+import base from '../../mixins/base'
+import {getPhoneNumber, onShareAppMessage} from '../../utils/util'
+import {service} from '../../config'
+
+wepy.page({
+  config: {},
+  mixins: [https, base],
+
+  data: {
+    no_more: false,
+    showCustom: false,
+    showBackTopBtn: false,
+    modalName: '',
+    searchTOP: '',
+    scrollTOP: 0,
+    StatusBar: 0,
+    CustomBar: 0,
+    Custom: 0,
+    delIndex: 0,
+    list: []
+  },
+// 上拉获取更多数据
+  onReachBottom() {
+    if (!this.no_more) {
+      // this.getList()
+    }
+  },
+  onPageScroll(res) {
+    let top = res.scrollTop
+    this.showCustom = top > 18
+    this.showBackTopBtn = top > 300
+    this.scrollTOP = top
+  },
+  // 下拉刷新
+  onPullDownRefresh() {
+    // this.page = 1
+    // this.list = []
+    // this.no_more = false
+    // this.getList()
+  },
+  onShareAppMessage(e) {
+    let title = `「创建图书馆」`
+    let path = `/pages/tabBar/home`
+    return onShareAppMessage(title, path)
+  },
+  methods: {
+    deleteFn() {
+      let vm = this
+      vm.$delete({url: `${service.host}/libraries/${vm.list[vm.delIndex].id}`}).then(({code, data}) => {
+        if (code === 0) {
+          vm.$Toast_success('删除成功')
+          vm.list.splice(vm.delIndex, 1)
+          vm.modalName = ''
+        }
+      })
+    },
+    cancelFn() { // 取消弹框
+      let vm = this
+      vm.modalName = ''
+    },
+    submitFn() { // 提交
+      let vm = this
+      if (!vm.avatarUrl) {
+        return vm.$showToast('请上传你的头像')
+      }
+      if (!vm.name) {
+        return vm.$showToast('请输入昵称')
+      }
+      if (!vm.mobile) {
+        return vm.$showToast('请输入手机号码')
+      }
+      if (!/^1(3|4|5|6|7|8|9)\d{9}$/.test(vm.mobile)) {
+        return vm.$showToast('手机号码错误')
+      }
+      vm.$showToast('登录成功')
+      // const data = {
+      //   mobile: this.mobile,
+      //   name: this.name
+      // }
+      // vm.$post({url: `${service.host}/wechat/register`, data}).then(({code, data}) => {
+      //     if (code === 0) {
+      //     }
+      // })
+      // debugger
+    },
+
+    initPageData() {
+      let vm = this
+      vm.$get({url: `${service.host}/user/libraries/v2?status=ADMIN`}).then(({code, data}) => {
+        if (code === 0) {
+          console.log(data)
+          vm.list = data
+          if (vm.list.length < 1) {
+            vm.no_more = true
+          }
+        }
+      })
+    },
+    getPhoneNumber(e) { // 获取手机号
+      console.log(e.detail.iv)
+      let vm = this
+      if (e.detail.iv) {
+        getPhoneNumber(e).then(({phoneNumber}) => {
+          if (phoneNumber) {
+            vm.mobile = phoneNumber
+            vm.$showToast('获取成功')
+          }
+        }).catch(() => {
+        })
+      }
+    },
+    onChooseAvatar(e) {
+      const {avatarUrl} = e.detail
+      this.avatarUrl = avatarUrl
+    },
+    goto(path) {
+      this.$goto(path)
+    }
+  },
+  onLoad() {
+    // this.$showLoading('加载中...')
+    this.initPageData()
+  },
+  created() {
+    let app = this.$app.$options
+    this.StatusBar = app.globalData.StatusBar
+    this.CustomBar = app.globalData.CustomBar
+    this.Custom = app.globalData.Custom
+    console.log(this.Custom)
+  }
+})
+</script>
+<config>
+{
+navigationBarTitleText: '首页',
+enablePullDownRefresh: false,
+navigationStyle: 'custom',
+backgroundColorTop: '#F4F7FC',
+backgroundColorBottom: '#F4F7FC',
+"usingComponents": {
+<!--navigation: '~@/components/navigation'-->
+}
+}
+</config>

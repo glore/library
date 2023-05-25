@@ -1,0 +1,107 @@
+.skeleton {
+  position: absolute; left:0; top:0; z-index:9998; overflow: hidden;
+}
+
+.skeleton__item {
+  position: absolute;
+}
+.skeleton__item_bg {
+  background-color: #f6f6f6;
+  border-radius: 12rpx;
+}
+.skeleton__item_rect {
+  background-color: #f2f2f2;
+  border-radius: 12rpx;
+}
+.skeleton__item_circle {
+  background-color: #f2f2f2;
+  border-radius: 200rpx;
+}
+
+/* spin start */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.skeleton__spinbox{
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  z-index: 9999;
+  display: none;
+}
+.skeleton__spin {
+  display: inline-block;
+  width: 64rpx;
+  height: 64rpx;
+}
+.skeleton__spin:after {
+  content: " ";
+  display: block;
+  width: 46rpx;
+  height: 46rpx;
+  margin: 1rpx;
+  border-radius: 50%;
+  border: 5rpx solid #409eff;
+  border-color: #409eff transparent #409eff transparent;
+  animation: spin 1.2s linear infinite;
+}
+
+.skeleton_spin .skeleton__spinbox {
+  display: flex;
+}
+/* spin end */
+
+/* shine start */
+@keyframes flush {
+  0% {
+    transform: translate(-100%, -100%) rotate(45deg);
+  }
+  100% {
+    transform: translate(100%, 100%) rotate(45deg);
+  }
+}
+.skeleton__shine {
+  animation: flush 2s linear infinite;
+  position: absolute;
+  top: -50%;
+  height: 200%;
+  width: 500px;
+  background: linear-gradient(to right,
+  rgba(255, 255, 255, 0) 10%,
+  rgba(255, 255, 255, .85) 50%,
+  rgba(255, 255, 255, 0) 90%
+  );
+  display: none;
+}
+
+.skeleton_shine .skeleton__shine {
+  display: block;
+}
+/* shine end */
+
+/* chiaroscuro start */
+@keyframes chiaroscuro {
+  0% {
+    opacity: .7;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: .7;
+  }
+}
+
+.skeleton_chiaroscuro .skeleton__item {
+  animation-duration: 2s;
+  animation-name: chiaroscuro;
+  animation-iteration-count: infinite;
+}
+/* chiaroscuro end */

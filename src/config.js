@@ -7,7 +7,7 @@ var host = ''
 // if (_NODE_) {
 // host = 'https://task.ufutx.com/api' // 线上环境
 // } else {
-  host = 'https://love.ufutx.com/api' // 线上环境
+  host = 'https://library.ufutx.com/api' // 线上环境
 // }
 
 export const service = {

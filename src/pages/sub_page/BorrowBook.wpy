@@ -1,0 +1,508 @@
+
+<style lang="less" scoped>
+page {
+  background-color: #FFFFFF;
+  ._bg{
+    width: 100vw;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+  ._container{
+    ._library_info{
+      padding: 36rpx 30rpx 30rpx;
+      border-bottom: 16rpx solid #f8f8f8;
+      ._book_info{
+        display: flex;
+      }
+      ._borrow_out {
+        width: 224rpx;
+        height: 296rpx;
+        background-image: url("https://image.fulllinkai.com/202305/18/78aca8ba6ed75b9d48cc68785975fcaa.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        position: absolute;
+        top: 0;
+      }
+      ._pic{
+        width: 224rpx;
+        height: 296rpx;
+        box-shadow: 0rpx 4rpx 16rpx 0rpx rgba(0, 0, 0, 0.15);
+        border-radius: 16rpx;
+        margin-right: 24rpx;
+        background: #f8f8f8;
+      }
+    }
+    ._library_container{
+      ._title{
+        margin-bottom: 20rpx;
+      }
+      ._list {
+        width: 100%;
+        ._item {
+          padding: 24rpx 30rpx;
+          border-radius: 24rpx;
+          margin-bottom: 30rpx;
+          box-shadow: 0rpx 4rpx 20rpx 0rpx rgba(0, 0, 0, 0.08);
+
+          ._pic {
+            width: 92rpx;
+            height: 92rpx;
+            background: #d0d0d0;
+            border-radius: 50%;
+            margin-right: 24rpx;
+          }
+          ._icon {
+            width: 40rpx;
+            height: 40rpx;
+          }
+        }
+      }
+      ._btn {
+        width: 600rpx;
+        height: 80rpx;
+        background: linear-gradient(90deg, #9DC0F8 0%, #508AFC 100%);
+        box-shadow: 0rpx 8rpx 24rpx 0rpx rgba(55, 123, 203, 0.5);
+        border-radius: 40rpx;
+        margin: auto;
+      }
+      .bg_c2{
+        box-shadow: 0rpx 8rpx 24rpx 0rpx #c2c2c2;
+      }
+    }
+  }
+  .selected_icon{
+    width: 40rpx;
+    height: 40rpx;
+    margin-right: 16rpx;
+  }
+  .canvas{
+    width: 200px;
+    height: 200px;
+  }
+  ._input{
+    height: 80rpx;
+    background: #F8F8F8;
+    border-radius: 16rpx;
+    padding: 20rpx;
+    margin-top: 16rpx;
+    input{
+    }
+  }
+}
+.pay_qrcode{
+  width: 500rpx;
+  height: 500rpx;
+}
+</style>
+<wxs lang="babel" module="m1">
+const getStatuText = (item) => {
+if(item == 'RESERVE') return '【预借】'
+if(item == 'BORROW') return '【借阅中】'
+if(item == 'RETURN') return '【已还】'
+}
+module.exports.getStatuText = getStatuText;
+</wxs>
+<template>
+  <view class="cu-custom">
+    <view class="cu-bar fixed" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+      <view @tap="$gotoBack(1)" class="action">
+        <text class="cuIcon-back"></text>
+        返回
+      </view>
+      <view class="content {{showCustom?'animation-TOP forwards':'animation-slide-top'}}" style="top:{{StatusBar}}px;">
+        借阅详情</view>
+    </view>
+  </view>
+  <image src="https://image.fulllinkai.com/202305/09/fe9e791027aeec5509358f995c676e84.png" mode="widthFix" class="_bg"></image>
+  <view class="_container " style="margin-top:{{CustomBar}}px;">
+    <view class="_library_info">
+      <view class="_book_info">
+        <view class="relative">
+          <image src="{{bookData.book.image}}" mode="aspectFill" class="_pic"></image>
+          <view v-if="bookData.book_library&&bookData.book_library.lent_num === bookData.book_library.num" class="_borrow_out"></view>
+        </view>
+        <view style="width: 422rpx;">
+          <view class="color333 bold lineH42  font_30">{{bookData.book.title}}</view>
+          <view class="color666 lineH36 font_26  marginT8">作者：{{bookData.book.author}}</view>
+          <view class="color666 lineH36 font_26 marginT8" style="width: 422rpx">出版社：{{bookData.book.publisher?bookData.book.publisher:'不祥'}}</view>
+          <view class="color666 lineH36 font_26  marginT8">出版时间：{{bookData.book.pubdate?bookData.book.pubdate:'不详'}}</view>
+          <view class="color666 lineH36 font_26  marginT8 ellipsis_1">ISBN编码：{{bookData.book.isbn}}</view>
+          <view class="color666 lineH36 font_26  marginT8">所属图书馆：【{{bookData.library.name}}】</view>
+        </view>
+      </view>
+    </view>
+    <view class="_library_container">
+      <view class="padding30">
+        <view class="_title bold color333 font_30 lineH42">选择会员</view>
+        <view class="_list">
+          <view class="item" v-if="users" v-for="(item, index) in users" :key="index">
+            <view class="_item bg_f"  @tap="selectedFn(item,index)">
+              <view class="f-fbc">
+                <view class="f-ffs">
+                  <image src="{{item.circle_avatar?item.circle_avatar:'https://image.fulllinkai.com/202305/17/449c3253ca2bbed9314d39977a486d0e.png'}}" mode="aspectFill" class="_pic"></image>
+                  <view style="max-width: 450rpx">
+                    <view class="lineH42 color333 bold font_30 ellipsis_1">
+                      {{item?item.name:'未获取'}} {{m1.getStatuText(bookData.status)}}
+                    </view>
+                    <view class="font_24 lineH34 color666 marginT12 ellipsis_2">{{item.updated_at}}</view>
+                  </view>
+                </view>
+                <image src="~@/images/icon/selected_icon.png" mode="aspectFill" class="_icon" v-if="item.selected"></image>
+                <image src="~@/images/icon/selected_icon_n.png" mode="aspectFill" class="_icon" v-else></image>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="fixed text-c" style="bottom: 120rpx;width: 100%;left: 0;"  v-if="bookData.status">
+        <view class="_btn colorfff f-fcc spacing2" @tap="modalName='BorrowBook'" v-if="selected_id && bookData.status == 'RESERVE'" >{{bookData.status == 'RESERVE'?'确认借书':'确认还书' }}</view>
+        <view class="_btn colorfff f-fcc spacing2" @tap="modalName='returnBook'" v-if="selected_id && bookData.status == 'BORROW'" >{{bookData.status == 'RESERVE'?'确认借书':'确认还书' }}</view>
+        <view class="_btn colorfff f-fcc spacing2 bg_c2" v-if="!selected_id" @tap="$showToast('请先选择会员')">{{bookData.status == 'RESERVE'?'确认借书':'确认还书' }}</view>
+      </view>
+<!--      // 借书-->
+      <view class=" cu-modal {{modalName=='BorrowBook'?'show':''}}">
+        <view class="cu-dialog" style="padding-top: 58rpx;">
+          <view class="_t font_32 lineH44 color333 text-c bold">{{bookData.status == 'RESERVE'?'借阅确认':'还书确认'}}</view>
+          <view class="_c font_32 lineH44 color333 text-c marginT30">
+            是否借阅该本书?
+          </view>
+          <view class="f-fcc marginT12">
+            <view class="cancel marginT40 f-fcc color999" @tap="cancelFn">取消</view>
+            <view class="confirm marginT40 f-fcc colorfff" @tap="BorrowFn">确认</view>
+<!--            <view class="confirm marginT40 f-fcc colorfff" @tap="submitFn">确认</view>-->
+          </view>
+        </view>
+      </view>
+<!--      // 还书-->
+      <view class="cu-modal {{modalName=='returnBook'?'show':''}}">
+        <view class="cu-dialog bg_f" style="padding-top: 58rpx;">
+<!--          <view class="_t font_32 lineH44 color333 text-c bold">{{bookData.status == 'RESERVE'?'借阅确认':'还书确认'}}</view>-->
+          <view class="_c font_32 lineH44 color333 text-c marginT12 bold">
+            图书是否有损坏?
+          </view>
+          <view class="marginT50 f-fbc">
+            <view class="f-fc marginL40" @tap="isDamage=1">
+              <image src="~@/images/icon/selected_icon.png" mode="aspectFill" class="selected_icon" v-if="isDamage == 1"></image>
+              <image src="~@/images/icon/selected_icon_n.png" mode="aspectFill" class="selected_icon" v-else></image>
+              <view class="color333 font_30 lineH42">无损坏</view>
+            </view>
+            <view class="f-fc marginR40" @tap="isDamage=2">
+              <image src="~@/images/icon/selected_icon.png" mode="aspectFill" class="selected_icon" v-if="isDamage == 2"></image>
+              <image src="~@/images/icon/selected_icon_n.png" mode="aspectFill" class="selected_icon" v-else></image>
+              <view class="color333 font_30 lineH42">有损坏</view>
+            </view>
+          </view>
+          <block v-if="isDamage==2">
+            <view class="color333 font_28 lineH40 marginT50 text-l">赔偿金</view>
+            <view class="text-l _input f-fbc">
+              <input type="number" placeholder="请输入赔偿金额（元）" v-model="money" style="width: 410rpx;"/>
+              <view class="color333 font_28 lineH40">元</view>
+            </view>
+          </block>
+          <view class="f-fcc marginT12">
+            <view class="cancel marginT40 f-fcc color999" @tap="cancelFn">取消</view>
+            <view class="confirm marginT40 f-fcc colorfff" @tap="confirmFn">确认</view>
+          </view>
+        </view>
+      </view>
+
+      <!--      // 赔偿-->
+      <view class=" cu-modal {{modalName=='payAmount'?'show':''}}">
+        <view class="cu-dialog" style="padding-top: 58rpx;">
+          <view class="_c font_32 lineH44 color333 text-c marginT30">
+            请对方扫码二维码支付
+          </view>
+          <view class="marginT40 f-fcc">
+<!--            <image src="{{pay_qrcode}}" mode="aspectFill" class="pay_qrcode" v-if="pay_qrcode" show-menu-by-longpress="{{true}}"></image>-->
+            <canvas type="2d" style="width: 260px; height: 260px;" id="myQrcode" v-show="modalName=='payAmount'"></canvas>
+<!--            <canvas class="canvas" type="2d" id="canvas" style="width: 300px; height: 200px;" ></canvas>-->
+          </view>
+          <view class="f-fcc marginT20">
+            <view class="cancel marginT40 f-fcc color999" @tap="cancelFn">取消</view>
+            <view class="confirm marginT40 f-fcc colorfff" @tap="confirmPay">确认</view>
+            <!--            <view class="confirm marginT40 f-fcc colorfff" @tap="submitFn">确认</view>-->
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<!--x-->
+
+
+<script>
+import wepy from '@wepy/core'
+import https from '../../mixins/https'
+import base from '../../mixins/base'
+import {getPhoneNumber} from '../../utils/util'
+import {service} from '../../config'
+
+// var QRCode = require('../../utils/weapp-qrcode.js')
+
+// var qrcode
+import drawQrcode from 'weapp-qrcode-canvas-2d'
+
+wepy.page({
+  config: {},
+  mixins: [https, base],
+
+  data: {
+    modalName: '',
+    shareImg: '',
+    showCanvas: false,
+    showBackTopBtn: false,
+    selected_id: null,
+    id: 0,
+    isOpen: false,
+    isDamage: 0, // 是否被损坏
+    money: null,
+    library_id: 0,
+    trade_no: null,
+    user_id: 0,
+    pay_qrcode: '',
+    bookData: {},
+    users: [],
+    user_cash_pledge: 0,
+    StatusBar: 0,
+    CustomBar: 0,
+    Custom: 0
+  },
+  onPageScroll(res) {
+    let top = res.scrollTop
+    this.showCustom = top > 18
+    this.showBackTopBtn = top > 300
+  },
+// 上拉获取更多数据
+  onReachBottom() {
+  },
+  // 下拉刷新
+  onPullDownRefresh() {
+    this.initPageData()
+  },
+  methods: {
+    modalFn(val) {
+      this.modalName = val
+    },
+    selectedFn(item, index) {
+      let vm = this
+      for (let itemV of this.users) {
+        itemV.selected = false
+      }
+      vm.user_id = item.id
+      vm.selected_id = item.borrow_id
+      vm.users[index].selected = true
+      vm.users = [...vm.users]
+    },
+    showBorrowFn() {
+      let vm = this
+      let {library} = vm.bookData.book_library
+      console.log(library.cash_pledge)
+      if (library.cash_pledge === 1 && vm.user_cash_pledge === 0) {
+        vm.modalName = 'cashPledge'
+      } else {
+        vm.modalName = 'BorrowBook'
+      }
+    },
+    BorrowFn() {
+      let vm = this
+      vm.$showLoading('加载中')
+      console.log(vm.id)
+      vm.$put({url: `${service.host}/libraries/${vm.library_id}/borrows/${vm.selected_id}/borrow`}).then(({code, data}) => {
+        if (code === 0) {
+          vm.modalName = ''
+          vm.$Toast_success('借书成功')
+          setTimeout(() => {
+            vm.$gotoBack(1)
+          }, 800)
+        }
+      })
+    },
+    confirmFn() {
+      let vm = this
+      console.log(vm.id)
+      if (vm.isDamage == 0) {
+        return vm.$showToast('请选择图书是否损坏')
+      }
+
+        if (vm.isDamage == 2) {
+        if (!vm.money) {
+          return vm.$showToast('请输入赔偿金额')
+        }
+        vm.$showLoading('生成二维码中...')
+        let data = {
+          price: vm.money,
+          pay_user_id: vm.user_id
+        }
+        vm.$post({url: `${service.host}/pay/damage`, data}).then(({code, data}) => {
+          if (code === 0) {
+            vm.getPayQrCode(data.wx_pay.pay_qrcode)
+            vm.trade_no = data.trade_no
+            vm.$nextTick(() => {
+              vm.modalName = 'payAmount'
+            })
+            vm.$hideLoading()
+          }
+        })
+      } else {
+        let data = {
+          book_user_id: vm.user_id
+        }
+        vm.$post({url: `${service.host}/libraries/${vm.library_id}/borrows/${vm.selected_id}/return`, data}).then(({code, data}) => {
+          if (code === 0) {
+            vm.$Toast_success('还书成功')
+            vm.modalName = ''
+            setTimeout(() => {
+              vm.$gotoBack(1)
+            }, 800)
+          }
+        })
+      }
+    },
+    confirmPay() {
+      let vm = this,
+      data = {
+        book_user_id: this.user_id
+      }
+      vm.$post({url: `${service.host}/mark/order/pay/${vm.trade_no}`, data}).then(({code, data}) => {
+        if (code === 0) {
+          vm.$post({url: `${service.host}/libraries/${vm.library_id}/borrows/${vm.selected_id}/return`, data}).then(({code, data}) => {
+            if (code === 0) {
+              vm.$Toast_success('还书成功')
+              vm.modalName = ''
+              setTimeout(() => {
+                vm.$gotoBack(1)
+              }, 800)
+            }
+          })
+        } else {
+          vm.modalName = ''
+        }
+      })
+    },
+    initPageData() {
+      let vm = this,
+        url = ''
+      if (vm.isbn) {
+        url = `${service.host}/libraries/${vm.library_id}/borrow/isbn/${vm.isbn}`
+      } else {
+        url = `${service.host}/libraries/${vm.library_id}/borrows/${vm.id}?book_user_id=${vm.user_id}`
+      }
+        vm.$get({url: url}).then(({code, data}) => {
+        if (code === 0) {
+          if (vm.isbn) {
+            vm.bookData = data[0]
+            for (let item of data) {
+              item.user.selected = false
+              item.user.borrow_id = item.id
+              vm.users.push(item.user)
+            }
+          } else {
+            vm.bookData = data
+            data.user.selected = false
+            data.user.borrow_id = data.id
+            vm.users = [data.user]
+          }
+          console.log(vm.users)
+          if (!vm.bookData.book.title) {
+            wx.showModal({
+              title: '提示',
+              content: `您的图书信息不完善，为了他人借阅，请先完善图书信息哦！`,
+              showCancel: true,
+              confirmText: '完善信息',
+              success: function (res) {
+                if (res.confirm) {
+                  vm.$redirectTo(`/pages/sub_page/editBook?id=${vm.id}&library_id=${vm.library_id}&user_id=${vm.user_id}`)
+                }
+              }
+            })
+          }
+        }
+      })
+    },
+    getPayQrCode(pay_qrcode) {
+      let vm = this
+      vm.$nextTick(() => {
+        const query = wx.createSelectorQuery()
+        query.select('#myQrcode')
+          .fields({
+            node: true,
+            size: true
+          })
+          .exec((res) => {
+            var canvas = res[0].node
+            // 调用方法drawQrcode生成二维码
+            drawQrcode({
+              canvas: canvas,
+              canvasId: 'myQrcode',
+              width: 260,
+              padding: 30,
+              background: '#ffffff',
+              foreground: '#000000',
+              text: pay_qrcode
+            })
+            vm.$nextTick(() => {
+              wx.canvasToTempFilePath({
+                canvasId: 'myQrcode',
+                canvas: canvas,
+                x: 0,
+                y: 0,
+                width: 260,
+                height: 260,
+                destWidth: 260,
+                destHeight: 260,
+                success(res) {
+                  vm.pay_qrcode = res.tempFilePath
+                },
+                fail(res) {
+                  console.error(res)
+                }
+              })
+            })
+          })
+      })
+    },
+    cancelFn() { // 取消弹框
+      let vm = this
+      vm.modalName = ''
+    },
+    listIndexNotice(index) {
+      console.log(this.noticeData[index])
+      // this.$goto('/pages/museum/notice_detail?id=' + this.noticeData[index].id)
+    },
+    goto(path) {
+      this.$goto(path)
+    }
+  },
+  onLoad(e) {
+    this.id = e.id ? e.id : ''
+    this.library_id = e.library_id ? e.library_id : ''
+    this.user_id = e.user_id ? e.user_id : ''
+    this.isbn = e.isbn ? e.isbn : ''
+  },
+  onShow() {
+    this.initPageData()
+  },
+  created() {
+    let app = this.$app.$options
+    this.StatusBar = app.globalData.StatusBar
+    this.CustomBar = app.globalData.CustomBar
+    this.Custom = app.globalData.Custom
+    console.log(this.Custom)
+  }
+})
+</script>
+<config>
+{
+navigationBarTitleText: '图书馆详情',
+enablePullDownRefresh: true,
+navigationStyle: 'custom',
+backgroundColorTop: '#F4F7FC',
+backgroundColorBottom: '#F4F7FC',
+"usingComponents": {
+}
+}
+</config>

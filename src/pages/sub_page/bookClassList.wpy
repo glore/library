@@ -1,0 +1,274 @@
+
+<style lang="less" scoped>
+page {
+  background-color: #FFFFFF;
+
+  ._search_box{
+    width: 100%;
+    background: #FFFFFF;
+    z-index: 999;
+    padding-bottom: 18rpx;
+    //box-shadow: 0rpx 8rpx 24rpx 0rpx #ededed;
+  }
+  ._search {
+    width: 690rpx;
+    height: 80rpx;
+    background: #F8F8F8;
+    border-radius: 40rpx;
+    padding: 0 30rpx;
+    margin: 10rpx auto;
+
+    ._icon {
+      width: 28rpx;
+      height: 28rpx;
+      margin-right: 10rpx;
+    }
+
+    ._input {
+      width: 90%;
+      letter-spacing: 2rpx;
+    }
+  }
+
+  ._container {
+    ._library_container {
+      padding: 30rpx;
+      position: relative;
+      top: 40rpx;
+      ._title {
+        margin-bottom: 20rpx;
+      }
+      ._icon_r {
+        width: 12rpx;
+        height: 20rpx;
+        margin-left: 12rpx;
+      }
+    }
+
+    ._form_btn {
+      width: 500rpx;
+      height: 80rpx;
+      background: linear-gradient(90deg, #9DC0F8 0%, #508AFC 100%);
+      box-shadow: 0rpx 8rpx 24rpx 0rpx rgba(55, 123, 203, 0.5);
+      border-radius: 40rpx;
+      margin: auto;
+      margin-top: 100rpx;
+    }
+    ._list {
+      ._item_box {
+        width: 100%;
+        justify-content: center;
+        display: grid;
+        gap: 68rpx;
+        grid-template-columns: repeat(auto-fill, 172rpx);
+      }
+      ._borrow_out{
+        width: 172rpx;
+        height: 228rpx;
+        background-image: url("https://image.fulllinkai.com/202305/18/78aca8ba6ed75b9d48cc68785975fcaa.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        position: absolute;
+        top: 0;
+      }
+      ._item {
+        margin-bottom: -28rpx;
+        position: relative;
+        ._img {
+          width: 172rpx;
+          height: 228rpx;
+          background: #ededed;
+          border-radius: 13rpx;
+          box-shadow: 0rpx 8rpx 24rpx 0rpx #ededed;
+        }
+
+        ._text {
+          padding: 4rpx;
+        }
+      }
+    }
+  }
+}
+</style>
+<template>
+  <view class="_container">
+    <view class="fixed _search_box">
+      <view class="_search f-fc ">
+        <image class="_icon" src="~@/images/icon/search_icon.png" mode="aspectFit"></image>
+        <input type="text" class="_input lineH40 font_28" placeholder="搜索图书" v-model="searchVal"
+               @confirm="searchConfirm($wx)"/>
+      </view>
+    </view>
+
+    <view class="_library_container " style="top: {{navHeight}}px;">
+      <view class="f-fbc marginT30">
+        <view class="_title bold color333 font_30 lineH42 margin0 ellipsis_1" style="max-width: 500rpx;">{{title}}</view>
+        <view class="color-theme font_26 ">共{{total}}本图书</view>
+      </view>
+      <view class="_list marginT40">
+        <view v-if="no_more" class="_no_more text-c" style="height: 42vh;margin-top: 12vh;">
+          <image src="https://image.fulllinkai.com/202305/20/126800766170e753faeb31a74b370152.png" mode="widthFix"
+                 class="_no_more_img"></image>
+          <view class="color999 lineH42 font_28 spacing2">暂无数据</view>
+        </view>
+        <view class="_item_box">
+          <view v-for="(item, index) in library_books" :key="index" class="_item" @click="goto(`/pages/sub_page/bookDetail?id=${item.book_id}&library_id=${library_id}&user_id=${item.user_id}`,item)">
+            <image src="{{item.image?item.image:'https://image.fulllinkai.com/202305/17/e072b39804d657bbe98ff99809e1948f.png'}}" mode="aspectFill" class="_img"></image>
+            <view v-if="item.borrow_out == 1" class="_borrow_out"></view>
+            <view class="color333 font_20 _text ellipsis_1">{{item.title?item.title:'图书信息缺失...'}}{{vm.library_id}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="heigth160"></view>
+      <view class="scroll_top {{showBackTopBtn?'animation-slide-bottom':'animation-slide-top'}}" v-if="showBackTopBtn"
+            @tap="$BackTop()">
+      </view>
+    </view>
+  </view>
+</template>
+<!--x-->
+
+
+<script>
+import wepy from '@wepy/core'
+import https from '../../mixins/https'
+import base from '../../mixins/base'
+import {getElement_WH, getPhoneNumber} from '../../utils/util'
+import {service} from '../../config'
+
+wepy.page({
+  config: {},
+  mixins: [https, base],
+
+  data: {
+    modalName: '',
+    shareImg: '',
+    searchVal: '',
+    showBackTopBtn: false,
+    showCustom: false,
+    no_more: false,
+    librarieData: null,
+    page: 1,
+    id: 0,
+    total: 0,
+    bottomLift: 0,
+    navHeight: 0,
+    StatusBar: 0,
+    CustomBar: 0,
+    Custom: 0,
+    title: '',
+    library_id: 0,
+    library_books: []
+  },
+  onPageScroll(res) {
+    let top = res.scrollTop
+    this.showCustom = top > 18
+    this.showBackTopBtn = top > 300
+  },
+// 上拉获取更多数据
+  onReachBottom() {
+    // if (!this.no_more) {
+      this.initPageData()
+    // }
+  },
+  // 下拉刷新
+  onPullDownRefresh() {
+    this.page = 1
+    this.library_books = []
+    this.no_more = false
+    this.initPageData()
+  },
+  methods: {
+
+    searchConfirm() {
+      let vm = this
+      // if (!vm.searchVal) {
+      //   return vm.$showToast('请输入搜索内容')
+      // }
+      vm.page = 1
+      vm.no_more = false
+      vm.library_books = []
+      vm.$showLoading('搜索中')
+      vm.initPageData()
+      setTimeout(() => {
+        vm.$hideLoading()
+      }, 1200)
+    },
+    modalFn(val) {
+      this.modalName = val
+    },
+    initPageData() {
+      let vm = this
+      vm.$get({url: `${service.host}/libraries/${vm.library_id}/sorts/${vm.id}/books/v2?page=${vm.page}&keyword=${vm.searchVal}`}).then(({code, data}) => {
+        if (code === 0) {
+          vm.total = data.total
+          if (data.data == [] || data.data.length < 1) {
+            if (vm.library_books.length < 1) return vm.no_more = true
+            return console.log('暂无更多数据')
+          }
+          if (vm.page == 1) {
+            vm.page++
+            vm.library_books = data.data
+          } else {
+            vm.page++
+            data.data.map((item, index) => {
+              vm.library_books.push(item)
+            })
+          }
+          if (vm.library_books < 1) {
+            vm.no_more = true
+          }
+          console.log(vm.library_books)
+        }
+      })
+    },
+    goto(path, item) {
+      console.log(path)
+      // let vm = this,
+      //   {status} = vm.librarieData.member
+      // console.log(status)
+      // if (!item.title && status != 'ADMIN') {
+      //   return this.$showModal('图书信息丢失了，暂时无法显示详情哦~')
+      // }
+      this.$goto(path)
+    }
+  },
+  onLoad(e) {
+    this.id = e.id
+    this.library_id = e.library_id
+    this.title = e.title
+    this.$showLoading('加载中...')
+    this.page = 1
+    this.library_books = []
+    this.initPageData()
+  },
+  onShow() {
+    getElement_WH('._search').then((res) => {
+      this.navHeight = res.height
+    })
+  },
+  created() {
+    let app = this.$app.$options
+    this.StatusBar = app.globalData.StatusBar
+    this.CustomBar = app.globalData.CustomBar
+    this.Custom = app.globalData.Custom
+    this.bottomLift = app.globalData.bottomLift
+    console.log(this.Custom)
+  }
+})
+</script>
+<config>
+{
+navigationBarTitleText: '图书分类',
+enablePullDownRefresh: true ,
+<!--navigationStyle: 'custom',-->
+backgroundColorTop: '#F4F7FC',
+backgroundColorBottom: '#F4F7FC',
+"usingComponents": {
+<!--noticeCom: '~@/components/noticeCom',-->
+<!--wxShareCom: '~@/components/wxShareCom'-->
+<!--navigation: '~@/components/navigation'-->
+}
+}
+</config>

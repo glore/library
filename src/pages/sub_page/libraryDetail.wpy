@@ -1,0 +1,577 @@
+<style lang="less" scoped>
+page {
+  background-color: #FFFFFF;
+
+  ._bg {
+    width: 100vw;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+
+  ._container {
+    ._library_info {
+      padding: 36rpx 30rpx 30rpx;
+      border-bottom: 16rpx solid #f8f8f8;
+
+      ._pic {
+        width: 180rpx;
+        height: 180rpx;
+        box-shadow: 0rpx 4rpx 16rpx 0rpx rgba(0, 0, 0, 0.15);
+        border-radius: 16rpx;
+        margin-right: 24rpx;
+      }
+
+      .share_btn, .add_btn {
+        width: 172rpx;
+        height: 64rpx;
+        border-radius: 34rpx;
+        border: 2rpx solid #ADCEFF;
+      }
+
+      .add_btn {
+        background: linear-gradient(90deg, #9DC0F8 0%, #508AFC 100%);
+        border: none;
+      }
+      ._wait_btn {
+        background: none;
+        color: #FEB76F;
+        border: 2rpx solid #FFD697;
+      }
+
+      ._notice {
+        width: 690rpx;
+        height: 80rpx;
+        line-height: 80rpx;
+        background: #EEF4FF;
+        border-radius: 20rpx;
+        padding: 24rpx;
+        margin-top: 30rpx;
+        //opacity: 0.4;
+
+        ._i {
+          width: 28rpx;
+          height: 28rpx;
+          margin-right: 12rpx;
+        }
+      }
+
+      ._tabs {
+        margin-top: 40rpx;
+        padding: 0 4rpx;
+
+        ._dot {
+          width: 2rpx;
+          height: 52rpx;
+          background: #F5F5F5;
+        }
+      }
+    }
+
+    ._library_container {
+      padding: 30rpx;
+
+      ._icon {
+        width: 24rpx;
+        height: 28rpx;
+        margin-left: 8rpx;
+        vertical-align: middle;
+      }
+
+      ._title {
+        margin-bottom: 20rpx;
+      }
+
+      ._icon_r {
+        width: 12rpx;
+        height: 20rpx;
+        margin-left: 12rpx;
+      }
+    }
+
+    ._form_btn {
+      width: 500rpx;
+      height: 80rpx;
+      background: linear-gradient(90deg, #9DC0F8 0%, #508AFC 100%);
+      box-shadow: 0rpx 8rpx 24rpx 0rpx rgba(55, 123, 203, 0.5);
+      border-radius: 40rpx;
+      margin: auto;
+      margin-top: 100rpx;
+    }
+    ._list {
+      ._item_box {
+        width: 100%;
+        justify-content: center;
+        display: grid;
+        gap: 68rpx;
+        grid-template-columns: repeat(auto-fill, 172rpx);
+
+      }
+      ._borrow_out{
+        width: 172rpx;
+        height: 228rpx;
+        background-image: url("https://image.fulllinkai.com/202305/18/78aca8ba6ed75b9d48cc68785975fcaa.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        position: absolute;
+        top: 0;
+      }
+      ._item {
+        margin-bottom: -28rpx;
+        position: relative;
+        ._img {
+          width: 172rpx;
+          height: 228rpx;
+          background: #ededed;
+          border-radius: 13rpx;
+          box-shadow: 0rpx 4rpx 16rpx 0rpx rgba(0, 0, 0, 0.15);
+        }
+
+        ._text {
+          padding: 4rpx;
+        }
+      }
+    }
+  }
+}
+.admin_Box_Fn{
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  background-image: url("https://image.fulllinkai.com/202305/18/cc674e886262cd3a56feaafa312aa38b.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 0 26rpx;
+  .admin_fn_key{
+    width: 508rpx;
+    border-radius: 50rpx;
+    box-shadow: 0rpx 4rpx 24rpx 0rpx rgba(0, 0, 0, 0.1);
+    position: relative;
+    height: 100rpx;
+    margin-top: -20rpx;
+    line-height: 100rpx;
+    margin-right: 20rpx;
+    ._icon_fn{
+      width: 232rpx;
+      height: 116rpx;
+      position: absolute;
+      right: 0;
+      bottom: -16rpx;
+    }
+    ._text_fn{
+      margin-left: 60rpx;
+    }
+  }
+  ._share{
+    width: 140rpx;
+    height: 140rpx;
+    vertical-align: middle;
+  }
+}
+
+._icon_type {
+  width: 64rpx;
+  height: 32rpx;
+  margin-left: 12rpx;
+}
+
+
+</style>
+
+<wxs lang="babel" module="m1">
+const getBadgeR = (item) => {
+if(item>999){
+return`-36rpx`
+}
+if(item>99){
+return`-26rpx`
+}
+}
+module.exports.getBadgeR = getBadgeR;
+</wxs>
+<template>
+  <view class="cu-custom">
+    <view class="cu-bar fixed" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+      <view @tap="$gotoBack(1)" class="action">
+        <text class="cuIcon-back"></text>
+        返回
+      </view>
+<!--      <navigator class="action" open-type="navigateBack" delta="1" hover-class="none">-->
+<!--        <image class="_back_icon f-fc" src="~@/images/icon/back_icon.png" mode="aspectFit"></image> 返回-->
+<!--        <text class='cuIcon-back'></text> 返回-->
+<!--      </navigator>-->
+        <view class="content {{showCustom?'animation-TOP forwards':'animation-slide-top'}} "
+              style="top:{{StatusBar}}px;">
+          {{librarieData.name}}
+        </view>
+    </view>
+  </view>
+  <image src="https://image.fulllinkai.com/202305/09/fe9e791027aeec5509358f995c676e84.png" mode="widthFix"
+         class="_bg"></image>
+  <view class="_container " style="margin-top:{{CustomBar}}px;">
+    <view class="_library_info">
+      <view class="" style="display: flex">
+        <image src="{{librarieData.logo}}" mode="aspectFill" class="_pic"></image>
+        <view>
+          <view class="f-fc">
+            <view class="color333 bold lineH42 ellipsis_1 font_30">{{librarieData.name}}</view>
+            <image class="_icon_type" src="~@/images/icon/institution_icon.png" mode="aspectFit"
+                   v-if="librarieData.type === 'ORG'"></image>
+            <image class="_icon_type" src="~@/images/icon/share_icon.png" mode="aspectFit"
+                   v-if="librarieData.type === 'SHARE'"></image>
+            <image class="_icon_type" src="~@/images/icon/person_icon.png" mode="aspectFit"
+                   v-if="librarieData.type==='FAMILY'"></image>
+          </view>
+          <view class="color666 lineH36 font_26 ellipsis_1 marginT8">馆长：{{librarieData.link_name}}</view>
+          <view class="f-fc marginT30">
+            <block v-if="librarieData.member&&librarieData.member.status == 'ADMIN'">
+              <view class="add_btn f-fcc font_28 colorfff" style="width: 210rpx;" @tap="$goto(`/pages/sub_page/createLibrary?id=${id}`)">编辑图书馆</view>
+            </block>
+            <block v-else>
+              <view class="share_btn f-fcc font_28 color-theme" @tap="modalName='Modal'">立即分享</view>
+              <view class="add_btn f-fcc font_28 colorfff marginL30" v-if="!librarieData.member" @tap="joinFn">
+                申请加入
+              </view>
+              <view class="add_btn f-fcc font_28  marginL30  _wait_btn"
+                    v-if="librarieData.member && librarieData.member.status == 'JOIN'"
+                    @tap="$showModal('请耐心等待管理员审核...')">等待审核
+              </view>
+              <view class="add_btn f-fcc font_28 colorfff marginL30"
+                    v-if="librarieData.member && librarieData.member.status == 'MEMBER'"
+                    @tap="$callPhone(librarieData.link_mobile)">联系取书
+              </view>
+
+            </block>
+          </view>
+        </view>
+      </view>
+      <view class="_notice f-fc" v-if="librarieData.last_borrows.length>1">
+        <image src="~@/images/icon/notice_icon.png" class="_i" mode="aspectFit"/>
+        <noticeCom @listIndex="listIndexNotice" :list.stop="librarieData.last_borrows"></noticeCom>
+      </view>
+      <view class="_tabs f-fbc">
+        <view class="text-c" @tap="$goto(`/pages/sub_page/classBooks?id=${id}&is_admin=${librarieData.is_admin}`)">
+          <view class="color-theme font_32 bold lineH44">{{librarieData.library_books_count}}册</view>
+          <view class="_name color666 font_26 marginT10">馆藏册数</view>
+        </view>
+        <view class="_dot"></view>
+        <view class="text-c">
+          <view class="color-theme font_32 bold lineH44">{{librarieData.click_num}}</view>
+          <view class="_name color666 font_26 marginT10">人气</view>
+        </view>
+        <view class="_dot"></view>
+        <view class="text-c relative" @tap="$goto(`/pages/sub_page/Management?id=${id}&is_admin=${librarieData.is_admin}`)">
+          <view class="color-theme font_32 bold lineH44">{{librarieData.members_count}}位</view>
+          <view class="_name color666 font_26 marginT10">会员数量</view>
+          <view class="cu-tag badge" style="right: {{m1.getBadgeR(librarieData.members_count)}}" v-if="librarieData&&librarieData.join_member_num!=0">
+              {{librarieData.join_member_num>99?"99+":librarieData.join_member_num}}
+          </view>
+        </view>
+        <view class="_dot"></view>
+        <view class="text-c relative" @tap="$goto(`/pages/sub_page/BorrowManage?id=${id}&is_admin=${librarieData.is_admin}`)">
+          <view class="color-theme font_32 bold lineH44">{{librarieData.borrows_count}}册</view>
+          <view class="_name color666 font_26 marginT10">借阅册数</view>
+          <view class="cu-tag badge" style="right: {{m1.getBadgeR(librarieData.borrows_count)}}" v-if="librarieData&&librarieData.reserve_book_num!=0">
+              {{librarieData.reserve_book_num>99?"99+":librarieData.reserve_book_num}}
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="_library_container">
+      <view class="_title bold color333 font_30 lineH42">简介内容</view>
+      <view class="font_26 color666 lineH36">{{librarieData.intro?librarieData.intro:'...'}}
+      </view>
+      <view class="_title bold color333 font_30 lineH42 marginT40">联系地址</view>
+      <view class="font_26 color666 lineH36 f-fc" v-if="librarieData.address" @tap="openAddress(librarieData.location_latitude,librarieData.location_longitude)">
+        <text>{{librarieData.address}}</text>
+        <image class="_icon" src="~@/images/icon/nav_icon.png" mode="aspectFit"></image>
+      </view>
+      <view class="font_26 color666 lineH36" v-if="!librarieData&&!librarieData.address">暂无联系地址</view>
+      <view class="f-fbc" v-if="librarieData.recommend_library_books.length>1">
+        <view class="_title bold color333 font_30 lineH42 marginT40">馆长推荐</view>
+<!--        <view class="font_26 color666 lineH36 f-fc">-->
+<!--          <text class="color-theme">更多图书</text>-->
+<!--          <image class="_icon_r" src="~@/images/icon/right_icon.png" mode="aspectFit"></image>-->
+<!--        </view>-->
+      </view>
+      <view class="_list marginT20">
+        <view class="_item_box">
+          <view v-for="(item, index) in librarieData.recommend_library_books" :key="index" class="_item"
+                @click="goto(`/pages/sub_page/bookDetail?id=${item.book_id}&library_id=${item.library_id}&user_id=${item.user_id}`,item)">
+            <image src="{{item.image?item.image:'https://image.fulllinkai.com/202305/17/e072b39804d657bbe98ff99809e1948f.png'}}" mode="aspectFill"
+                   class="_img"></image>
+            <view v-if="item.borrow_out == 1" class="_borrow_out"></view>
+            <view class="color333 font_20 _text ellipsis_1"> {{item.title?item.title:'图书信息缺失'}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="f-fbc marginT68">
+        <view class="_title bold color333 font_30 lineH42 margin0">全部图书</view>
+        <view class="font_26 color666 lineH36 f-fc" @tap="$goto(`/pages/sub_page/bookLibrary?id=${id}`)">
+          <text class="color-theme">更多图书</text>
+          <image class="_icon_r" src="~@/images/icon/right_icon.png" mode="aspectFit"></image>
+        </view>
+      </view>
+      <view class="_list marginT40">
+        <view v-if="no_more" class="_no_more text-c" style="height: 42vh;margin-top: 12vh;">
+          <image src="https://image.fulllinkai.com/202305/20/126800766170e753faeb31a74b370152.png" mode="widthFix"
+                 class="_no_more_img"></image>
+          <view class="color999 lineH42 font_28 spacing2">暂无数据</view>
+        </view>
+        <view class="_item_box">
+          <view v-for="(item, index) in library_books" :key="index" class="_item" @click="goto(`/pages/sub_page/bookDetail?id=${item.book_id}&library_id=${item.library_id}&user_id=${item.user_id}`,item)">
+            <image src="{{item.image?item.image:'https://image.fulllinkai.com/202305/17/e072b39804d657bbe98ff99809e1948f.png'}}" mode="aspectFill" class="_img"></image>
+            <view v-if="item.borrow_out == 1" class="_borrow_out"></view>
+            <view class="color333 font_20 _text ellipsis_1">{{item.title?item.title:'图书信息缺失...'}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="heigth160"></view>
+      <view class="scroll_top {{showBackTopBtn?'animation-slide-bottom':'animation-slide-top'}}" v-if="showBackTopBtn"
+            @tap="$BackTop()">
+      </view>
+    </view>
+    <view class="fixed admin_Box_Fn" style="height: {{bottomLift+50}}px;" v-if="(librarieData.member&&librarieData.member.status == 'ADMIN')||(librarieData.member.status == 'MEMBER'&&librarieData.type=='SHARE')">
+      <view class="f-fbc">
+        <image src="https://image.fulllinkai.com/202305/18/a0c06b508211c748a046e22626627b5a.png" mode="aspectFill"
+               class="_share" @tap="modalName='Modal'"></image>
+        <view class="bg_f f-fc admin_fn_key">
+          <view class="_text_fn" @tap="scanReturnBook">还书</view>
+          <view class="_text_fn" @tap="scanBorrowBook">借书</view>
+          <image src="https://image.fulllinkai.com/202305/18/e36d9cf37e2e9018f4f48a22324a7f94.png" mode="aspectFill"
+                 class="_icon_fn" @tap="enterFn"></image>
+        </view>
+      </view>
+    </view>
+    <editInforCom :modalName.sync="modalName" @modalFn="modalEditInforComFn"></editInforCom>
+    <wxShareCom :modalName.sync="modalName" :sharePic.sync="shareImg" @modalFn="modalFn"></wxShareCom>
+  </view>
+</template>
+<!--x-->
+
+
+<script>
+import wepy from '@wepy/core'
+import https from '../../mixins/https'
+import base from '../../mixins/base'
+import {getPhoneNumber, onShareAppMessage} from '../../utils/util'
+import {service} from '../../config'
+
+wepy.page({
+  config: {},
+  mixins: [https, base],
+
+  data: {
+    modalName: '',
+    shareImg: '',
+    showBackTopBtn: false,
+    showCustom: false,
+    no_more: false,
+    librarieData: null,
+    page: 1,
+    id: 0,
+    bottomLift: 0,
+    StatusBar: 0,
+    CustomBar: 0,
+    Custom: 0,
+    library_books: []
+  },
+  onPageScroll(res) {
+    let top = res.scrollTop
+    this.showCustom = top > 18
+    this.showBackTopBtn = top > 300
+  },
+// 上拉获取更多数据
+  onReachBottom() {
+    // if (!this.no_more) {
+      this.initPageData()
+    // }
+  },
+  // 下拉刷新
+  onPullDownRefresh() {
+    this.page = 1
+    this.library_books = []
+    // this.no_more = false
+    this.initPageData()
+  },
+  onShareAppMessage(e) {
+    this.modalName = ''
+    let title = `向您推荐了「${this.librarieData.name}」`
+    let path = `/pages/sub_page/libraryDetail?id=${this.id}`
+    return onShareAppMessage(title, path)
+  },
+  methods: {
+    adminPathFn(path) {
+      let vm = this
+      if (vm.librarieData.is_admin === 1) { vm.$goto(path) }
+      if (vm.librarieData.member.status == 'MEMBER' && vm.librarieData.type == 'SHARE') { vm.$goto(path) }
+    },
+    joinFn(val) { // 加入图书馆
+      let vm = this
+      let {circle_avatar, name, mobile} = wx.getStorageSync('userInfo')
+      if (!circle_avatar || !name || !mobile) {
+        return vm.modalName = 'editInfor'
+      }
+      wx.showModal({
+        title: '提示',
+        content: '是否确认申请成为该图书馆会员？成为会员后才可借阅图书哦~',
+        success: (res) => {
+          if (res.confirm) {
+            vm.$post({url: `${service.host}/libraries/${vm.id}/join`}).then(({code, data}) => {
+              if (code === 0) {
+                vm.modalName = ''
+                vm.$showToast('申请成功')
+                vm.page = 1
+                vm.library_books = []
+                vm.initPageData()
+              }
+            })
+          }
+        }
+      })
+    },
+    modalFn(val) {
+      this.modalName = val
+    },
+
+    modalEditInforComFn(val) { // 完善资料的弹框回调
+      this.modalName = val
+    },
+    scanBorrowBook() { // 借书
+      let vm = this
+      wx.scanCode({
+        success: (res) => {
+          console.log(res.result)
+          let data = {
+            'isbn': res.result
+            // 'isbn': 'E0036099100'
+          }
+          vm.$post({url: `${service.host}/books`, data}).then(({code, data}) => {
+            if (code === 0) {
+              vm.$goto(`/pages/sub_page/bookDetail?id=${data.id}&library_id=${vm.id}&user_id=`)
+            }
+          })
+        }
+      })
+    },
+    scanReturnBook() { // 还书
+      let vm = this
+      wx.scanCode({
+        success: (res) => {
+          console.log(res.result)
+          vm.$goto(`/pages/sub_page/BorrowBook?isbn=${res.result}&library_id=${vm.id}`)
+        }
+      })
+    },
+    enterFn() { // 录书
+      let vm = this
+      wx.scanCode({
+        success: (res) => {
+          console.log(res.result)
+          vm.$goto(`/pages/sub_page/enteringBooks?id=${vm.id}&isbn=${res.result}`)
+        }
+      })
+    },
+    openAddress(latitude, longitude) {
+      let vm = this
+      wx.openLocation({
+        latitude: Number(latitude),
+        longitude: Number(longitude),
+        name: vm.librarieData.address
+      })
+    },
+    initPageData() {
+      let vm = this
+      vm.no_more = false
+      vm.$get({url: `${service.host}/libraries/${vm.id}/v3?page=${vm.page}`}).then(({
+        code,
+        data
+      }) => {
+        if (code === 0) {
+          vm.librarieData = data
+           data = data.library_books
+          if (data.data == [] || data.data.length < 1) {
+            if (vm.library_books < 1) {
+               vm.no_more = true
+            }
+            return
+          }
+          if (vm.page == 1) {
+            vm.page++
+            vm.library_books = data.data
+          } else {
+            vm.page++
+            data.data.map((item, index) => {
+              vm.library_books.push(item)
+            })
+          }
+          console.log(vm.library_books)
+        }
+      })
+      vm.$get({url: `${service.host}/libraries/${vm.id}/share`}).then(({code, data}) => {
+        if (code === 0) {
+          this.shareImg = data.pic
+          console.log(vm.shareImg)
+        }
+      })
+    },
+    cancelFn() { // 取消弹框
+      let vm = this
+      vm.modalName = ''
+    },
+    listIndexNotice(index) {
+      console.log(this.noticeData[index])
+    },
+    goto(path, item) {
+      let vm = this,
+        {status} = vm.librarieData.member ? vm.librarieData.member : ''
+      console.log(status)
+      if (vm.librarieData.member) {
+        if (!item.title && status != 'ADMIN') {
+          return this.$showModal('图书信息丢失了，暂时无法显示详情哦~')
+        }
+      }
+      this.$goto(path)
+    }
+  },
+  onLoad(e) {
+    this.id = e.id
+    this.$showLoading('加载中...')
+    this.no_more = false
+    this.page = 1
+    this.library_books = []
+    this.initPageData()
+  },
+  onShow() {
+    // this.page = 1
+    // this.library_books = []
+    // this.initPageData()
+  },
+  created() {
+    let app = this.$app.$options
+    this.StatusBar = app.globalData.StatusBar
+    this.CustomBar = app.globalData.CustomBar
+    this.Custom = app.globalData.Custom
+    this.bottomLift = app.globalData.bottomLift
+    console.log(this.Custom)
+  }
+})
+</script>
+<config>
+{
+navigationBarTitleText: '图书馆详情',
+enablePullDownRefresh: true ,
+navigationStyle: 'custom',
+backgroundColorTop: '#F4F7FC',
+backgroundColorBottom: '#F4F7FC',
+"usingComponents": {
+noticeCom: '~@/components/noticeCom',
+wxShareCom: '~@/components/wxShareCom',
+editInforCom: '~@/components/editInforCom'
+<!--navigation: '~@/components/navigation'-->
+}
+}
+</config>
