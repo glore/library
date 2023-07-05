@@ -94,6 +94,22 @@ page {
 }
 
 
+.cu-dialog {
+  padding: 42rpx 0 22rpx 0 !important;
+  width: 92vw;
+  ._t {
+    width: 420rpx;
+    margin: 40rpx auto;
+  }
+
+  ._b {
+    width: 334rpx;
+    height: 72rpx;
+    background: #BDA88D;
+    border-radius: 8rpx;
+    margin: 42rpx auto;
+  }
+}
 </style>
 
 <wxs lang="babel" module="m1">
@@ -220,6 +236,13 @@ module.exports.getLibraryType = getLibraryType;
       <view class="_form_btn f-fcc colorfff font_30" >{{id?'保存':'创建'}}</view>
     </view>
   </view>
+  <view class="cu-modal {{modalName=='Modal'?'show':''}}">
+    <view class="cu-dialog">
+      <view class="bold font_32">提示</view>
+      <view class="_t">系统需要获取您的位置，部分本地功能将无法使用！</view>
+      <button class="_b colorfff f-fcc font_28" open-type="openSetting" @opensetting="openSetting_address($wx)">去授权</button>
+    </view>
+  </view>
   <editInforCom :modalName.sync="modalName" @modalFn="modalFn"></editInforCom>
 
 </template>
@@ -288,6 +311,100 @@ wepy.page({
     modalFn(val) {
       this.modalName = val
     },
+    openSetting_address(e) {
+      let that = this
+      if (wx.getFuzzyLocation) {
+        if (e.detail.authSetting['scope.userFuzzyLocation']) { // 如果打开了地理位置，就会为true
+          wx.getFuzzyLocation({
+            type: 'gcj02',
+            success: (res) => {
+              that.modalName = ''
+              that.geocoderFn(res.latitude, res.longitude)
+              that.$Toast_success('授权成功!')
+            },
+            fail: (res) => {
+              console.log(res)
+            },
+            complete: () => {
+            }
+          })
+        }
+      } else {
+        wx.showModal({
+          title: '提示',
+          content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
+        })
+      }
+    },
+    getCenterLocation() {
+      let that = this
+      if (wx.getFuzzyLocation) {
+        wx.getSetting({
+          success: (res) => {
+            let authSetting = res.authSetting
+            console.log(authSetting, 'authSetting---')
+            if (authSetting['scope.userFuzzyLocation'] || authSetting['scope.userLocation']) {
+              console.log('已授权')
+              wx.getFuzzyLocation({
+                type: 'gcj02',
+                success: function (res) {
+                  // that.$Toast_success('授权成功!')
+                  that.modalName = ''
+                  that.geocoderFn(res.latitude, res.longitude)
+                },
+                fail: function (res) {
+                  console.log(res)
+                },
+                complete: function () {
+                  wx.hideLoading()
+                }
+              })
+            } else {
+              console.log('未授权')
+              wx.getFuzzyLocation({
+                type: 'gcj02',
+                success: function (res) {
+                  that.modalName = ''
+                  that.latitude = res.latitude // 经度
+                  that.longitude = res.longitude// 纬度
+                  that.geocoderFn(res.latitude, res.longitude)
+                },
+                fail: function (res) {
+                  console.log(res)
+                  if (res.errno == '0' || res.errMsg.includes('deny')) {
+                    that.modalName = 'Modal'
+                  }
+                },
+                complete: function () {
+                  wx.hideLoading()
+                }
+              })
+            }
+          }
+        })
+      } else {
+        wx.showModal({
+          title: '提示',
+          content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
+        })
+      }
+    },
+    geocoderFn(latitude, longitude) {
+      let vm = this
+      let data = {
+        key: 'DQ3BZ-SWT3U-HUQV7-BBO3U-OU7WS-53FBV',
+        location: latitude + ',' + longitude
+      }
+      vm.formData.location_latitude = latitude
+      vm.formData.location_longitude = longitude
+      vm.$getV2({url: `https://apis.map.qq.com/ws/geocoder/v1/`, data}).then(({status, result}) => {
+        vm.$hideLoading()
+        if (status === 0) {
+          console.log(result.address)
+          vm.formData.address = result.address
+        }
+      })
+    },
     replacePic() { // 更换封面
       let vm = this
       wx.chooseImage({
@@ -333,6 +450,10 @@ wepy.page({
         },
         fail: (res) => {
           console.log(res)
+          if (res.errno == '0' || res.errMsg.includes('deny')) {
+            vm.modalName = 'Modal'
+          }
+          wx.hideLoading()
         }
       })
     },
@@ -416,7 +537,7 @@ wepy.page({
   },
   onShow() {
     // this.$showLoading('加载中...')
-    // this.getUserInfo()
+    this.getCenterLocation()
   },
   created() {
     let app = this.$app.$options

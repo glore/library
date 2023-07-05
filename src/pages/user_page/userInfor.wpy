@@ -11,7 +11,6 @@ page {
   .avatar-wrapper{
 
     .avatar {
-
       width: 200rpx;
       height: 200rpx;
       margin: 22rpx auto;
@@ -84,7 +83,7 @@ page {
     <view class="_form_input marginT40">
       <view class="_input_t color333 font_28 lineH40">手机号</view>
       <view class="f-fbc">
-        <input type="nickname" class="_input lineH42 font_30" placeholder="请填写手机号码" v-model="userInfo.mobile"/>
+        <input type="number" class="_input lineH42 font_30" placeholder="请填写手机号码" v-model="userInfo.mobile"/>
         <button class="btn f-fbc" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber($wx)">
           <view class="font_24 lineH34 _wxBtn color-theme f-fcc">从微信获取</view>
         </button>

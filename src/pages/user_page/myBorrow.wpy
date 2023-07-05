@@ -48,7 +48,6 @@ page {
     }
   }
 }
-
 </style>
 
 <template>
@@ -60,9 +59,9 @@ page {
               data-id="{{index}}">
           <view class="relative">
             {{item}}
-            <view class="cu-tag badge" style="top: 16rpx;right: 24rpx" v-if="index == 1 &&badge">
-              {{badge>99?"99+":badge}}
-            </view>
+<!--            <view class="cu-tag badge" style="top: 16rpx;right: 24rpx" v-if="index == 1 &&badge">-->
+<!--              {{badge>99?"99+":badge}}-->
+<!--            </view>-->
           </view>
         </view>
       </view>
@@ -192,6 +191,7 @@ wepy.page({
       let vm = this
       vm.page = 1
       vm.list = []
+      vm.no_more = false
       vm.TabCur = e.currentTarget.dataset.id
       vm.scrollLeft = (e.currentTarget.dataset.id - 1) * 60
       vm.$showLoading('加载中')

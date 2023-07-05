@@ -364,6 +364,9 @@ module.exports.getlibrary = getlibrary;
       </view>
       <view class="cu-modal {{modalName=='cashPledge'?'show':''}}">
         <view class="cu-dialog" style="padding-top: 58rpx;">
+
+
+
           <view class="_t font_32 lineH44 color333 text-c bold">提示</view>
           <view class="_c font_32 lineH44 color333 text-l marginT24">您还没交押金哦，借阅该图书馆需要重置押金后借阅，还书后押金可退换！</view>
           <view class="f-fcc">
